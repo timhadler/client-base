@@ -1,6 +1,7 @@
 import React from "react";
 
 export default function DropdownBtn() {
+    // Show dropdown content
     function dbOnClick() {
         document.getElementById("myDropdown").classList.toggle("show");
       }
@@ -18,7 +19,7 @@ export default function DropdownBtn() {
           }
         }
       }
-      
+
     return (
         <div className="dropdown">
         <button onClick={dbOnClick} className="dropbtn">Dropdown</button>
