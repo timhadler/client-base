@@ -1,55 +1,68 @@
-/* RESETS */
-*,
-*::before,
-*::after {
+
+
+:root {
+  --header: #878787;
+}
+
+/* Resets */
+* {
   box-sizing: border-box;
-}
-*:focus {
-  outline: 3px dashed #228bec;
-  outline-offset: 0;
-}
-html {
-  font: 62.5% / 1.15 sans-serif;
-}
-h1,
-h2 {
-  margin-bottom: 0;
-}
-ul {
-  list-style: none;
-  padding: 0;
-}
-button {
-  border: none;
   margin: 0;
   padding: 0;
-  width: auto;
-  overflow: visible;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  line-height: normal;
-  -webkit-font-smoothing: inherit;
-  -moz-osx-font-smoothing: inherit;
-  -webkit-appearance: none;
 }
-button::-moz-focus-inner {
-  border: 0;
+
+html, body {
+  height: 100%;
+  overflow: auto;
 }
-button,
-input,
-optgroup,
-select,
-textarea {
-  font-family: inherit;
-  font-size: 100%;
-  line-height: 1.15;
-  margin: 0;
+
+body {
+  background-color: #DAD9D9;
 }
-button,
-input {
-  overflow: visible;
+
+.App {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
-input[type="text"] {
-  border-radius: 0;
+
+/*myStyles*/
+.App-header {
+  grid-column: 1 / span 3;
+  height: 50px;
+  background-color: var(--header);
+  text-align: center;
 }
+
+.CustomerList {
+  grid-column: 1 / span 1;
+}
+
+.CustomerDetails {
+  grid-column: 2 / span 1;
+}
+
+.Enquiries {
+  grid-column: 3 / span 1;
+}
+
+
+
+
+
+/* Dropdown Button */
+
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
