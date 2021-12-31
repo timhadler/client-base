@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function DropdownBtn() {
+export default function DropdownBtn(props) {
     // Show dropdown content
     function dbOnClick() {
         document.getElementById("myDropdown").classList.toggle("show");
@@ -19,14 +19,13 @@ export default function DropdownBtn() {
           }
         }
       }
-
+    
     return (
         <div className="dropdown">
-        <button onClick={dbOnClick} className="dropbtn">Dropdown</button>
-        <div id ="myDropdown" className="dropdown-content">
-          <p> Item 1 </p>
-          <p> Item 2 </p>
-        </div>
+          <button onClick={dbOnClick} className="dropbtn">{props.text}</button>
+          <div id ="myDropdown" className="dropdown-content">
+            {props.items}
+          </div>
       </div>
     );
 }
