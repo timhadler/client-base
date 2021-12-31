@@ -5,9 +5,23 @@ import DropdownBtn from "./components/DropdownBtn";
 
 function App() {
   const login_dropdown_items = [
-    <a href="#"> Info </a>,
-    <a href="#"> Logout </a>
+    /*<a href="#"> Info </a>,
+    <a href="#"> Logout </a>*/
   ];
+
+  const CUSTOMER_DATA = [
+    { id: "1", name: "Anne Barron", contactNum: "0278135441", created: "30/12/2021",  freashAir: "Hrv Gen 1", address: "14 Burwood Rd", suburb: "Burwood", city: "Christchurch", pc: 8043},
+    { id: "2", name: "Barry Stansfield", contactNum: "0278135441", created: "30/12/2021",  freashAir: "Hrv Gen 1", address: "14 Burwood Rd", suburb: "Burwood", city: "Christchurch", pc: 8043}
+  ];
+
+  const [customers, setCustomers] = useState(CUSTOMER_DATA);
+  const customerList = [];
+  var i;
+  for (i = 0; i < customers.length; i++) {
+    customerList[i] = <li> {customers[i].name} </li>;
+  }
+  console.log(customerList);
+
   return (
     <div className="App">
       <main>
@@ -37,54 +51,8 @@ function App() {
           </div>
           <hr />
           <ul className="customers">
-            <li> Anne Barron </li>
-            <li> Barry Stansfield </li>
-            <li> Darren Buxley </li>
-            <li> Charlie Wort </li>
-            <li> Anne Barron </li>
-            <li> Barry Stansfield </li>
-            <li> Darren Buxley </li>
-            <li> Charlie Wort </li>
-            <li> Anne Barron </li>
-            <li> Barry Stansfield </li>
-            <li> Darren Buxley </li>
-            <li> Charlie Wort </li>
-            <li> Anne Barron </li>
-            <li> Barry Stansfield </li>
-            <li> Darren Buxley </li>
-            <li> Charlie Wort </li>
-            <li> Anne Barron </li>
-            <li> Barry Stansfield </li>
-            <li> Darren Buxley </li>
-            <li> Charlie Wort </li>
-            <li> Anne Barron </li>
-            <li> Barry Stansfield </li>
-            <li> Darren Buxley </li>
-            <li> Charlie Wort </li>
-            <li> Anne Barron </li>
-            <li> Barry Stansfield </li>
-            <li> Darren Buxley </li>
-            <li> Charlie Wort </li>
-            <li> Anne Barron </li>
-            <li> Barry Stansfield </li>
-            <li> Darren Buxley </li>
-            <li> Charlie Wort </li>
-            <li> Anne Barron </li>
-            <li> Barry Stansfield </li>
-            <li> Darren Buxley </li>
-            <li> Charlie Wort </li>
-            <li> Anne Barron </li>
-            <li> Barry Stansfield </li>
-            <li> Darren Buxley </li>
-            <li> Charlie Wort </li>
-            <li> Anne Barron </li>
-            <li> Barry Stansfield </li>
-            <li> Darren Buxley </li>
-            <li> Charlie Wort </li>
-            <li> Anne Barron </li>
-            <li> Barry Stansfield </li>
-            <li> Darren Buxley </li>
-            <li> Charlie Wort </li>
+            {customerList}
+
           </ul>
         </section>
       </main>
