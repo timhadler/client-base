@@ -32,11 +32,55 @@ function App() {
             </form>
           </div>
           <div className="customer_list_top">
-            <p className="customer_count"> 4&nbsp;customers </p>
+            <p className="customer_count"> 47&nbsp;customers </p>
             <button className="button_main button_filter"> Filter </button>
           </div>
           <hr />
           <ul className="customers">
+            <li> Anne Barron </li>
+            <li> Barry Stansfield </li>
+            <li> Darren Buxley </li>
+            <li> Charlie Wort </li>
+            <li> Anne Barron </li>
+            <li> Barry Stansfield </li>
+            <li> Darren Buxley </li>
+            <li> Charlie Wort </li>
+            <li> Anne Barron </li>
+            <li> Barry Stansfield </li>
+            <li> Darren Buxley </li>
+            <li> Charlie Wort </li>
+            <li> Anne Barron </li>
+            <li> Barry Stansfield </li>
+            <li> Darren Buxley </li>
+            <li> Charlie Wort </li>
+            <li> Anne Barron </li>
+            <li> Barry Stansfield </li>
+            <li> Darren Buxley </li>
+            <li> Charlie Wort </li>
+            <li> Anne Barron </li>
+            <li> Barry Stansfield </li>
+            <li> Darren Buxley </li>
+            <li> Charlie Wort </li>
+            <li> Anne Barron </li>
+            <li> Barry Stansfield </li>
+            <li> Darren Buxley </li>
+            <li> Charlie Wort </li>
+            <li> Anne Barron </li>
+            <li> Barry Stansfield </li>
+            <li> Darren Buxley </li>
+            <li> Charlie Wort </li>
+            <li> Anne Barron </li>
+            <li> Barry Stansfield </li>
+            <li> Darren Buxley </li>
+            <li> Charlie Wort </li>
+            <li> Anne Barron </li>
+            <li> Barry Stansfield </li>
+            <li> Darren Buxley </li>
+            <li> Charlie Wort </li>
+            <li> Anne Barron </li>
+            <li> Barry Stansfield </li>
+            <li> Darren Buxley </li>
+            <li> Charlie Wort </li>
             <li> Anne Barron </li>
             <li> Barry Stansfield </li>
             <li> Darren Buxley </li>
