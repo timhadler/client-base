@@ -21,11 +21,11 @@ main {
   overflow: auto;
   display: grid;
   /*grids 2-7 max 1480px*/
-  grid-template-columns: minmax(60px, 1fr) repeat(6, minmax(100px, 250px)) minmax(60px, 1fr);
+  grid-template-columns: minmax(60px, 1fr) minmax(300px, 450px) repeat(2, minmax(200px, 550px)) minmax(60px, 1fr);
 }
 
 header {
-  grid-column: 2 / span 6;
+  grid-column: 2 / span 3;
 }
 
 nav {
@@ -93,7 +93,6 @@ li {
   height: 100%;
   min-height: 250px;
   overflow: scroll;
-  width: 400px;
 }
 
 .customer_list_top {
@@ -130,6 +129,11 @@ li {
   height: 35px;
   padding-left: 10px;
   padding-right: 0px;
+}
+
+/* Customer details */
+.customer_details {
+  grid-column: 3 / span 2;
 }
 
 /* Lines */

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import user_icon from "./images/user-icon.png";
 import DropdownBtn from "./components/DropdownBtn";
+import DetailsForm from "./components/DetailsForm";
 
 
 function App() {
@@ -15,7 +16,6 @@ function App() {
   for (i = 0; i < customers.length; i++) {
     customerList[i] = <li> {customers[i].name} </li>;
   }
-  console.log(customerList);
 
   return (
     <div className="App">
@@ -28,7 +28,7 @@ function App() {
               <a href="#">Customer</a>
             </div>
             <img className="logo_user" src={user_icon}/>
-            <DropdownBtn text="WEST" items={login_dropdown_items} />
+            <DropdownBtn text="WEST" />
           </nav>
           <hr className="line_under line_customer"/>
         </header>
@@ -49,6 +49,9 @@ function App() {
             {customerList}
 
           </ul>
+        </section>
+        <section className="customer_details">
+          <DetailsForm data={customerList[0]} />
         </section>
       </main>
 
