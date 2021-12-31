@@ -24,7 +24,8 @@ export default function DropdownBtn(props) {
         <div className="dropdown">
           <button onClick={dbOnClick} className="dropbtn">{props.text}</button>
           <div id ="myDropdown" className="dropdown-content">
-            {props.items}
+            <a href="#"> Info </a>
+            <a href="#"> Logout </a>
           </div>
       </div>
     );
