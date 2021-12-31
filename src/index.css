@@ -34,25 +34,43 @@ nav {
   height: 50px;
 }
 
-p, a, button, h1, .dropbtn{
+p, a, li, button, h1, .dropbtn{
   font-family: "Roboto",sans-serif;
   text-decoration: none;
   color: black;
 }
 
+p, li {
+  font-size: 16px;
+}
+
+li {
+  color: var(--secondary);
+}
+
 h1 {
   font-size: 25px;
   font-weight: bold;
-  color: var(--primary);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin: 15px;
 }
 
 /* Custom tags*/
+/* Nav */
 .button_login {
   color: #C5C5C5;
 }
 
 .logo_font {
   margin-right: 75px;
+  color: var(--primary);
 }
 
 .page_links a {
@@ -66,7 +84,56 @@ h1 {
   width: 40px;
 }
 
+/* Customer list */
+.customer_list {
+  grid-column: 2 / span 1;
+  width: 400px;
+}
+
+.customer_list_top {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  height: 60px;
+}
+
+.button_main {
+  border: none;
+  border-radius: 8px;
+  margin-right: 20px;
+  height: 35px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: var(--primary);
+  color: white;
+  font-size: 18px;
+}
+
+.customer_count {
+  font-size: 18px;
+}
+
+.button_filter {
+  margin-left: auto;
+}
+
+.search_bar {
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  border-radius: 8px;
+  height: 35px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 /* Lines */
+.vl {
+  border: none;
+  width: 0px;
+  height: 100%;
+  border-left: 1px solid #1f1209;
+}
+
 hr {
   border: none;
   width:100%;
@@ -93,7 +160,7 @@ hr {
 .dropbtn {
   background-color: white;
   border: none;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: lighter;
 }
 

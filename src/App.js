@@ -19,11 +19,30 @@ function App() {
               <a href="#">Customer</a>
             </div>
             <img className="logo_user" src={user_icon}/>
-            <DropdownBtn text="WEST" items={login_dropdown_items}></DropdownBtn>
+            <DropdownBtn text="WEST" items={login_dropdown_items} />
           </nav>
           <hr className="line_under line_customer"/>
         </header>
         <hr className="line_header"/>
+        <section className="customer_list">
+          <div className="customer_list_top">
+            <button className="button_main button_add_customer"> Add&nbsp;Customer </button>
+            <form>
+              <input type="text" className="search_bar" autoComplete="off" defaultValue="Search..." />
+            </form>
+          </div>
+          <div className="customer_list_top">
+            <p className="customer_count"> 4&nbsp;customers </p>
+            <button className="button_main button_filter"> Filter </button>
+          </div>
+          <hr />
+          <ul className="customers">
+            <li> Anne Barron </li>
+            <li> Barry Stansfield </li>
+            <li> Darren Buxley </li>
+            <li> Charlie Wort </li>
+          </ul>
+        </section>
       </main>
 
     </div>
