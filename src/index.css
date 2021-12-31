@@ -21,7 +21,7 @@ main {
   height: 100%;
   display: grid;
   /*grids 2-7 max 1480px*/
-  grid-template-columns: minmax(60px, 1fr) repeat(6, minmax(60px, 200px)) minmax(60px, 1fr);
+  grid-template-columns: minmax(60px, 1fr) repeat(6, minmax(100px, 250px)) minmax(60px, 1fr);
 }
 
 header {
