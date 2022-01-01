@@ -45,7 +45,7 @@ function App() {
             <p className="customer_count"> 47&nbsp;customers </p>
             <button className="button_main button_filter"> Filter </button>
           </div>
-          <hr />
+          <hr className="line_list"/>
           <ul className="customers">
             {customerList}
 
