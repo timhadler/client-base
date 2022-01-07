@@ -47,6 +47,7 @@ p, li {
 li {
   color: var(--secondary);
   margin: 15px;
+  cursor: pointer;
 }
 
 h1 {
@@ -115,6 +116,18 @@ ul {
   font-size: 18px;
 }
 
+.button_edit_appointment {
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  height: 23px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: white;
+  color: var(--primary);
+  font-size: 16px;
+  margin-left: 20px;
+}
+
 .customer_count {
   font-size: 18px;
 }
@@ -154,7 +167,15 @@ ul {
   grid-template-columns: 1fr 1fr;
 }
 
-.name-edit {
+.customer_details_bottom {
+  grid-row: 2 / span 1;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 20px;;
+}
+
+.header-button {
   grid-column: 1 / span 2;
   display: flex;
   height: 50px;

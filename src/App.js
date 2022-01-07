@@ -6,18 +6,29 @@ import DetailsForm from "./components/DetailsForm";
 
 function App() {
   const CUSTOMER_DATA = [
-    { id: "1", name: "Anne Barron", contactNum: "021 8456 258", eAddress: "barry@stansfield.co.nz", created: "30/12/2021",  freashAir: "Hrv Gen 1", address: "14 Burwood Rd", suburb: "Burwood", city: "Christchurch", pc: 8043, notes:""},
-    { id: "2", name: "Barry Stansfield", contactNum: "021 8456 258", eAddress: "barry@stansfield.co.nz", created: "30/12/2021",  freashAir: "Hrv Gen 1", address: "14 Burwood Rd", suburb: "Burwood", city: "Christchurch", pc: 8043, notes:""}
+    { id: "1", name: "Anne Barron", contactNum: "021 8456 258", eAddress: "anne@Barron.co.nz", created: "30/12/2021",  freashAir: "Hrv Gen 1", address: "14 Burwood Rd", suburb: "Burwood", city: "Christchurch", pc: 8043, notes:""},
+    { id: "2", name: "Barry Stansfield", contactNum: "021 6754 890", eAddress: "barry@stansfield.co.nz", created: "15/2/2021",  freashAir: "Hrv Gen 2", address: "18 Everness Ln", suburb: "Addington", city: "Christchurch", pc: 8045, notes:""}
   ];
+
+  const APPOINTMENT_DATA = [
+    {id: "ap_1", dateTime: "Wed, 4 Aug, 9:00am", address: "14 Burwood Rd, Burwood, Christchurch", service: "2x Premium heatpump cleans", reminders: "Yearly", nextAppt: "4 Aug 2022", notes: ""}
+  ]
 
   const [customers, setCustomers] = useState(CUSTOMER_DATA);
   const customerList = [];
   var i;
-  for (i = 0; i < customers.length; i++) {
-    customerList[i] = <li key={customers[i].id}> {customers[i].name} </li>;
-  }
-  const testCustomer = CUSTOMER_DATA[0];
 
+  customerList[0] = <li key={customers[0].id} onClick={myFunction1}> {customers[0].name} </li>;
+  customerList[1] = <li key={customers[1].id} onClick={myFunction2}> {customers[1].name} </li>;
+
+  var [testCustomer, setCustomer] = useState(CUSTOMER_DATA[0]);
+
+  function myFunction1() {
+    setCustomer(CUSTOMER_DATA[0]);
+  }
+  function myFunction2() {
+    setCustomer(CUSTOMER_DATA[1]);
+  }
   return (
     <div className="App">
       <main>
@@ -46,17 +57,13 @@ function App() {
             <button className="button_main button_filter"> Filter </button>
           </div>
           <hr className="line_list"/>
-          <ul className="customers">
+          <ul className="customerList">
             {customerList}
 
           </ul>
         </section>
-        <section className="customer_details">
-          <DetailsForm customer={testCustomer} />
-          <hr className="line_header_details"/>
-        </section>
+        <DetailsForm customer={testCustomer} appointments={APPOINTMENT_DATA[0]}/>
       </main>
-
     </div>
   );
 }
