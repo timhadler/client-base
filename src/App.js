@@ -1,7 +1,7 @@
 import { useState } from "react";
 import user_icon from "./images/user-icon.png";
 import DropdownBtn from "./components/DropdownBtn";
-import DetailsForm from "./components/DetailsForm";
+
 
 
 function App() {
