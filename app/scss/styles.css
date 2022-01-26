@@ -107,7 +107,8 @@ hr {
   font-size: 24px;
   border-radius: 8px;
   height: 35px;
-  width: 248px;
+  width: 300px;
+  margin-right: 15px;
 }
 
 .grid_column_1 {
