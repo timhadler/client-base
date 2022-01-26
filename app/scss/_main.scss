@@ -1,0 +1,4 @@
+main{
+    display: grid;
+    grid-template-columns: minmax(100px, 1fr) repeat(3, minmax(400px, 550px)) minmax(100px, 1fr);
+}
