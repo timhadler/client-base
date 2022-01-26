@@ -4,7 +4,7 @@ let  data3= ["Harry Burr", "Barry Stansfield", "Darren Buxley", "Harold Bertrum"
 
 let callList = document.getElementById("callList");
 let toBeConfirmed = document.getElementById("toBeConfirmed");
-let confirmed = document.getElementById("confirmed");
+let confirmd = document.getElementById("confirmed");
 
 setList(callList, data1);
 setList(toBeConfirmed, data2);
