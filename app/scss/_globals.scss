@@ -20,6 +20,17 @@ p, a, h1, h2 {
     color: black;
 }
 
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    color: $secondary;
+    padding-top: 15px;
+    cursor: pointer;
+  }
+
 // Flexbox
 .flex {
     display: flex;

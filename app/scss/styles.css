@@ -22,6 +22,17 @@ p, a, h1, h2 {
   color: black;
 }
 
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  color: #0652C3;
+  padding-top: 15px;
+  cursor: pointer;
+}
+
 .flex {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -145,6 +156,11 @@ main {
 .section_title {
   font-size: 24px;
   color: #009AAF;
+}
+
+.section_content {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .section_divider {
