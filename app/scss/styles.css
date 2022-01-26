@@ -7,6 +7,7 @@ html {
 *, *::before, *::after {
   -webkit-box-sizing: inherit;
           box-sizing: inherit;
+  margin: 0;
 }
 
 body {
@@ -61,8 +62,22 @@ hr {
   border: none;
   width: 100%;
   height: 0px;
-  margin-bottom: 16px;
   border-bottom: 1px solid #1f1209;
+}
+
+.line_header {
+  grid-column: 1 / span all;
+  -webkit-box-shadow: 0px 0.5px grey;
+          box-shadow: 0px 0.5px grey;
+  margin-bottom: 16px;
+}
+
+.margin_bottom_small {
+  margin-bottom: 15px;
+}
+
+.margin_bottom_medium {
+  margin-bottom: 30px;
 }
 
 .button_primary {
@@ -81,6 +96,7 @@ hr {
   font-size: 24px;
   border-radius: 8px;
   height: 35px;
+  width: 248px;
 }
 
 .grid_column_1 {
@@ -119,12 +135,6 @@ nav {
   font-weight: lighter;
 }
 
-.line_header {
-  grid-column: 1 / span all;
-  -webkit-box-shadow: 0px 0.5px grey;
-          box-shadow: 0px 0.5px grey;
-}
-
 main {
   display: -ms-grid;
   display: grid;
@@ -135,5 +145,13 @@ main {
 .section_title {
   font-size: 24px;
   color: #009AAF;
+}
+
+.section_divider {
+  height: 71vh;
+  border: none;
+  width: 100%;
+  margin-bottom: 16px;
+  border-right: 1px solid #1f1209;
 }
 /*# sourceMappingURL=styles.css.map */
