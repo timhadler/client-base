@@ -1,0 +1,61 @@
+/* The popup form - hidden by default */
+.form-popup {
+    display: none;
+    z-index: 9;
+    position: fixed;
+    top: 150px;
+    left: 120px;
+}
+
+/* Add styles to the form container */
+.form-container {
+    display: grid;
+    grid-template-columns: 50px repeat(2, minmax(100px, 250px)) minmax(100px, 190px)  50px;
+    grid-auto-rows: min-content;
+    grid-template-areas:
+      ". a a a ."
+      ". c d e ."
+      ". f f . .";
+    min-height: 476px;
+    min-width: 345px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid $primary;
+}
+
+.form-container header {
+    grid-area: a;
+}
+
+.details_1 {
+    grid-area: c;
+}
+
+.details_2 {
+    grid-area: d;
+}
+
+.result {
+    grid-area: e;
+}
+
+.comments {
+    grid-area: f;
+}
+
+.close_form {
+    display: block;
+    width: 30px;
+    border-top: 6px solid red;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.form-container button {
+    display: block;
+}
+
+.customer_detail {
+    font-size: $font-small;
+    color: $secondary;
+}

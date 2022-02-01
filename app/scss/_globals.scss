@@ -29,7 +29,11 @@ li {
     color: $secondary;
     padding-top: 15px;
     cursor: pointer;
-  }
+}
+
+input, label {
+    margin: .4rem 0;
+}
 
 // Flexbox
 .flex {
@@ -48,17 +52,29 @@ li {
     }
 }
 
-// Font sizes
+// Font sizes and colours
 .size_large {
-    font-size: var(font-large);
+    font-size: $font-large;
 }
 
 .size_medium {
-    font-size: var(font-medium);
+    font-size: $font-medium;
 }
 
 .size_small {
-    font-size: var(font-small);
+    font-size: $font-small;
+}
+
+.color_primary {
+    color: $primary;
+}
+
+.color_secondary {
+    color: $secondary;
+}
+
+.italic {
+    font-style: italic;
 }
 
 // Lines
@@ -84,25 +100,63 @@ hr {
     margin-bottom: $margin-medium;
 }
 
+.margin_top_medium {
+    margin-top: $margin-medium;
+}
+
 // Buttons
-.button_primary {
+button {
     display: inline-block;
     border: none;
     border-radius: 8px;
     height: 35px;
-    width: 201px;
-    background-color: $primary;
-    color: white;
+    padding-left: 20px;
+    padding-right: 20px;
     font-size: $font-medium;
     text-align: center;
+    cursor: pointer;
+}
+.button_primary {
+    background-color: $primary;
+    color: white;
   }
+
+.button_secondary {
+    border: 1px solid $primary;
+    background-color: white;
+    color: $primary;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.drop_button {
+    border-radius: 0;
+}
+
+.drop_content {
+    display: none;
+    position: absolute;
+    background-color: lightgray;
+    min-width: 150px;
+    z-index: 1;
+}
+
+.drop_content li {
+    color: black;
+    list-style: none;
+    padding-top: 10px;
+}
+
+.show {display:block;}
 
   // Search bar
   .search_bar {
     font-size: $font-medium;
     border-radius: 8px;
     height: 35px;
-    width: 300px;
+    min-width: 200px;
     margin-right: 15px;
   }
 

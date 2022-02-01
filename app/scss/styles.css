@@ -33,6 +33,10 @@ li {
   cursor: pointer;
 }
 
+input, label {
+  margin: .4rem 0;
+}
+
 .flex {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -58,15 +62,27 @@ li {
 }
 
 .size_large {
-  font-size: var(font-large);
+  font-size: 27px;
 }
 
 .size_medium {
-  font-size: var(font-medium);
+  font-size: 24px;
 }
 
 .size_small {
-  font-size: var(font-small);
+  font-size: 20px;
+}
+
+.color_primary {
+  color: #009AAF;
+}
+
+.color_secondary {
+  color: #0652C3;
+}
+
+.italic {
+  font-style: italic;
 }
 
 hr {
@@ -91,23 +107,64 @@ hr {
   margin-bottom: 30px;
 }
 
-.button_primary {
+.margin_top_medium {
+  margin-top: 30px;
+}
+
+button {
   display: inline-block;
   border: none;
   border-radius: 8px;
   height: 35px;
-  width: 201px;
-  background-color: #009AAF;
-  color: white;
+  padding-left: 20px;
+  padding-right: 20px;
   font-size: 24px;
   text-align: center;
+  cursor: pointer;
+}
+
+.button_primary {
+  background-color: #009AAF;
+  color: white;
+}
+
+.button_secondary {
+  border: 1px solid #009AAF;
+  background-color: white;
+  color: #009AAF;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.drop_button {
+  border-radius: 0;
+}
+
+.drop_content {
+  display: none;
+  position: absolute;
+  background-color: lightgray;
+  min-width: 150px;
+  z-index: 1;
+}
+
+.drop_content li {
+  color: black;
+  list-style: none;
+  padding-top: 10px;
+}
+
+.show {
+  display: block;
 }
 
 .search_bar {
   font-size: 24px;
   border-radius: 8px;
   height: 35px;
-  width: 300px;
+  min-width: 200px;
   margin-right: 15px;
 }
 
@@ -165,10 +222,84 @@ main {
 }
 
 .section_divider {
-  height: 71vh;
+  min-height: 71vh;
+  margin-bottom: 16px;
   border: none;
   width: 100%;
-  margin-bottom: 16px;
   border-right: 1px solid #1f1209;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  z-index: 9;
+  position: fixed;
+  top: 150px;
+  left: 120px;
+}
+
+/* Add styles to the form container */
+.form-container {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 50px (minmax(100px, 250px))[2] minmax(100px, 190px) 50px;
+      grid-template-columns: 50px repeat(2, minmax(100px, 250px)) minmax(100px, 190px) 50px;
+  grid-auto-rows: -webkit-min-content;
+  grid-auto-rows: min-content;
+      grid-template-areas: ". a a a ." ". c d e ." ". f f . .";
+  min-height: 476px;
+  min-width: 345px;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #009AAF;
+}
+
+.form-container header {
+  -ms-grid-row: 1;
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 3;
+  grid-area: a;
+}
+
+.details_1 {
+  -ms-grid-row: 2;
+  -ms-grid-column: 2;
+  grid-area: c;
+}
+
+.details_2 {
+  -ms-grid-row: 2;
+  -ms-grid-column: 3;
+  grid-area: d;
+}
+
+.result {
+  -ms-grid-row: 2;
+  -ms-grid-column: 4;
+  grid-area: e;
+}
+
+.comments {
+  -ms-grid-row: 3;
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 2;
+  grid-area: f;
+}
+
+.close_form {
+  display: block;
+  width: 30px;
+  border-top: 6px solid red;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.form-container button {
+  display: block;
+}
+
+.customer_detail {
+  font-size: 20px;
+  color: #0652C3;
 }
 /*# sourceMappingURL=styles.css.map */

@@ -11,7 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
         <title>ClientBase</title>
         <link rel="stylesheet" href="app/scss/styles.css">
     </head>
@@ -56,6 +56,61 @@
                 <div class="section_content">
                     <ul id="confirmed"> </ul>
                 </div>
+            </div>
+
+            <div class="form-popup" id="customerPopup">
+                <form action="" class="form-container">
+                    <header>
+                        <nav class="flex flex-jc-sb flex-ai-c">
+                            <p id="name" class="size_medium color_primary"></p>
+                            <div class="flex flex-ai-c">
+                                <button type="button" class="button_secondary"> Edit </button>
+                                <span class="close_form" onClick="closeCustomerForm()">
+                            </div>
+                        </nav>
+                        <hr class="line_header" />
+                    </header>
+                    <div class="details_1">
+                        <p class="size_small">Contact number</p>
+                        <p class="size_small">Email address</p>
+                        <br />
+                        <p class="size_small">Address</p>
+                        <p class="size_small">Suburb</p>
+                        <p class="size_small">City</p>
+                        <p class="size_small">Postcode</p>
+                        <br />
+                        <p class="size_small">Fresh air system</p>
+                        <br />
+                    </div>
+                    <div class="details_2">
+                        <p id="cn" class="customer_detail"></p>
+                        <p id="ea" class="customer_detail"></p>
+                        <br />
+                        <p id="add" class="customer_detail"></p>
+                        <p id="sub" class="customer_detail"></p>
+                        <p id="ci" class="customer_detail"></p>
+                        <p id="pc" class="customer_detail"></p>
+                        <br />
+                        <p id="fa" class="customer_detail"></p>
+                    </div>
+                    <div class="comments">
+                        <p class="size_small">Customer Notes:</p>
+                        <p id="n" class="size_small"></p>
+                    </div>
+                    <div class="result">
+                        <button type="button" class="button_primary drop_button" onclick="openDropButton()"> Call&nbsp;result </button>
+                        <div id="callResultDropdown" class="drop_content">
+                            <li onclick="setConfirmed()"> Confirmed </li>
+                            <li onclick="setToBeConfirmed()"> To be confirmed </li>
+                            <li onclick="setCallBack()"> Call back later </li>
+                            <li onclick="setCallBack()"> Declined </li>
+                        </div>
+                        <br />
+                        <br />
+                        <label for="cbDate"> Call back on: </label>
+                        <input type="date" id="cbDate" value="2022-02-25">
+                    </div>
+                </form>
             </div>
         </main>
         <script src="app/js/script.js"></script>
