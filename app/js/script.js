@@ -2,32 +2,52 @@ let  data1= ["Anne Barron", "Frederick Botony", "Karrie Ferguson"];
 let  data2= ["Toby Mur", "Nocholous Lous", "Charlie Wort"];
 let  data3= ["Harry Burr", "Barry Stansfield", "Darren Buxley", "Harold Bertrum"];
 
+// Objects
 function Customer(id, name, cn, ea, add, sub, ci, pc, fa, n, a) {
-    id = id;
-    name = name;
-    contactNumber = cn;
-    email = ea;
-    address = add;
-    suburb = sub;
-    city = ci;
-    postCode = pc;
-    freshAir = fa;
-    notes = n;
-    action = a;
+    this.id = id;
+    this.name = name;
+    this.contactNumber = cn;
+    this.email = ea;
+    this.address = add;
+    this.suburb = sub;
+    this.city = ci;
+    this.postCode = pc;
+    this.freshAir = fa;
+    this.notes = n;
+    this.action = a;
+}
+
+function CallDate(id, customerId, date) {
+    this.id = id;
+    this.customerId = customerId;
+    this.date = date;
 }
 
 let customerData = [
-    ["Anne Barron", "028 459 2654", "anne@barron.co.nz", "4 Burwood rd", "Burwood", "Christchurch", "8067", "None", "", "callList"],
-    ["Frederick Botony", "027 449 3464", "fred@botony.co.nz", "6 Wincroft rd", "Riccarton", "Christchurch", "8065", "HRV Gen1", "", "callList"],
-    ["Karrie Ferguson", "021 659 9504", "karrie@furg.co.nz", "13 Oxycotin rd", "Burnside", "Christchurch", "8069", "None", "", "callList"],
-    ["Toby Mur", "021 184 4627", "toby@mur.co.nz", "8 Kin rd", "Burnsdie", "Christchurch", "8089", "None", "", "toBeconfirmed"],
-    ["Nocholous Lous", "021 387 6847", "nic@lous.co.nz", "102 Kindell rd", "Addington", "Christchurch", "8832", "None", "", "toBeconfirmed"],
-    ["Charlie Wort", "021 385 2901", "harlie@wort.co.nz", "56 Oxycotin rd", "Burnside", "Christchurch", "8324", "Unknown", "", "toBeconfirmed"],
-    ["Harry Burr", "021 938 3456", "harry@burr.co.nz", "56 Boycotte rd", "Fernside", "Christchurch", "8334", "DVS", "", "confirmed"],
-    ["Barry Stansfield", "021 485 6852", "barry@stans.co.nz", "56 Boycotte rd", "Fernside", "Christchurch", "8334", "DVS", "", "confirmed"],
-    ["Darren Buxley", "021 789 5214", "darren@bux.co.nz", "201 Foils rd", "Redwood", "Christchurch", "8324", "DVS", "Likes to get DVS serviced every 3 years", "confirmed"],
-    ["Harold Bertrum", "021 458 2564", "harold@burty.co.nz", "45 Berty rd", "Avonhead", "Christchurch", "8335", "None", "", "confirmed"]
+    new Customer(1, "Anne Barron", "028 459 2654", "anne@barron.co.nz", "4 Burwood rd", "Burwood", "Christchurch", "8067", "None", "", "callList"),
+    new Customer(2, "Frederick Botony", "027 449 3464", "fred@botony.co.nz", "6 Wincroft rd", "Riccarton", "Christchurch", "8065", "HRV Gen1", "", "callList"),
+    new Customer(3, "Karrie Ferguson", "021 659 9504", "karrie@furg.co.nz", "13 Oxycotin rd", "Burnside", "Christchurch", "8069", "None", "", "callList"),
+    new Customer(4, "Toby Mur", "021 184 4627", "toby@mur.co.nz", "8 Kin rd", "Burnsdie", "Christchurch", "8089", "None", "", "toBeconfirmed"),
+    new Customer(5, "Nocholous Lous", "021 387 6847", "nic@lous.co.nz", "102 Kindell rd", "Addington", "Christchurch", "8832", "None", "", "toBeconfirmed"),
+    new Customer(6, "Charlie Wort", "021 385 2901", "harlie@wort.co.nz", "56 Oxycotin rd", "Burnside", "Christchurch", "8324", "Unknown", "", "toBeconfirmed"),
+    new Customer(7, "Harry Burr", "021 938 3456", "harry@burr.co.nz", "56 Boycotte rd", "Fernside", "Christchurch", "8334", "DVS", "", "confirmed"),
+    new Customer(8, "Barry Stansfield", "021 485 6852", "barry@stans.co.nz", "56 Boycotte rd", "Fernside", "Christchurch", "8334", "DVS", "", "confirmed"),
+    new Customer(9, "Darren Buxley", "021 789 5214", "darren@bux.co.nz", "201 Foils rd", "Redwood", "Christchurch", "8324", "DVS", "Likes to get DVS serviced every 3 years", "confirmed"),
+    new Customer(10, "Harold Bertrum", "021 458 2564", "harold@burty.co.nz", "45 Berty rd", "Avonhead", "Christchurch", "8335", "None", "", "confirmed")
 ];
+
+let callData = [
+    new CallDate(1, 1, "2022-02-02"),
+    new CallDate(1, 2, "2022-02-04"),
+    new CallDate(1, 3, "2022-02-05"),
+    new CallDate(1, 4, "2022-02-07"),
+    new CallDate(1, 5, "2022-02-09"),
+    new CallDate(1, 6, "2022-02-11"),
+    new CallDate(1, 7, "2022-02-012"),
+    new CallDate(1, 8, "2022-02-12"),
+    new CallDate(1, 9, "2022-02-21"),
+    new CallDate(1, 10, "2022-02-22")
+]
 
 let callList = document.getElementById("callList");
 let toBeConfirmed = document.getElementById("toBeConfirmed");
@@ -52,15 +72,15 @@ function setList(list, data) {
 
 function openCustomerForm(name) {
     let customerDetails = findCustomer(name);
-    document.getElementById("name").innerHTML = name;
-    document.getElementById("cn").innerHTML = customerDetails[1];
-    document.getElementById("ea").innerHTML = customerDetails[2];
-    document.getElementById("add").innerHTML = customerDetails[3];
-    document.getElementById("sub").innerHTML = customerDetails[4];
-    document.getElementById("ci").innerHTML = customerDetails[5];
-    document.getElementById("pc").innerHTML = customerDetails[6];
-    document.getElementById("fa").innerHTML = customerDetails[7];
-    document.getElementById("n").innerHTML = customerDetails[8];
+    document.getElementById("name").innerHTML = customerDetails.name;
+    document.getElementById("cn").innerHTML = customerDetails.contactNumber;
+    document.getElementById("ea").innerHTML = customerDetails.email;
+    document.getElementById("add").innerHTML = customerDetails.address;
+    document.getElementById("sub").innerHTML = customerDetails.suburb;
+    document.getElementById("ci").innerHTML = customerDetails.city;
+    document.getElementById("pc").innerHTML = customerDetails.postCode;
+    document.getElementById("fa").innerHTML = customerDetails.freshAir;
+    document.getElementById("n").innerHTML = customerDetails.notes;
     document.getElementById("customerPopup").style.display = "block";
 }
 
@@ -70,7 +90,7 @@ function closeCustomerForm() {
 
 function findCustomer(name) {
     for (var i=0; i < customerData.length; i++) {
-        if (customerData[i][0] == name) {
+        if (customerData[i].name == name) {
             return customerData[i];
         }
     }
