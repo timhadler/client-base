@@ -246,7 +246,6 @@ main {
       grid-template-columns: 50px repeat(2, minmax(100px, 250px)) minmax(100px, 190px) 50px;
   grid-auto-rows: -webkit-min-content;
   grid-auto-rows: min-content;
-      grid-template-areas: ". a a a ." ". c d e ." ". f f . .";
   min-height: 476px;
   min-width: 345px;
   padding: 10px;
@@ -254,36 +253,46 @@ main {
   border: 1px solid #009AAF;
 }
 
+.form-container-details {
+      grid-template-areas: ". a a a ." ". b c d ." ". e e . .";
+}
+
+.form-container-add {
+      grid-template-areas: ". a a ." ". b c ." ". b c .";
+}
+
 .form-container header {
   -ms-grid-row: 1;
   -ms-grid-column: 2;
-  -ms-grid-column-span: 3;
+  -ms-grid-column-span: 2;
   grid-area: a;
 }
 
 .details_1 {
   -ms-grid-row: 2;
+  -ms-grid-row-span: 2;
   -ms-grid-column: 2;
-  grid-area: c;
+  grid-area: b;
 }
 
 .details_2 {
   -ms-grid-row: 2;
+  -ms-grid-row-span: 2;
   -ms-grid-column: 3;
-  grid-area: d;
+  grid-area: c;
 }
 
 .result {
   -ms-grid-row: 2;
   -ms-grid-column: 4;
-  grid-area: e;
+  grid-area: d;
 }
 
 .comments {
   -ms-grid-row: 3;
   -ms-grid-column: 2;
   -ms-grid-column-span: 2;
-  grid-area: f;
+  grid-area: e;
 }
 
 .close_form {

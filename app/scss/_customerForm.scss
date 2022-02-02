@@ -12,15 +12,25 @@
     display: grid;
     grid-template-columns: 50px repeat(2, minmax(100px, 250px)) minmax(100px, 190px)  50px;
     grid-auto-rows: min-content;
-    grid-template-areas:
-      ". a a a ."
-      ". c d e ."
-      ". f f . .";
     min-height: 476px;
     min-width: 345px;
     padding: 10px;
     background-color: white;
     border: 1px solid $primary;
+
+    &-details {
+        grid-template-areas:
+        ". a a a ."
+        ". b c d ."
+        ". e e . .";
+    }
+
+    &-add {
+        grid-template-areas :
+        ". a a ."
+        ". b c ."
+        ". b c .";
+    }
 }
 
 .form-container header {
@@ -28,19 +38,19 @@
 }
 
 .details_1 {
-    grid-area: c;
+    grid-area: b;
 }
 
 .details_2 {
-    grid-area: d;
+    grid-area: c;
 }
 
 .result {
-    grid-area: e;
+    grid-area: d;
 }
 
 .comments {
-    grid-area: f;
+    grid-area: e;
 }
 
 .close_form {

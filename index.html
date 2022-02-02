@@ -30,7 +30,7 @@
             <hr class="line_header"/>
             
             <div class="grid_column_1 flex flex-ai-c flex-jc-sb margin_bottom_medium">
-                <button type="button" class="button_primary"> Add&nbsp;Customer </button>
+                <button type="button" class="button_primary" onclick="addCustomerForm()"> Add&nbsp;Customer </button>
                 <form>
                     <input type="text" class="search_bar" autoComplete="off" placeholder=" Search..." />
                 </form>
@@ -59,7 +59,7 @@
             </div>
 
             <div class="form-popup" id="customerPopup">
-                <form action="" class="form-container">
+                <form class="form-container form-container-details">
                     <header>
                         <nav class="flex flex-jc-sb flex-ai-c">
                             <p id="name" class="size_medium color_primary"></p>
@@ -109,6 +109,44 @@
                         <br />
                         <label for="cbDate"> Call back on: </label>
                         <input type="date" id="cbDate" value="2022-02-25">
+                    </div>
+                </form>
+            </div>
+            <div class="form-popup" id="addCustomerForm">
+                <form class="form-container form-container-add">
+                    <header>
+                        <nav class="flex flex-jc-sb flex-ai-c">
+                            <p class="size_medium color_primary"> Add Customer </p>
+                            <div class="flex flex-ai-c">
+                                <span class="close_form" onClick="closeAddForm()">
+                            </div>
+                        </nav>
+                        <hr class="line_header" />
+                    </header>
+                    <div class="details_1">
+                        <label for="customerName"> Customer name: </label> <br />
+                        <input type="text" id="customerName"> <br />
+                        <label for="contactNumber"> Contact number: </label> <br />
+                        <input type="text" id="contactNumber"> <br />
+                        <label for="address"> Address: </label> <br />
+                        <input type="text" id="address"> <br />
+                        <label for="suburb"> Suburb: </label> <br />
+                        <input type="text" id="suburb"> <br />
+                        <label for="city"> City: </label> <br />
+                        <input type="text" id="city"> <br />
+                        <label for="postCode"> Postcode: </label> <br />
+                        <input type="text" id="postCode">
+                    </div>
+                    <div class="details_2">
+                        <p> Fresh air system: </p>
+                        <input type="radio" id="Gen1" name="freshAir" value="GEN1">
+                        <label for="Gen1"> HRV Gen 1: </label> <br />
+                        <input type="radio" id="Gen2" name="freshAir" value="GEN2">
+                        <label for="Gen2"> HRV Gen 2: </label> <br />
+                        <input type="radio" id="dvs name="freshAir" value="DVS">
+                        <label for="dvs"> DVS: </label> <br />
+                        <input type="radio" id="unknown" name="freshAir" value="UNKNOWN"> 
+                        <label for="unknown"> Unknown: </label> <br />
                     </div>
                 </form>
             </div>

@@ -19,6 +19,7 @@ function CallDate(id, customerId, date) {
     this.id = id;
     this.customerId = customerId;
     this.date = date;
+    // Methods for changing date to next year etc
 }
 
 // Customer data for proof-of-concept
@@ -61,6 +62,7 @@ function setLists() {
     var confirmed = document.getElementById("confirmed");
 
     // Clear HTML and js lists
+    // instead of reforming list everytime search list childs for specific customers to delete and add
     clearList(callList);
     clearList(toBeConfirmed);
     clearList(confirmed);
@@ -88,7 +90,7 @@ function setLists() {
     }
 }
 
-// creats and appends customer list item to a given list
+// creates and appends customer list item to a given list
 function addCustomerToList(list, customer) {
     let li = document.createElement("li");
     li.innerHTML = customer.name;
@@ -117,8 +119,16 @@ function openCustomerForm(customer) {
     document.getElementById("customerPopup").style.display = "block";
 }
 
+function addCustomerForm() {
+    document.getElementById("addCustomerForm").style.display = "block";
+}
+
 function closeCustomerForm() {
     document.getElementById("customerPopup").style.display = "none";
+}
+
+function closeAddForm() {
+    document.getElementById("addCustomerForm").style.display = "none";
 }
 
 // Finds a customer with a given property
