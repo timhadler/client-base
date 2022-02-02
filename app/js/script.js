@@ -38,16 +38,16 @@ let customerData = [
 ];
 
 let callData = [
-    new CallDate(1, 1, "2022-02-02"),
-    new CallDate(8, 8, "2022-02-12"),
-    new CallDate(3, 3, "2022-02-05"),
-    new CallDate(4, 4, "2022-02-07"),
-    new CallDate(5, 5, "2022-02-09"),
-    new CallDate(10, 10, "2022-02-22"),
-    new CallDate(6, 6, "2022-02-11"),
-    new CallDate(7, 7, "2022-02-12"),
-    new CallDate(9, 9, "2022-02-21"),
-    new CallDate(2, 2, "2022-02-04")
+    new CallDate(1, 1, new Date("2022-02-02")),
+    new CallDate(8, 8, new Date("2022-02-12")),
+    new CallDate(3, 3, new Date("2022-03-05")),
+    new CallDate(4, 4, new Date("2022-02-07")),
+    new CallDate(5, 5, new Date("2022-02-09")),
+    new CallDate(10, 10, new Date("2022-02-22")),
+    new CallDate(6, 6, new Date("2022-02-11")),
+    new CallDate(7, 7, new Date("2022-02-12")),
+    new CallDate(9, 9, new Date("2022-02-21")),
+    new CallDate(2, 2, new Date("2022-02-04"))
 ];
 
 // setting up html lists
@@ -77,10 +77,17 @@ function setLists() {
 
     // Set callBack list sorted by call back date
     // Customers with multiple call back dates will appear in list mutiple times
+    let month = "";
     callData.sort((a,b) => (a.date > b.date) ? 1 : -1);
     for (let i = 0; i < callData.length; i++) {
         let call = callData[i];
         let customer = findCustomer("id", call.customerId);
+
+        if (getMonthText(call.date.getMonth()) != month) {
+            month = getMonthText(call.date.getMonth());
+            addCustomerToList(callList, month);
+            console.log(month);
+        }
         if (customer.action == "callList") {
             addCustomerToList(callList, customer);
         }
@@ -90,8 +97,14 @@ function setLists() {
 // creates and appends customer list item to a given list
 function addCustomerToList(list, customer) {
     let li = document.createElement("li");
-    li.innerHTML = customer.name;
-    li.addEventListener('click', function() { openCustomerForm(customer); });
+
+    if (typeof customer == "string") {
+        li.innerHTML = customer;
+        li.classList.add("date_divider");
+    } else {
+        li.innerHTML = customer.name;
+        li.addEventListener('click', function() { openCustomerForm(customer); });
+    }
     list.appendChild(li);
 }
 
@@ -100,6 +113,51 @@ function clearList(list) {
     while (list.firstChild) {
         list.removeChild(list.firstChild);
     }
+}
+
+// Find the month from date.getMonth
+// date.getMonth starts indexing at 0
+function getMonthText(i) {
+    var month;
+    switch (i) {
+        case 0:
+            month = "January";
+            break;
+        case 1:
+            month = "February";
+            break;
+        case 2:
+            month = "March";
+            break;
+        case 3:
+            month = "April";
+            break;
+        case 4:
+            month = "May";
+            break;
+        case 5:
+            month = "June";
+            break;
+        case 6:
+            month = "July";
+            break;
+        case 7:
+            month = "August";
+            break;
+        case 8:
+            month = "Septemeber";
+            break;
+        case 9:
+            month = "October";
+            break;
+        case 10:
+            month = "November";
+            break;
+        case 11:
+            month = "December";
+            break;
+    }
+    return month;
 }
 
 // Customer popup form
