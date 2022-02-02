@@ -49,9 +49,6 @@ let callData = [
     new CallDate(9, 9, "2022-02-21"),
     new CallDate(2, 2, "2022-02-04")
 ];
-let date = new Date("2022-02-04");
-console.log(callData.sort((a,b) => (a.date > b.date) ? 1 : -1));
-
 
 // setting up html lists
 setLists();

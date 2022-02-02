@@ -55,10 +55,22 @@ input, label {
           justify-content: center;
 }
 
+.flex-jc-r {
+  -webkit-box-pack: right;
+      -ms-flex-pack: right;
+          justify-content: right;
+}
+
 .flex-ai-c {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.flex-ai-b {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: end;
 }
 
 .size_large {
@@ -164,8 +176,8 @@ button {
   font-size: 24px;
   border-radius: 8px;
   height: 35px;
-  min-width: 200px;
   margin-right: 15px;
+  margin-left: 25px;
 }
 
 .grid_column_1 {
@@ -242,29 +254,30 @@ main {
 .form-container {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 50px (minmax(100px, 250px))[2] minmax(100px, 190px) 50px;
-      grid-template-columns: 50px repeat(2, minmax(100px, 250px)) minmax(100px, 190px) 50px;
   grid-auto-rows: -webkit-min-content;
   grid-auto-rows: min-content;
   min-height: 476px;
-  min-width: 345px;
   padding: 10px;
   background-color: white;
   border: 1px solid #009AAF;
 }
 
 .form-container-details {
+  -ms-grid-columns: 50px (minmax(150px, 300px))[2] minmax(100px, 190px) 50px;
+      grid-template-columns: 50px repeat(2, minmax(150px, 300px)) minmax(100px, 190px) 50px;
       grid-template-areas: ". a a a ." ". b c d ." ". e e . .";
 }
 
 .form-container-add {
-      grid-template-areas: ". a a ." ". b c ." ". b c .";
+  -ms-grid-columns: 50px 300px 200px 250px  50px;
+      grid-template-columns: 50px 300px 200px 250px  50px;
+      grid-template-areas: ". a a a ." ". b c e ." ". b c d .";
 }
 
 .form-container header {
   -ms-grid-row: 1;
   -ms-grid-column: 2;
-  -ms-grid-column-span: 2;
+  -ms-grid-column-span: 3;
   grid-area: a;
 }
 
@@ -283,16 +296,46 @@ main {
 }
 
 .result {
-  -ms-grid-row: 2;
+  -ms-grid-row: 3;
   -ms-grid-column: 4;
   grid-area: d;
 }
 
 .comments {
-  -ms-grid-row: 3;
-  -ms-grid-column: 2;
-  -ms-grid-column-span: 2;
+  -ms-grid-row: 2;
+  -ms-grid-column: 4;
   grid-area: e;
+}
+
+.add_col_1 {
+  -ms-grid-row: 2;
+  -ms-grid-row-span: 2;
+  -ms-grid-column: 2;
+  grid-area: b;
+}
+
+.add_col_2 {
+  -ms-grid-row: 2;
+  -ms-grid-row-span: 2;
+  -ms-grid-column: 3;
+  grid-area: c;
+}
+
+.add_comments {
+  -ms-grid-row: 2;
+  -ms-grid-column: 4;
+  grid-area: e;
+}
+
+.add_button {
+  -ms-grid-row: 3;
+  -ms-grid-column: 4;
+  grid-area: d;
+}
+
+.form_comments {
+  width: 250px;
+  height: 100px;
 }
 
 .close_form {
@@ -301,6 +344,10 @@ main {
   border-top: 6px solid red;
   margin-left: 10px;
   cursor: pointer;
+}
+
+.add_col_1 input {
+  width: 220px;
 }
 
 .form-container button {

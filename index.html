@@ -29,7 +29,7 @@
             </header>
             <hr class="line_header"/>
             
-            <div class="grid_column_1 flex flex-ai-c flex-jc-sb margin_bottom_medium">
+            <div class="grid_column_1 flex flex-ai-c margin_bottom_medium">
                 <button type="button" class="button_primary" onclick="addCustomerForm()"> Add&nbsp;Customer </button>
                 <form>
                     <input type="text" class="search_bar" autoComplete="off" placeholder=" Search..." />
@@ -123,7 +123,7 @@
                         </nav>
                         <hr class="line_header" />
                     </header>
-                    <div class="details_1">
+                    <div class="add_col_1">
                         <label for="customerName"> Customer name: </label> <br />
                         <input type="text" id="customerName"> <br />
                         <label for="contactNumber"> Contact number: </label> <br />
@@ -137,16 +137,34 @@
                         <label for="postCode"> Postcode: </label> <br />
                         <input type="text" id="postCode">
                     </div>
-                    <div class="details_2">
+                    <div class="add_col_2">
                         <p> Fresh air system: </p>
                         <input type="radio" id="Gen1" name="freshAir" value="GEN1">
                         <label for="Gen1"> HRV Gen 1: </label> <br />
                         <input type="radio" id="Gen2" name="freshAir" value="GEN2">
                         <label for="Gen2"> HRV Gen 2: </label> <br />
-                        <input type="radio" id="dvs name="freshAir" value="DVS">
+                        <input type="radio" id="dvs" name="freshAir" value="DVS">
                         <label for="dvs"> DVS: </label> <br />
                         <input type="radio" id="unknown" name="freshAir" value="UNKNOWN"> 
                         <label for="unknown"> Unknown: </label> <br />
+                        <br />
+                        <p> Status: </p>
+                        <input type="radio" id="callBackRadio" name="status" value="CALLBACK">
+                        <label for="callBackRadio"> Call back later </label> <br />
+                        <input type="radio" id="toBeConfirmedRadio" name="status" value="TOBECONFIRMED">
+                        <label for="toBeConfirmedRadio"> To be confrimed </label> <br />
+                        <input type="radio" id="confirmedRadio" name="status" value="CONFIRMED">
+                        <label for="confirmedRadio"> Confirmed </label> <br/>
+                        <br />
+                        <label for="AddDate"> Call back on: </label>
+                        <input type="date" id="AddDate">
+                    </div>
+                    <div class="add_comments">
+                        <label for="comments"> Comments: </label> <br />
+                        <input type="text" id="comments" class="form_comments">
+                    </div>
+                    <div class="add_button flex flex-jc-r flex-ai-b">
+                        <button type="button" class="button_primary"> Submit </button>
                     </div>
                 </form>
             </div>

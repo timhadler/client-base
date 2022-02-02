@@ -10,15 +10,14 @@
 /* Add styles to the form container */
 .form-container {
     display: grid;
-    grid-template-columns: 50px repeat(2, minmax(100px, 250px)) minmax(100px, 190px)  50px;
     grid-auto-rows: min-content;
     min-height: 476px;
-    min-width: 345px;
     padding: 10px;
     background-color: white;
     border: 1px solid $primary;
 
     &-details {
+        grid-template-columns: 50px repeat(2, minmax(150px, 300px)) minmax(100px, 190px)  50px;
         grid-template-areas:
         ". a a a ."
         ". b c d ."
@@ -26,10 +25,11 @@
     }
 
     &-add {
+        grid-template-columns: 50px 300px 200px 250px  50px;
         grid-template-areas :
-        ". a a ."
-        ". b c ."
-        ". b c .";
+        ". a a a ."
+        ". b c e ."
+        ". b c d .";
     }
 }
 
@@ -37,6 +37,7 @@
     grid-area: a;
 }
 
+// Details form
 .details_1 {
     grid-area: b;
 }
@@ -53,12 +54,38 @@
     grid-area: e;
 }
 
+// Add customer form
+.add_col_1 {
+    grid-area: b;
+}
+
+.add_col_2 {
+    grid-area: c;
+}
+
+.add_comments {
+    grid-area: e;
+}
+
+.add_button {
+    grid-area: d;
+}
+
+.form_comments {
+    width: 250px;
+    height: 100px;
+}
+
 .close_form {
     display: block;
     width: 30px;
     border-top: 6px solid red;
     margin-left: 10px;
     cursor: pointer;
+}
+
+.add_col_1 input {
+    width: 220px;
 }
 
 .form-container button {
