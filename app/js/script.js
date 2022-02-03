@@ -83,11 +83,12 @@ function setLists() {
         let call = callData[i];
         let customer = findCustomer("id", call.customerId);
 
-        if (getMonthText(call.date.getMonth()) != month) {
-            month = getMonthText(call.date.getMonth());
-            addCustomerToList(callList, call.date);
-        }
+        // If customer action is call back later, add them to call list
         if (customer.action == "callList") {
+            if (getMonthText(call.date.getMonth()) != month) {
+                month = getMonthText(call.date.getMonth());
+                addCustomerToList(callList, call.date);
+            }
             addCustomerToList(callList, customer);
         }
     }
