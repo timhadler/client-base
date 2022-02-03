@@ -182,6 +182,7 @@ function openCustomerForm(customer) {
 
 function addCustomerForm() {
     document.getElementById("addCustomerForm").style.display = "block";
+    document.getElementById("comments").value = "";
 }
 
 function closeCustomerForm() {

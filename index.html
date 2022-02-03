@@ -113,7 +113,7 @@
                 </form>
             </div>
             <div class="form-popup" id="addCustomerForm">
-                <form class="form-container form-container-add">
+                <form class="form-container form-container-add" id="addFormID">
                     <header>
                         <nav class="flex flex-jc-sb flex-ai-c">
                             <p class="size_medium color_primary"> Add Customer </p>
@@ -161,7 +161,7 @@
                     </div>
                     <div class="add_comments">
                         <label for="comments"> Comments: </label> <br />
-                        <input type="text" id="comments" class="form_comments">
+                        <textarea class="form_comments" id=comments form="addFormID" cols="33" rows="6"> </textarea>
                     </div>
                     <div class="add_button flex flex-jc-r flex-ai-b">
                         <button type="button" class="button_primary"> Submit </button>
