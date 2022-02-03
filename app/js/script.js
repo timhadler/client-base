@@ -85,8 +85,7 @@ function setLists() {
 
         if (getMonthText(call.date.getMonth()) != month) {
             month = getMonthText(call.date.getMonth());
-            addCustomerToList(callList, month);
-            console.log(month);
+            addCustomerToList(callList, call.date);
         }
         if (customer.action == "callList") {
             addCustomerToList(callList, customer);
@@ -94,16 +93,16 @@ function setLists() {
     }
 }
 
-// creates and appends customer list item to a given list
-function addCustomerToList(list, customer) {
+// creates and appends an item to an HTML list
+function addCustomerToList(list, data) {
     let li = document.createElement("li");
 
-    if (typeof customer == "string") {
-        li.innerHTML = customer;
+    if (data instanceof Date) {
+        li.innerHTML = getMonthText(data.getMonth()) + " 20" + getYearText(data.getYear());
         li.classList.add("date_divider");
     } else {
-        li.innerHTML = customer.name;
-        li.addEventListener('click', function() { openCustomerForm(customer); });
+        li.innerHTML = data.name;
+        li.addEventListener('click', function() { openCustomerForm(data); });
     }
     list.appendChild(li);
 }
@@ -158,6 +157,12 @@ function getMonthText(i) {
             break;
     }
     return month;
+}
+
+// Get the str year from date.getYear()
+// Years >= 2000 are represented add 100 eg 2022 > 122
+function getYearText(i) {
+    return i - 100;
 }
 
 // Customer popup form
