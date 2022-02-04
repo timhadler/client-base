@@ -182,7 +182,25 @@ function openCustomerForm(customer) {
 
 function addCustomerForm() {
     document.getElementById("addCustomerForm").style.display = "block";
+    // Reset all input fields
+    document.getElementById("customerName").value = "";
+    document.getElementById("contactNumber").value = "";
+    document.getElementById("address").value = "";
+    document.getElementById("suburb").value = "";
+    document.getElementById("city").value = "";
+    document.getElementById("postCode").value = "";
     document.getElementById("comments").value = "";
+    document.getElementById("addDate").value = "";
+
+    // Radio inputs
+    let e = document.getElementsByName("freshAir");
+    for (var i = 0; i < e.length; i++) {
+        e[i].checked = false;
+    }
+    e = document.getElementsByName("status");
+    for (var i = 0; i < e.length; i++) {
+        e[i].checked = false;
+    }
 }
 
 function closeCustomerForm() {
