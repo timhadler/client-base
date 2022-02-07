@@ -108,7 +108,7 @@
                         <br />
                         <br />
                         <label for="cbDate"> Call back on: </label>
-                        <input type="date" id="cbDate" value="2022-02-25">
+                        <input type="date" id="cbDate">
                     </div>
                 </form>
             </div>
@@ -128,6 +128,8 @@
                         <input type="text" id="customerName"> <br />
                         <label for="contactNumber"> Contact number: </label> <br />
                         <input type="text" id="contactNumber"> <br />
+                        <label for="emailAddress"> Email address: </label> <br />
+                        <input type="text" id="emailAddress"> <br />
                         <label for="address"> Address: </label> <br />
                         <input type="text" id="address"> <br />
                         <label for="suburb"> Suburb: </label> <br />
@@ -164,7 +166,7 @@
                         <textarea class="form_comments" id=comments form="addFormID" cols="33" rows="6"> </textarea>
                     </div>
                     <div class="add_button flex flex-jc-r flex-ai-b">
-                        <button type="button" class="button_primary"> Submit </button>
+                        <button type="button" class="button_primary" onclick="addCustomer()"> Submit </button>
                     </div>
                 </form>
             </div>

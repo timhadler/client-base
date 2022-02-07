@@ -20,6 +20,7 @@ function CallDate(id, customerId, date) {
     this.customerId = customerId;
     this.date = date;
     // Methods for changing date to next year etc
+    // Get striong formats, define own date object
 }
 
 // Customer data for proof-of-concept
@@ -177,7 +178,9 @@ function openCustomerForm(customer) {
     document.getElementById("pc").innerHTML = customer.postCode;
     document.getElementById("fa").innerHTML = customer.freshAir;
     document.getElementById("n").innerHTML = customer.notes;
+    //document.getElementById("cbDate").value = findCallDate(customer.id);
     document.getElementById("customerPopup").style.display = "block";
+    console.log(findCallDate(customer.id));
 }
 
 function addCustomerForm() {
@@ -185,6 +188,7 @@ function addCustomerForm() {
     // Reset all input fields
     document.getElementById("customerName").value = "";
     document.getElementById("contactNumber").value = "";
+    document.getElementById("emailAddress").value = "";
     document.getElementById("address").value = "";
     document.getElementById("suburb").value = "";
     document.getElementById("city").value = "";
@@ -211,6 +215,36 @@ function closeAddForm() {
     document.getElementById("addCustomerForm").style.display = "none";
 }
 
+// Creates a new customer and call date for the customer
+function addCustomer() {
+    let radio = document.getElementsByName("freshAir");
+    for (let i = 0; i < radio.length; i++) {
+        if (radio[i].checked) {
+            radio = radio[i];
+            break;
+        }
+    }
+    var customer = new Customer( customerData.length + 1,
+                                 document.getElementById("customerName").value, 
+                                 document.getElementById("contactNumber").value,
+                                 document.getElementById("emailAddress").value,
+                                 document.getElementById("address").value,
+                                 document.getElementById("suburb").value, 
+                                 document.getElementById("city").value,
+                                 document.getElementById("postCode").value,
+                                 radio.value,
+                                 document.getElementById("comments").value,
+                                 "callList"
+    );
+    //console.log(customer);
+    customerData.push(customer);
+
+    callData.push(new CallDate(callData.length + 1, customerData.length, new Date(document.getElementById("addDate").value)));
+    //console.log(document.getElementById("addDate").value);
+    //console.log(callData);
+    setLists();
+}
+
 // Finds a customer with a given property
 function findCustomer(property, value) {
     if (property == "name") {
@@ -228,6 +262,18 @@ function findCustomer(property, value) {
     } else {
         console.log("Invalid property search");
     }
+}
+
+// Finds callDate from customer id
+function findCallDate(customerID) {
+    for (let i = 0; i < callData.length; i++) {
+        if (callData[i].customerId == customerID) {
+            let date = callData[i].date;
+            let str = date.getYear() + " " + date.getMonth() + " " + date.getDay();
+            return str;
+        }
+    }
+    return 1;
 }
 
 // Dropbox button for call result
