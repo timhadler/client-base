@@ -21,6 +21,12 @@ function CallDate(id, customerId, date) {
     this.date = date;
     // Methods for changing date to next year etc
     // Get striong formats, define own date object
+    this.getMonthInt = function() {
+        return this.date.slice(5, 7);
+    }
+    this.getYearInt = function() {
+        return this.date.slice(8, 10);
+    }
 }
 
 // Customer data for proof-of-concept
@@ -39,16 +45,16 @@ let customerData = [
 ];
 
 let callData = [
-    new CallDate(1, 1, new Date("2022-02-02")),
-    new CallDate(8, 8, new Date("2022-02-12")),
-    new CallDate(3, 3, new Date("2022-03-05")),
-    new CallDate(4, 4, new Date("2022-02-07")),
-    new CallDate(5, 5, new Date("2022-02-09")),
-    new CallDate(10, 10, new Date("2022-02-22")),
-    new CallDate(6, 6, new Date("2022-02-11")),
-    new CallDate(7, 7, new Date("2022-02-12")),
-    new CallDate(9, 9, new Date("2022-02-21")),
-    new CallDate(2, 2, new Date("2022-02-04"))
+    new CallDate(1, 1, "2022-02-02"),
+    new CallDate(8, 8, "2022-02-12"),
+    new CallDate(3, 3, "2022-03-05"),
+    new CallDate(4, 4, "2022-02-07"),
+    new CallDate(5, 5, "2022-02-09"),
+    new CallDate(10, 10, "2022-02-22"),
+    new CallDate(6, 6, "2022-02-11"),
+    new CallDate(7, 7, "2022-02-12"),
+    new CallDate(9, 9, "2022-02-21"),
+    new CallDate(2, 2, "2022-02-04")
 ];
 
 // setting up html lists
@@ -80,15 +86,16 @@ function setLists() {
     // Customers with multiple call back dates will appear in list mutiple times
     let month = "";
     callData.sort((a,b) => (a.date > b.date) ? 1 : -1);
+    //console.log(callData);
     for (let i = 0; i < callData.length; i++) {
         let call = callData[i];
         let customer = findCustomer("id", call.customerId);
 
         // If customer action is call back later, add them to call list
         if (customer.action == "callList") {
-            if (getMonthText(call.date.getMonth()) != month) {
-                month = getMonthText(call.date.getMonth());
-                addCustomerToList(callList, call.date);
+            if (call.getMonthInt() != month) {
+                month = call.getMonthInt();
+                addCustomerToList(callList, month);
             }
             addCustomerToList(callList, customer);
         }
@@ -99,12 +106,12 @@ function setLists() {
 function addCustomerToList(list, data) {
     let li = document.createElement("li");
 
-    if (data instanceof Date) {
-        li.innerHTML = getMonthText(data.getMonth()) + " 20" + getYearText(data.getYear());
-        li.classList.add("date_divider");
-    } else {
+    if (data instanceof Customer) {
         li.innerHTML = data.name;
         li.addEventListener('click', function() { openCustomerForm(data); });
+    } else {
+        li.innerHTML = getMonthText(parseInt(data));
+        li.classList.add("date_divider");
     }
     list.appendChild(li);
 }
@@ -117,54 +124,47 @@ function clearList(list) {
 }
 
 // Find the month from date.getMonth
-// date.getMonth starts indexing at 0
 function getMonthText(i) {
     var month;
     switch (i) {
-        case 0:
+        case 1:
             month = "January";
             break;
-        case 1:
+        case 2:
             month = "February";
             break;
-        case 2:
+        case 3:
             month = "March";
             break;
-        case 3:
+        case 4:
             month = "April";
             break;
-        case 4:
+        case 5:
             month = "May";
             break;
-        case 5:
+        case 6:
             month = "June";
             break;
-        case 6:
+        case 7:
             month = "July";
             break;
-        case 7:
+        case 8:
             month = "August";
             break;
-        case 8:
+        case 9:
             month = "Septemeber";
             break;
-        case 9:
+        case 10:
             month = "October";
             break;
-        case 10:
+        case 11:
             month = "November";
             break;
-        case 11:
+        case 12:
             month = "December";
             break;
     }
     return month;
-}
-
-// Get the str year from date.getYear()
-// Years >= 2000 are represented add 100 eg 2022 > 122
-function getYearText(i) {
-    return i - 100;
 }
 
 // Customer popup form
@@ -178,9 +178,8 @@ function openCustomerForm(customer) {
     document.getElementById("pc").innerHTML = customer.postCode;
     document.getElementById("fa").innerHTML = customer.freshAir;
     document.getElementById("n").innerHTML = customer.notes;
-    //document.getElementById("cbDate").value = findCallDate(customer.id);
+    document.getElementById("cbDate").value = findCallDate(customer.id);
     document.getElementById("customerPopup").style.display = "block";
-    console.log(findCallDate(customer.id));
 }
 
 function addCustomerForm() {
@@ -217,10 +216,18 @@ function closeAddForm() {
 
 // Creates a new customer and call date for the customer
 function addCustomer() {
-    let radio = document.getElementsByName("freshAir");
-    for (let i = 0; i < radio.length; i++) {
-        if (radio[i].checked) {
-            radio = radio[i];
+    // Put this into function
+    let radio1 = document.getElementsByName("freshAir");
+    for (let i = 0; i < radio1.length; i++) {
+        if (radio1[i].checked) {
+            radio1 = radio1[i];
+            break;
+        }
+    }
+    let radio2 = document.getElementsByName("status");
+    for (i = 0; i < radio2.length; i++) {
+        if (radio2[i].checked) {
+            radio2 = radio2[i];
             break;
         }
     }
@@ -232,14 +239,14 @@ function addCustomer() {
                                  document.getElementById("suburb").value, 
                                  document.getElementById("city").value,
                                  document.getElementById("postCode").value,
-                                 radio.value,
+                                 radio1.value,
                                  document.getElementById("comments").value,
-                                 "callList"
+                                 radio2.value
     );
     //console.log(customer);
     customerData.push(customer);
 
-    callData.push(new CallDate(callData.length + 1, customerData.length, new Date(document.getElementById("addDate").value)));
+    callData.push(new CallDate(callData.length + 1, customerData.length, document.getElementById("addDate").value));
     //console.log(document.getElementById("addDate").value);
     //console.log(callData);
     setLists();
@@ -268,9 +275,7 @@ function findCustomer(property, value) {
 function findCallDate(customerID) {
     for (let i = 0; i < callData.length; i++) {
         if (callData[i].customerId == customerID) {
-            let date = callData[i].date;
-            let str = date.getYear() + " " + date.getMonth() + " " + date.getDay();
-            return str;
+            return callData[i].date;
         }
     }
     return 1;
