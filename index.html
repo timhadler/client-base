@@ -65,7 +65,7 @@
                             <p id="name" class="size_medium color_primary"></p>
                             <div class="flex flex-ai-c">
                                 <button type="button" id="editCustomerButton" class="button_secondary"> Edit </button>
-                                <span class="close_form" onClick="closeCustomerForm()">
+                                <span id="closeCustomerFormButton" class="close_form">
                             </div>
                         </nav>
                         <hr class="line_header" />
@@ -98,12 +98,12 @@
                         <p id="n" class="size_small"></p>
                     </div>
                     <div class="result">
-                        <button type="button" class="button_primary drop_button" onclick="openDropButton()"> Call&nbsp;result </button>
+                        <button id="customerDropButton" type="button" class="button_primary drop_button"> Call&nbsp;result </button>
                         <div id="callResultDropdown" class="drop_content">
-                            <li onclick="setConfirmed()"> Confirmed </li>
-                            <li onclick="setToBeConfirmed()"> To be confirmed </li>
-                            <li onclick="setCallBack()"> Call back later </li>
-                            <li onclick="setCallBack()"> Declined </li>
+                            <li id="setConfirmedButton"> Confirmed </li>
+                            <li id="setToBeConfirmedButton"> To be confirmed </li>
+                            <li id="setCallBackLaterButton"> Call back later </li>
+                            <li id="setDeclinedButton"> Declined </li>
                         </div>
                         <br />
                         <br />
@@ -118,7 +118,7 @@
                         <nav class="flex flex-jc-sb flex-ai-c">
                             <p class="size_medium color_primary"> Add Customer </p>
                             <div class="flex flex-ai-c">
-                                <span class="close_form" onClick="closeAddForm()">
+                                <span id="closeAddFormButton" class="close_form">
                             </div>
                         </nav>
                         <hr class="line_header" />
@@ -168,11 +168,11 @@
                         <textarea class="form_comments" id=comments form="addFormID" cols="33" rows="6"> </textarea>
                     </div>
                     <div class="add_button flex flex-jc-r flex-ai-b">
-                        <button type="button" class="button_primary" onclick="addCustomer()"> Submit </button>
+                        <button id="submitCustomerButton" type="button" class="button_primary"> Submit </button>
                     </div>
                 </form>
             </div>
         </main>
-        <script src="app/js/script.js"></script>
+        <script type="module" src="app/js/script.js"></script>
     </body>
 </html>

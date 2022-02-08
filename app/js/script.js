@@ -1,33 +1,4 @@
-// Objects
-// Customer
-function Customer(id, name, cn, ea, add, sub, ci, pc, fa, n, a) {
-    this.id = id;
-    this.name = name;
-    this.contactNumber = cn;
-    this.email = ea;
-    this.address = add;
-    this.suburb = sub;
-    this.city = ci;
-    this.postCode = pc;
-    this.freshAir = fa;
-    this.notes = n;
-    this.action = a;
-}
-
-// Call date
-function CallDate(id, customerId, date) {
-    this.id = id;
-    this.customerId = customerId;
-    this.date = date;
-    // Methods for changing date to next year etc
-    // Get striong formats, define own date object
-    this.getMonthInt = function() {
-        return this.date.slice(5, 7);
-    }
-    this.getYearInt = function() {
-        return this.date.slice(8, 10);
-    }
-}
+import {Customer, CallDate} from "./customer.js";
 
 // Customer data for proof-of-concept
 // Object list for customers and call dates
@@ -60,12 +31,16 @@ let callData = [
 // setting up html lists
 setLists();
 // Set event listener for buttons
-document.getElementById("addCustomerButton").addEventListener('click', function() {
-    addCustomerForm("add");
-})
-document.getElementById("editCustomerButton").addEventListener('click', function() {
-    addCustomerForm("edit");
-})
+document.getElementById("addCustomerButton").addEventListener('click', function() { addCustomerForm("add"); })
+document.getElementById("editCustomerButton").addEventListener('click', function() { addCustomerForm("edit"); })
+document.getElementById("setConfirmedButton").addEventListener('click', function() { setConfirmed(); })
+document.getElementById("setToBeConfirmedButton").addEventListener('click', function() { setToBeConfirmed(); })
+document.getElementById("setCallBackLaterButton").addEventListener('click', function() { setCallBack(); })
+document.getElementById("setDeclinedButton").addEventListener('click', function() { setCallBack(); })
+document.getElementById("closeAddFormButton").addEventListener('click', function() { closeAddForm(); })
+document.getElementById("submitCustomerButton").addEventListener('click', function() { addCustomer(); })
+document.getElementById("closeCustomerFormButton").addEventListener('click', function() { closeCustomerForm(); })
+document.getElementById("customerDropButton").addEventListener('click', function() { openDropButton(); })
 
 function setLists() {
     var callList = document.getElementById("callList");
@@ -100,8 +75,8 @@ function setLists() {
 
         // If customer action is call back later, add them to call list
         if (customer.action == "callList") {
-            if (call.getMonthInt() != month) {
-                month = call.getMonthInt();
+            if (call.getMonth() != month) {
+                month = call.getMonth();
                 addCustomerToList(callList, month);
             }
             addCustomerToList(callList, customer);
@@ -117,7 +92,7 @@ function addCustomerToList(list, data) {
         li.innerHTML = data.name;
         li.addEventListener('click', function() { openCustomerForm(data); });
     } else {
-        li.innerHTML = getMonthText(parseInt(data));
+        li.innerHTML = data;
         li.classList.add("date_divider");
     }
     list.appendChild(li);
@@ -128,50 +103,6 @@ function clearList(list) {
     while (list.firstChild) {
         list.removeChild(list.firstChild);
     }
-}
-
-// Find the month from date.getMonth
-function getMonthText(i) {
-    var month;
-    switch (i) {
-        case 1:
-            month = "January";
-            break;
-        case 2:
-            month = "February";
-            break;
-        case 3:
-            month = "March";
-            break;
-        case 4:
-            month = "April";
-            break;
-        case 5:
-            month = "May";
-            break;
-        case 6:
-            month = "June";
-            break;
-        case 7:
-            month = "July";
-            break;
-        case 8:
-            month = "August";
-            break;
-        case 9:
-            month = "Septemeber";
-            break;
-        case 10:
-            month = "October";
-            break;
-        case 11:
-            month = "November";
-            break;
-        case 12:
-            month = "December";
-            break;
-    }
-    return month;
 }
 
 // Customer popup form
@@ -248,7 +179,7 @@ function addCustomer() {
         }
     }
     let radio2 = document.getElementsByName("status");
-    for (i = 0; i < radio2.length; i++) {
+    for (let i = 0; i < radio2.length; i++) {
         if (radio2[i].checked) {
             radio2 = radio2[i];
             break;
