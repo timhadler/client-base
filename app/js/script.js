@@ -1,4 +1,5 @@
 import {Customer, CallDate} from "./customer.js";
+import {openCustomerForm, openAddCustomerForm} from "./forms.js";
 
 // Customer data for proof-of-concept
 // Object list for customers and call dates
@@ -15,7 +16,7 @@ let customerData = [
     new Customer(10, "Harold Bertrum", "021 458 2564", "harold@burty.co.nz", "45 Berty rd", "Avonhead", "Christchurch", "8335", "None", "", "confirmed")
 ];
 
-let callData = [
+export let callData = [
     new CallDate(1, 1, "2022-02-02"),
     new CallDate(8, 8, "2022-02-12"),
     new CallDate(3, 3, "2022-03-05"),
@@ -28,27 +29,40 @@ let callData = [
     new CallDate(2, 2, "2022-02-04")
 ];
 
+var customer_global;
+
+// Set event listener for buttons
+document.getElementById("addCustomerButton").addEventListener('click', function() { openAddCustomerForm(false); });
+document.getElementById("editCustomerButton").addEventListener('click', function() { openEditForm(); });
+document.getElementById("submitCustomerButton").addEventListener('click', submitCustomer);
+// Dropdown links
+document.getElementById("setConfirmedButton").addEventListener('click', function() { setConfirmed(); });
+document.getElementById("setToBeConfirmedButton").addEventListener('click', function() { setToBeConfirmed(); });
+document.getElementById("setCallBackLaterButton").addEventListener('click', function() { setCallBack(); });
+document.getElementById("setDeclinedButton").addEventListener('click', function() { setCallBack(); });
+
+function openEditForm() {
+    customer_global = findCustomer("name", document.getElementById("name").innerHTML);
+    openAddCustomerForm(customer_global);
+}
+
+function submitCustomer() {
+    if(document.getElementById("formTitle").innerHTML == "Edit Customer") {
+        editCustomer();
+    } else {
+        addCustomer();
+    }
+}
+
 // setting up html lists
 setLists();
-// Set event listener for buttons
-document.getElementById("addCustomerButton").addEventListener('click', function() { addCustomerForm("add"); })
-document.getElementById("editCustomerButton").addEventListener('click', function() { addCustomerForm("edit"); })
-document.getElementById("setConfirmedButton").addEventListener('click', function() { setConfirmed(); })
-document.getElementById("setToBeConfirmedButton").addEventListener('click', function() { setToBeConfirmed(); })
-document.getElementById("setCallBackLaterButton").addEventListener('click', function() { setCallBack(); })
-document.getElementById("setDeclinedButton").addEventListener('click', function() { setCallBack(); })
-document.getElementById("closeAddFormButton").addEventListener('click', function() { closeAddForm(); })
-document.getElementById("submitCustomerButton").addEventListener('click', function() { addCustomer(); })
-document.getElementById("closeCustomerFormButton").addEventListener('click', function() { closeCustomerForm(); })
-document.getElementById("customerDropButton").addEventListener('click', function() { openDropButton(); })
 
 function setLists() {
     var callList = document.getElementById("callList");
     var toBeConfirmed = document.getElementById("toBeConfirmed");
     var confirmed = document.getElementById("confirmed");
 
-    // Clear HTML and js lists
-    // instead of reforming list everytime search list childs for specific customers to delete and add
+    // Clear HTML lists
     clearList(callList);
     clearList(toBeConfirmed);
     clearList(confirmed);
@@ -58,9 +72,9 @@ function setLists() {
     for (let i = 0; i < customerData.length; i++) {
         let customer = customerData[i];
         if (customer.action == "toBeConfirmed") {
-            addCustomerToList(toBeConfirmed, customer);
+            addToList(toBeConfirmed, customer);
         } else if (customer.action == "confirmed") {
-            addCustomerToList(confirmed, customer);
+            addToList(confirmed, customer);
         }
     }
 
@@ -77,15 +91,17 @@ function setLists() {
         if (customer.action == "callList") {
             if (call.getMonth() != month) {
                 month = call.getMonth();
-                addCustomerToList(callList, month);
+                addToList(callList, month);
             }
-            addCustomerToList(callList, customer);
+            addToList(callList, customer);
         }
     }
 }
 
-// creates and appends an item to an HTML list
-function addCustomerToList(list, data) {
+// Creates and appends a list item to an HTML list
+// if data is a customer, add to the list as a  customer
+// if data is a string, add it to the call list as a month divider
+function addToList(list, data) {
     let li = document.createElement("li");
 
     if (data instanceof Customer) {
@@ -98,74 +114,11 @@ function addCustomerToList(list, data) {
     list.appendChild(li);
 }
 
-// Clears all itmes from a given HTML list
+// Clears all items from a given HTML list
 function clearList(list) {
     while (list.firstChild) {
         list.removeChild(list.firstChild);
     }
-}
-
-// Customer popup form
-function openCustomerForm(customer) {
-    document.getElementById("name").innerHTML = customer.name;
-    document.getElementById("cn").innerHTML = customer.contactNumber;
-    document.getElementById("ea").innerHTML = customer.email;
-    document.getElementById("add").innerHTML = customer.address;
-    document.getElementById("sub").innerHTML = customer.suburb;
-    document.getElementById("ci").innerHTML = customer.city;
-    document.getElementById("pc").innerHTML = customer.postCode;
-    document.getElementById("fa").innerHTML = customer.freshAir;
-    document.getElementById("n").innerHTML = customer.notes;
-    document.getElementById("cbDate").value = findCallDate(customer.id);
-    document.getElementById("customerPopup").style.display = "block";
-}
-
-function addCustomerForm(event) {
-    // Add
-    if (event == "add") {
-        // Reset all input fields
-        document.getElementById("customerName").value = "";
-        document.getElementById("contactNumber").value = "";
-        document.getElementById("emailAddress").value = "";
-        document.getElementById("address").value = "";
-        document.getElementById("suburb").value = "";
-        document.getElementById("city").value = "";
-        document.getElementById("postCode").value = "";
-        document.getElementById("comments").value = "";
-        document.getElementById("addDate").value = "";
-
-        // Radio inputs
-        resetRadio("freshAir");
-        resetRadio("status");
-
-    // Edit
-    } else if (event == "edit") {
-        let customer = findCustomer("name", document.getElementById("name").innerHTML);
-        console.log(customer);
-        document.getElementById("customerName").value = customer.name;
-        document.getElementById("contactNumber").value = customer.contactNumber;
-        document.getElementById("emailAddress").value = customer.email;
-        document.getElementById("address").value = customer.address;
-        document.getElementById("suburb").value = customer.suburb;
-        document.getElementById("city").value = customer.city;
-        document.getElementById("postCode").value = customer.postCode;
-        document.getElementById("comments").value = customer.notes;
-        document.getElementById("addDate").value = findCallDate(customer.id);
-
-        checkRadio("freshAir", customer.freshAir);
-    } else {
-        console.log("Something went wrong...");
-    }
-    closeCustomerForm();
-    document.getElementById("addCustomerForm").style.display = "block";
-}
-
-function closeCustomerForm() {
-    document.getElementById("customerPopup").style.display = "none";
-}
-
-function closeAddForm() {
-    document.getElementById("addCustomerForm").style.display = "none";
 }
 
 // Creates a new customer and call date for the customer
@@ -185,6 +138,7 @@ function addCustomer() {
             break;
         }
     }
+
     var customer = new Customer( customerData.length + 1,
                                  document.getElementById("customerName").value, 
                                  document.getElementById("contactNumber").value,
@@ -206,6 +160,19 @@ function addCustomer() {
     setLists();
 }
 
+function editCustomer() {
+    let customer = customer_global;
+    customer.name = document.getElementById("customerName").value;
+    customer.contactNumber = document.getElementById("contactNumber").value;
+    customer.emailAddress = document.getElementById("emailAddress").value;
+    customer.address = document.getElementById("address").value;
+    customer.suburb = document.getElementById("suburb").value;
+    customer.city = document.getElementById("city").value;
+    customer.postCode = document.getElementById("postCode").value;
+    customer.notes = document.getElementById("comments").value;
+    setLists();
+}
+
 // Finds a customer with a given property
 function findCustomer(property, value) {
     if (property == "name") {
@@ -222,63 +189,6 @@ function findCustomer(property, value) {
         }
     } else {
         console.log("Invalid property search");
-    }
-}
-
-// Finds callDate from customer id
-function findCallDate(customerID) {
-    for (let i = 0; i < callData.length; i++) {
-        if (callData[i].customerId == customerID) {
-            return callData[i].date;
-        }
-    }
-    return 1;
-}
-
-// resets radio items
-function resetRadio(name) {
-    let e = document.getElementsByName(name);
-    for (var i = 0; i < e.length; i++) {
-        e[i].checked = false;
-    }
-}
-
-// Reutrns the value of the radio element that is checked
-function findCheckedRadio(name) {
-    let e = document.getElementsByName(name);
-    for (var i = 0; i < e.length; i++) {
-        if (e[i].checked == true) {
-            return e[i].value;
-        }
-    }
-}
-
-// Checks a given radio item 
-function checkRadio(name, value) {
-    let e = document.getElementsByName(name);
-    for (var i = 0; i < e.length; i++) {
-        if (e[i].value == value) {
-            e[i].checked = true;
-        }
-    }
-}
-
-// Dropbox button for call result
-function openDropButton() {
-    document.getElementById("callResultDropdown").classList.toggle("show");
-}
-
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-    if (!event.target.matches('.drop_button')) {
-        var dropdowns = document.getElementsByClassName("drop_content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
     }
 }
 
