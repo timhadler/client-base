@@ -33,7 +33,7 @@ function CallDate(id, customerId, date) {
 // Object list for customers and call dates
 let customerData = [
     new Customer(1, "Anne Barron", "028 459 2654", "anne@barron.co.nz", "4 Burwood rd", "Burwood", "Christchurch", "8067", "None", "", "callList"),
-    new Customer(2, "Frederick Botony", "027 449 3464", "fred@botony.co.nz", "6 Wincroft rd", "Riccarton", "Christchurch", "8065", "HRV Gen1", "", "callList"),
+    new Customer(2, "Frederick Botony", "027 449 3464", "fred@botony.co.nz", "6 Wincroft rd", "Riccarton", "Christchurch", "8065", "HRV Gen 1", "", "callList"),
     new Customer(3, "Karrie Ferguson", "021 659 9504", "karrie@furg.co.nz", "13 Oxycotin rd", "Burnside", "Christchurch", "8069", "None", "", "callList"),
     new Customer(4, "Toby Mur", "021 184 4627", "toby@mur.co.nz", "8 Kin rd", "Burnsdie", "Christchurch", "8089", "None", "", "toBeConfirmed"),
     new Customer(5, "Nocholous Lous", "021 387 6847", "nic@lous.co.nz", "102 Kindell rd", "Addington", "Christchurch", "8832", "None", "", "toBeConfirmed"),
@@ -59,6 +59,13 @@ let callData = [
 
 // setting up html lists
 setLists();
+// Set event listener for buttons
+document.getElementById("addCustomerButton").addEventListener('click', function() {
+    addCustomerForm("add");
+})
+document.getElementById("editCustomerButton").addEventListener('click', function() {
+    addCustomerForm("edit");
+})
 
 function setLists() {
     var callList = document.getElementById("callList");
@@ -182,28 +189,44 @@ function openCustomerForm(customer) {
     document.getElementById("customerPopup").style.display = "block";
 }
 
-function addCustomerForm() {
-    document.getElementById("addCustomerForm").style.display = "block";
-    // Reset all input fields
-    document.getElementById("customerName").value = "";
-    document.getElementById("contactNumber").value = "";
-    document.getElementById("emailAddress").value = "";
-    document.getElementById("address").value = "";
-    document.getElementById("suburb").value = "";
-    document.getElementById("city").value = "";
-    document.getElementById("postCode").value = "";
-    document.getElementById("comments").value = "";
-    document.getElementById("addDate").value = "";
+function addCustomerForm(event) {
+    // Add
+    if (event == "add") {
+        // Reset all input fields
+        document.getElementById("customerName").value = "";
+        document.getElementById("contactNumber").value = "";
+        document.getElementById("emailAddress").value = "";
+        document.getElementById("address").value = "";
+        document.getElementById("suburb").value = "";
+        document.getElementById("city").value = "";
+        document.getElementById("postCode").value = "";
+        document.getElementById("comments").value = "";
+        document.getElementById("addDate").value = "";
 
-    // Radio inputs
-    let e = document.getElementsByName("freshAir");
-    for (var i = 0; i < e.length; i++) {
-        e[i].checked = false;
+        // Radio inputs
+        resetRadio("freshAir");
+        resetRadio("status");
+
+    // Edit
+    } else if (event == "edit") {
+        let customer = findCustomer("name", document.getElementById("name").innerHTML);
+        console.log(customer);
+        document.getElementById("customerName").value = customer.name;
+        document.getElementById("contactNumber").value = customer.contactNumber;
+        document.getElementById("emailAddress").value = customer.email;
+        document.getElementById("address").value = customer.address;
+        document.getElementById("suburb").value = customer.suburb;
+        document.getElementById("city").value = customer.city;
+        document.getElementById("postCode").value = customer.postCode;
+        document.getElementById("comments").value = customer.notes;
+        document.getElementById("addDate").value = findCallDate(customer.id);
+
+        checkRadio("freshAir", customer.freshAir);
+    } else {
+        console.log("Something went wrong...");
     }
-    e = document.getElementsByName("status");
-    for (var i = 0; i < e.length; i++) {
-        e[i].checked = false;
-    }
+    closeCustomerForm();
+    document.getElementById("addCustomerForm").style.display = "block";
 }
 
 function closeCustomerForm() {
@@ -279,6 +302,34 @@ function findCallDate(customerID) {
         }
     }
     return 1;
+}
+
+// resets radio items
+function resetRadio(name) {
+    let e = document.getElementsByName(name);
+    for (var i = 0; i < e.length; i++) {
+        e[i].checked = false;
+    }
+}
+
+// Reutrns the value of the radio element that is checked
+function findCheckedRadio(name) {
+    let e = document.getElementsByName(name);
+    for (var i = 0; i < e.length; i++) {
+        if (e[i].checked == true) {
+            return e[i].value;
+        }
+    }
+}
+
+// Checks a given radio item 
+function checkRadio(name, value) {
+    let e = document.getElementsByName(name);
+    for (var i = 0; i < e.length; i++) {
+        if (e[i].value == value) {
+            e[i].checked = true;
+        }
+    }
 }
 
 // Dropbox button for call result

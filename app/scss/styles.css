@@ -263,19 +263,20 @@ main {
   display: grid;
   grid-auto-rows: -webkit-min-content;
   grid-auto-rows: min-content;
-  min-height: 476px;
   padding: 10px;
   background-color: white;
   border: 1px solid #009AAF;
 }
 
 .form-container-details {
+  min-height: 476px;
   -ms-grid-columns: 50px (minmax(150px, 300px))[2] minmax(100px, 190px) 50px;
       grid-template-columns: 50px repeat(2, minmax(150px, 300px)) minmax(100px, 190px) 50px;
       grid-template-areas: ". a a a ." ". b c d ." ". e e . .";
 }
 
 .form-container-add {
+  min-height: 516px;
   -ms-grid-columns: 50px 300px 200px 250px  50px;
       grid-template-columns: 50px 300px 200px 250px  50px;
       grid-template-areas: ". a a a ." ". b c e ." ". b c d .";

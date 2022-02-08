@@ -30,7 +30,7 @@
             <hr class="line_header"/>
             
             <div class="grid_column_1 flex flex-ai-c margin_bottom_medium">
-                <button type="button" class="button_primary" onclick="addCustomerForm()"> Add&nbsp;Customer </button>
+                <button type="button" id="addCustomerButton" class="button_primary"> Add&nbsp;Customer </button>
                 <form>
                     <input type="text" class="search_bar" autoComplete="off" placeholder=" Search..." />
                 </form>
@@ -64,7 +64,7 @@
                         <nav class="flex flex-jc-sb flex-ai-c">
                             <p id="name" class="size_medium color_primary"></p>
                             <div class="flex flex-ai-c">
-                                <button type="button" class="button_secondary"> Edit </button>
+                                <button type="button" id="editCustomerButton" class="button_secondary"> Edit </button>
                                 <span class="close_form" onClick="closeCustomerForm()">
                             </div>
                         </nav>
@@ -141,13 +141,15 @@
                     </div>
                     <div class="add_col_2">
                         <p> Fresh air system: </p>
-                        <input type="radio" id="Gen1" name="freshAir" value="GEN1">
+                        <input type="radio" id="Gen1" name="freshAir" value="HRV Gen 1">
                         <label for="Gen1"> HRV Gen 1: </label> <br />
-                        <input type="radio" id="Gen2" name="freshAir" value="GEN2">
+                        <input type="radio" id="Gen2" name="freshAir" value="HRV Gen 2">
                         <label for="Gen2"> HRV Gen 2: </label> <br />
                         <input type="radio" id="dvs" name="freshAir" value="DVS">
                         <label for="dvs"> DVS: </label> <br />
-                        <input type="radio" id="unknown" name="freshAir" value="UNKNOWN"> 
+                        <input type="radio" id="none" name="freshAir" value="None"> 
+                        <label for="none"> None: </label> <br />
+                        <input type="radio" id="unknown" name="freshAir" value="Unknown"> 
                         <label for="unknown"> Unknown: </label> <br />
                         <br />
                         <p> Status: </p>
