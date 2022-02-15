@@ -1,12 +1,10 @@
 html {
   font-size: 100%;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 *, *::before, *::after {
-  -webkit-box-sizing: inherit;
-          box-sizing: inherit;
+  box-sizing: inherit;
   margin: 0;
 }
 
@@ -34,43 +32,26 @@ li {
 }
 
 input, label {
-  margin: .4rem 0;
+  margin: 0.4rem 0;
 }
 
 .flex {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
 }
-
 .flex-jc-sb {
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
-
 .flex-jc-c {
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
 }
-
 .flex-jc-r {
-  -webkit-box-pack: right;
-      -ms-flex-pack: right;
-          justify-content: right;
+  justify-content: right;
 }
-
 .flex-ai-c {
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
 }
-
 .flex-ai-b {
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: end;
+  align-items: end;
 }
 
 .size_large {
@@ -105,9 +86,8 @@ hr {
 }
 
 .line_header {
-  grid-column: 1 / span all;
-  -webkit-box-shadow: 0px 0.5px grey;
-          box-shadow: 0px 0.5px grey;
+  grid-column: 1/span all;
+  box-shadow: 0px 0.5px grey;
   margin-bottom: 16px;
 }
 
@@ -181,24 +161,19 @@ button {
 }
 
 .grid_column_1 {
-  -ms-grid-column: 2;
   grid-column: 2;
 }
 
 .grid_column_2 {
-  -ms-grid-column: 3;
   grid-column: 3;
 }
 
 .grid_column_3 {
-  -ms-grid-column: 4;
   grid-column: 4;
 }
 
 header {
-  -ms-grid-column: 2;
-  -ms-grid-column-span: 3;
-  grid-column: 2 / span 3;
+  grid-column: 2/span 3;
 }
 
 nav {
@@ -217,10 +192,8 @@ nav {
 }
 
 main {
-  display: -ms-grid;
   display: grid;
-  -ms-grid-columns: minmax(100px, 1fr) (minmax(400px, 550px))[3] minmax(100px, 1fr);
-      grid-template-columns: minmax(100px, 1fr) repeat(3, minmax(400px, 550px)) minmax(100px, 1fr);
+  grid-template-columns: minmax(100px, 1fr) repeat(3, minmax(400px, 550px)) minmax(100px, 1fr);
 }
 
 .section_title {
@@ -259,85 +232,56 @@ main {
 
 /* Add styles to the form container */
 .form-container {
-  display: -ms-grid;
   display: grid;
-  grid-auto-rows: -webkit-min-content;
   grid-auto-rows: min-content;
   padding: 10px;
   background-color: white;
   border: 1px solid #009AAF;
 }
-
 .form-container-details {
   min-height: 476px;
-  -ms-grid-columns: 50px (minmax(150px, 300px))[2] minmax(100px, 190px) 50px;
-      grid-template-columns: 50px repeat(2, minmax(150px, 300px)) minmax(100px, 190px) 50px;
-      grid-template-areas: ". a a a ." ". b c d ." ". e e . .";
+  grid-template-columns: 50px repeat(2, minmax(150px, 300px)) minmax(100px, 190px) 50px;
+  grid-template-areas: ". a a a ." ". b c d ." ". e e . .";
 }
-
 .form-container-add {
   min-height: 516px;
-  -ms-grid-columns: 50px 300px 200px 250px  50px;
-      grid-template-columns: 50px 300px 200px 250px  50px;
-      grid-template-areas: ". a a a ." ". b c e ." ". b c d .";
+  grid-template-columns: 50px 300px 200px 250px 50px;
+  grid-template-areas: ". a a a ." ". b c e ." ". b c d .";
 }
 
 .form-container header {
-  -ms-grid-row: 1;
-  -ms-grid-column: 2;
-  -ms-grid-column-span: 3;
   grid-area: a;
 }
 
 .details_1 {
-  -ms-grid-row: 2;
-  -ms-grid-row-span: 2;
-  -ms-grid-column: 2;
   grid-area: b;
 }
 
 .details_2 {
-  -ms-grid-row: 2;
-  -ms-grid-row-span: 2;
-  -ms-grid-column: 3;
   grid-area: c;
 }
 
 .result {
-  -ms-grid-row: 3;
-  -ms-grid-column: 4;
   grid-area: d;
 }
 
 .comments {
-  -ms-grid-row: 2;
-  -ms-grid-column: 4;
   grid-area: e;
 }
 
 .add_col_1 {
-  -ms-grid-row: 2;
-  -ms-grid-row-span: 2;
-  -ms-grid-column: 2;
   grid-area: b;
 }
 
 .add_col_2 {
-  -ms-grid-row: 2;
-  -ms-grid-row-span: 2;
-  -ms-grid-column: 3;
   grid-area: c;
 }
 
 .add_comments {
-  -ms-grid-row: 2;
-  -ms-grid-column: 4;
   grid-area: e;
 }
 
 .add_button {
-  -ms-grid-row: 3;
-  -ms-grid-column: 4;
   grid-area: d;
 }
 
@@ -366,4 +310,5 @@ main {
   font-size: 20px;
   color: #0652C3;
 }
+
 /*# sourceMappingURL=styles.css.map */

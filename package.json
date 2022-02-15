@@ -2,10 +2,12 @@
   "name": "client-base",
   "version": "1.0.0",
   "description": "https://timhadler.github.io/client-base/",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node server.js",
-    "devStart": "nodemon server.js"
+    "start": "node src/server.js",
+    "devStart": "nodemon src/server.js",
+    "scss": "sass src/scss/styles.scss public/css/styles.css",
+    "scss-watch": "sass --watch src/scss/styles.scss public/css/styles.css"
   },
   "repository": {
     "type": "git",
