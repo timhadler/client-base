@@ -21,9 +21,11 @@
   },
   "homepage": "https://github.com/timhadler/client-base#readme",
   "dependencies": {
+    "dotenv": "^16.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
-    "express-ejs-layouts": "^2.5.1"
+    "express-ejs-layouts": "^2.5.1",
+    "mariadb": "^2.5.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
