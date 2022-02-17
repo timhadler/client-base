@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const clients = require("./../models/client-models");
 
-router.get("/", (req, res) => {
-    //res.render("list");
-    res.render("index");
+router.get("/", async (req, res) => {
+    let callList = await clients.callList();
+    //let toBeConfirmed = await clients.toBeConfirmedList
+    //let confirmed = await clients.confiemedList
+    res.render("index", {callList: callList});
 });
 
 module.exports = router;

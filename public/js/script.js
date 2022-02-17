@@ -63,7 +63,7 @@ function setLists() {
     var confirmed = document.getElementById("confirmed");
 
     // Clear HTML lists
-    clearList(callList);
+    //clearList(callList);
     clearList(toBeConfirmed);
     clearList(confirmed);
 
@@ -91,9 +91,9 @@ function setLists() {
         if (customer.action == "callList") {
             if (call.getMonth() != month) {
                 month = call.getMonth();
-                addToList(callList, month);
+                //addToList(callList, month);
             }
-            addToList(callList, customer);
+            //addToList(callList, customer);
         }
     }
 }
