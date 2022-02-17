@@ -14,7 +14,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.get("/", (req, res) => {
-    res.send("Clients page");
+    res.send("list");
 });
 
 module.exports = router;
