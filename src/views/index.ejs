@@ -1,135 +1,110 @@
-
 <main>
     <header>
-        <%- include('partials/header-nav'); %>
+        <nav class="flex flex-jc-sb flex-ai-c">
+            <a href="#" class="logo"> ClientBase </a>
+
+            <a href="#" class="user flex flex-ai-c"> 
+                <img src=images/user-icon.png alt="user-icon" width=32px height=32px />
+                WEST
+            </a>
+        </nav>
     </header>
     <hr class="line_header"/>
     
-    <!-- Add client button and search bar-->
-    <div class="grid_column_1 flex flex-ai-c margin_bottom_medium">
-        <button type="button" id="addCustomerButton" class="button_primary"> Add&nbsp;Customer </button>
-        <form>
-            <input type="text" class="search_bar" autoComplete="off" placeholder=" Search..." />
-        </form>
+    <!-- Left Pane -->
+    <div class="grid_col_1 section_divider">
+        <div class="pad-t-med pad-r-sm">
+            <!-- Add customer button and search bar -->
+            <div class="flex flex-ai-c flex-jc-sb margin_b_med">
+                <button type="button" id="addCustomerButton" class="button_primary"> Add&nbsp;Customer </button>
+                <form>
+                    <input type="text" class="search_bar" autoComplete="off" placeholder=" Search..." />
+                </form>
+            </div>
+            <!-- Call list header -->
+            <p class="size_small"> Call List </p>
+            <hr class="line_header">
+
+            <!-- Call list -->
+            <div class="inner_section">
+                <ul id="cList">
+                    <li> Hello </li>
+                    <li> Hello to you </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
-    <!-- Client lists -->
-    <%- include('partials/client-lists', {callList: callList}); %>
+    <!-- Client details pane -->
+    <div class="grid_col_2">
+        <div class="margin_t_l margin_l_l">
+            <!-- Details header -->
+            <div class="flex flex-ai-c flex-jc-sb">
+                <p id="client_name" class="size_small bold"> Barry Stansfield </p>
+                <button class="button_primary"> Edit </button>
+            </div>
 
-    <!-- Popups-->
-    <div class="form-popup" id="customerPopup">
-        <form class="form-container form-container-details">
-            <header>
-                <nav class="flex flex-jc-sb flex-ai-c">
-                    <p id="name" class="size_medium color_primary"></p>
-                    <div class="flex flex-ai-c">
-                        <button type="button" id="editCustomerButton" class="button_secondary"> Edit </button>
-                        <span id="closeCustomerFormButton" class="close_form">
+            <div class="details_grid pad-t-med pad-l-med">
+                <div class="grid_a_1">
+                    <!-- Address details -->
+                    <div class="client_details">
+                        <p class="color_primary size_small"> Address </p>
+                        <hr class="line_header">
                     </div>
-                </nav>
-                <hr class="line_header" />
-            </header>
-            <div class="details_1">
-                <p class="size_small">Contact number</p>
-                <p class="size_small">Email address</p>
-                <br />
-                <p class="size_small">Address</p>
-                <p class="size_small">Suburb</p>
-                <p class="size_small">City</p>
-                <p class="size_small">Postcode</p>
-                <br />
-                <p class="size_small">Fresh air system</p>
-                <br />
-            </div>
-            <div class="details_2">
-                <p id="cn" class="customer_detail"></p>
-                <p id="ea" class="customer_detail"></p>
-                <br />
-                <p id="add" class="customer_detail"></p>
-                <p id="sub" class="customer_detail"></p>
-                <p id="ci" class="customer_detail"></p>
-                <p id="pc" class="customer_detail"></p>
-                <br />
-                <p id="fa" class="customer_detail"></p>
-            </div>
-            <div class="comments">
-                <p class="size_small">Customer Notes:</p>
-                <p id="n" class="size_small"></p>
-            </div>
-            <div class="result">
-                <button id="customerDropButton" type="button" class="button_primary drop_button"> Call&nbsp;result </button>
-                <div id="callResultDropdown" class="drop_content">
-                    <li id="setConfirmedButton"> Confirmed </li>
-                    <li id="setToBeConfirmedButton"> To be confirmed </li>
-                    <li id="setCallBackLaterButton"> Call back later </li>
-                    <li id="setDeclinedButton"> Declined </li>
+                    <div class="list_container margin_t_med margin_l_med">
+                        <ul id="client_details">
+                            <li> Who Knows </li>
+                        </ul>
+                    </div>
+                    <!-- Contact details -->
+                    <div class="client_details">
+                        <p class="color_primary size_small"> Contact details </p>
+                        <hr class="line_header">
+                    </div>
+                    <div class="list_container margin_t_med margin_l_med">
+                        <ul id="contact_details">
+                            <li> 584 52455 885 </li>
+                        </ul>
+                    </div>
                 </div>
-                <br />
-                <br />
-                <label for="cbDate"> Call back on: </label>
-                <input type="date" id="cbDate">
-            </div>
-        </form>
-    </div>
-    <div class="form-popup" id="addCustomerForm">
-        <form class="form-container form-container-add" id="addFormID">
-            <header>
-                <nav class="flex flex-jc-sb flex-ai-c">
-                    <p id="formTitle" class="size_medium color_primary"></p>
-                    <div class="flex flex-ai-c">
-                        <span id="closeAddFormButton" class="close_form">
+                <div class="gird_a_2">
+                    <!-- Call date details -->
+                    <div class="client_details">
+                        <p class="color_primary size_small"> Call dates </p>
+                        <hr class="line_header">
                     </div>
-                </nav>
-                <hr class="line_header" />
-            </header>
-            <div class="add_col_1">
-                <label for="customerName"> Customer name: </label> <br />
-                <input type="text" id="customerName"> <br />
-                <label for="contactNumber"> Contact number: </label> <br />
-                <input type="text" id="contactNumber"> <br />
-                <label for="emailAddress"> Email address: </label> <br />
-                <input type="text" id="emailAddress"> <br />
-                <label for="address"> Address: </label> <br />
-                <input type="text" id="address"> <br />
-                <label for="suburb"> Suburb: </label> <br />
-                <input type="text" id="suburb"> <br />
-                <label for="city"> City: </label> <br />
-                <input type="text" id="city"> <br />
-                <label for="postCode"> Postcode: </label> <br />
-                <input type="text" id="postCode">
+                    <div class="list_container margin_t_med margin_l_med">
+                        <ul id="call_dates">
+                            <li> Mr Barry </li>
+                            <li> Sweeny Todd </li>
+                        </ul>
+                    </div>
+                    <!-- Comments -->
+                    <div class="client_details">
+                        <p class="color_primary size_small"> Comments </p>
+                        <hr class="line_header">
+                    </div>
+                    <div class="list_container margin_t_med margin_l_med">
+                        <p id="client_comments" class="color_secondary">
+                            Yeah it was bloody good
+                        </p>
+                    </div>
+                </div>
+                <!-- Services -->
+                <div class="grid_a_3_4">
+                    <div class="client_details">
+                        <p class="color_primary size_small"> Services </p>
+                        <hr class="line_header">
+                    </div>
+                    <div class="list_container margin_t_med margin_l_med">
+                        <ul id="service_list">
+                            <li> A goody </li>
+                            <li> Marvelous </li>
+                            <li> Yeap </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="add_col_2">
-                <p> Fresh air system: </p>
-                <input type="radio" id="Gen1" name="freshAir" value="HRV Gen 1">
-                <label for="Gen1"> HRV Gen 1: </label> <br />
-                <input type="radio" id="Gen2" name="freshAir" value="HRV Gen 2">
-                <label for="Gen2"> HRV Gen 2: </label> <br />
-                <input type="radio" id="dvs" name="freshAir" value="DVS">
-                <label for="dvs"> DVS: </label> <br />
-                <input type="radio" id="none" name="freshAir" value="None"> 
-                <label for="none"> None: </label> <br />
-                <input type="radio" id="unknown" name="freshAir" value="Unknown"> 
-                <label for="unknown"> Unknown: </label> <br />
-                <br />
-                <p> Status: </p>
-                <input type="radio" id="callBackRadio" name="status" value="callList">
-                <label for="callBackRadio"> Call back later </label> <br />
-                <input type="radio" id="toBeConfirmedRadio" name="status" value="toBeConfirmed">
-                <label for="toBeConfirmedRadio"> To be confrimed </label> <br />
-                <input type="radio" id="confirmedRadio" name="status" value="confirmed">
-                <label for="confirmedRadio"> Confirmed </label> <br/>
-                <br />
-                <label for="addDate"> Call back on: </label>
-                <input type="date" id="addDate">
-            </div>
-            <div class="add_comments">
-                <label for="comments"> Comments: </label> <br />
-                <textarea class="form_comments" id=comments form="addFormID" cols="33" rows="6"> </textarea>
-            </div>
-            <div class="add_button flex flex-jc-r flex-ai-b">
-                <button id="submitCustomerButton" type="button" class="button_primary"> Submit </button>
-            </div>
-        </form>
+        </div>
     </div>
 </main>
-
