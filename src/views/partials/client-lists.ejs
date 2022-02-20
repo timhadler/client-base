@@ -15,8 +15,9 @@
         <!-- Call list -->
         <div class="inner_section">
             <ul id="cList">
-                <li> Hello </li>
-                <li> Hello to you </li>
+                <% for (let i = 0; i < calls.length; i++) { %>
+                    <li> <%= calls[i].name %> </li>
+                <% } %>
             </ul>
         </div>
     </div>
