@@ -1,10 +1,12 @@
 html {
   font-size: 100%;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 *, *::before, *::after {
-  box-sizing: inherit;
+  -webkit-box-sizing: inherit;
+          box-sizing: inherit;
   margin: 0;
 }
 
@@ -27,31 +29,60 @@ ul {
 
 li {
   color: #0652C3;
-  padding-top: 15px;
   cursor: pointer;
 }
 
+li:not(:first-child) {
+  margin-top: 5px;
+}
+
 input, label {
-  margin: 0.4rem 0;
+  margin: .4rem 0;
+}
+
+input {
+  margin: 0;
 }
 
 .flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 }
+
 .flex-jc-sb {
-  justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
+
 .flex-jc-c {
-  justify-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
+
 .flex-jc-r {
-  justify-content: right;
+  -webkit-box-pack: right;
+      -ms-flex-pack: right;
+          justify-content: right;
 }
+
+.flex-jc-l {
+  -ms-grid-column-align: left;
+      justify-self: left;
+}
+
 .flex-ai-c {
-  align-items: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
+
 .flex-ai-b {
-  align-items: end;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: end;
 }
 
 .size_large {
@@ -66,16 +97,20 @@ input, label {
   font-size: 20px;
 }
 
+.italic {
+  font-style: italic;
+}
+
+.bold {
+  font-weight: bold;
+}
+
 .color_primary {
   color: #009AAF;
 }
 
 .color_secondary {
   color: #0652C3;
-}
-
-.italic {
-  font-style: italic;
 }
 
 hr {
@@ -86,21 +121,9 @@ hr {
 }
 
 .line_header {
-  grid-column: 1/span all;
-  box-shadow: 0px 0.5px grey;
-  margin-bottom: 16px;
-}
-
-.margin_bottom_small {
-  margin-bottom: 15px;
-}
-
-.margin_bottom_medium {
-  margin-bottom: 30px;
-}
-
-.margin_top_medium {
-  margin-top: 30px;
+  grid-column: 1 / span all;
+  -webkit-box-shadow: 0px 0.5px grey;
+          box-shadow: 0px 0.5px grey;
 }
 
 button {
@@ -156,24 +179,38 @@ button {
   font-size: 24px;
   border-radius: 8px;
   height: 35px;
-  margin-right: 15px;
-  margin-left: 25px;
+  width: 186px;
 }
 
-.grid_column_1 {
+.grid_col_1 {
+  -ms-grid-column: 2;
   grid-column: 2;
 }
 
-.grid_column_2 {
+.grid_col_2 {
+  -ms-grid-column: 3;
   grid-column: 3;
 }
 
-.grid_column_3 {
+.grid_col_3 {
+  -ms-grid-column: 4;
   grid-column: 4;
 }
 
+.grid_col_2_s2 {
+  -ms-grid-column: 3;
+  -ms-grid-column-span: 2;
+  grid-column: 3 / span 2;
+}
+
+.list_container {
+  height: 150px;
+}
+
 header {
-  grid-column: 2/span 3;
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 2;
+  grid-column: 2 / span 2;
 }
 
 nav {
@@ -192,26 +229,95 @@ nav {
 }
 
 main {
+  display: -ms-grid;
   display: grid;
-  grid-template-columns: minmax(100px, 1fr) repeat(3, minmax(400px, 550px)) minmax(100px, 1fr);
+  -ms-grid-columns: 150px minmax(200px, 400px) minmax(200px, 1200px) 150px;
+      grid-template-columns: 150px minmax(200px, 400px) minmax(200px, 1200px) 150px;
 }
 
-.section_title {
-  font-size: 24px;
-  color: #009AAF;
+.inner_section {
+  padding: 10px;
 }
 
-.section_content {
-  padding-left: 10px;
+.pad-r-sm {
   padding-right: 10px;
 }
 
+.pad-t-med {
+  padding-top: 15px;
+}
+
+.pad-l-med {
+  padding-left: 15px;
+}
+
+.margin_b_sm {
+  margin-bottom: 10px;
+}
+
+.margin_b_med {
+  margin-bottom: 15px;
+}
+
+.margin_t_med {
+  margin-top: 15px;
+}
+
+.margin_l_med {
+  margin-left: 15px;
+}
+
+.margin_t_l {
+  margin-top: 30px;
+}
+
+.margin_l_l {
+  margin-left: 30px;
+}
+
+.client_details {
+  width: 100%;
+}
+
 .section_divider {
-  min-height: 71vh;
-  margin-bottom: 16px;
+  height: 92vh;
   border: none;
   width: 100%;
   border-right: 1px solid #1f1209;
+}
+
+.details_grid {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+  -ms-grid-rows: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+  -webkit-column-gap: 80px;
+          column-gap: 80px;
+  row-gap: 80px;
+}
+
+.grid_a_1 {
+  -ms-grid-column: 1;
+      grid-column-start: 1;
+  -ms-grid-row: 1;
+      grid-row-start: 1;
+}
+
+.grid_a_2 {
+  -ms-grid-column: 2;
+      grid-column-start: 2;
+  -ms-grid-row: 1;
+      grid-row-start: 1;
+}
+
+.grid_a_3_4 {
+  -ms-grid-column: 1;
+      grid-column-start: 1;
+  grid-column-end: 3;
+  -ms-grid-row: 2;
+      grid-row-start: 2;
 }
 
 .date_divider {
@@ -232,56 +338,85 @@ main {
 
 /* Add styles to the form container */
 .form-container {
+  display: -ms-grid;
   display: grid;
+  grid-auto-rows: -webkit-min-content;
   grid-auto-rows: min-content;
   padding: 10px;
   background-color: white;
   border: 1px solid #009AAF;
 }
+
 .form-container-details {
   min-height: 476px;
-  grid-template-columns: 50px repeat(2, minmax(150px, 300px)) minmax(100px, 190px) 50px;
-  grid-template-areas: ". a a a ." ". b c d ." ". e e . .";
+  -ms-grid-columns: 50px (minmax(150px, 300px))[2] minmax(100px, 190px) 50px;
+      grid-template-columns: 50px repeat(2, minmax(150px, 300px)) minmax(100px, 190px) 50px;
+      grid-template-areas: ". a a a ." ". b c d ." ". e e . .";
 }
+
 .form-container-add {
   min-height: 516px;
-  grid-template-columns: 50px 300px 200px 250px 50px;
-  grid-template-areas: ". a a a ." ". b c e ." ". b c d .";
+  -ms-grid-columns: 50px 300px 200px 250px  50px;
+      grid-template-columns: 50px 300px 200px 250px  50px;
+      grid-template-areas: ". a a a ." ". b c e ." ". b c d .";
 }
 
 .form-container header {
+  -ms-grid-row: 1;
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 3;
   grid-area: a;
 }
 
 .details_1 {
+  -ms-grid-row: 2;
+  -ms-grid-row-span: 2;
+  -ms-grid-column: 2;
   grid-area: b;
 }
 
 .details_2 {
+  -ms-grid-row: 2;
+  -ms-grid-row-span: 2;
+  -ms-grid-column: 3;
   grid-area: c;
 }
 
 .result {
+  -ms-grid-row: 3;
+  -ms-grid-column: 4;
   grid-area: d;
 }
 
 .comments {
+  -ms-grid-row: 2;
+  -ms-grid-column: 4;
   grid-area: e;
 }
 
 .add_col_1 {
+  -ms-grid-row: 2;
+  -ms-grid-row-span: 2;
+  -ms-grid-column: 2;
   grid-area: b;
 }
 
 .add_col_2 {
+  -ms-grid-row: 2;
+  -ms-grid-row-span: 2;
+  -ms-grid-column: 3;
   grid-area: c;
 }
 
 .add_comments {
+  -ms-grid-row: 2;
+  -ms-grid-column: 4;
   grid-area: e;
 }
 
 .add_button {
+  -ms-grid-row: 3;
+  -ms-grid-column: 4;
   grid-area: d;
 }
 
@@ -310,5 +445,4 @@ main {
   font-size: 20px;
   color: #0652C3;
 }
-
 /*# sourceMappingURL=styles.css.map */
