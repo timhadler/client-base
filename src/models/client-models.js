@@ -15,6 +15,21 @@ exports.callList = async function () {
     }
 };
 
+// Fetches the address details of a given client_id
+exports.addressDetails = async function (id) {
+    try {
+        const sqlQuery = "SELECT * from addresses WHERE client_id=" + id;
+        const rows = await db.query(sqlQuery);
+        //console.log(sqlQuery);
+        //console.log(rows[0]);
+        return rows;
+    } catch (error) {
+        console.error(error.message);
+        throw error;
+    }
+
+}
+
 
 // exports.callList = async function () {
 //     try {

@@ -2,12 +2,17 @@
 const express = require("express");
 const router = express.Router();
 const db = require("./../database");
+const clients = require("./../models/client-models");
 
 router.get("/:id", async (req, res) => {
     try {
         const sqlQuery = "SELECT * from Clients WHERE id=?";
         const rows = await db.query(sqlQuery, req.params.id);
-        //res.status(200).render("client-lists.ejs");
+
+        const callList = await clients.callList();
+        const addressDetails = await clients.addressDetails(req.params.id);
+
+        res.status(200).render("client-details.ejs", {callList:callList, addDetails:addressDetails});
     } catch (error) {
         res.status(400).send(error.message);
     }

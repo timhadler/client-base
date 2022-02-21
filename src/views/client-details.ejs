@@ -1,27 +1,6 @@
-<!-- Left Pane -->
-<div class="grid_col_1 section_divider">
-    <div class="pad-t-med pad-r-sm">
-        <!-- Add customer button and search bar -->
-        <div class="flex flex-ai-c flex-jc-sb margin_b_med">
-            <button type="button" id="addCustomerButton" class="button_primary"> Add&nbsp;Customer </button>
-            <form>
-                <input type="text" class="search_bar" autoComplete="off" placeholder=" Search..." />
-            </form>
-        </div>
-        <!-- Call list header -->
-        <p class="size_small"> Call List </p>
-        <hr class="line_header">
+<!-- Left pane (call list) -->
+<%- include("./partials/call-list.ejs", {calls:callList}) %>
 
-        <!-- Call list -->
-        <div class="inner_section">
-            <ul id="cList">
-                <% for (let i = 0; i < calls.length; i++) { %>
-                    <li><a href="clients/15" class="color_secondary"> <%= calls[i].name %> </a></li>
-                <% } %>
-            </ul>
-        </div>
-    </div>
-</div>
 
 <!-- Client details pane -->
 <div class="grid_col_2">
@@ -42,10 +21,12 @@
                 <div class="list_container margin_t_med margin_l_med">
                     <ul id="client_details">
                         <li> 
-                            <div class="flex flex-ai-c flex-jc-sb">
-                                Who Knows
-                                <span id="closeCustomerFormButton" class="close_form">
-                            </div> 
+                            <% for (let i=0; i < addDetails.length; i++) { %>
+                                <div class="flex flex-ai-c flex-jc-sb">
+                                    <%=addDetails[i].address%>
+                                    <span id="closeCustomerFormButton" class="close_form">
+                                </div> 
+                            <% } %>
                         </li>
                     </ul>
                 </div>

@@ -1,10 +1,2 @@
-
-<main>
-    <!-- Header/Nav -->
-    <%- include("./partials/header-nav.ejs"); %>
-
-    <!-- Client details lists -->
-    <%- include("./partials/client-lists.ejs", {calls:callList}); %>
-
-    <script type="module" src="js/script.js"> </script>
-</main>
+<!-- Left pane (call list) -->
+<%- include("./partials/call-list.ejs", {calls:callList}) %>
