@@ -7,7 +7,7 @@ router.get("/:id", async (req, res) => {
     try {
         const sqlQuery = "SELECT * from Clients WHERE id=?";
         const rows = await db.query(sqlQuery, req.params.id);
-        res.status(200).json(rows);
+        //res.status(200).render("client-lists.ejs");
     } catch (error) {
         res.status(400).send(error.message);
     }
