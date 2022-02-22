@@ -146,7 +146,7 @@ button {
 .button_secondary {
   height: 20px;
   font-size: 16px;
-  border: none;
+  border: 1px solid #009AAF;
   background-color: white;
   color: #009AAF;
   padding-left: 8px;
