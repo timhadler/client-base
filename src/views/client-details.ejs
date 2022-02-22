@@ -24,7 +24,7 @@
                             <% for (let i=0; i < addDetails.length; i++) { %>
                                 <div class="flex flex-ai-c flex-jc-sb">
                                     <%=addDetails[i].address%>
-                                    <span id="closeCustomerFormButton" class="close_form">
+                                    <span class="close_form">
                                 </div> 
                             <% } %>
                         </li>
@@ -49,8 +49,14 @@
                 </div>
                 <div class="list_container margin_t_med margin_l_med">
                     <ul id="call_dates">
-                        <li> Mr Barry </li>
-                        <li> Sweeny Todd </li>
+                        <li> 
+                            <% for (let i=0; i < callDetails.length; i++) { %>
+                                <div class="flex flex-ai-c flex-jc-sb">
+                                    <%=callDetails[i].rDate.toLocaleDateString()%>
+                                    <span class="close_form">
+                                </div> 
+                            <% } %>
+                        </li>
                     </ul>
                 </div>
                 <!-- Comments -->

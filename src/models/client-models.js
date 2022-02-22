@@ -20,6 +20,19 @@ exports.addressDetails = async function (id) {
     try {
         const sqlQuery = "SELECT * from addresses WHERE client_id=" + id;
         const rows = await db.query(sqlQuery);
+
+        return rows;
+    } catch (error) {
+        console.error(error.message);
+        throw error;
+    }
+}
+
+// Fetches the call dates of a given client_id
+exports.callDetails = async function (id) {
+    try {
+        const sqlQuery = "SELECT * from reminders WHERE client_id=" + id;
+        const rows = await db.query(sqlQuery);
         //console.log(sqlQuery);
         //console.log(rows[0]);
         return rows;
@@ -27,17 +40,4 @@ exports.addressDetails = async function (id) {
         console.error(error.message);
         throw error;
     }
-
 }
-
-
-// exports.callList = async function () {
-//     try {
-//         const sqlQuery = "SELECT * from Clients";
-//         const rows = await db.query(sqlQuery);
-//         return rows;
-//     } catch (error) {
-//         console.error(error.message);
-//         throw error;
-//     }
-// };
