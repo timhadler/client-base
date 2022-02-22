@@ -130,23 +130,27 @@ button {
   display: inline-block;
   border: none;
   border-radius: 8px;
-  height: 35px;
-  padding-left: 20px;
-  padding-right: 20px;
-  font-size: 24px;
   text-align: center;
   cursor: pointer;
 }
 
 .button_primary {
+  height: 35px;
+  font-size: 24px;
   background-color: #009AAF;
   color: white;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .button_secondary {
-  border: 1px solid #009AAF;
+  height: 20px;
+  font-size: 16px;
+  border: none;
   background-color: white;
   color: #009AAF;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .dropdown {
@@ -203,8 +207,12 @@ button {
   grid-column: 3 / span 2;
 }
 
-.list_container {
-  height: 150px;
+.close_form {
+  display: block;
+  width: 25px;
+  border-top: 5px solid red;
+  margin-left: 10px;
+  cursor: pointer;
 }
 
 header {
@@ -327,122 +335,7 @@ main {
   font-weight: lighter;
 }
 
-/* The popup form - hidden by default */
-.form-popup {
-  display: none;
-  z-index: 9;
-  position: fixed;
-  top: 150px;
-  left: 120px;
-}
-
-/* Add styles to the form container */
-.form-container {
-  display: -ms-grid;
-  display: grid;
-  grid-auto-rows: -webkit-min-content;
-  grid-auto-rows: min-content;
-  padding: 10px;
-  background-color: white;
-  border: 1px solid #009AAF;
-}
-
-.form-container-details {
-  min-height: 476px;
-  -ms-grid-columns: 50px (minmax(150px, 300px))[2] minmax(100px, 190px) 50px;
-      grid-template-columns: 50px repeat(2, minmax(150px, 300px)) minmax(100px, 190px) 50px;
-      grid-template-areas: ". a a a ." ". b c d ." ". e e . .";
-}
-
-.form-container-add {
-  min-height: 516px;
-  -ms-grid-columns: 50px 300px 200px 250px  50px;
-      grid-template-columns: 50px 300px 200px 250px  50px;
-      grid-template-areas: ". a a a ." ". b c e ." ". b c d .";
-}
-
-.form-container header {
-  -ms-grid-row: 1;
-  -ms-grid-column: 2;
-  -ms-grid-column-span: 3;
-  grid-area: a;
-}
-
-.details_1 {
-  -ms-grid-row: 2;
-  -ms-grid-row-span: 2;
-  -ms-grid-column: 2;
-  grid-area: b;
-}
-
-.details_2 {
-  -ms-grid-row: 2;
-  -ms-grid-row-span: 2;
-  -ms-grid-column: 3;
-  grid-area: c;
-}
-
-.result {
-  -ms-grid-row: 3;
-  -ms-grid-column: 4;
-  grid-area: d;
-}
-
-.comments {
-  -ms-grid-row: 2;
-  -ms-grid-column: 4;
-  grid-area: e;
-}
-
-.add_col_1 {
-  -ms-grid-row: 2;
-  -ms-grid-row-span: 2;
-  -ms-grid-column: 2;
-  grid-area: b;
-}
-
-.add_col_2 {
-  -ms-grid-row: 2;
-  -ms-grid-row-span: 2;
-  -ms-grid-column: 3;
-  grid-area: c;
-}
-
-.add_comments {
-  -ms-grid-row: 2;
-  -ms-grid-column: 4;
-  grid-area: e;
-}
-
-.add_button {
-  -ms-grid-row: 3;
-  -ms-grid-column: 4;
-  grid-area: d;
-}
-
-.form_comments {
-  width: 250px;
-  height: 100px;
-}
-
-.close_form {
-  display: block;
-  width: 30px;
-  border-top: 6px solid red;
-  margin-left: 10px;
-  cursor: pointer;
-}
-
-.add_col_1 input {
-  width: 220px;
-}
-
-.form-container button {
-  display: block;
-}
-
-.customer_detail {
-  font-size: 20px;
-  color: #0652C3;
+.list_container {
+  height: 150px;
 }
 /*# sourceMappingURL=styles.css.map */
