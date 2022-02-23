@@ -1,0 +1,22 @@
+<div class="client_details">
+    <% if (details.type == "address")  {
+        var title = "Address";
+        var data = details.data;
+        var atr = "address";
+    } else if (details.type == "call") {
+        var title = "Call dates";
+        var data = details.data;
+        var atr = "rDate"   
+    }%>
+
+    <p class="color_primary size_small"> <%= title %> </p>
+    <hr class="line_header">
+
+    <div class="list_container margin_t_med margin_l_med">
+        <ul id="client_details">
+            <li>
+                <%- include("details_address", {data:data, atr:atr}) %>   
+            </li>
+        </ul>
+    </div>
+</div>

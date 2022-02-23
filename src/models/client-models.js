@@ -15,8 +15,25 @@ exports.callList = async function () {
     }
 };
 
+// Fetches all entries from all tables associated with a given client id
+// as an object -- {client, cAddresses, cCallDates, cContacts, cComments, cServices}
+exports.clientDetails = async function(id) {
+    try {
+        //sqlQuery = "";
+        //const rows = await db.query(sqlQuery);
+        const add = await addressDetails(id);
+        const call = await callDetails(id);
+        const cont = await contactDetails(id);
+
+        return {addresses: add, calls:call, contacts:cont};
+    } catch (error) {
+        console.error(error.message);
+        throw error;
+    }
+}
+
 // Fetches the address details of a given client_id
-exports.addressDetails = async function (id) {
+async function addressDetails(id) {
     try {
         const sqlQuery = "SELECT * from addresses WHERE client_id=" + id;
         const rows = await db.query(sqlQuery);
@@ -29,12 +46,24 @@ exports.addressDetails = async function (id) {
 }
 
 // Fetches the call dates of a given client_id
-exports.callDetails = async function (id) {
+async function callDetails(id) {
     try {
         const sqlQuery = "SELECT * from reminders WHERE client_id=" + id;
         const rows = await db.query(sqlQuery);
         //console.log(sqlQuery);
         //console.log(rows[0]);
+        return rows;
+    } catch (error) {
+        console.error(error.message);
+        throw error;
+    }
+}
+
+// Fetches all the contacts of a given client_id
+async function contactDetails(id) {
+    try {
+        const sqlQuery = "SELECT * FROM contacts WHERE contacts.client_id=23"
+        rows = await db.query(sqlQuery);
         return rows;
     } catch (error) {
         console.error(error.message);

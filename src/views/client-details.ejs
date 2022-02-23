@@ -14,25 +14,7 @@
         <div class="details_grid pad-t-med pad-l-med">
             <div class="grid_a_1">
                 <!-- Address details -->
-                <div class="client_details">
-                    <p class="color_primary size_small"> Address </p>
-                    <hr class="line_header">
-                </div>
-                <div class="list_container margin_t_med margin_l_med">
-                    <ul id="client_details">
-                        <li> 
-                            <% for (let i=0; i < addDetails.length; i++) { %>
-                                <div class="flex flex-ai-c flex-jc-sb">
-                                    <%=addDetails[i].address%>
-                                    <div class="flex flex-ai-c">
-                                        <button type="button" class="button_secondary"> Edit </button>
-                                        <span class="close_form"></span>
-                                        </div>
-                                </div> 
-                            <% } %>
-                        </li>
-                    </ul>
-                </div>
+                <%- include("partials/details_layout", {details:{type:"address", data:details.addresses}}) %>
                 <!-- Contact details -->
                 <div class="client_details">
                     <p class="color_primary size_small"> Contact details </p>
@@ -46,22 +28,7 @@
             </div>
             <div class="gird_a_2">
                 <!-- Call date details -->
-                <div class="client_details">
-                    <p class="color_primary size_small"> Call dates </p>
-                    <hr class="line_header">
-                </div>
-                <div class="list_container margin_t_med margin_l_med">
-                    <ul id="call_dates">
-                        <li> 
-                            <% for (let i=0; i < callDetails.length; i++) { %>
-                                <div class="flex flex-ai-c flex-jc-sb">
-                                    <%=callDetails[i].rDate.toLocaleDateString()%>
-                                    <span class="close_form">
-                                </div> 
-                            <% } %>
-                        </li>
-                    </ul>
-                </div>
+                <%- include("partials/details_layout", {details:{type:"call", data:details.calls}}) %>
                 <!-- Comments -->
                 <div class="client_details">
                     <p class="color_primary size_small"> Comments </p>
