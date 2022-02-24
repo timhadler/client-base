@@ -17,7 +17,7 @@ router.get("/:id", async (req, res) => {
             details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString();
         }
 
-        res.status(200).render("client-details.ejs", {callList:callList, details:details});
+        res.status(200).render("clientDetails/client-details.ejs", {callList:callList, details:details});
     } catch (error) {
         res.status(500).send(error.message);
     }

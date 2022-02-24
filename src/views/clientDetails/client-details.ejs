@@ -1,5 +1,5 @@
 <!-- Left pane (call list) -->
-<%- include("./partials/call-list.ejs", {calls:callList}) %>
+<%- include("../partials/call-list.ejs", {calls:callList}) %>
 
 
 <!-- Client details pane -->
@@ -14,7 +14,7 @@
         <div class="details_grid pad-t-med pad-l-med">
             <div class="grid_a_1">
                 <!-- Address details -->
-                <%- include("partials/details_layout", {details:{type:"address", data:details.addresses}}) %>
+                <%- include("../partials/clientDetails/details_layout", {details:{type:"address", data:details.addresses}}) %>
                 <!-- Contact details -->
                 <div class="client_details">
                     <p class="color_primary size_small"> Contact details </p>
@@ -28,7 +28,7 @@
             </div>
             <div class="gird_a_2">
                 <!-- Call date details -->
-                <%- include("partials/details_layout", {details:{type:"call", data:details.calls}}) %>
+                <%- include("../partials/clientDetails/details_layout", {details:{type:"call", data:details.calls}}) %>
                 <!-- Comments -->
                 <div class="client_details">
                     <p class="color_primary size_small"> Comments </p>
