@@ -21,11 +21,12 @@ exports.clientDetails = async function(id) {
     try {
         //sqlQuery = "";
         //const rows = await db.query(sqlQuery);
+        const cli = await clientDetails(id);
         const add = await addressDetails(id);
         const call = await callDetails(id);
         const cont = await contactDetails(id);
 
-        return {addresses: add, calls:call, contacts:cont};
+        return {client: cli, addresses: add, calls:call, contacts:cont};
     } catch (error) {
         console.error(error.message);
         throw error;
@@ -62,9 +63,21 @@ async function callDetails(id) {
 // Fetches all the contacts of a given client_id
 async function contactDetails(id) {
     try {
-        const sqlQuery = "SELECT * FROM contacts WHERE contacts.client_id=23"
+        const sqlQuery = "SELECT * FROM contacts WHERE contacts.client_id=" + id;
         rows = await db.query(sqlQuery);
         return rows;
+    } catch (error) {
+        console.error(error.message);
+        throw error;
+    }
+}
+
+// Fetches all the client details of a given client_id
+async function clientDetails(id) {
+    try {
+        const sqlQuery = "SELECT * FROM clients WHERE clients.id=" + id;
+        rows = await db.query(sqlQuery);
+        return rows[0];
     } catch (error) {
         console.error(error.message);
         throw error;

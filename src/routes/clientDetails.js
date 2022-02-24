@@ -13,6 +13,7 @@ router.get("/:id", async (req, res) => {
         // const addressDetails = await clients.clientDetails(req.params.id);
         // let callDetails = await clients.callDetails(req.params.id);
         let details = await clients.clientDetails(req.params.id);
+        //console.log(details.client);
         for (let i = 0; i < details.calls.length; i++) {
             details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString();
         }
