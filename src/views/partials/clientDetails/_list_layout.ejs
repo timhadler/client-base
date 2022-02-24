@@ -1,0 +1,27 @@
+<div class="client_details">
+    <%
+    var title;
+    var file;
+    if (details.type == "address")  {
+        title = "Address";
+         file = "_address"
+    } else if (details.type == "call") {
+        title = "Call dates";
+        file = "_call"
+    } else if (details.type == "contact") {
+        title = "Contacts";
+        file = "_contact"
+    }
+    %>
+
+    <p class="color_primary size_small"> <%= title %> </p>
+    <hr class="line_header">
+
+    <div class="list_container margin_t_med margin_l_med">
+        <ul id="client_details">
+            <li>
+                <%- include(file, {data:details.data}) %>   
+            </li>
+        </ul>
+    </div>
+</div>

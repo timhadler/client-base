@@ -14,31 +14,15 @@
         <div class="details_grid pad-t-med pad-l-med">
             <div class="grid_a_1">
                 <!-- Address details -->
-                <%- include("../partials/clientDetails/details_layout", {details:{type:"address", data:details.addresses}}) %>
+                <%- include("../partials/clientDetails/_list_layout", {details:{type:"address", data:details.addresses}}) %>
                 <!-- Contact details -->
-                <div class="client_details">
-                    <p class="color_primary size_small"> Contact details </p>
-                    <hr class="line_header">
-                </div>
-                <div class="list_container margin_t_med margin_l_med">
-                    <ul id="contact_details">
-                        <li> 584 52455 885 </li>
-                    </ul>
-                </div>
+                <%- include("../partials/clientDetails/_list_layout", {details:{type:"contact", data:details.contacts}}) %>
             </div>
             <div class="gird_a_2">
                 <!-- Call date details -->
-                <%- include("../partials/clientDetails/details_layout", {details:{type:"call", data:details.calls}}) %>
+                <%- include("../partials/clientDetails/_list_layout", {details:{type:"call", data:details.calls}}) %>
                 <!-- Comments -->
-                <div class="client_details">
-                    <p class="color_primary size_small"> Comments </p>
-                    <hr class="line_header">
-                </div>
-                <div class="list_container margin_t_med margin_l_med">
-                    <p id="client_comments" class="color_secondary">
-                        Yeah it was bloody good
-                    </p>
-                </div>
+                <%- include("../partials/clientDetails/_comment", {comments:details.client.comments}) %>
             </div>
             <!-- Services -->
             <div class="grid_a_3_4">
