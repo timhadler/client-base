@@ -21,7 +21,7 @@ exports.clientDetails = async function(id) {
     try {
         //sqlQuery = "";
         //const rows = await db.query(sqlQuery);
-        const cli = await clientDetails(id);
+        const cli = await customerDetails(id);
         const add = await addressDetails(id);
         const call = await callDetails(id);
         const cont = await contactDetails(id);
@@ -73,7 +73,7 @@ async function contactDetails(id) {
 }
 
 // Fetches all the client details of a given client_id
-async function clientDetails(id) {
+async function customerDetails(id) {
     try {
         const sqlQuery = "SELECT * FROM clients WHERE clients.id=" + id;
         rows = await db.query(sqlQuery);
