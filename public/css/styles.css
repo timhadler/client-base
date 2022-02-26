@@ -373,4 +373,14 @@ main {
   margin: 0;
   width: 300px;
 }
+
+
+.formPopup {
+  display: none;
+  position: absolute;
+  background-color: white;
+  width: 450px;
+}
+
+
 /*# sourceMappingURL=styles.css.map */

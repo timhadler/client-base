@@ -42,7 +42,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
+router.post("/addclient", async (req, res) => {
     try {
         const body = req.body;
         if (body.name != "") {
@@ -50,9 +50,26 @@ router.post("/", async (req, res) => {
             db.query(sqlQuery, [body.name, body.comments]);
 
             const id = await clients.clientId(body.name);
-            
+
             res.redirect("/clients/" + id);
         };
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+});
+
+router.post("/addaddress", async (req, res) => {
+    try {
+        const body = req.body;
+        res.send("Add address");
+        // if (body.name != "") {
+        //     const sqlQuery = "INSERT INTO clients (name, comments) VALUES(?, ?)";
+        //     db.query(sqlQuery, [body.name, body.comments]);
+
+        //     const id = await clients.clientId(body.name);
+
+        //     res.redirect("/clients/" + id);
+        // };
     } catch (error) {
         res.status(400).send(error.message);
     }
