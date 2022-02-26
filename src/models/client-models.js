@@ -1,6 +1,11 @@
 //const express = require("express");
 const db = require("./../database");
 
+// Returns a clientDetails object
+exports.detailsModel = function(name) {
+    this.name = name;
+}
+
 // Fetches the first x call dates from databse and the associated 
 // client details (clients table)
 exports.callList = async function () {
@@ -18,20 +23,26 @@ exports.callList = async function () {
 // Fetches all entries from all tables associated with a given client id
 // as an object -- {client, cAddresses, cCallDates, cContacts, cComments, cServices}
 exports.clientDetails = async function(id) {
-    try {
-        //sqlQuery = "";
-        //const rows = await db.query(sqlQuery);
-        const cli = await customerDetails(id);
-        const add = await addressDetails(id);
-        const call = await callDetails(id);
-        const cont = await contactDetails(id);
 
-        return {client: cli, addresses: add, calls:call, contacts:cont};
-    } catch (error) {
-        console.error(error.message);
-        throw error;
-    }
+    //sqlQuery = "";
+    //const rows = await db.query(sqlQuery);
+    const cli = await customerDetails(id);
+    const add = await addressDetails(id);
+    const call = await callDetails(id);
+    const cont = await contactDetails(id);
+
+    return {client: cli, addresses: add, calls:call, contacts:cont};
 }
+
+// Returns the id of a given client name
+exports.clientId = async function(name) {
+    const sqlQuery = "SELECT id FROM clients WHERE name=?";
+    const id = await db.query(sqlQuery, name);
+    if (id.length > 1) {
+        console.log("Carefull multiple clients with name: " + name);
+    }
+    return id[id.length - 1].id;
+};
 
 // Fetches the address details of a given client_id
 async function addressDetails(id) {

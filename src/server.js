@@ -5,6 +5,7 @@ const app = express();
 const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
 const override = require("method-override");
+const bodyParser = require("body-parser");
 
 const indexRouter = require("./routes/index");
 const clientRouter = require("./routes/clientDetails");
@@ -15,6 +16,7 @@ app.set("layout", "layouts/layout");
 app.use(expressLayouts);
 app.use(express.static(path.join("public")));
 app.use(override("_method"));
+app.use(bodyParser.urlencoded( {extended: false } ));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

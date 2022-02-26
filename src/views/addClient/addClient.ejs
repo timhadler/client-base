@@ -1,0 +1,30 @@
+<!-- Left pane (call list) -->
+<%- include("../partials/call-list.ejs", {calls:callList}) %>
+
+
+<!-- Client details pane -->
+<div class="grid_col_2">
+    <div class="margin_t_l margin_l_l">
+        <!-- Details header -->
+        <h2 class="size_small bold"> Add Customer </h2>
+
+        <form action= "/clients" method="POST" class="details_grid pad-t-med pad-l-med">
+            <div class="grid_a_1">
+                <%- include("../partials/addClient/client.ejs") %>
+                <%//- include("../partials/addClient/address.ejs") %>
+            </div>
+
+            <div class="grid_a_2">
+                <%//- include("../partials/addClient/contact.ejs") %>
+                <%//- include("../partials/addClient/freashAir_rDate.ejs") %>
+            </div>
+
+            <div class="grid_a_3_4">
+                <div class="add_button flex flex-jc-r flex-ai-b">
+                    <button type="submit" class="button_primary"> Submit </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

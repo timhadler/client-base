@@ -40,10 +40,6 @@ input, label {
   margin: .4rem 0;
 }
 
-input {
-  margin: 0;
-}
-
 .flex {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -134,6 +130,14 @@ button {
   cursor: pointer;
 }
 
+.button {
+  display: inline-block;
+  border: none;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
 .button_primary {
   height: 35px;
   font-size: 24px;
@@ -144,13 +148,18 @@ button {
 }
 
 .button_secondary {
-  height: 20px;
-  font-size: 16px;
+  height: 25px;
+  font-size: 20px;
   border: 1px solid #009AAF;
   background-color: white;
   color: #009AAF;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.button_cancel {
+  border-color: red;
+  color: red;
 }
 
 .dropdown {
@@ -215,6 +224,10 @@ button {
   cursor: pointer;
 }
 
+.hidden {
+  display: none;
+}
+
 header {
   -ms-grid-column: 2;
   -ms-grid-column-span: 2;
@@ -259,8 +272,20 @@ main {
   padding-left: 15px;
 }
 
+.pad-t-lar {
+  padding-top: 25px;
+}
+
+.pad-l-lar {
+  padding-left: 25px;
+}
+
 .margin_b_sm {
   margin-bottom: 10px;
+}
+
+.margin_r_sm {
+  margin-right: 10px;
 }
 
 .margin_b_med {
@@ -299,11 +324,11 @@ main {
   display: grid;
   -ms-grid-columns: 1fr 1fr;
       grid-template-columns: 1fr 1fr;
-  -ms-grid-rows: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
+  -ms-grid-rows: 2fr 1fr;
+      grid-template-rows: 2fr 1fr;
   -webkit-column-gap: 80px;
           column-gap: 80px;
-  row-gap: 80px;
+  row-gap: 10px;
 }
 
 .grid_a_1 {
@@ -337,5 +362,15 @@ main {
 
 .list_container {
   height: 150px;
+}
+
+.form_comments {
+  width: 300px;
+  height: 100px;
+}
+
+.details_grid input[type="text"] {
+  margin: 0;
+  width: 300px;
 }
 /*# sourceMappingURL=styles.css.map */
