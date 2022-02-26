@@ -18,27 +18,6 @@ router.get("/add-client", async (req, res) => {
     }
 });
 
-router.get("/:id", async (req, res) => {
-    try {
-        const callList = await clients.callList();
-        let details = await clients.clientDetails(req.params.id);
-        //console.log(details);
-        
-        // Convert dates to a nicer format to display
-        for (let i = 0; i < details.calls.length; i++) {
-            details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString();
-        }
-
-        if (details.client != null) {
-            res.status(200).render("clientDetails/client-details.ejs", {callList:callList, details:details});
-        } else {
-            res.redirect("/");
-        }
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
 router.post("/add-client", async (req, res) => {
     try {
         const body = req.body;
@@ -69,6 +48,27 @@ router.post("/add-address", async (req, res) => {
         // };
     } catch (error) {
         res.status(400).send(error.message);
+    }
+});
+
+router.get("/:id", async (req, res) => {
+    try {
+        const callList = await clients.callList();
+        let details = await clients.clientDetails(req.params.id);
+        //console.log(details);
+        
+        // Convert dates to a nicer format to display
+        for (let i = 0; i < details.calls.length; i++) {
+            details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString();
+        }
+
+        if (details.client != null) {
+            res.status(200).render("clientDetails/client-details.ejs", {callList:callList, details:details});
+        } else {
+            res.redirect("/");
+        }
+    } catch (error) {
+        res.status(500).send(error.message);
     }
 });
 

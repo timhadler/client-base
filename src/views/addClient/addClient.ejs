@@ -8,15 +8,13 @@
         <!-- Details header -->
         <h2 class="size_small bold"> Add Customer </h2>
 
-        <form action= "/clients/addclient" method="POST" class="details_grid pad-t-med pad-l-med">
+        <form action= "/clients/add-client" method="POST" class="details_grid pad-t-med pad-l-med">
             <div class="grid_a_1">
-                <%- include("../partials/addClient/client.ejs") %>
-                <%//- include("../partials/addClient/address.ejs") %>
+                <%- include("../partials/inputForms/client") %>
             </div>
 
             <div class="grid_a_2">
-                <%//- include("../partials/addClient/contact.ejs") %>
-                <%//- include("../partials/addClient/freashAir_rDate.ejs") %>
+                <%- include("../partials/inputForms/contact") %>
             </div>
 
             <div class="grid_a_3_4">
@@ -24,7 +22,6 @@
                     <button type="submit" class="button_primary"> Submit </button>
                 </div>
             </div>
-
         </form>
     </div>
 </div>
