@@ -1,3 +1,9 @@
+<!-- INPUT: details
+Is a an object that contains lists of each database table
+ie. details.client is an object
+    details.addresses, contacts, and calls are lists of objects
+-->
+
 <!-- Left pane (call list) -->
 <%- include("../partials/call-list.ejs", {calls:callList}) %>
 
@@ -14,18 +20,65 @@
         <div class="details_grid pad-t-med pad-l-med">
             <div class="grid_a_1">
                 <!-- Address details -->
-                <%- include("../partials/clientDetails/_list_layout", {details:{type:"address", data:details.addresses}}) %>
+                <div class="client_details">
+                    <!-- Header -->
+                    <div class="flex flex-ai-c flex-jc-sb">
+                        <p class="color_primary size_small"> Address </p>
+                        <a class="button button_secondary"> Add </a>
+                    </div>
+                    <hr class="line_header">
+
+                    <!-- Address list -->
+                    <div class="list_container margin_t_med margin_l_med">
+                        <ul id="client_details">
+                            <%- include("../partials/clientDetails/_address", {data:details.addresses}) %>
+                        </ul>
+                    </div>
+                </div>
+
                 <!-- Contact details -->
-                <%- include("../partials/clientDetails/_list_layout", {details:{type:"contact", data:details.contacts}}) %>
+                <div class="client_details">
+                    <!-- Header -->
+                    <div class="flex flex-ai-c flex-jc-sb">
+                        <p class="color_primary size_small"> Contacts </p>
+                        <a class="button button_secondary"> Add </a>
+                    </div>
+                    <hr class="line_header">
+
+                    <!-- Contacts list -->
+                    <div class="list_container margin_t_med margin_l_med">
+                        <ul id="client_details">
+                            <%- include("../partials/clientDetails/_contact", {data:details.contacts}) %>   
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="gird_a_2">
+            <div class="grid_a_2">
                 <!-- Call date details -->
-                <%- include("../partials/clientDetails/_list_layout", {details:{type:"call", data:details.calls}}) %>
+                <div class="client_details">
+                    <!-- Header -->
+                    <div class="flex flex-ai-c flex-jc-sb">
+                        <p class="color_primary size_small"> Call dates </p>
+                        <a class="button button_secondary"> Add </a>
+                    </div>
+                    <hr class="line_header">
+
+                    <!-- Call date list -->
+                    <div class="list_container margin_t_med margin_l_med">
+                        <ul id="client_details">
+                            <%- include("../partials/clientDetails/_call", {data:details.calls}) %>   
+                        </ul>
+                    </div>
+                </div>
                 <!-- Comments -->
-                <%- include("../partials/clientDetails/_comment", {comments:details.client.comments}) %>
+                <p class="color_primary size_small"> Comments </p>
+                <hr class="line_header">
+            
+                <div class="list_container margin_t_med margin_l_med">
+                    <p> <%= details.client.comments %> </p>
+                </div>
             </div>
             <!-- Services -->
-            <%/*%><%- include("../partials/clientDetails/_services") %><%*/%>
         </div>
     </div>
 </div>

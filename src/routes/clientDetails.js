@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
     res.send("How did you get here?");
 });
 
-router.get("/add", async (req, res) => {
+router.get("/add-client", async (req, res) => {
     try {
         const callList = await clients.callList();
 
@@ -20,14 +20,11 @@ router.get("/add", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     try {
-        //const sqlQuery = "SELECT * from Clients WHERE id=?";
-        //const rows = await db.query(sqlQuery, req.params.id);
-
         const callList = await clients.callList();
-        // const addressDetails = await clients.clientDetails(req.params.id);
-        // let callDetails = await clients.callDetails(req.params.id);
         let details = await clients.clientDetails(req.params.id);
         //console.log(details);
+        
+        // Convert dates to a nicer format to display
         for (let i = 0; i < details.calls.length; i++) {
             details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString();
         }
@@ -42,7 +39,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/addclient", async (req, res) => {
+router.post("/add-client", async (req, res) => {
     try {
         const body = req.body;
         if (body.name != "") {
@@ -58,7 +55,7 @@ router.post("/addclient", async (req, res) => {
     }
 });
 
-router.post("/addaddress", async (req, res) => {
+router.post("/add-address", async (req, res) => {
     try {
         const body = req.body;
         res.send("Add address");
