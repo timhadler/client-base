@@ -26,7 +26,8 @@
     <hr class="line_header">
 
     <% if (details.type == "address") { %>
-        <%- include("../addClient/address.ejs") %>
+        <% var id = details.data[0]; %>
+        <%- include("../addClient/address.ejs", {id: id.id}) %>
     <% } %>
 
     <div class="list_container margin_t_med margin_l_med">
