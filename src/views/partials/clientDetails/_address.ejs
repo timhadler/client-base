@@ -6,8 +6,11 @@
                 <button id="editAddressBut" type="button" class="button_secondary"> Edit </button>
                 <form action="/clients/1?_method=DELETE" method="POST">
                     <button type="submit"><span class="close_form"></span></button>
-                </span>
+                </form>
             </div>
         </div> 
     </li>
 <% } %> 
+
+<!-- Edit form -->
+<%- include("../inputForms/address", {id:data[0].client_id}) %>

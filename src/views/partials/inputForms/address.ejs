@@ -1,19 +1,21 @@
-<form action="/clients/addaddress" method="POST" id="addFormPopup" class="formPopup">
-    <!--<h3> Address: </h3> <br />-->
-    <label> Street: </label> <br />
-    <input type="text" name="street"> <br /><br />
-    <label> Suburb: </label> <br />
-    <input type="text" name="suburb"> <br /><br />
-    <label> City: </label> <br />
-    <input type="text" name="city"> <br /><br />
-    <label> Postcode: </label> <br />
-    <input type="text" name="pc"><br /><br />
-    <label> Area: </label> <br />
-    <input type="text" name="area"><br />
+<div id="addFormPopup" class="formPopup">
+    <form action="/clients/<%=id%>" method="GET">
+        <!--<h3> Address: </h3> <br />-->
+        <label> Street: </label> <br />
+        <input type="text" name="street"> <br /><br />
+        <label> Suburb: </label> <br />
+        <input type="text" name="suburb"> <br /><br />
+        <label> City: </label> <br />
+        <input type="text" name="city"> <br /><br />
+        <label> Postcode: </label> <br />
+        <input type="text" name="pc"><br /><br />
+        <label> Area: </label> <br />
+        <input type="text" name="area"><br />
 
-    <br />
-    <div class="flex flex-ai-c flex-jc-r">
-        <button type="submit" class="button_primary margin_r_sm"> Submit </button>
-        <a href="/clients/<%= id %>" class="button button_secondary button_cancel"> Cancel </a>
-    </div>
-</form>
+        <br />
+        <div class="flex flex-ai-c flex-jc-r">
+            <button type="submit" class="button_primary margin_r_sm"> Submit </button>
+            <a href="/clients/<%=id%>" class="button button_secondary button_cancel"> Cancel </a>
+        </div>
+    </form>
+</div>
