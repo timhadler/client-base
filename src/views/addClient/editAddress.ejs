@@ -1,0 +1,19 @@
+<!-- Left pane (call list) -->
+<%- include("../partials/call-list.ejs", {calls:callList}) %>
+
+<div class="grid_col_2">
+    <div class="margin_t_l margin_l_l">
+        <!-- Details header -->
+        <h2 class="size_small bold"> Edit </h2>
+
+        <form action= "/clients/edit-address-" method="POST" class="pad-t-med pad-l-med">
+            <% const data = {street:address.street, sub:address.suburb, city:address.city, pc:address.pc, area:address.area, fa:address.fa, c:address.clientAddress} %>
+            <%- include("../partials/inputForms/address", data) %>
+
+            <div class="flex flex-ai-c flex-jc-r">
+                <button type="submit" class="button_primary margin_r_sm"> Submit </button>
+                <a href="/clients/" class="button button_secondary button_cancel"> Cancel </a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -22,16 +22,16 @@ ie. details.client is an object
                 <!-- Address details -->
                 <div class="client_details">
                     <!-- Header -->
-                    <div class="flex flex-ai-c flex-jc-sb">
+                    <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
                         <p class="color_primary size_small"> Address </p>
-                        <a class="button button_secondary"> Add </a>
+                        <button id="addAddressBut" class="button_secondary"> Add </button>
                     </div>
                     <hr class="line_header">
 
                     <!-- Address list -->
                     <div class="list_container margin_t_med margin_l_med">
                         <ul id="client_details">
-                            <%- include("../partials/clientDetails/_address", {data:details.addresses}) %>
+                            <%- include("../partials/clientDetails/_address", {client_id: details.client.id, data:details.addresses}) %>
                         </ul>
                     </div>
                 </div>
@@ -39,7 +39,7 @@ ie. details.client is an object
                 <!-- Contact details -->
                 <div class="client_details">
                     <!-- Header -->
-                    <div class="flex flex-ai-c flex-jc-sb">
+                    <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
                         <p class="color_primary size_small"> Contacts </p>
                         <a class="button button_secondary"> Add </a>
                     </div>
@@ -57,7 +57,7 @@ ie. details.client is an object
                 <!-- Call date details -->
                 <div class="client_details">
                     <!-- Header -->
-                    <div class="flex flex-ai-c flex-jc-sb">
+                    <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
                         <p class="color_primary size_small"> Call dates </p>
                         <a class="button button_secondary"> Add </a>
                     </div>
@@ -71,7 +71,7 @@ ie. details.client is an object
                     </div>
                 </div>
                 <!-- Comments -->
-                <p class="color_primary size_small"> Comments </p>
+                <p class="color_primary size_small margin_b_sm"> Comments </p>
                 <hr class="line_header">
             
                 <div class="list_container margin_t_med margin_l_med">

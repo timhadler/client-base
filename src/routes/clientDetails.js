@@ -11,7 +11,7 @@ router.get("/", (req, res) => {
 router.get("/add-client", async (req, res) => {
     try {
         const callList = await clients.callList();
-        res.render("addClient/addCLient.ejs", {callList:callList});
+        res.render("addClient/addClient.ejs", {callList:callList});
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -24,8 +24,8 @@ router.post("/add-client", async (req, res) => {
             let id = await clients.createClient(body.name, body.comments);
             await clients.createContact(body.contactName, body.number, body.email, 1, id);
             await clients.createReminder(body.rDate, id);
-            
-            res.redirect("/clients/" + id);
+
+            res.status(200).redirect("/clients/" + id);
         } else {
             // error message
             console.log(body.rDate);
@@ -41,10 +41,21 @@ router.post("/add-client", async (req, res) => {
     }
 });
 
-router.post("/add-address", async (req, res) => {
+router.get("/edit-address-:id", async (req, res) => {
+    try {
+        const callList = await clients.callList();
+        const add = await clients.address(req.params.id);
+        //console.log(add.street);
+        res.render("addClient/editAddress.ejs", {callList:callList, address:add});
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+router.post("/add-address-:id", async (req, res) => {
     try {
         const body = req.body;
-        res.send("Add address");
+        res.send(req.params.id);
         // if (body.name != "") {
         //     const sqlQuery = "INSERT INTO clients (name, comments) VALUES(?, ?)";
         //     db.query(sqlQuery, [body.name, body.comments]);

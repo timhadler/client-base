@@ -1,9 +1,27 @@
+<!-- Edit address form -->
+<form id="editFormPopup" class="formPopup" action="/clients/<%=client_id%>" method="GET">
+    <%- include("../inputForms/address") %>
+    <div class="flex flex-ai-c flex-jc-r">
+        <button type="submit" class="button_primary margin_r_sm"> Submit </button>
+        <a href="/clients/<%=client_id%>" class="button button_secondary button_cancel"> Cancel </a>
+    </div>
+</form>
+
+<!-- Add address form -->
+<form id="addFormPopup" class="formPopup" action="/clients/add-address-<%=client_id%>" method="POST">
+    <%- include("../inputForms/address") %>
+    <div class="flex flex-ai-c flex-jc-r">
+        <button type="submit" class="button_primary margin_r_sm"> Submit </button>
+        <a href="/clients/<%=client_id%>" class="button button_secondary button_cancel"> Cancel </a>
+    </div>
+</form>
+
 <% for (let i=0; i < data.length; i++) { %>
     <li>
         <div class="flex flex-ai-c flex-jc-sb">
             <p> <%=data[i].street%> </p>
-            <div class="flex flex-ai-c">
-                <button id="editAddressBut" type="button" class="button_secondary"> Edit </button>
+            <div id="test" class="flex flex-ai-c">
+                <a href="/clients/edit-address-<%= data[i].id %>" class="button button_secondary"> Edit </a>
                 <form action="/clients/1?_method=DELETE" method="POST">
                     <button type="submit"><span class="close_form"></span></button>
                 </form>
@@ -11,6 +29,3 @@
         </div> 
     </li>
 <% } %> 
-
-<!-- Edit form -->
-<%- include("../inputForms/address", {id:data[0].client_id}) %>

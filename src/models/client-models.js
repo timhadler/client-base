@@ -1,10 +1,9 @@
 //const express = require("express");
 const db = require("./../database");
 
-// Returns a clientDetails object
-exports.detailsModel = function(name) {
-    this.name = name;
-}
+/***********************************************************
+ * Retrieval
+ ***********************************************************/
 
 // Fetches the first x call dates from database and the associated 
 // client details (clients table)
@@ -26,6 +25,22 @@ exports.clientDetails = async function(id) {
 
     return {client: cli, addresses: add, calls:call, contacts:cont};
 }
+
+// Retrieves address with given id
+exports.address = async function(id) {
+    const sqlQuery = "SELECT * FROM addresses WHERE id=?";
+    const rows = await db.query(sqlQuery, id);
+
+    if (rows.length > 1) {
+        console.log("Somethings gone wrong, fetched multiple addresses with same address id");
+    }
+
+    return rows[0];
+}
+
+/***********************************************************
+ * Creation
+ ***********************************************************/
 
 // Creates a client entry
 // Returns the id of the created client
@@ -55,11 +70,15 @@ exports.createContact = async function(name, phone, email, cNum, id) {
 
 // Creates a reminder entry
 exports.createReminder = async function(rDate, id) {
-    //let rDate = new Date(date);
-    //rDate = rDate.toISOString().slice(0, 19).replace('T', ' ');
-
     const sqlQuery = "INSERT INTO reminders (rDate, client_id) VALUES(?, ?)";
     await db.query(sqlQuery, [rDate, id]);
+}
+
+// Creates an address entry
+exports.createAddress = async function(street, suburb, city, pc, area, fa, clientAddress, id) {
+    const params = [street, suburb, city, pc, area, fa, clientAddress, id];
+    const sqlQuery = "INSERT INTO addresses (street, suburb, city, pc, area, fa, clientAddress, client_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+    await db.query(sqlQuery, params);
 }
 
 /***********************************************************
