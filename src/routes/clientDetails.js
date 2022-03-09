@@ -28,13 +28,20 @@ router.post("/add-client", async (req, res) => {
             res.status(200).redirect("/clients/" + id);
         } else {
             // error message
-            console.log(body.rDate);
-            res.redirect("/");
+            //console.log(body.rDate);
+            //res.redirect("/");
+            const callList = await clients.callList();
+            const error = "Make sure to provide client name, contact name and number, and reminder date";
+            res.render("addClient/addClient.ejs", {callList:callList, error:error});
         }
     } catch (error) {
         if (error.message.includes("Duplicate entry")) {
             //error message
-            res.redirect("/");
+            // Make sure to repopulate the user input when re-rendering 
+            const callList = await clients.callList();
+            const error = "Name already exists in client database";
+            res.render("addClient/addClient.ejs", {callList:callList, error:error});
+            //res.redirect("/");
         } else {
             res.status(400).send(error.message);
         }

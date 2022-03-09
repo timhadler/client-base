@@ -8,6 +8,11 @@
         <!-- Details header -->
         <h2 class="size_small bold"> Add Customer </h2>
 
+        <!-- Error message -->
+        <% if (locals.error) { %>
+            <p style="color:red"> <%= locals.error %> </p>
+        <% } %>
+
         <form action= "/clients/add-client" method="POST" class="details_grid pad-t-med pad-l-med">
             <div class="grid_a_1">
                 <%- include("../partials/inputForms/client") %>
