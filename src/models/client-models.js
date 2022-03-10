@@ -81,6 +81,13 @@ exports.createAddress = async function(street, suburb, city, pc, area, fa, clien
     await db.query(sqlQuery, params);
 }
 
+// Edits an address entry
+exports.editAddress = async function(id, street, suburb, city, pc, area, fa, clientAddress) {
+    const params = [street, suburb, city, pc, area, fa, clientAddress, id];
+    const sqlQuery = "UPDATE addresses SET street=?, suburb=?, city=?, pc=?, area=?, fa=?, clientAddress=? WHERE id=?";
+    await db.query(sqlQuery, params);
+}
+
 /***********************************************************
  * Helper functions
  ***********************************************************/

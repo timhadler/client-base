@@ -20,21 +20,22 @@ router.get("/add-client", async (req, res) => {
 router.post("/add-client", async (req, res) => {
     try {
         const body = req.body;
-        if (body.name != "" && body.contactName != "" && body.rDate != "") {
+        if (body.name != "" && body.contactName != "" && body.rDate != "" && body.number != "") {
             let id = await clients.createClient(body.name, body.comments);
             await clients.createContact(body.contactName, body.number, body.email, 1, id);
             await clients.createReminder(body.rDate, id);
 
-            res.status(200).redirect("/clients/" + id);
+            res.status(201).redirect("/clients/" + id);
         } else {
             // error message
             //console.log(body.rDate);
             //res.redirect("/");
             const callList = await clients.callList();
-            const error = "Make sure to provide client name, contact name and number, and reminder date";
+            const error = "Make sure to provide client name, contact name and number, and call back date";
             res.render("addClient/addClient.ejs", {callList:callList, error:error});
         }
     } catch (error) {
+        // If error was caused by a duplicate name
         if (error.message.includes("Duplicate entry")) {
             //error message
             // Make sure to repopulate the user input when re-rendering 
@@ -54,6 +55,26 @@ router.get("/edit-address-:id", async (req, res) => {
         const add = await clients.address(req.params.id);
         //console.log(add.street);
         res.render("addClient/editAddress.ejs", {callList:callList, address:add});
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+router.post("/edit-address-:cId-:addId", async (req, res) => {
+    try {
+        const body = req.body;
+        if (body.street != "" && typeof body.freshAir != "undefined") {
+            let cAddress;
+            if (body.clientAddress == "1") {
+                cAddress = 1;
+            } else {
+                cAddress = 0;
+            }
+
+            await clients.editAddress(req.params.addId, body.street, body.suburb, body.city, body.pc, body.area, body.freshAir, cAddress);
+
+            res.status(201).redirect("/clients/" + req.params.cId);
+        }
     } catch (error) {
         res.status(500).send(error.message);
     }
