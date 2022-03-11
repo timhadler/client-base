@@ -41,17 +41,17 @@ router.post("/add-client", async (req, res) => {
     }
 });
 
-router.post("/edit-client/:id", async (req, res) => {
+router.post("/:id/editClient", async (req, res) => {
     try {
         const body = req.body;
         await clients.editClient(req.params.id, body.name, body.comments);
-        res.redirect("/clients/" + req.params.id);
+        res.status(201).redirect("/clients/" + req.params.id);
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
 
-router.get("/edit-address-:id", async (req, res) => {
+router.get("/edit-address/:id", async (req, res) => {
     try {
         const callList = await clients.callList();
         const add = await clients.address(req.params.id);
@@ -62,7 +62,7 @@ router.get("/edit-address-:id", async (req, res) => {
     }
 });
 
-router.post("/edit-address-:cId-:addId", async (req, res) => {
+router.post("/edit-address/:addId-:cId", async (req, res) => {
     try {
         const body = req.body;
         if (body.street != "" && typeof body.freshAir != "undefined") {

@@ -12,7 +12,7 @@ ie. details.client is an object
 <div class="grid_col_2">
     <div class="margin_t_l margin_l_l">
         <!-- Edit client popup -->
-        <form id="cliFormPopup" class="formPopup" action="/clients/edit-client/<%=details.client.id%>" method="POST">
+        <form id="cliFormPopup" class="formPopup" action="/clients/<%=details.client.id%>/editClient" method="POST">
             <%- include("../partials/inputForms/client") %>
             <div class="flex flex-ai-c flex-jc-r">
                 <button type="submit" class="button_primary margin_r_sm"> Submit </button>

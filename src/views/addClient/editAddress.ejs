@@ -6,7 +6,7 @@
         <!-- Details header -->
         <h2 class="size_small bold"> Edit </h2>
 
-        <form action= "/clients/edit-address-<%= address.client_id %>-<%= address.id %>" method="POST" class="pad-t-med pad-l-med">
+        <form action= "/clients/edit-address/<%= address.id %>-<%= address.client_id %>" method="POST" class="pad-t-med pad-l-med">
             <% const data = {street:address.street, sub:address.suburb, city:address.city, pc:address.pc, area:address.area, fa:address.fa, c:address.clientAddress} %>
             <%- include("../partials/inputForms/address", data) %>
 
