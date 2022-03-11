@@ -3,7 +3,7 @@
 <div class="flex">
     <div>
         <label> Street: </label> <br />
-        <input id="formStreet" type="text" name="street" value="<%= locals.street %>"> <br /><br />
+        <input id="formStreet" type="text" name="street" required value="<%= locals.street %>"> <br /><br />
         <label> Suburb: </label> <br />
         <input type="text" name="suburb" value="<%= locals.sub %>"> <br /><br />
         <label> City: </label> <br />
@@ -11,7 +11,7 @@
         <label> Postcode: </label> <br />
         <input type="text" name="pc" value="<%= locals.pc %>"><br /><br />
         <label> Area: </label> <br />
-        <input type="text" name="area" value="<%= locals.area %>"><br />
+        <input type="text" name="area" required value="<%= locals.area %>"><br />
     </div>
 
     <br />

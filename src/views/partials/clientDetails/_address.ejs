@@ -1,12 +1,3 @@
-<!-- Edit address form -->
-<form id="editFormPopup" class="formPopup" action="/clients/<%=client_id%>" method="GET">
-    <%- include("../inputForms/address") %>
-    <div class="flex flex-ai-c flex-jc-r">
-        <button type="submit" class="button_primary margin_r_sm"> Submit </button>
-        <a href="/clients/<%=client_id%>" class="button button_secondary button_cancel"> Cancel </a>
-    </div>
-</form>
-
 <!-- Add address form -->
 <form id="addFormPopup" class="formPopup" action="/clients/add-address-<%=client_id%>" method="POST">
     <%- include("../inputForms/address") %>

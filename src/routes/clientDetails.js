@@ -64,15 +64,9 @@ router.post("/edit-address-:cId-:addId", async (req, res) => {
     try {
         const body = req.body;
         if (body.street != "" && typeof body.freshAir != "undefined") {
-            let cAddress;
-            if (body.clientAddress == "1") {
-                cAddress = 1;
-            } else {
-                cAddress = 0;
-            }
+            let cAddress = isClientAddress(body.clientAddress);
 
             await clients.editAddress(req.params.addId, body.street, body.suburb, body.city, body.pc, body.area, body.freshAir, cAddress);
-
             res.status(201).redirect("/clients/" + req.params.cId);
         }
     } catch (error) {
@@ -83,15 +77,10 @@ router.post("/edit-address-:cId-:addId", async (req, res) => {
 router.post("/add-address-:id", async (req, res) => {
     try {
         const body = req.body;
-        res.send(req.params.id);
-        // if (body.name != "") {
-        //     const sqlQuery = "INSERT INTO clients (name, comments) VALUES(?, ?)";
-        //     db.query(sqlQuery, [body.name, body.comments]);
+        let cAddress = isClientAddress(body.clientAddress);
 
-        //     const id = await clients.clientId(body.name);
-
-        //     res.redirect("/clients/" + id);
-        // };
+        await clients.createAddress(body.street, body.suburb, body.city, body.pc, body.area, body.freshAir, cAddress, req.params.id);
+        res.status(201).redirect("/clients/" + req.params.id);
     } catch (error) {
         res.status(400).send(error.message);
     }
@@ -121,5 +110,14 @@ router.get("/:id", async (req, res) => {
 router.delete("/:id", (req, res) => {
     res.send("Delete me");
 });
+
+// Helper
+function isClientAddress(i) {
+    if (i == "1") {
+        return 1;
+    } else {
+        return  0;
+    }
+}
 
 module.exports = router;
