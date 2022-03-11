@@ -20,20 +20,12 @@ router.get("/add-client", async (req, res) => {
 router.post("/add-client", async (req, res) => {
     try {
         const body = req.body;
-        if (body.name != "" && body.contactName != "" && body.rDate != "" && body.number != "") {
-            let id = await clients.createClient(body.name, body.comments);
-            await clients.createContact(body.contactName, body.number, body.email, 1, id);
-            await clients.createReminder(body.rDate, id);
+        let id = await clients.createClient(body.name, body.comments);
 
-            res.status(201).redirect("/clients/" + id);
-        } else {
-            // error message
-            //console.log(body.rDate);
-            //res.redirect("/");
-            const callList = await clients.callList();
-            const error = "Make sure to provide client name, contact name and number, and call back date";
-            res.render("addClient/addClient.ejs", {callList:callList, error:error});
-        }
+        await clients.createContact(body.contactName, body.number, body.email, 1, id);
+        await clients.createReminder(body.rDate, id);
+        res.status(201).redirect("/clients/" + id);
+
     } catch (error) {
         // If error was caused by a duplicate name
         if (error.message.includes("Duplicate entry")) {
