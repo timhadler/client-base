@@ -11,10 +11,19 @@ ie. details.client is an object
 <!-- Client details pane -->
 <div class="grid_col_2">
     <div class="margin_t_l margin_l_l">
+        <!-- Edit client popup -->
+        <form id="cliFormPopup" class="formPopup" action="/clients/edit-client/<%=details.client.id%>" method="POST">
+            <%- include("../partials/inputForms/client") %>
+            <div class="flex flex-ai-c flex-jc-r">
+                <button type="submit" class="button_primary margin_r_sm"> Submit </button>
+                <a href="/clients/<%=details.client.id%>" class="button button_secondary button_cancel"> Cancel </a>
+            </div>
+        </form>
+
         <!-- Details header -->
         <div class="flex flex-ai-c flex-jc-sb">
             <p id="client_name" class="size_small bold"> <%= details.client.name %> </p>
-            <button class="button_primary"> Edit </button>
+            <button id="editClientButton" class="button_primary"> Edit </button>
         </div>
 
         <div class="details_grid pad-t-med pad-l-med">
