@@ -1,9 +1,15 @@
 <% for (let i=0; i < data.length; i++) { %>
     <li>
+        <!-- Edit popup -->
+        <div id="<%= "rDatePopup-" + data[i].id %>" class="rDatePopup flex flex-ai-c flex-jc-sb">
+            <input type="date" value="<%= rDateToHTMLDate(data[i].rDate) %>">
+            <button id="<%= data[i].id %>" name="rDateCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
+        </div>
+
         <div class="flex flex-ai-c flex-jc-sb">
             <p> <%=data[i].rDate%> </p>
             <div class="flex flex-ai-c">
-                <button type="button" class="button_secondary"> Edit </button>
+                <button id="<%= data[i].id %>" name="rDateEditButton" type="button" class="button_secondary"> Edit </button>
                 <form action="/clients/1?_method=DELETE" method="POST">
                     <button type="submit"><span class="close_form"></span></button>
                 </span>
@@ -11,3 +17,16 @@
         </div> 
     </li>
 <% } %>
+
+<%
+function rDateToHTMLDate(rDate) {
+    let y = rDate.slice(-4);
+    let m = rDate.slice(-7, -5);
+    let d = rDate.slice(0, 2);
+
+    if(Number.isNaN(Number(d))) {
+        d = "0" + d.slice(0, 1);
+    }
+    return y + "-" + m + "-" + d;
+}
+%>

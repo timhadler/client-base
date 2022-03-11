@@ -381,4 +381,11 @@ main {
   width: 525px;
 }
 
+.rDatePopup {
+  visibility: hidden;
+  position: absolute;
+  background-color: white;
+  width: 525px;
+}
+
 /*# sourceMappingURL=styles.css.map */
