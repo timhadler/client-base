@@ -1,7 +1,7 @@
 <% for (let i=0; i < data.length; i++) { %>
     <li>
         <!-- Edit popup -->
-        <div id="<%= "rDatePopup-" + data[i].id %>" class="rDatePopup flex flex-ai-c flex-jc-sb">
+        <div id="<%= "rDatePopup-" + data[i].id %>" class="editPopup flex flex-ai-c flex-jc-sb">
             <input type="date" value="<%= rDateToHTMLDate(data[i].rDate) %>">
             <button id="<%= data[i].id %>" name="rDateCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
         </div>

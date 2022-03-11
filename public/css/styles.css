@@ -381,7 +381,7 @@ main {
   width: 525px;
 }
 
-.rDatePopup {
+.editPopup {
   visibility: hidden;
   position: absolute;
   background-color: white;

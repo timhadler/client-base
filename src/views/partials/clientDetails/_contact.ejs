@@ -1,9 +1,15 @@
 <% for (let i=0; i < data.length; i++) { %>
     <li>
+        <!-- Edit popup -->
+        <div id="<%= "contactPopup-" + data[i].id %>" class="editPopup flex flex-ai-c flex-jc-sb">
+            <input type="text" value="<%= data[i].phone %>">
+            <button id="<%= data[i].id %>" name="contactCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
+        </div>
+
         <div class="flex flex-ai-c flex-jc-sb">
             <p> <%=data[i].phone%> </p>
             <div class="flex flex-ai-c">
-                <button type="button" class="button_secondary"> Edit </button>
+                <button id="<%= data[i].id %>" name="contactEditButton" type="button" class="button_secondary"> Edit </button>
                 <form action="/clients/1?_method=DELETE" method="POST">
                     <button type="submit"><span class="close_form"></span></button>
                 </span>
