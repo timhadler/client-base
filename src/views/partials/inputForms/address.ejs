@@ -17,7 +17,7 @@
     <br />
     <div class="margin_l_med">
         <p> Fresh air system: </p>
-        <input type="radio" name="freshAir" value="HRV" <%if(locals.fa == "HRV") {%> checked="true" <%}%>>
+        <input type="radio" name="freshAir" required value="HRV" <%if(locals.fa == "HRV") {%> checked="true" <%}%>>
         <label for="hrv"> HRV </label> <br />
         <input type="radio" name="freshAir" value="DVS" <%if(locals.fa == "DVS") {%> checked="true" <%}%>>
         <label for="dvs"> DVS </label> <br />

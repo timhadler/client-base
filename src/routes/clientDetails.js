@@ -107,8 +107,14 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.delete("/:id", (req, res) => {
-    res.send("Delete me");
+router.delete("/delete-address/:cId-:addId", async (req, res) => {
+    try {
+        await clients.deleteAddress(req.params.addId);
+        res.status(204).redirect("/clients/" + req.params.cId);
+        //res.send(req.params.id + ": Delete me");   
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
 });
 
 // Helper

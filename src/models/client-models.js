@@ -89,6 +89,14 @@ exports.editAddress = async function(id, street, suburb, city, pc, area, fa, cli
 }
 
 /***********************************************************
+ * Delete
+ ***********************************************************/
+exports.deleteAddress = async function(id) {
+    const sqlQuery = "DELETE FROM addresses WHERE id=?";
+    await db.query(sqlQuery, id);
+}
+
+/***********************************************************
  * Helper functions
  ***********************************************************/
 // Returns the id of a given client name

@@ -13,7 +13,7 @@
             <p> <%=data[i].street%> </p>
             <div id="test" class="flex flex-ai-c">
                 <a href="/clients/edit-address-<%= data[i].id %>" class="button button_secondary"> Edit </a>
-                <form action="/clients/1?_method=DELETE" method="POST">
+                <form action="/clients/delete-address/<%= data[i].client_id %>-<%= data[i].id %>?_method=DELETE" method="POST">
                     <button type="submit"><span class="close_form"></span></button>
                 </form>
             </div>
