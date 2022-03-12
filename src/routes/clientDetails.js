@@ -68,6 +68,19 @@ router.get("/edit-address/:id", async (req, res) => {
     }
 });
 
+// POST add address (popup)
+router.post("/add-address-:id", async (req, res) => {
+    try {
+        const body = req.body;
+        let cAddress = isClientAddress(body.clientAddress);
+
+        await clients.createAddress(body.street, body.suburb, body.city, body.pc, body.area, body.freshAir, cAddress, req.params.id);
+        res.status(201).redirect("/clients/" + req.params.id);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+});
+
 // POST Edit address
 router.post("/edit-address/:addId-:cId", async (req, res) => {
     try {
@@ -128,19 +141,6 @@ router.post("/edit-reminder/:rId-:cId", async (req, res) => {
         res.status(201).redirect("/clients/" + req.params.cId);
     } catch (error) {
         res.status(500).send(error.message);
-    }
-});
-
-// POST add address (popup)
-router.post("/add-address-:id", async (req, res) => {
-    try {
-        const body = req.body;
-        let cAddress = isClientAddress(body.clientAddress);
-
-        await clients.createAddress(body.street, body.suburb, body.city, body.pc, body.area, body.freshAir, cAddress, req.params.id);
-        res.status(201).redirect("/clients/" + req.params.id);
-    } catch (error) {
-        res.status(400).send(error.message);
     }
 });
 

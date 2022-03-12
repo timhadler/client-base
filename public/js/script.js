@@ -19,6 +19,17 @@ document.getElementById("contactCloseAddFormBut").addEventListener('click', func
 document.getElementById("editClientButton").addEventListener('click', function() { editClientForm() });
 document.getElementById("clientCancelPopupButton").addEventListener('click', function() { editClientCloseForm() });
 
+// address popups
+const addressEditButs = document.getElementsByName("addressEditButton");
+for (let i = 0; i< addressEditButs.length; i++) {
+    addressEditButs[i].addEventListener('click', function() { editAddressForm(addressEditButs[i].id); });
+};
+
+const addressCancelButs = document.getElementsByName("addressCancelPopupButton");
+for (let i = 0; i< addressCancelButs.length; i++) {
+    addressCancelButs[i].addEventListener('click', function() { editAddressCloseForm(addressCancelButs[i].id); });
+};
+
 // rDate popups
 const rDateEditButs = document.getElementsByName("rDateEditButton");
 for (let i = 0; i< rDateEditButs.length; i++) {
@@ -51,6 +62,15 @@ function addAddressForm() {
 
 function addAddressCloseForm() {
     document.getElementById("addAddressPopup").style.visibility = "hidden";
+}
+
+// Edit address popup
+function editAddressForm(i) {
+    document.getElementById("addressEditPopup-" + i).style.visibility = "visible";
+}
+
+function editAddressCloseForm(i) {
+    document.getElementById("addressEditPopup-" + i).style.visibility = "hidden";
 }
 
 // Edit client popup
