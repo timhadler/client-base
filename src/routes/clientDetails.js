@@ -57,17 +57,6 @@ router.post("/:id/editClient", async (req, res) => {
     }
 });
 
-// GET Edit address
-router.get("/edit-address/:id", async (req, res) => {
-    try {
-        const add = await clients.address(req.params.id);
-        //console.log(add.street);
-        res.render("addClient/editAddress.ejs", {address:add});
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
 // POST add address (popup)
 router.post("/add-address-:id", async (req, res) => {
     try {
