@@ -106,6 +106,18 @@ router.post("/edit-contact/:conId-:cId", async (req, res) => {
     }
 });
 
+// POST add reminder
+router.post("/add-reminder/:id", async (req, res) => {
+    try {
+        const body = req.body;
+
+        await clients.createReminder(body.rDate, req.params.id)
+        res.status(201).redirect("/clients/" + req.params.id);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}) 
+
 // POST edit reminder (popup)
 router.post("/edit-reminder/:rId-:cId", async (req, res) => {
     try {
@@ -160,6 +172,17 @@ router.get("/:id", async (req, res) => {
 router.delete("/delete-address/:cId-:addId", async (req, res) => {
     try {
         await clients.deleteAddress(req.params.addId);
+        res.status(204).redirect("/clients/" + req.params.cId);
+        //res.send(req.params.id + ": Delete me");   
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// Delete from reminders table
+router.delete("/delete-date/:cId-:dId", async (req, res) => {
+    try {
+        await clients.deleteReminder(req.params.dId);
         res.status(204).redirect("/clients/" + req.params.cId);
         //res.send(req.params.id + ": Delete me");   
     } catch (error) {

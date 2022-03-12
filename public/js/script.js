@@ -1,6 +1,13 @@
-// Add buttons
+/***********************************************************
+ * Add buttons
+ ***********************************************************/
+// Address buttons
 document.getElementById("addAddressBut").addEventListener('click', function() { addAddressForm() });
 document.getElementById("addressCloseAddFormButton").addEventListener('click', function() { addAddressCloseForm() });
+
+// Date buttons
+document.getElementById("addDateBut").addEventListener('click', function() { addDateForm() });
+document.getElementById("dateCloseAddForm").addEventListener('click', function() { addDateCloseForm() });
 
 /***********************************************************
  * Edit buttons
@@ -24,11 +31,11 @@ for (let i = 0; i< rDateCancelButs.length; i++) {
  ***********************************************************/
 // Add address popup
 function addAddressForm() {
-    document.getElementById("addFormPopup").style.visibility = "visible";
+    document.getElementById("addAddressPopup").style.visibility = "visible";
 }
 
 function addAddressCloseForm() {
-    document.getElementById("addFormPopup").style.visibility = "hidden";
+    document.getElementById("addAddressPopup").style.visibility = "hidden";
 }
 
 // Edit client popup
@@ -40,12 +47,20 @@ function editClientCloseForm() {
     document.getElementById("cliFormPopup").style.visibility = "hidden";
 }
 
+// Add date popup
+function addDateForm(i) {
+    document.getElementById("addCallPopup").style.visibility = "visible";
+}
+
+function addDateCloseForm(i) {
+    document.getElementById("addCallPopup").style.visibility = "hidden";
+}
+
 // Edit date popup
 function editDateForm(i) {
-    //console.log(i);
-    document.getElementById("rDatePopup-" + i).style.visibility = "visible";
+    document.getElementById("rDateEditPopup-" + i).style.visibility = "visible";
 }
 
 function editDateCloseForm(i) {
-    document.getElementById("rDatePopup-" + i).style.visibility = "hidden";
+    document.getElementById("rDateEditPopup-" + i).style.visibility = "hidden";
 }

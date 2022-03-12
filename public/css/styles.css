@@ -310,6 +310,7 @@ main {
 
 .client_details {
   width: 100%;
+  overflow: auto;
 }
 
 .section_divider {

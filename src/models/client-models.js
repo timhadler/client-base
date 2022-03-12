@@ -126,6 +126,11 @@ exports.deleteAddress = async function(id) {
     await db.query(sqlQuery, id);
 }
 
+exports.deleteReminder = async function(id) {
+    const sqlQuery = "DELETE FROM reminders WHERE id=?";
+    await db.query(sqlQuery, id);
+}
+
 /***********************************************************
  * Helper functions - DATABASE
  ***********************************************************/
