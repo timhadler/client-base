@@ -14,8 +14,7 @@ router.get("/", (req, res) => {
  ***********************************************************/
 router.get("/add-client", async (req, res) => {
     try {
-        const callList = await clients.callList();
-        res.render("addClient/addClient.ejs", {callList:callList});
+        res.render("addClient/addClient.ejs");
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -35,9 +34,8 @@ router.post("/add-client", async (req, res) => {
         if (error.message.includes("Duplicate entry")) {
             //error message
             // Make sure to repopulate the user input when re-rendering 
-            const callList = await clients.callList();
             const error = "Name already exists in client database";
-            res.render("addClient/addClient.ejs", {callList:callList, error:error});
+            res.render("addClient/addClient.ejs", {error:error});
             //res.redirect("/");
         } else {
             res.status(400).send(error.message);
@@ -62,10 +60,9 @@ router.post("/:id/editClient", async (req, res) => {
 // GET Edit address
 router.get("/edit-address/:id", async (req, res) => {
     try {
-        const callList = await clients.callList();
         const add = await clients.address(req.params.id);
         //console.log(add.street);
-        res.render("addClient/editAddress.ejs", {callList:callList, address:add});
+        res.render("addClient/editAddress.ejs", {address:add});
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -89,10 +86,9 @@ router.post("/edit-address/:addId-:cId", async (req, res) => {
 // GET Edit contact
 router.get("/edit-contact/:id", async (req, res) => {
     try {
-        const callList = await clients.callList();
         const contact = await clients.contact(req.params.id);
         //console.log();
-        res.render("addClient/editContact.ejs", {callList:callList, contact:contact});
+        res.render("addClient/editContact.ejs", {contact:contact});
     } catch (error) {
         res.status(500).send(error.message);
     }
