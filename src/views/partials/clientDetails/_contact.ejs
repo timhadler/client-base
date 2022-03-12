@@ -1,7 +1,7 @@
 <% for (let i=0; i < data.length; i++) { %>
     <li>
         <!-- Edit popup -->
-        <div id="<%= "contactPopup-" + data[i].id %>" class="editPopup">
+        <div id="<%= "contactPopup-" + data[i].id %>" class="popup">
             <form class="flex flex-ai-c flex-jc-sb" action="/clients/edit-contact/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
                 <%- include("../inputForms/contact") %>
                 <div class="flex flex-ai-c">

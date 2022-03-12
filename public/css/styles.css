@@ -374,14 +374,7 @@ main {
   width: 300px;
 }
 
-.formPopup {
-  display: none;
-  position: absolute;
-  background-color: white;
-  width: 525px;
-}
-
-.editPopup {
+.popup {
   visibility: hidden;
   position: absolute;
   background-color: white;

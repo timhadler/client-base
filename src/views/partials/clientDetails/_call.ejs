@@ -1,7 +1,7 @@
 <% for (let i=0; i < data.length; i++) { %>
     <li>
         <!-- Edit popup -->
-        <div id="<%= "rDatePopup-" + data[i].id %>" class="editPopup">
+        <div id="<%= "rDatePopup-" + data[i].id %>" class="popup">
             <form class="flex flex-ai-c flex-jc-sb" action="/clients/edit-reminder/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
                 <input type="date" name="rDate" value="<%= rDateToHTMLDate(data[i].rDate) %>">
                 <div class="flex flex-ai-c">

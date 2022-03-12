@@ -5,7 +5,6 @@ const globals = require("./../globals");
 
 router.get("/", async (req, res) => {
     try {
-        console.log(globals.d1);
         let callList = await clients.callList(globals.d1, globals.d2);
         res.render("index", {callList: callList});
     } catch (error) {
