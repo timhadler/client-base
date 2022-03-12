@@ -13,7 +13,7 @@ ie. details.client is an object
     <div class="margin_t_l margin_l_l">
         <!-- Edit client popup -->
         <form id="cliFormPopup" class="formPopup" action="/clients/<%=details.client.id%>/editClient" method="POST">
-            <%- include("../partials/inputForms/client") %>
+            <%- include("../partials/inputForms/client", {name:details.client.name, comments:details.client.comments}) %>
             <div class="flex flex-ai-c flex-jc-r">
                 <button type="submit" class="button_primary margin_r_sm"> Submit </button>
                 <a href="/clients/<%=details.client.id%>" class="button button_secondary button_cancel"> Cancel </a>
