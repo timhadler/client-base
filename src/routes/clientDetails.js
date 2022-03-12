@@ -8,6 +8,9 @@ router.get("/", (req, res) => {
     res.send("How did you get here?");
 });
 
+/***********************************************************
+ * Add client
+ ***********************************************************/
 router.get("/add-client", async (req, res) => {
     try {
         const callList = await clients.callList();
@@ -41,6 +44,10 @@ router.post("/add-client", async (req, res) => {
     }
 });
 
+/***********************************************************
+ * Edit tables
+ ***********************************************************/
+// Edit client
 router.post("/:id/editClient", async (req, res) => {
     try {
         const body = req.body;
@@ -51,6 +58,7 @@ router.post("/:id/editClient", async (req, res) => {
     }
 });
 
+// GET Edit address
 router.get("/edit-address/:id", async (req, res) => {
     try {
         const callList = await clients.callList();
@@ -62,6 +70,7 @@ router.get("/edit-address/:id", async (req, res) => {
     }
 });
 
+// POST Edit address
 router.post("/edit-address/:addId-:cId", async (req, res) => {
     try {
         const body = req.body;
@@ -76,6 +85,7 @@ router.post("/edit-address/:addId-:cId", async (req, res) => {
     }
 });
 
+// GET Edit contact
 router.get("/edit-contact/:id", async (req, res) => {
     try {
         const callList = await clients.callList();
@@ -87,6 +97,7 @@ router.get("/edit-contact/:id", async (req, res) => {
     }
 });
 
+// POST edit contact
 router.post("/edit-contact/:conId-:cId", async (req, res) => {
     try {
         const body = req.body;
@@ -98,6 +109,7 @@ router.post("/edit-contact/:conId-:cId", async (req, res) => {
     }
 });
 
+// POST edit reminder (popup)
 router.post("/edit-reminder/:rId-:cId", async (req, res) => {
     try {
         const body = req.body;
@@ -109,6 +121,7 @@ router.post("/edit-reminder/:rId-:cId", async (req, res) => {
     }
 });
 
+// POST add address (popup)
 router.post("/add-address-:id", async (req, res) => {
     try {
         const body = req.body;
@@ -121,6 +134,7 @@ router.post("/add-address-:id", async (req, res) => {
     }
 });
 
+// GET Client details
 router.get("/:id", async (req, res) => {
     try {
         const callList = await clients.callList();
@@ -142,6 +156,10 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+/***********************************************************
+ * Delete
+ ***********************************************************/
+// Delete from addresses table
 router.delete("/delete-address/:cId-:addId", async (req, res) => {
     try {
         await clients.deleteAddress(req.params.addId);
@@ -152,7 +170,9 @@ router.delete("/delete-address/:cId-:addId", async (req, res) => {
     }
 });
 
-// Helper
+/***********************************************************
+ * Helper
+ ***********************************************************/
 function isClientAddress(i) {
     if (i == "1") {
         return 1;
