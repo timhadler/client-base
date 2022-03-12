@@ -5,13 +5,13 @@ const db = require("./../database");
  * Retrieval
  ***********************************************************/
 
-// Fetches the first x call dates from database and the associated 
+// Fetches the client names associated with the reminder dates between d1 and d2
 // client details (clients table)
-exports.callList = async function () {
-    // for now do all call dates
-    // Change to only grab from clients table? dont need call dates just yet
-    const sqlQuery = "SELECT client_id, name FROM reminders LEFT JOIN clients ON clients.id = reminders.client_id";
+exports.callList = async function (d1, d2) {
+    const sqlQuery = "SELECT name, client_id FROM reminders INNER JOIN clients ON clients.id = reminders.client_id AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate";
     const rows = await db.query(sqlQuery);
+
+    //console.log(rows[0]);
     return rows;
 };
 
@@ -127,7 +127,7 @@ exports.deleteAddress = async function(id) {
 }
 
 /***********************************************************
- * Helper functions
+ * Helper functions - DATABASE
  ***********************************************************/
 // Returns the id of a given client name
 async function getClientId(name) {

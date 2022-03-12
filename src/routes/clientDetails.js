@@ -137,7 +137,13 @@ router.post("/add-address-:id", async (req, res) => {
 // GET Client details
 router.get("/:id", async (req, res) => {
     try {
-        const callList = await clients.callList();
+        // Set the days to retrieve clients from database
+        // d1 and d2 set range boundaries as days from the current datw
+        // eg. d1=0, d2=31 days retirves call dates from today to next month
+        const d1 = 0;
+        const d2 = 32;
+
+        const callList = await clients.callList(getDate(d1), getDate(d2));
         let details = await clients.clientDetails(req.params.id);
         //console.log(details);
         
@@ -171,8 +177,17 @@ router.delete("/delete-address/:cId-:addId", async (req, res) => {
 });
 
 /***********************************************************
- * Helper
+ * Helper functions
  ***********************************************************/
+// Gets the date n days from the current date (yyyy-mm-dd)
+function getDate(n) {
+    let date = new Date();
+    date.setDate(date.getDate() + n);
+    date = date.toISOString().slice(0, 10).replace('T', ' ');
+
+    return date;
+}
+
 function isClientAddress(i) {
     if (i == "1") {
         return 1;
