@@ -83,6 +83,18 @@ router.post("/edit-address/:addId-:cId", async (req, res) => {
     }
 });
 
+// POST add contact
+router.post("/add-contact/:id", async (req, res) => {
+    try {
+        const body = req.body;
+
+        await clients.createContact(body.contactName, body.number, body.email, req.params.id);
+        res.status(201).redirect("/clients/" + req.params.id);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 // POST edit contact (popup)
 router.post("/edit-contact/:conId-:cId", async (req, res) => {
     try {
@@ -172,6 +184,17 @@ router.delete("/delete-address/:cId-:addId", async (req, res) => {
 router.delete("/delete-date/:cId-:dId", async (req, res) => {
     try {
         await clients.deleteReminder(req.params.dId);
+        res.status(204).redirect("/clients/" + req.params.cId);
+        //res.send(req.params.id + ": Delete me");   
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// Delete from contacts table
+router.delete("/delete-contact/:cId-:conId", async (req, res) => {
+    try {
+        await clients.deleteContact(req.params.conId);
         res.status(204).redirect("/clients/" + req.params.cId);
         //res.send(req.params.id + ": Delete me");   
     } catch (error) {

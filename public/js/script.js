@@ -9,6 +9,10 @@ document.getElementById("addressCloseAddFormButton").addEventListener('click', f
 document.getElementById("addDateBut").addEventListener('click', function() { addDateForm() });
 document.getElementById("dateCloseAddForm").addEventListener('click', function() { addDateCloseForm() });
 
+// Contact buttons
+document.getElementById("addContactBut").addEventListener('click', function() { addContactForm() });
+document.getElementById("contactCloseAddFormBut").addEventListener('click', function() { addContactCloseForm() });
+
 /***********************************************************
  * Edit buttons
  ***********************************************************/
@@ -76,8 +80,18 @@ function editDateCloseForm(i) {
     document.getElementById("rDateEditPopup-" + i).style.visibility = "hidden";
 }
 
-// Edit date popup
+// Add contact popup
+function addContactForm(i) {
+    document.getElementById("addContactPopup").style.visibility = "visible";
+}
+
+function addContactCloseForm(i) {
+    document.getElementById("addContactPopup").style.visibility = "hidden";
+}
+
+// Edit contact popup
 function editContactForm(i) {
+    //console.log("here");
     document.getElementById("contactEditPopup-" + i).style.visibility = "visible";
 }
 

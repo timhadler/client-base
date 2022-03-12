@@ -1,14 +1,14 @@
-<!-- Add address form -->
-<form id="addAddressPopup" class="popup" action="/clients/add-address-<%=client_id%>" method="POST">
-    <%- include("../inputForms/address") %>
-    <div class="flex flex-ai-c flex-jc-r">
-        <button type="submit" class="button_primary margin_r_sm"> Submit </button>
-        <button id="addressCloseAddFormButton" type="button" class="button_secondary button_cancel"> Cancel </button>
-    </div>
-</form>
-
 <% for (let i=0; i < data.length; i++) { %>
     <li>
+        <!-- Add address form -->
+        <form id="addAddressPopup" class="popup" action="/clients/add-address-<%=data[i].client_id%>" method="POST">
+            <%- include("../inputForms/address") %>
+            <div class="flex flex-ai-c flex-jc-r">
+                <button type="submit" class="button_primary margin_r_sm"> Submit </button>
+                <button id="addressCloseAddFormButton" type="button" class="button_secondary button_cancel"> Cancel </button>
+            </div>
+        </form>
+
         <div class="flex flex-ai-c flex-jc-sb">
             <p> <%=data[i].street%> </p>
             <div id="test" class="flex flex-ai-c">

@@ -33,14 +33,14 @@ ie. details.client is an object
                     <!-- Header -->
                     <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
                         <p class="color_primary size_small"> Address </p>
-                        <button id="addAddressBut" class="button_secondary"> Add </button>
+                        <button id="addAddressBut" type="button" class="button_secondary"> Add </button>
                     </div>
                     <hr class="line_header">
 
                     <!-- Address list -->
                     <div class="list_container margin_t_med margin_l_med">
                         <ul id="client_details">
-                            <%- include("../partials/clientDetails/_address", {client_id: details.client.id, data:details.addresses}) %>
+                            <%- include("../partials/clientDetails/_address", {data:details.addresses}) %>
                         </ul>
                     </div>
                 </div>
@@ -50,7 +50,7 @@ ie. details.client is an object
                     <!-- Header -->
                     <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
                         <p class="color_primary size_small"> Contacts </p>
-                        <a class="button button_secondary"> Add </a>
+                        <button id="addContactBut" type="button" class="button_secondary"> Add </button>
                     </div>
                     <hr class="line_header">
 

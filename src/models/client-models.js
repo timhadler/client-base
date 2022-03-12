@@ -74,9 +74,9 @@ exports.createClient = async function(name, comments) {
 }
 
 // Creates a contact entry
-exports.createContact = async function(name, phone, email, cNum, id) {
-    let params = [name, phone, email, cNum, id];
-    const sqlQuery = "INSERT INTO contacts (name, phone, email, clientNumber, client_id) VALUES(?, ?, ?, ?, ?)";
+exports.createContact = async function(name, phone, email, id) {
+    let params = [name, phone, email, id];
+    const sqlQuery = "INSERT INTO contacts (name, phone, email, client_id) VALUES(?, ?, ?, ?)";
     await db.query(sqlQuery, params);
 }
 
@@ -128,6 +128,11 @@ exports.deleteAddress = async function(id) {
 
 exports.deleteReminder = async function(id) {
     const sqlQuery = "DELETE FROM reminders WHERE id=?";
+    await db.query(sqlQuery, id);
+}
+
+exports.deleteContact = async function(id) {
+    const sqlQuery = "DELETE FROM contacts WHERE id=?";
     await db.query(sqlQuery, id);
 }
 
