@@ -3,14 +3,14 @@
         <!-- Add popup -->
         <div id="addCallPopup" class="popup">
             <form class="flex flex-ai-c flex-jc-sb" action="/clients/add-reminder/<%= data[i].client_id %>" method="POST">
-                <%- include("../popupForms/call") %>
+                <%- include("../inputForms/call") %>
             </form>
         </div>
 
         <!-- Edit popup -->
         <div id="<%= "rDateEditPopup-" + data[i].id %>" class="popup">
             <form class="flex flex-ai-c flex-jc-sb" action="/clients/edit-reminder/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
-                <%- include("../popupForms/call", { date:rDateToHTMLDate(data[i].rDate), id:data[i].id}) %>
+                <%- include("../inputForms/call", { date:rDateToHTMLDate(data[i].rDate), id:data[i].id}) %>
             </form>
         </div>
 
