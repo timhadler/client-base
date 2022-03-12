@@ -1,10 +1,12 @@
 <h3> Contact: </h3> <br />
 <label> Contact name: </label> <br />
-<input required type="text" name="contactName"> <br /><br />
+<input required type="text" name="contactName" value="<%= locals.name %>"> <br /><br />
 <label> Contact number: </label> <br />
-<input required type="text" name="number"> <br /><br />
+<input required type="text" name="number" value="<%= locals.phone %>"> <br /><br />
 <label> Email address: </label> <br />
-<input type="text" name="email"> <br /><br />
+<input type="text" name="email" value="<%= locals.email %>"> <br /><br />
 <br /> <br />
-<label> Call back on: </label> <br />
-<input required type="date" name="rDate">
+<% if (typeof name == "undefined") { %>
+    <label> Call back on: </label> <br />
+    <input required type="date" name="rDate">
+<% } %>

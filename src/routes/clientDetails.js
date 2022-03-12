@@ -76,6 +76,39 @@ router.post("/edit-address/:addId-:cId", async (req, res) => {
     }
 });
 
+router.get("/edit-contact/:id", async (req, res) => {
+    try {
+        const callList = await clients.callList();
+        const contact = await clients.contact(req.params.id);
+        //console.log();
+        res.render("addClient/editContact.ejs", {callList:callList, contact:contact});
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+router.post("/edit-contact/:conId-:cId", async (req, res) => {
+    try {
+        const body = req.body;
+
+        await clients.editContact(req.params.conId, body.contactName, body.number, body.email);
+        res.status(201).redirect("/clients/" + req.params.cId);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+router.post("/edit-reminder/:rId-:cId", async (req, res) => {
+    try {
+        const body = req.body;
+
+        await clients.editReminder(req.params.rId, body.rDate);
+        res.status(201).redirect("/clients/" + req.params.cId);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 router.post("/add-address-:id", async (req, res) => {
     try {
         const body = req.body;

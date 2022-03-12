@@ -38,6 +38,18 @@ exports.address = async function(id) {
     return rows[0];
 }
 
+// Retrieves contact with given id
+exports.contact = async function(id) {
+    const sqlQuery = "SELECT * FROM contacts WHERE id=?";
+    const rows = await db.query(sqlQuery, id);
+
+    if (rows.length > 1) {
+        console.log("Somethings gone wrong, fetched multiple contacts with same contact id");
+    }
+
+    return rows[0];
+}
+
 /***********************************************************
  * Creation
  ***********************************************************/
@@ -92,6 +104,18 @@ exports.editAddress = async function(id, street, suburb, city, pc, area, fa, cli
     const params = [street, suburb, city, pc, area, fa, clientAddress, id];
     const sqlQuery = "UPDATE addresses SET street=?, suburb=?, city=?, pc=?, area=?, fa=?, clientAddress=? WHERE id=?";
     await db.query(sqlQuery, params);
+}
+
+// Edits a contact entry
+exports.editContact = async function(id, name, phone, email) {
+    const sqlQuery = "UPDATE contacts SET name=?, phone=?, email=? WHERE id=?";
+    await db.query(sqlQuery, [name, phone, email, id]);
+}
+
+// Edits a reminder entry
+exports.editReminder = async function(id, date) {
+    const sqlQuery = "UPDATE reminders SET rDate=? WHERE id=?";
+    await db.query(sqlQuery, [date, id]);
 }
 
 /***********************************************************

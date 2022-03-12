@@ -1,18 +1,20 @@
 <% for (let i=0; i < data.length; i++) { %>
     <li>
         <!-- Edit popup -->
-        <div id="<%= "rDatePopup-" + data[i].id %>" class="editPopup flex flex-ai-c flex-jc-sb">
-            <input type="date" value="<%= rDateToHTMLDate(data[i].rDate) %>">
-            <button id="<%= data[i].id %>" name="rDateCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
+        <div id="<%= "rDatePopup-" + data[i].id %>" class="editPopup">
+            <form class="flex flex-ai-c flex-jc-sb" action="/clients/edit-reminder/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
+                <input type="date" name="rDate" value="<%= rDateToHTMLDate(data[i].rDate) %>">
+                <div class="flex flex-ai-c">
+                    <button type="submit" class="button_secondary"> Submit </button>
+                    <button id="<%= data[i].id %>" name="rDateCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
+                </div>
+            </form>
         </div>
 
         <div class="flex flex-ai-c flex-jc-sb">
             <p> <%=data[i].rDate%> </p>
             <div class="flex flex-ai-c">
                 <button id="<%= data[i].id %>" name="rDateEditButton" type="button" class="button_secondary"> Edit </button>
-                <form action="/clients/1?_method=DELETE" method="POST">
-                    <button type="submit"><span class="close_form"></span></button>
-                </span>
             </div>
         </div> 
     </li>

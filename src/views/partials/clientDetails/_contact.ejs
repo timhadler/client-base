@@ -1,18 +1,23 @@
 <% for (let i=0; i < data.length; i++) { %>
     <li>
         <!-- Edit popup -->
-        <div id="<%= "contactPopup-" + data[i].id %>" class="editPopup flex flex-ai-c flex-jc-sb">
-            <input type="text" value="<%= data[i].phone %>">
-            <button id="<%= data[i].id %>" name="contactCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
+        <div id="<%= "contactPopup-" + data[i].id %>" class="editPopup">
+            <form class="flex flex-ai-c flex-jc-sb" action="/clients/edit-contact/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
+                <%- include("../inputForms/contact") %>
+                <div class="flex flex-ai-c">
+                    <button type="submit" class="button_secondary"> Submit </button>
+                    <button id="<%= data[i].id %>" name="contactCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
+                </div>
+            </form>
         </div>
 
         <div class="flex flex-ai-c flex-jc-sb">
             <p> <%=data[i].phone%> </p>
             <div class="flex flex-ai-c">
-                <button id="<%= data[i].id %>" name="contactEditButton" type="button" class="button_secondary"> Edit </button>
+                <a href="/clients/edit-contact/<%= data[i].id %>" class="button button_secondary"> Edit </a>
                 <form action="/clients/1?_method=DELETE" method="POST">
                     <button type="submit"><span class="close_form"></span></button>
-                </span>
+                </form>
             </div>
         </div> 
     </li>
