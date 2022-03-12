@@ -83,18 +83,7 @@ router.post("/edit-address/:addId-:cId", async (req, res) => {
     }
 });
 
-// GET Edit contact
-router.get("/edit-contact/:id", async (req, res) => {
-    try {
-        const contact = await clients.contact(req.params.id);
-        //console.log();
-        res.render("addClient/editContact.ejs", {contact:contact});
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
-// POST edit contact
+// POST edit contact (popup)
 router.post("/edit-contact/:conId-:cId", async (req, res) => {
     try {
         const body = req.body;

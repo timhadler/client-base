@@ -1,12 +1,1 @@
 <input required type="date" name="rDate" value="<%= locals.date %>">
-<div class="flex flex-ai-c">
-    <button type="submit" class="button_secondary"> Submit </button>
-
-    <% var butId; %>
-    <% if (typeof id == "undefined") { %>
-        <% butId = "dateCloseAddForm" %>
-    <% } else { %>
-        <% butId = id %>
-    <% } %>
-    <button id="<%= butId %>" name="rDateCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
-</div>

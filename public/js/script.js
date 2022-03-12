@@ -15,7 +15,7 @@ document.getElementById("dateCloseAddForm").addEventListener('click', function()
 document.getElementById("editClientButton").addEventListener('click', function() { editClientForm() });
 document.getElementById("clientCancelPopupButton").addEventListener('click', function() { editClientCloseForm() });
 
-// rDate popup
+// rDate popups
 const rDateEditButs = document.getElementsByName("rDateEditButton");
 for (let i = 0; i< rDateEditButs.length; i++) {
     rDateEditButs[i].addEventListener('click', function() { editDateForm(rDateEditButs[i].id); });
@@ -24,6 +24,17 @@ for (let i = 0; i< rDateEditButs.length; i++) {
 const rDateCancelButs = document.getElementsByName("rDateCancelPopupButton");
 for (let i = 0; i< rDateCancelButs.length; i++) {
     rDateCancelButs[i].addEventListener('click', function() { editDateCloseForm(rDateCancelButs[i].id); });
+};
+
+// contact popups
+const contactEditButs = document.getElementsByName("contactEditButton");
+for (let i = 0; i< contactEditButs.length; i++) {
+    contactEditButs[i].addEventListener('click', function() { editContactForm(contactEditButs[i].id); });
+};
+
+const contactCancelButs = document.getElementsByName("contactCancelPopupButton");
+for (let i = 0; i< contactCancelButs.length; i++) {
+    contactCancelButs[i].addEventListener('click', function() { editContactCloseForm(contactCancelButs[i].id); });
 };
 
 /***********************************************************
@@ -63,4 +74,13 @@ function editDateForm(i) {
 
 function editDateCloseForm(i) {
     document.getElementById("rDateEditPopup-" + i).style.visibility = "hidden";
+}
+
+// Edit date popup
+function editContactForm(i) {
+    document.getElementById("contactEditPopup-" + i).style.visibility = "visible";
+}
+
+function editContactCloseForm(i) {
+    document.getElementById("contactEditPopup-" + i).style.visibility = "hidden";
 }

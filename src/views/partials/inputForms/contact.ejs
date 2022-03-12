@@ -1,4 +1,4 @@
-<h3> Contact: </h3> <br />
+<!--<h3> Contact: </h3> <br /> <br />-->
 <label> Contact name: </label> <br />
 <input required type="text" name="contactName" value="<%= locals.name %>"> <br /><br />
 <label> Contact number: </label> <br />
@@ -6,7 +6,3 @@
 <label> Email address: </label> <br />
 <input type="email" name="email" value="<%= locals.email %>"> <br /><br />
 <br /> <br />
-<% if (typeof name == "undefined") { %>
-    <label> Call back on: </label> <br />
-    <input required type="date" name="rDate">
-<% } %>
