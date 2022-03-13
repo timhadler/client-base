@@ -9,6 +9,16 @@ router.get("/", (req, res) => {
     res.send("How did you get here?");
 });
 
+// Search
+router.get("/search", async (req, res) => {
+    try {
+        const clientList = await clients.searchList(req.query.search);
+        res.render("index", {list: clientList});
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+})
+
 /***********************************************************
  * Add client
  ***********************************************************/

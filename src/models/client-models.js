@@ -8,12 +8,20 @@ const db = require("./../database");
 // Fetches the client names associated with the reminder dates between d1 and d2
 // client details (clients table)
 exports.callList = async function (d1, d2) {
-    const sqlQuery = "SELECT name, client_id FROM reminders INNER JOIN clients ON clients.id = reminders.client_id AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate";
+    const sqlQuery = "SELECT name, clients.id FROM clients INNER JOIN reminders ON clients.id = reminders.client_id AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate";
     const rows = await db.query(sqlQuery);
 
     //console.log(rows[0]);
     return rows;
 };
+
+// Fetches clients resulting from a search query
+exports.searchList = async function(search) {
+    const sqlQuery = "SELECT name, id FROM clients WHERE name LIKE '%" + search + "%'";
+    const rows = await db.query(sqlQuery, search);
+
+    return rows;
+}
 
 // Fetches all entries from all tables associated with a given client id
 // as an object -- {client, addresses, callDates, contacts, comments, services}

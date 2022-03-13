@@ -4,8 +4,8 @@
         <!-- Add customer button and search bar -->
         <div class="flex flex-ai-c flex-jc-sb margin_b_med">
             <a href="/clients/add-client" class="button button_primary"> Add&nbsp;Customer </a>
-            <form>
-                <input type="text" class="search_bar" autoComplete="off" placeholder=" Search..." />
+            <form id="searchForm" action="/clients/search" method="GET">
+                <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search..." />
             </form>
         </div>
         <!-- Call list header -->
@@ -16,7 +16,7 @@
         <div class="inner_section">
             <ul id="cList">
                 <% for (let i = 0; i < calls.length; i++) { %>
-                    <li><a href=<%="/clients/" + calls[i].client_id%> class="color_secondary"> <%= calls[i].name %> </a></li>
+                    <li><a href=<%="/clients/" + calls[i].id%> class="color_secondary"> <%= calls[i].name %> </a></li>
                 <% } %>
             </ul>
         </div>
