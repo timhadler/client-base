@@ -13,7 +13,7 @@ ie. details.client is an object
     <div class="margin_t_l margin_l_l">
         <!-- Edit client popup -->
         <form id="cliFormPopup" class="popup" action="/clients/<%=details.client.id%>/editClient" method="POST">
-            <%- include("../partials/inputForms/client", {name:details.client.name, comments:details.client.comments}) %>
+            <%- include("../partials/inputForms/client", {name:details.client.name, company:details.client.company, comments:details.client.comments}) %>
             <div class="flex flex-ai-c flex-jc-r">
                 <button type="submit" class="button_primary margin_r_sm"> Submit </button>
                 <button id="clientCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
@@ -40,7 +40,7 @@ ie. details.client is an object
                     <!-- Address list -->
                     <div class="list_container margin_t_med margin_l_med">
                         <ul id="client_details">
-                            <%- include("../partials/clientDetails/_address", {data:details.addresses}) %>
+                            <%- include("../partials/clientDetails/_address", {data:details.addresses, client_id:details.client.id}) %>
                         </ul>
                     </div>
                 </div>
@@ -57,7 +57,7 @@ ie. details.client is an object
                     <!-- Contacts list -->
                     <div class="list_container margin_t_med margin_l_med">
                         <ul id="client_details">
-                            <%- include("../partials/clientDetails/_contact", {data:details.contacts}) %>   
+                            <%- include("../partials/clientDetails/_contact", {data:details.contacts, client_id:details.client.id}) %>   
                         </ul>
                     </div>
                 </div>
@@ -75,7 +75,7 @@ ie. details.client is an object
                     <!-- Call date list -->
                     <div class="list_container margin_t_med margin_l_med">
                         <ul id="client_details">
-                            <%- include("../partials/clientDetails/_call", {data:details.calls}) %>   
+                            <%- include("../partials/clientDetails/_call", {data:details.calls, client_id:details.client.id}) %>   
                         </ul>
                     </div>
                 </div>

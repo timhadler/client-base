@@ -64,17 +64,17 @@ exports.contact = async function(id) {
 
 // Creates a client entry
 // Returns the id of the created client
-exports.createClient = async function(name, comments) {
+exports.createClient = async function(name, company, comments) {
     let sqlQuery;
-    let params = [name];
+    let params = [name, company];
 
     // Only enter comments if something is entered
     // Input lenght from text area is 1 when nothing is entered
     if (comments.length > 1) {
-        sqlQuery = "INSERT INTO clients (name, comments) VALUES(?, ?)";
+        sqlQuery = "INSERT INTO clients (name, company, comments) VALUES(?, ?, ?)";
         params.push(comments);
     } else {
-        sqlQuery = "INSERT INTO clients (name) VALUES(?)";
+        sqlQuery = "INSERT INTO clients (name, company) VALUES(?, ?)";
     }
     await db.query(sqlQuery, params);
 

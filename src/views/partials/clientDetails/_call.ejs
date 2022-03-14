@@ -1,16 +1,16 @@
+<!-- Add popup -->
+<div id="addCallPopup" class="popup">
+    <form class="flex flex-ai-c flex-jc-sb" action="/clients/add-reminder/<%= client_id %>" method="POST">
+        <%- include("../inputForms/call") %>
+        <div>
+            <button type="submit" class="button_secondary"> Submit </button>
+            <button id="dateCloseAddForm" type="button" class="button_secondary button_cancel"> Cancel </button>
+        </div>
+    </form>
+</div>
+
 <% for (let i=0; i < data.length; i++) { %>
     <li>
-        <!-- Add popup -->
-        <div id="addCallPopup" class="popup">
-            <form class="flex flex-ai-c flex-jc-sb" action="/clients/add-reminder/<%= data[i].client_id %>" method="POST">
-                <%- include("../inputForms/call") %>
-                <div>
-                    <button type="submit" class="button_secondary"> Submit </button>
-                    <button id="dateCloseAddForm" type="button" class="button_secondary button_cancel"> Cancel </button>
-                </div>
-            </form>
-        </div>
-
         <!-- Edit popup -->
         <div id="<%= "rDateEditPopup-" + data[i].id %>" class="popup">
             <form class="flex flex-ai-c flex-jc-sb" action="/clients/edit-reminder/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">

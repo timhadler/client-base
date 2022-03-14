@@ -1,14 +1,14 @@
+<!-- Add form -->
+<form id="addContactPopup" class="popup" action="/clients/add-contact/<%=client_id%>" method="POST">
+    <%- include("../inputForms/contact") %>
+    <div class="flex flex-ai-c flex-jc-r">
+        <button type="submit" class="button_primary margin_r_sm"> Submit </button>
+        <button id="contactCloseAddFormBut" type="button" class="button_secondary button_cancel"> Cancel </button>
+    </div>
+</form>
+
 <% for (let i=0; i < data.length; i++) { %>
     <li>
-        <!-- Add form -->
-        <form id="addContactPopup" class="popup" action="/clients/add-contact/<%=data[i].client_id%>" method="POST">
-            <%- include("../inputForms/contact") %>
-            <div class="flex flex-ai-c flex-jc-r">
-                <button type="submit" class="button_primary margin_r_sm"> Submit </button>
-                <button id="contactCloseAddFormBut" type="button" class="button_secondary button_cancel"> Cancel </button>
-            </div>
-        </form>
-
         <!-- Edit popup -->
         <div id="<%= "contactEditPopup-" + data[i].id %>" class="popup">
             <form action="/clients/edit-contact/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">

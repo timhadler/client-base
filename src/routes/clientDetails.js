@@ -33,9 +33,9 @@ router.get("/add-client", async (req, res) => {
 router.post("/add-client", async (req, res) => {
     try {
         const body = req.body;
-        let id = await clients.createClient(body.name, body.comments);
+        let id = await clients.createClient(body.name, body.company, body.comments);
 
-        await clients.createContact(body.contactName, body.number, body.email, 1, id);
+        await clients.createContact(body.contactName, body.number, body.email, id);
         await clients.createReminder(body.rDate, id);
         res.status(201).redirect("/clients/" + id);
 
