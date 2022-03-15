@@ -9,14 +9,16 @@
             </form>
         </div>
 
-        <div>
-            <form id="datesForm" action="/setDates" method="GET">
-                <input id="date1_input" type="date" name="date1" value="<%= D1 %>">
-                <p> to </p>
-                <input id="date2_input" type="date" name="date2" value="<%= D2 %>">
-                <button type="submit"> Set </button>
-            </form>
-        </div>
+        <% if (locals.search == null) { %>
+            <div>
+                <form id="datesForm" action="/setDates" method="GET">
+                    <input id="date1_input" type="date" name="date1" value="<%= D1 %>">
+                    <p> to </p>
+                    <input id="date2_input" type="date" name="date2" value="<%= D2 %>">
+                    <button type="submit"> Set </button>
+                </form>
+            </div>
+        <% } %>
 
         <!-- Call list header -->
         <p class="size_small"> 
