@@ -12,8 +12,15 @@ router.get("/", (req, res) => {
 // Search
 router.get("/search", async (req, res) => {
     try {
-        const clientList = await clients.searchList(req.query.search);
-        res.render("index", {list: clientList});
+        if (req.query.search.length > 0) {
+            SEARCH = req.query.search;
+            CLIENT_LIST = await clients.searchList(SEARCH);
+            res.render("index", {list: CLIENT_LIST, search:SEARCH});
+        } else {
+            SEARCH = "";
+            CLIENT_LIST = await clients.callList(globals.d1, globals.d2);
+            res.render("index", {list: CLIENT_LIST});
+        }
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -146,7 +153,7 @@ router.post("/edit-reminder/:rId-:cId", async (req, res) => {
 // GET Client details
 router.get("/:id", async (req, res) => {
     try {
-        const callList = await clients.callList(globals.d1, globals.d2);
+        //const callList = await clients.callList(globals.d1, globals.d2);
         let details = await clients.clientDetails(req.params.id);
         //console.log(details);
         
@@ -156,7 +163,11 @@ router.get("/:id", async (req, res) => {
         }
 
         if (details.client != null) {
-            res.status(200).render("clientDetails/client-details.ejs", {callList:callList, details:details});
+            let search = null;
+            if (SEARCH.length > 0) {
+                search = SEARCH;
+            }
+            res.status(200).render("clientDetails/client-details.ejs", {callList:CLIENT_LIST, search:search, details:details});
         } else {
             res.redirect("/");
         }

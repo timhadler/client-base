@@ -5,11 +5,16 @@
         <div class="flex flex-ai-c flex-jc-sb margin_b_med">
             <a href="/clients/add-client" class="button button_primary"> Add&nbsp;Customer </a>
             <form id="searchForm" action="/clients/search" method="GET">
-                <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search..." />
+                <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
             </form>
         </div>
         <!-- Call list header -->
-        <p class="size_small"> Call List </p>
+        <p class="size_small"> 
+            <% if(typeof search != "undefined" && locals.search != null) { %> 
+                Search: <%= locals.search %> <% } else { %>
+                Call List
+            <% } %>
+        </p>
         <hr class="line_header">
 
         <!-- Call list -->
