@@ -95,22 +95,22 @@ exports.createReminder = async function(rDate, id) {
 }
 
 // Creates an address entry
-exports.createAddress = async function(street, suburb, city, pc, area, fa, clientAddress, id) {
-    const params = [street, suburb, city, pc, area, fa, clientAddress, id];
-    const sqlQuery = "INSERT INTO addresses (street, suburb, city, pc, area, fa, clientAddress, client_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+exports.createAddress = async function(street, suburb, city, pc, fa, clientAddress, id) {
+    const params = [street, suburb, city, pc, fa, clientAddress, id];
+    const sqlQuery = "INSERT INTO addresses (street, suburb, city, pc, fa, clientAddress, client_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
     await db.query(sqlQuery, params);
 }
 
 // Edits a client entry
-exports.editClient = async function(id, name, comments) {
-    const sqlQuery = "UPDATE clients SET name=?, comments=? WHERE id=?";
-    await db.query(sqlQuery, [name, comments, id]);
+exports.editClient = async function(id, name, company, comments) {
+    const sqlQuery = "UPDATE clients SET name=?, company=?, comments=? WHERE id=?";
+    await db.query(sqlQuery, [name, company, comments, id]);
 }
 
 // Edits an address entry
-exports.editAddress = async function(id, street, suburb, city, pc, area, fa, clientAddress) {
-    const params = [street, suburb, city, pc, area, fa, clientAddress, id];
-    const sqlQuery = "UPDATE addresses SET street=?, suburb=?, city=?, pc=?, area=?, fa=?, clientAddress=? WHERE id=?";
+exports.editAddress = async function(id, street, suburb, city, pc, fa, clientAddress) {
+    const params = [street, suburb, city, pc, fa, clientAddress, id];
+    const sqlQuery = "UPDATE addresses SET street=?, suburb=?, city=?, pc=?, fa=?, clientAddress=? WHERE id=?";
     await db.query(sqlQuery, params);
 }
 
