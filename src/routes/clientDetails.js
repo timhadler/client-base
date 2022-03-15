@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("./../database");
 const clients = require("./../models/client-models");
-const globals = require("./../globals");
+//const globals = require("./../globals");
 
 router.get("/", (req, res) => {
     res.send("How did you get here?");
@@ -18,7 +18,7 @@ router.get("/search", async (req, res) => {
             res.render("index", {list: CLIENT_LIST, search:SEARCH});
         } else {
             SEARCH = "";
-            CLIENT_LIST = await clients.callList(globals.d1, globals.d2);
+            CLIENT_LIST = await clients.callList(D1, D2);
             res.render("index", {list: CLIENT_LIST});
         }
     } catch (error) {
