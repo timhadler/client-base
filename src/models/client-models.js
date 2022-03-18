@@ -58,6 +58,30 @@ exports.contact = async function(id) {
     return rows[0];
 }
 
+// Reveives a user with a given id
+exports.getUserById = async function(id) {
+    const sqlQuery = "SELECT * from users WHERE id=?";
+    const rows = await db.query(sqlQuery, id);
+
+    if (rows.length > 0) {
+        return rows[0];
+    } else {
+        return null;
+    };
+}
+
+// Reveives a user with a given username
+exports.getUserByUsername = async function(username) {
+    const sqlQuery = "SELECT * from users WHERE username=?";
+    const rows = await db.query(sqlQuery, username);
+    //console.log(rows);
+    if (rows.length > 0) {
+        return rows[0];
+    } else {
+        return null;
+    };
+}
+
 /***********************************************************
  * Creation
  ***********************************************************/
@@ -101,6 +125,15 @@ exports.createAddress = async function(street, suburb, city, pc, fa, clientAddre
     await db.query(sqlQuery, params);
 }
 
+exports.creatUser = async function(username, password) {
+    const sqlQuery = "INSERT INTO users (username, password) VALUES(?, ?)";
+    const rows = await db.query(sqlQuery, [username, password]);
+}
+
+/***********************************************************
+ * Edit
+ ***********************************************************/
+
 // Edits a client entry
 exports.editClient = async function(id, name, company, comments) {
     const sqlQuery = "UPDATE clients SET name=?, company=?, comments=? WHERE id=?";
@@ -141,6 +174,11 @@ exports.deleteReminder = async function(id) {
 
 exports.deleteContact = async function(id) {
     const sqlQuery = "DELETE FROM contacts WHERE id=?";
+    await db.query(sqlQuery, id);
+}
+
+exports.deleteUser = async function(id) {
+    const sqlQuery = "DELETE FROM users WHERE id=?";
     await db.query(sqlQuery, id);
 }
 

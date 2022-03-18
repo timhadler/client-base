@@ -1,0 +1,18 @@
+<form class="grid_col_1_s2" action="/login" method="POST">
+    <div class="login_container">
+        <% if (messages.error) { %>
+            <p style="color: red;"> <%= messages.error %> </p>
+            <br />
+        <% } %>
+        <h2> Login </h2>
+        <br />
+
+        <label for="username"> Username: </label>
+        <input required type="text" name="username" id="username"> <br /><br />
+
+        <label for="password"> Password: </label>
+        <input required type="password" name="password" id="password"> <br /><br />
+
+        <button type="submit" class="button_primary"> Login </button>
+    </div>
+</form>

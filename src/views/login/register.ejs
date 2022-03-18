@@ -1,0 +1,22 @@
+<form class="grid_col_1_s2" action="/register" method="POST">
+    <div class="login_container">
+        <% if (locals.error) { %>
+            <p style="color: red;"> <%= locals.error %> </p>
+            <br />
+        <% } %>
+        <h2> Register </h2>
+        <br />
+
+        <label for="registerCode"> Register code: </label>
+        <input required type="text" name="registerCode" id="registerCode"> <br /><br />
+
+        <label for="username"> Username: </label>
+        <input required type="text" name="username" id="username"> <br /><br />
+
+        <label for="password"> Password: </label>
+        <input required type="password" name="password" id="password"> <br /><br />
+
+        <button type="submit" class="button_primary"> Register </button>
+        <a href="/login" class="button button_secondary margin-r-sm"> Login </a>
+    </div>
+</form>

@@ -10,7 +10,7 @@ global.D2 = getDate(31);
 
 let started = 0;
 
-router.get("/", async (req, res) => {
+router.get("/", checkAuthenticated, async (req, res) => {
     try {
         if (!started) {
             CLIENT_LIST = await clients.callList(D1, D2);
@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/setDates", (req, res) => {
+router.get("/setDates", checkAuthenticated, (req, res) => {
     D1 = req.query.date1;
     D2 = req.query.date2;
     started = 0;
@@ -39,5 +39,13 @@ function getDate(n) {
 
     return date;
 }
+
+function checkAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+
+    res.redirect("/login");
+};
 
 module.exports = router;

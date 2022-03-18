@@ -1,7 +1,7 @@
 //const { response } = require("express");
 const express = require("express");
 const router = express.Router();
-const db = require("./../database");
+//const db = require("./../database");
 const clients = require("./../models/client-models");
 //const globals = require("./../globals");
 
