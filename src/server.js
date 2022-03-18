@@ -125,8 +125,6 @@ async function getUserById(id) {
 
 async function getUserByName(username) {
     try {
-        //console.log(username);
-        //console.log(await clients.getUserByUsername(username));
         return await clients.getUserByUsername(username);
     } catch (error) {
         res.status(500).send(error.message);

@@ -1,9 +1,6 @@
-//const { response } = require("express");
 const express = require("express");
 const router = express.Router();
-//const db = require("./../database");
 const clients = require("./../models/client-models");
-//const globals = require("./../globals");
 
 router.get("/", (req, res) => {
     res.send("How did you get here?");
@@ -49,11 +46,8 @@ router.post("/add-client", async (req, res) => {
     } catch (error) {
         // If error was caused by a duplicate name
         if (error.message.includes("Duplicate entry")) {
-            //error message
-            // Make sure to repopulate the user input when re-rendering 
             const error = "Name already exists in client database";
             res.render("addClient/addClient.ejs", {error:error});
-            //res.redirect("/");
         } else {
             res.status(400).send(error.message);
         }
@@ -132,6 +126,7 @@ router.post("/add-reminder/:id", async (req, res) => {
         const body = req.body;
 
         await clients.createReminder(body.rDate, req.params.id)
+        CLIENT_LIST = await clients.callList(D1, D2);
         res.status(201).redirect("/clients/" + req.params.id);
     } catch (error) {
         res.status(500).send(error.message);
@@ -153,9 +148,7 @@ router.post("/edit-reminder/:rId-:cId", async (req, res) => {
 // GET Client details
 router.get("/:id", async (req, res) => {
     try {
-        //const callList = await clients.callList(globals.d1, globals.d2);
         let details = await clients.clientDetails(req.params.id);
-        //console.log(details);
         
         // Convert dates to a nicer format to display
         for (let i = 0; i < details.calls.length; i++) {
@@ -184,7 +177,6 @@ router.delete("/delete-address/:cId-:addId", async (req, res) => {
     try {
         await clients.deleteAddress(req.params.addId);
         res.status(204).redirect("/clients/" + req.params.cId);
-        //res.send(req.params.id + ": Delete me");   
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -195,7 +187,6 @@ router.delete("/delete-date/:cId-:dId", async (req, res) => {
     try {
         await clients.deleteReminder(req.params.dId);
         res.status(204).redirect("/clients/" + req.params.cId);
-        //res.send(req.params.id + ": Delete me");   
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -206,7 +197,6 @@ router.delete("/delete-contact/:cId-:conId", async (req, res) => {
     try {
         await clients.deleteContact(req.params.conId);
         res.status(204).redirect("/clients/" + req.params.cId);
-        //res.send(req.params.id + ": Delete me");   
     } catch (error) {
         res.status(500).send(error.message);
     }
