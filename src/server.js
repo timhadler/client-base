@@ -50,7 +50,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", indexRouter);
 app.use("/clients", checkAuthenticated, clientRouter);
 
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT);
 
 
 // Logins
