@@ -51,6 +51,7 @@ app.use("/", indexRouter);
 app.use("/clients", checkAuthenticated, clientRouter);
 
 app.listen(process.env.PORT);
+console.log("Listening on port: " + process.env.PORT);
 
 
 // Logins
