@@ -1,5 +1,5 @@
 //const express = require("express");
-//const db = require("./../database");
+const db = require("./../database");
 
 /***********************************************************
  * Retrieval
@@ -74,7 +74,7 @@ exports.getUserById = async function(id) {
 exports.getUserByUsername = async function(username) {
     const sqlQuery = "SELECT * from users WHERE username=?";
     const rows = await db.query(sqlQuery, username);
-    //console.log(rows);
+
     if (rows.length > 0) {
         return rows[0];
     } else {

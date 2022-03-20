@@ -16,6 +16,8 @@ pool.getConnection((err, connection) => {
             console.error("Database connection limit exceeded");
         } else if (err.code === "ECONREFUSED") {
             console.error("Database connection refused");
+        } else {
+            console.log(err.message);
         }
     }
     if (connection) {
