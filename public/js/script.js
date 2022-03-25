@@ -65,7 +65,10 @@ for (let i = 0; i< contactCancelButs.length; i++) {
  ***********************************************************/
 // Add address popup
 function addAddressForm() {
-    document.getElementById("addAddressPopup").style.visibility = "visible";
+    const popup = document.getElementById("addAddressPopup");
+
+    popup.style.visibility = "visible";
+    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 }
 
 function addAddressCloseForm() {
@@ -74,7 +77,10 @@ function addAddressCloseForm() {
 
 // Edit address popup
 function editAddressForm(i) {
-    document.getElementById("addressEditPopup-" + i).style.visibility = "visible";
+    const popup = document.getElementById("addressEditPopup-" + i);
+
+    popup.style.visibility = "visible";
+    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 }
 
 function editAddressCloseForm(i) {
@@ -83,7 +89,10 @@ function editAddressCloseForm(i) {
 
 // Edit client popup
 function editClientForm() {
-    document.getElementById("cliFormPopup").style.visibility = "visible";
+    const popup = document.getElementById("cliFormPopup");
+
+    popup.style.visibility = "visible";
+    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 }
 
 function editClientCloseForm() {
@@ -92,7 +101,10 @@ function editClientCloseForm() {
 
 // Add date popup
 function addDateForm(i) {
-    document.getElementById("addCallPopup").style.visibility = "visible";
+    const popup = document.getElementById("addCallPopup");
+
+    popup.style.visibility = "visible";
+    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 }
 
 function addDateCloseForm(i) {
@@ -101,7 +113,10 @@ function addDateCloseForm(i) {
 
 // Edit date popup
 function editDateForm(i) {
-    document.getElementById("rDateEditPopup-" + i).style.visibility = "visible";
+    const popup = document.getElementById("rDateEditPopup-" + i);
+
+    popup.style.visibility = "visible";
+    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 }
 
 function editDateCloseForm(i) {
@@ -110,7 +125,10 @@ function editDateCloseForm(i) {
 
 // Add contact popup
 function addContactForm(i) {
-    document.getElementById("addContactPopup").style.visibility = "visible";
+    const popup = document.getElementById("addContactPopup");
+
+    popup.style.visibility = "visible";
+    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 }
 
 function addContactCloseForm(i) {
@@ -120,7 +138,10 @@ function addContactCloseForm(i) {
 // Edit contact popup
 function editContactForm(i) {
     //console.log("here");
-    document.getElementById("contactEditPopup-" + i).style.visibility = "visible";
+    const popup = document.getElementById("contactEditPopup-" + i);
+
+    popup.style.visibility = "visible";
+    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 }
 
 function editContactCloseForm(i) {

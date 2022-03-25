@@ -11,6 +11,7 @@ html {
 body {
   margin: 0;
   padding: 0;
+  overflow: hidden;
   line-height: 1.3;
   font-family: "Roboto", sans-serif;
 }
@@ -210,7 +211,9 @@ button {
   visibility: hidden;
   position: absolute;
   background-color: white;
-  width: 500px;
+}
+.popup-call {
+  width: 400px;
 }
 
 header {
@@ -269,6 +272,10 @@ main {
   margin-right: 10px;
 }
 
+.margin_r_large {
+  margin-right: 35px;
+}
+
 .margin_b_med {
   margin-bottom: 15px;
 }
@@ -279,6 +286,10 @@ main {
 
 .margin_l_med {
   margin-left: 15px;
+}
+
+.margin_l_large {
+  margin-left: 35px;
 }
 
 .margin_t_l {
@@ -311,6 +322,7 @@ main {
 .grid_a_1 {
   grid-column-start: 1;
   grid-row-start: 1;
+  width: 100%;
 }
 
 .grid_a_2 {
@@ -329,11 +341,6 @@ main {
   border-bottom: 1px solid grey;
   cursor: default;
   font-weight: lighter;
-}
-
-.details_grid input[type=text] {
-  margin: 0;
-  width: 300px;
 }
 
 .list_container {
