@@ -48,8 +48,8 @@ app.use(express.urlencoded({ extended: false }));
  * Routes
  */
 app.use("/", indexRouter);
-//app.use("/clients", checkAuthenticated, clientRouter);
-app.use("/clients", clientRouter);
+app.use("/clients", checkAuthenticated, clientRouter);
+//app.use("/clients", clientRouter);
 
 app.listen(process.env.PORT);
 console.log("Listening on port: " + process.env.PORT);

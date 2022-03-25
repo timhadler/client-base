@@ -2,22 +2,23 @@
 <div class="grid_col_1 section_divider">
     <div class="pad-t-med pad-r-sm">
         <!-- Add customer button and search bar -->
-        <div class="flex flex-ai-c flex-jc-sb margin_b_med">
-            <a href="/clients/add-client" class="button button_primary"> Add&nbsp;Customer </a>
-            <form id="searchForm" action="/clients/search" method="GET">
-                <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
-            </form>
-        </div>
+        <a href="/clients/add-client" class="button button_primary"> Add&nbsp;Customer </a>
+        <form id="searchForm" action="/clients/search" method="GET">
+            <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
+        </form>
+        <br />
 
         <% if (locals.search == null) { %>
             <div>
                 <form id="datesForm" action="/setDates" method="GET">
-                    <input id="date1_input" type="date" name="date1" value="<%= D1 %>">
-                    <p> to </p>
-                    <input id="date2_input" type="date" name="date2" value="<%= D2 %>">
-                    <button type="submit"> Set </button>
+                    <input id="date1_input" type="date" name="date1" value="<%= D1 %>"> to 
+                    <div class="flex flex-ai-c flex-jc-sb">
+                        <input id="date2_input" type="date" name="date2" value="<%= D2 %>">
+                        <button type="submit" class="button_secondary"> Set </button>
+                    </div>
                 </form>
             </div>
+            <br />
         <% } %>
 
         <!-- Call list header -->
@@ -31,7 +32,7 @@
 
         <!-- Call list -->
         <div class="inner_section">
-            <ul id="cList">
+            <ul id="cList" class="callList">
                 <% for (let i = 0; i < calls.length; i++) { %>
                     <li><a href=<%="/clients/" + calls[i].id%> class="color_secondary"> <%= calls[i].name %> </a></li>
                 <% } %>
