@@ -22,7 +22,7 @@ ie. details.client is an object
 
         <!-- Details header -->
         <div class="flex flex-ai-c flex-jc-sb">
-            <p id="client_name" class="size_small bold"> <%= details.client.name %> </p>
+            <p id="client_name" class="size_medium bold"> <%= details.client.name %> </p>
             <button id="editClientButton" class="button_primary"> Edit </button>
         </div>
 
@@ -38,7 +38,7 @@ ie. details.client is an object
                     <hr class="line_header">
 
                     <!-- Address list -->
-                    <div class="list_container margin_t_med margin_l_med">
+                    <div class="list_container margin_t_sm margin_l_sm">
                         <ul id="client_details">
                             <%- include("../partials/clientDetails/_address", {data:details.addresses, client_id:details.client.id}) %>
                         </ul>
@@ -55,7 +55,7 @@ ie. details.client is an object
                     <hr class="line_header">
 
                     <!-- Contacts list -->
-                    <div class="list_container margin_t_med margin_l_med">
+                    <div class="list_container margin_t_sm margin_l_sm">
                         <ul id="client_details">
                             <%- include("../partials/clientDetails/_contact", {data:details.contacts, client_id:details.client.id}) %>   
                         </ul>
@@ -73,7 +73,7 @@ ie. details.client is an object
                     <hr class="line_header">
 
                     <!-- Call date list -->
-                    <div class="list_container margin_t_med margin_l_med">
+                    <div class="list_container margin_t_sm margin_l_sm">
                         <ul id="client_details">
                             <%- include("../partials/clientDetails/_call", {data:details.calls, client_id:details.client.id}) %>   
                         </ul>
@@ -83,7 +83,7 @@ ie. details.client is an object
                 <p class="color_primary size_small margin_b_sm"> Comments </p>
                 <hr class="line_header">
             
-                <div class="list_container margin_t_med margin_l_med">
+                <div class="list_container margin_t_sm margin_l_sm">
                     <p> <%= details.client.comments %> </p>
                 </div>
             </div>

@@ -11,7 +11,8 @@
         <% if (locals.search == null) { %>
             <div>
                 <form id="datesForm" action="/setDates" method="GET">
-                    <input id="date1_input" type="date" name="date1" value="<%= D1 %>"> to 
+                    <input id="date1_input" type="date" name="date1" value="<%= D1 %>"> <br />
+                    to
                     <div class="flex flex-ai-c flex-jc-sb">
                         <input id="date2_input" type="date" name="date2" value="<%= D2 %>">
                         <button type="submit" class="button_secondary"> Set </button>

@@ -14,7 +14,7 @@
         <!-- Edit popup -->
         <div id="<%= "addressEditPopup-" + data[i].id %>" class="popup">
             <form action="/clients/edit-address/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
-                <%- include("../inputForms/address", { street:data[i].street, suburb:data[i].suburb, city:data[i].city, pc:data[i].pc, area:data[i].area, fa:data[i].fa }) %>
+                <%- include("../inputForms/address", { street:data[i].street, suburb:data[i].suburb, city:data[i].city, pc:data[i].pc, fa:data[i].fa }) %>
                 <div>
                     <button type="submit" class="button_secondary"> Submit </button>
                     <button id="<%= data[i].id %>" name="addressCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
@@ -23,7 +23,12 @@
         </div>
 
         <div class="flex flex-ai-c flex-jc-sb">
-            <p> <%=data[i].street%> </p>
+            <p> <%=data[i].street%>, <%= data[i].suburb %>, <%= data[i].city %>, <%= data[i].pc %> </p>
+
+            <% if (data[i].fa != "None" && data[i].fa != "Unknown") { %>
+                <%= data[i].fa %>
+            <% } %>
+
             <div id="test" class="flex flex-ai-c">
                 <button id="<%= data[i].id %>" name="addressEditButton" type="button" class="button button_secondary"> Edit </button>
                 <form action="/clients/delete-address/<%= data[i].client_id %>-<%= data[i].id %>?_method=DELETE" method="POST">

@@ -66,15 +66,15 @@ label {
 }
 
 .size_large {
-  font-size: 27px;
-}
-
-.size_medium {
   font-size: 24px;
 }
 
-.size_small {
+.size_medium {
   font-size: 20px;
+}
+
+.size_small {
+  font-size: 16px;
 }
 
 .italic {
@@ -106,6 +106,7 @@ hr {
 }
 
 button {
+  background-color: white;
   display: inline-block;
   border: none;
   border-radius: 8px;
@@ -121,21 +122,21 @@ button {
   cursor: pointer;
 }
 .button_primary {
-  height: 35px;
-  font-size: 24px;
+  height: 31px;
+  font-size: 20px;
   background-color: #009AAF;
   color: white;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 .button_secondary {
-  height: 25px;
-  font-size: 20px;
+  height: 21px;
+  font-size: 16px;
   border: 1px solid #009AAF;
   background-color: white;
   color: #009AAF;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 8x;
+  padding-right: 8px;
 }
 .button_cancel {
   border-color: red;
@@ -169,10 +170,10 @@ button {
 }
 
 .search_bar {
-  font-size: 24px;
+  font-size: 16px;
   border-radius: 8px;
-  height: 35px;
-  width: 193px;
+  height: 31px;
+  width: 160px;
 }
 
 .grid_col_1 {
@@ -227,7 +228,7 @@ nav {
 
 .logo {
   color: #009AAF;
-  font-size: 27px;
+  font-size: 24px;
   font-weight: bold;
 }
 
@@ -237,18 +238,17 @@ nav {
 
 main {
   display: grid;
-  grid-template-columns: 150px minmax(100px, 300px) minmax(200px, 1200px) 150px;
+  grid-template-columns: 50px minmax(100px, 250px) minmax(200px, 2000px) 50px;
+  grid-template-rows: auto;
 }
 
 .inner_section {
-  height: 66vh;
   padding-left: 10px;
   padding-top: 10px;
 }
 
 .callList {
   overflow: auto;
-  height: 100%;
 }
 
 .pad-r-sm {
@@ -277,6 +277,14 @@ main {
 
 .margin_r_sm {
   margin-right: 10px;
+}
+
+.margin_t_sm {
+  margin-top: 10px;
+}
+
+.margin_l_sm {
+  margin-left: 10px;
 }
 
 .margin_r_large {
@@ -312,15 +320,17 @@ main {
 }
 
 .section_divider {
+  height: 88vh;
   border: none;
   width: 100%;
   border-right: 1px solid #1f1209;
+  overflow: auto;
 }
 
 .details_grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 2fr 1fr;
+  grid-template-rows: 2fr;
   column-gap: 80px;
   row-gap: 10px;
 }
@@ -360,13 +370,11 @@ main {
 }
 
 .form_comments {
-  width: 300px;
   height: 100px;
 }
 
 .details_grid input[type=text] {
   margin: 0;
-  width: 300px;
 }
 
 /*# sourceMappingURL=styles.css.map */
