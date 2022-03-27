@@ -12,10 +12,9 @@ let started = 0;
 
 router.get("/", checkAuthenticated, async (req, res) => {
     try {
-        if (!started) {
             CLIENT_LIST = await clients.callList(D1, D2);
-            started = 1;
-        }
+            SEARCH = "";
+
         res.render("index", {list: CLIENT_LIST});
     } catch (error) {
         console.error(error);
