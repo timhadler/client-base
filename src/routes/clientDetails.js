@@ -152,7 +152,7 @@ router.get("/:id", async (req, res) => {
         
         // Convert dates to a nicer format to display
         for (let i = 0; i < details.calls.length; i++) {
-            details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString();
+            details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString('en-GB');
         }
 
         if (details.client != null) {
