@@ -24,6 +24,7 @@
 
         <div class="flex flex-ai-c flex-jc-sb">
             <p> <%=data[i].rDate%> </p>
+            <%console.log(data[i].rDate)%>
             <div class="flex flex-ai-c">
                 <button id="<%= data[i].id %>" name="rDateEditButton" type="button" class="button_secondary"> Edit </button>
                 <form action="/clients/delete-date/<%= data[i].client_id %>-<%= data[i].id %>?_method=DELETE" method="POST">
@@ -43,7 +44,6 @@ function rDateToHTMLDate(rDate) {
     if(Number.isNaN(Number(d))) {
         d = "0" + d.slice(0, 1);
     }
-    console.log(y + "-" + m + "-" + d);
     return y + "-" + m + "-" + d;
 }
 %>
