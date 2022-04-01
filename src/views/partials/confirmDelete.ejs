@@ -1,0 +1,11 @@
+<script>
+    function confirmDelete(e) {
+        let confirmed = confirm("Delete this resource from database?");
+        if (confirmed) {
+            return true;
+        } else {
+            e.preventDefault();
+            return false;
+        }
+    }
+</script>

@@ -29,9 +29,11 @@
                 <%= data[i].fa %>
             <% } %>
 
+            <%- include("../confirmDelete") %>
+
             <div id="test" class="flex flex-ai-c">
                 <button id="<%= data[i].id %>" name="addressEditButton" type="button" class="button button_secondary"> Edit </button>
-                <form action="/clients/delete-address/<%= data[i].client_id %>-<%= data[i].id %>?_method=DELETE" method="POST">
+                <form onsubmit="confirmDelete(event)" action="/clients/delete-address/<%= data[i].client_id %>-<%= data[i].id %>?_method=DELETE" method="POST">
                     <button type="submit"><span class="close_form"></span></button>
                 </form>
             </div>
