@@ -160,6 +160,12 @@ exports.editReminder = async function(id, date) {
     await db.query(sqlQuery, [date, id]);
 }
 
+// Edits a reminder entry
+exports.editComment = async function(id, text) {
+    const sqlQuery = "UPDATE clients SET comments=? WHERE id=?";
+    await db.query(sqlQuery, [text, id]);
+}
+
 /***********************************************************
  * Delete
  ***********************************************************/

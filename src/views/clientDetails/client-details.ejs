@@ -13,8 +13,9 @@ ie. details.client is an object
     <div class="margin_t_l margin_l_l">
         <!-- Edit client popup -->
         <form id="cliFormPopup" class="popup" action="/clients/<%=details.client.id%>/editClient" method="POST">
-            <%- include("../partials/inputForms/client", {name:details.client.name, company:details.client.company, comments:details.client.comments}) %>
-            <div class="flex flex-ai-c flex-jc-r">
+            <%- include("../partials/inputForms/client", {name:details.client.name, company:details.client.company}) %>
+            <%- include("../partials/inputForms/comment", {comments:details.client.comments}) %>
+            <div class="flex flex-ai-c">
                 <button type="submit" class="button_primary margin_r_sm"> Submit </button>
                 <button id="clientCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
             </div>
@@ -79,10 +80,26 @@ ie. details.client is an object
                         </ul>
                     </div>
                 </div>
+
                 <!-- Comments -->
-                <p class="color_primary size_small margin_b_sm"> Comments </p>
+                <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
+                    <p class="color_primary size_small"> Comments </p>
+                    <button id="editCommentButton" type="button" class="button_secondary"> Edit </button>
+                </div>
                 <hr class="line_header">
+
+                <!-- Edit comments popup -->
+                <div id="commentEditPopup" class="popup">
+                    <form action="/clients/edit-comments/<%= details.client.id %>" method="POST">
+                        <%- include("../partials/inputForms/comment", {comments:details.client.comments}) %>
+                        <div>
+                            <button type="submit" class="button_secondary"> Submit </button>
+                            <button id="commentCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
+                        </div>
+                    </form>
+                </div>
             
+                <!-- Actual comments -->
                 <div class="list_container margin_t_sm margin_l_sm">
                     <p> <%= details.client.comments %> </p>
                 </div>

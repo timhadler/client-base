@@ -145,6 +145,18 @@ router.post("/edit-reminder/:rId-:cId", async (req, res) => {
     }
 });
 
+// POST comment reminder (popup)
+router.post("/edit-comments/:id", async (req, res) => {
+    try {
+        const body = req.body;
+
+        await clients.editComment(req.params.id, body.comments);
+        res.status(201).redirect("/clients/" + req.params.id);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 // GET Client details
 router.get("/:id", async (req, res) => {
     try {

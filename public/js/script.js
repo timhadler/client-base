@@ -27,6 +27,9 @@ document.getElementById("contactCloseAddFormBut").addEventListener('click', func
 document.getElementById("editClientButton").addEventListener('click', function() { editClientForm() });
 document.getElementById("clientCancelPopupButton").addEventListener('click', function() { editClientCloseForm() });
 
+document.getElementById("editCommentButton").addEventListener('click', function() { editCommentForm() });
+document.getElementById("commentCancelPopupButton").addEventListener('click', function() { editCommentCloseForm() });
+
 // address popups
 const addressEditButs = document.getElementsByName("addressEditButton");
 for (let i = 0; i< addressEditButs.length; i++) {
@@ -97,6 +100,18 @@ function editClientForm() {
 
 function editClientCloseForm() {
     document.getElementById("cliFormPopup").style.visibility = "hidden";
+}
+
+// Edit Comments popup
+function editCommentForm() {
+    const popup = document.getElementById("commentEditPopup");
+
+    popup.style.visibility = "visible";
+    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
+}
+
+function editCommentCloseForm() {
+    document.getElementById("commentEditPopup").style.visibility = "hidden";
 }
 
 // Add date popup
