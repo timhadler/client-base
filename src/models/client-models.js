@@ -91,7 +91,7 @@ exports.getUserByUsername = async function(username) {
 // Returns the id of the created client
 exports.createClient = async function(name, company, comments) {
     let sqlQuery;
-    let params = [name, company];
+    let params = processParameters([name, company]);
 
     // Only enter comments if something is entered
     // Input lenght from text area is 1 when nothing is entered
@@ -108,7 +108,7 @@ exports.createClient = async function(name, company, comments) {
 
 // Creates a contact entry
 exports.createContact = async function(name, phone, email, id) {
-    let params = [name, phone, email, id];
+    let params = processParameters([name, phone, email, id]);
     const sqlQuery = "INSERT INTO contacts (name, phone, email, client_id) VALUES(?, ?, ?, ?)";
     await db.query(sqlQuery, params);
 }
@@ -121,7 +121,7 @@ exports.createReminder = async function(rDate, id) {
 
 // Creates an address entry
 exports.createAddress = async function(street, suburb, city, pc, fa, clientAddress, id) {
-    const params = [street, suburb, city, pc, fa, clientAddress, id];
+    const params = processParameters([street, suburb, city, pc, fa, clientAddress, id]);
     const sqlQuery = "INSERT INTO addresses (street, suburb, city, pc, fa, clientAddress, client_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
     await db.query(sqlQuery, params);
 }
@@ -231,4 +231,16 @@ async function customerDetails(id) {
     const sqlQuery = "SELECT * FROM clients WHERE clients.id=" + id;
     rows = await db.query(sqlQuery);
     return rows[0];
+}
+
+// OTHER
+// Turns parameters in a list to null if their length is 0
+function processParameters(list) {
+    var result = list;
+    for (let i = 0; i < result.length; i++) {
+        if (result[i].length <= 0) {
+            result[i] = null;
+        }
+    }
+    return result;
 }
