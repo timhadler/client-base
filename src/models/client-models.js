@@ -169,6 +169,20 @@ exports.editComment = async function(id, text) {
 /***********************************************************
  * Delete
  ***********************************************************/
+exports.deleteClientData = async function(id) {
+    var sqlQuery = "DELETE FROM addresses WHERE client_id=" + id;
+    await db.query(sqlQuery);
+
+    sqlQuery = "DELETE FROM contacts WHERE client_id=" + id;
+    await db.query(sqlQuery);
+
+    sqlQuery = "DELETE FROM reminders WHERE client_id=" + id;
+    await db.query(sqlQuery);
+
+    sqlQuery = "DELETE FROM clients WHERE id=" + id;
+    await db.query(sqlQuery);
+}
+
 exports.deleteAddress = async function(id) {
     const sqlQuery = "DELETE FROM addresses WHERE id=?";
     await db.query(sqlQuery, id);

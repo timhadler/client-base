@@ -1,4 +1,6 @@
 const express = require("express");
+const req = require("express/lib/request");
+const res = require("express/lib/response");
 const router = express.Router();
 const clients = require("./../models/client-models");
 
@@ -184,6 +186,16 @@ router.get("/:id", async (req, res) => {
 /***********************************************************
  * Delete
  ***********************************************************/
+// Delete client and all associated data
+router.delete("/:id/delete-client", async (req, res) => {
+    try {
+        await clients.deleteClientData(req.params.id);
+        res.status(204).redirect("/");
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 // Delete from addresses table
 router.delete("/delete-address/:cId-:addId", async (req, res) => {
     try {

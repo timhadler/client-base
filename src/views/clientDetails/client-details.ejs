@@ -24,9 +24,11 @@ ie. details.client is an object
         <!-- Details header -->
         <div class="flex flex-ai-c flex-jc-sb">
             <p id="client_name" class="size_medium bold"> <%= details.client.name %> </p>
-            <div>
+            <div class="flex flex-ai-c">
                 <button type="button" id="editClientButton" class="button_primary"> Edit </button>
-                <button type="submit" class="button_primary button_primary_red margin_l_sm"> Delete </button>
+                <form onsubmit="confirmDelete(event)" action="<%= details.client.id %>/delete-client?_method=DELETE" method="POST">
+                    <button type="submit" class="button_primary button_primary_red margin_l_sm"> Delete </button>
+                </form>
             </div>
         </div>
 
