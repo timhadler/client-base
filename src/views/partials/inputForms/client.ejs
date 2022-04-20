@@ -1,4 +1,8 @@
-<h3> Client: </h3> <br />
+<h3> <%= locals.name %> </h3>
+<% if (locals.name) { %>
+    <br />
+<% } %>
+
 <label> Customer name: </label> <br />
 <input required type="text" name="name" value="<%= locals.name %>"> <br /><br />
 <label> Company: </label> <br />

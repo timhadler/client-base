@@ -6,7 +6,7 @@
 <div class="grid_col_1">
     <div class="margin_t_l margin_l_l">
         <!-- Details header -->
-        <h2 class="size_small bold"> Add Customer </h2>
+        <h3 > Add Customer </h3>
 
         <!-- Error message -->
         <% if (locals.error) { %>
@@ -15,6 +15,7 @@
 
         <form action= "/clients/add-client" method="POST" class="details_grid pad-t-med pad-l-med">
             <div class="grid_a_1">
+                <h3> Client: </h3> <br />
                 <%- include("../partials/inputForms/client") %>
                 <%- include("../partials/inputForms/comment") %>
             </div>

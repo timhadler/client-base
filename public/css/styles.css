@@ -129,6 +129,11 @@ button {
   padding-left: 15px;
   padding-right: 15px;
 }
+.button_primary_red {
+  background-color: white;
+  color: red;
+  border: 1px solid red;
+}
 .button_secondary {
   height: 21px;
   font-size: 16px;

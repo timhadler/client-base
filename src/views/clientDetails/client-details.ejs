@@ -24,7 +24,10 @@ ie. details.client is an object
         <!-- Details header -->
         <div class="flex flex-ai-c flex-jc-sb">
             <p id="client_name" class="size_medium bold"> <%= details.client.name %> </p>
-            <button id="editClientButton" class="button_primary"> Edit </button>
+            <div>
+                <button type="button" id="editClientButton" class="button_primary"> Edit </button>
+                <button type="submit" class="button_primary button_primary_red margin_l_sm"> Delete </button>
+            </div>
         </div>
 
         <div class="details_grid pad-t-med pad-l-med">
