@@ -83,6 +83,18 @@ exports.getUserByUsername = async function(username) {
     };
 }
 
+// Reveives a client with a given name
+exports.getClientByName = async function(name) {
+    const sqlQuery = "SELECT * from clients WHERE name=?";
+    const rows = await db.query(sqlQuery, name);
+
+    if (rows.length > 0) {
+        return rows[0];
+    } else {
+        return null;
+    };
+}
+
 /***********************************************************
  * Creation
  ***********************************************************/
