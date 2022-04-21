@@ -23,7 +23,13 @@
         <%- include("../confirmDelete") %>
 
         <div class="flex flex-ai-c flex-jc-sb">
-            <p> <%=data[i].phone%> </p>
+            <div class="margin_r_large" style="width: 100%;">
+                <div class="flex flex-ai-c flex-jc-sb">
+                    <p class="underline"> <%= data[i].name %> </p>
+                </div>
+                <% if (locals.data[i].phone) { %> <p> - <%= data[i].phone %> </p> <% } %>
+                <% if (locals.data[i].email) { %> <p> - <%= data[i].email %> </p> <% } %>
+            </div>
             <div class="flex flex-ai-c">
                 <button id="<%= data[i].id %>" name="contactEditButton" type="button" class="button_secondary"> Edit </button>
                 <form onsubmit="confirmDelete(event)" action="/clients/delete-contact/<%= data[i].client_id %>-<%= data[i].id %>?_method=DELETE" method="POST">

@@ -149,6 +149,10 @@ exports.creatUser = async function(username, password) {
 
 // Edits a client entry
 exports.editClient = async function(id, name, company, comments) {
+    // Comments are null if textarea length == 1
+    if (comments.length <= 1) {
+        comments = null;
+    }
     const sqlQuery = "UPDATE clients SET name=?, company=?, comments=? WHERE id=?";
     await db.query(sqlQuery, [name, company, comments, id]);
 }
@@ -174,6 +178,10 @@ exports.editReminder = async function(id, date) {
 
 // Edits a reminder entry
 exports.editComment = async function(id, text) {
+    // Comments are null if textarea length == 1
+    if (text.length <= 1) {
+        text = null;
+    }
     const sqlQuery = "UPDATE clients SET comments=? WHERE id=?";
     await db.query(sqlQuery, [text, id]);
 }
