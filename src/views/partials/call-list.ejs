@@ -8,7 +8,7 @@
         </form>
         <br />
 
-        <% if (locals.search == null) { %>
+        <% if (SEARCH.length == 0) { %>
             <div>
                 <form id="datesForm" action="/setDates" method="GET">
                     <input id="date1_input" type="date" name="date1" value="<%= D1 %>"> <br />
@@ -24,8 +24,14 @@
 
         <!-- Call list header -->
         <p class="size_small"> 
-            <% if(typeof search != "undefined" && locals.search != null) { %> 
-                Search: <%= locals.search %> <% } else { %>
+            <% if(SEARCH.length > 0) { %> 
+                <div class="flex flex-ai-c flex-jc-sb">
+                    Search: <%= SEARCH %> 
+                    <form id="cancelSearchForm" action="/" method="GET">
+                        <button type="submit"><span style="width: 15px; height: 1px;" class="close_form"></span></button>
+                    </form>
+                </div>
+            <% } else { %>
                 Call List
             <% } %>
         </p>
@@ -34,8 +40,8 @@
         <!-- Call list -->
         <div class="inner_section">
             <ul id="cList" class="callList">
-                <% for (let i = 0; i < calls.length; i++) { %>
-                    <li><a href=<%="/clients/" + calls[i].id%> class="color_secondary"> <%= calls[i].name %> </a></li>
+                <% for (let i = 0; i < CLIENT_LIST.length; i++) { %>
+                    <li><a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> <%= CLIENT_LIST[i].name %> </a></li>
                 <% } %>
             </ul>
         </div>

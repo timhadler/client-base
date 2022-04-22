@@ -8,14 +8,12 @@ global.SEARCH = "";
 global.D1 = getDate(0);
 global.D2 = getDate(31);
 
-let started = 0;
-
 router.get("/", checkAuthenticated, async (req, res) => {
     try {
-            CLIENT_LIST = await clients.callList(D1, D2);
-            SEARCH = "";
+        CLIENT_LIST = await clients.callList(D1, D2);
+        SEARCH = "";
 
-        res.render("index", {list: CLIENT_LIST});
+        res.render("index");
     } catch (error) {
         console.error(error);
         res.status(500).send();
@@ -25,7 +23,6 @@ router.get("/", checkAuthenticated, async (req, res) => {
 router.get("/setDates", checkAuthenticated, (req, res) => {
     D1 = req.query.date1;
     D2 = req.query.date2;
-    started = 0;
     res.redirect("/");
 })
 

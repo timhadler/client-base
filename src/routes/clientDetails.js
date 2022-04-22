@@ -14,11 +14,11 @@ router.get("/search", async (req, res) => {
         if (req.query.search.length > 0) {
             SEARCH = req.query.search;
             CLIENT_LIST = await clients.searchList(SEARCH);
-            res.render("index", {list: CLIENT_LIST, search:SEARCH});
+            res.render("index", {list: CLIENT_LIST});
         } else {
             SEARCH = "";
             CLIENT_LIST = await clients.callList(D1, D2);
-            res.render("index", {list: CLIENT_LIST});
+            res.render("index");
         }
     } catch (error) {
         res.status(500).send(error.message);
@@ -174,7 +174,8 @@ router.get("/:id", async (req, res) => {
             if (SEARCH.length > 0) {
                 search = SEARCH;
             }
-            res.status(200).render("clientDetails/client-details.ejs", {callList:CLIENT_LIST, search:search, details:details});
+        res.status(200).render("clientDetails/client-details.ejs", {details:details});
+
         } else {
             res.redirect("/");
         }
