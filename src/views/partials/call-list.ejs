@@ -1,5 +1,5 @@
 <!-- Left Pane -->
-<div class="grid_col_1 section_divider">
+<div id="leftPane" name="test" class="grid_col_1 section_divider">
     <div class="pad-t-med pad-r-sm">
         <!-- Add customer button and search bar -->
         <a href="/clients/add-client" class="button button_primary"> Add&nbsp;Customer </a>
@@ -39,7 +39,7 @@
 
         <!-- Call list -->
         <div class="inner_section">
-            <ul id="cList" class="callList">
+            <ul id="cList">
                 <% for (let i = 0; i < CLIENT_LIST.length; i++) { %>
                     <li><a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> <%= CLIENT_LIST[i].name %> </a></li>
                 <% } %>

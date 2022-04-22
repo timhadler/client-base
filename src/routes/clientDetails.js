@@ -170,12 +170,10 @@ router.get("/:id", async (req, res) => {
         }
 
         if (details.client != null) {
-            let search = null;
-            if (SEARCH.length > 0) {
-                search = SEARCH;
+            if (SEARCH.length == 0) {
+                CLIENT_LIST = await clients.callList(D1, D2);
             }
-        res.status(200).render("clientDetails/client-details.ejs", {details:details});
-
+            res.status(200).render("clientDetails/client-details.ejs", {details:details});
         } else {
             res.redirect("/");
         }
