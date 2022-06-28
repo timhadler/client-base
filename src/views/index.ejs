@@ -1,2 +1,33 @@
-<!-- Client List (Left pane) -->
-<%- include("partials/call-list.ejs") %>
+<div class="grid_col_1 margin_b_med">
+    <div class="flex flex-ai-c pad-t-med pad-r-sm">
+        <a href="/clients/add-client" class="button button_primary margin_r_sm"> Add&nbsp;Customer </a>
+        <form id="searchForm" action="/clients/search" method="GET">
+            <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
+        </form>
+    </div>
+</div>
+
+<div class="grid_col_1">
+    <p class="flex flex-jc-c"> Call List </p>
+    <hr />
+    <div class="section_divider">
+        <ul id="callList"> </ul>
+    </div>
+
+</div>
+
+<div class="grid_col_2">
+    <p class="flex flex-jc-c"> To be confirmed </p>
+    <hr />
+    <div class="section_divider">
+        <ul id="callList"> </ul>
+    </div>
+</div>
+
+<div class="grid_col_3">
+    <p class="flex flex-jc-c"> Confirmed </p>
+    <hr />
+    <div class="section_content">
+        <ul id="callList"> </ul>
+    </div>
+</div>

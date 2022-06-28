@@ -186,7 +186,6 @@ button {
   font-size: 16px;
   border-radius: 8px;
   height: 31px;
-  width: 160px;
 }
 
 .grid_col_1 {
@@ -251,7 +250,7 @@ nav {
 
 main {
   display: grid;
-  grid-template-columns: 50px minmax(100px, 250px) minmax(200px, 2000px) 50px;
+  grid-template-columns: 100px 1fr 1fr 1fr 100px;
   grid-template-rows: auto;
 }
 
