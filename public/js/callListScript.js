@@ -10,7 +10,7 @@ for (let i = 0; i< clientButs.length; i++) {
 function clientPopup(i) {
     const popup = document.getElementById("clientPopup-" + i);
 
-    popup.style.visibility = "visible";
+    popup.style.display = "block";
     //popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 }
 

@@ -147,13 +147,27 @@ router.post("/edit-reminder/:rId-:cId", async (req, res) => {
     }
 });
 
-// POST comment reminder (popup)
+// POST edit comment reminder (popup)
 router.post("/edit-comments/:id", async (req, res) => {
     try {
         const body = req.body;
 
         await clients.editComment(req.params.id, body.comments);
         res.status(201).redirect("/clients/" + req.params.id);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// POST set client status
+router.post("/set-client-status-:id", async (req, res) => {
+    try {
+        if (req.body.clientStatus) {
+            await clients.setClientStatus(req.body.clientStatus, req.params.id);
+            res.status(201).redirect("/");
+        } else {
+            res.redirect("/");
+        }
     } catch (error) {
         res.status(500).send(error.message);
     }

@@ -23,23 +23,27 @@
 <div class="grid_col_1">
     <p class="flex flex-jc-c"> Call List </p>
     <hr />
-    <div class="inner_section section_divider">
-        <ul id="cList">
+    <div class="inner_section">
+        <ul id="cList" class="section_divider">
             <% for (let i = 0; i < CLIENT_LIST.length; i++) { %>
-                <li> <button id="<%= CLIENT_LIST[i].id %>" name="clientCallButton" type="button" class="color_secondary"> <%= CLIENT_LIST[i].name %> </button> </li>
-                <!--<li><a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> <%= CLIENT_LIST[i].name %> </a></li>-->
-
-                <!-- Client Popup -->
-                <div id=<%= "clientPopup-" + CLIENT_LIST[i].id %> class="clientPopup">
-                    <input type="checkbox" name="tbcBox" value="tbc">
-                    <label for="tbcBox"> To be Confirmed </label> <br />
-                    <input type="checkbox" name="confirmedBox" value="confirmed">
-                    <label for="confirmedBox"> Confirmed </label>
-                    <br /><br />
-                    <a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> Client Details </a>
-                    <br />
-                    <button type="submit" class="button_primary"> Submit </button>
-                </div>
+                <% if (CLIENT_LIST[i].status == "call") { %>
+                    <li class="positionRelative"> 
+                        <button id="<%= CLIENT_LIST[i].id %>" name="clientCallButton" type="button" class="color_secondary"> <%= CLIENT_LIST[i].name %> </button>
+                        <!--<li><a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> <%= CLIENT_LIST[i].name %> </a></li>-->   
+                        
+                        <!-- Client Popup -->
+                        <form id=<%= "clientPopup-" + CLIENT_LIST[i].id %> class="clientPopup" action="/clients/set-client-status-<%= CLIENT_LIST[i].id %>" method="POST">
+                            <input type="radio" name="clientStatus" value="tbc">
+                            <label> To be Confirmed </label> <br />
+                            <input type="radio" name="clientStatus" value="confirmed">
+                            <label> Confirmed </label>
+                            <br /><br />
+                            <a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> Client Details </a>
+                            <br />
+                            <button type="submit" class="button_primary"> Submit </button>
+                        </form>
+                    </li>
+                <% } %>
             <% } %>
         </ul>
     </div>
@@ -49,8 +53,14 @@
 <div class="grid_col_2">
     <p class="flex flex-jc-c"> To be confirmed </p>
     <hr />
-    <div class="section_divider">
-        <ul id="callList"> </ul>
+    <div class="inner_section section_divider">
+        <ul id="tbcList">
+            <% for (let i = 0; i < CLIENT_LIST.length; i++) { %>
+                <% if (CLIENT_LIST[i].status == "tbc") { %>
+                   <li> <%= CLIENT_LIST[i].name %> </li> 
+                <% } %>
+            <% } %>
+        </ul>
     </div>
 </div>
 
