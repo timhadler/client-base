@@ -1,3 +1,4 @@
+<!--
 <div class="grid_col_1 margin_b_med">
     <div class="flex flex-ai-c pad-t-med pad-r-sm">
         <a href="/clients/add-client" class="button button_primary margin_r_sm"> Add&nbsp;Customer </a>
@@ -6,12 +7,41 @@
         </form>
     </div>
 </div>
+-->
+
+<script type="module" src="/js/callListScript.js"> </script>
+
+<form class="grid_col_1 margin_t_med margin_b_med" id="datesForm" action="/setDates" method="GET">
+    <div class="flex flex-ai-c">
+        <input class="margin_r_sm" id="date1_input" type="date" name="date1" value="<%= D1 %>">
+        to
+        <input class="margin_l_sm" id="date2_input" type="date" name="date2" value="<%= D2 %>">
+        <button class="button_secondary margin_l_sm" type="submit"> Set </button>
+    </div>
+</form>
 
 <div class="grid_col_1">
     <p class="flex flex-jc-c"> Call List </p>
     <hr />
-    <div class="section_divider">
-        <ul id="callList"> </ul>
+    <div class="inner_section section_divider">
+        <ul id="cList">
+            <% for (let i = 0; i < CLIENT_LIST.length; i++) { %>
+                <li> <button id="<%= CLIENT_LIST[i].id %>" name="clientCallButton" type="button" class="color_secondary"> <%= CLIENT_LIST[i].name %> </button> </li>
+                <!--<li><a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> <%= CLIENT_LIST[i].name %> </a></li>-->
+
+                <!-- Client Popup -->
+                <div id=<%= "clientPopup-" + CLIENT_LIST[i].id %> class="clientPopup">
+                    <input type="checkbox" name="tbcBox" value="tbc">
+                    <label for="tbcBox"> To be Confirmed </label> <br />
+                    <input type="checkbox" name="confirmedBox" value="confirmed">
+                    <label for="confirmedBox"> Confirmed </label>
+                    <br /><br />
+                    <a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> Client Details </a>
+                    <br />
+                    <button type="submit" class="button_primary"> Submit </button>
+                </div>
+            <% } %>
+        </ul>
     </div>
 
 </div>
@@ -27,7 +57,7 @@
 <div class="grid_col_3">
     <p class="flex flex-jc-c"> Confirmed </p>
     <hr />
-    <div class="section_content">
+    <div>
         <ul id="callList"> </ul>
     </div>
 </div>
