@@ -5,6 +5,7 @@ const clients = require("./../models/client-models");
 
 global.CLIENT_LIST = [];
 global.SEARCH = "";
+
 global.D1 = getDate(0);
 global.D2 = getDate(31);
 

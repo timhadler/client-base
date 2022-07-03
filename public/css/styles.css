@@ -82,6 +82,10 @@ label {
   font-size: 16px;
 }
 
+.size_v_small {
+  font-size: 14px;
+}
+
 .italic {
   font-style: italic;
 }
@@ -151,6 +155,12 @@ button {
   color: #009AAF;
   padding-left: 8x;
   padding-right: 8px;
+}
+.button_clear {
+  height: 17px;
+  font-size: 14px;
+  border: none;
+  color: #009AAF;
 }
 .button_cancel {
   border-color: red;
@@ -237,9 +247,8 @@ button {
 .clientPopup {
   display: none;
   position: absolute;
-  text-align: center;
   padding: 15px;
-  border: 1px solid black;
+  border: 1px solid grey;
   background-color: lightgrey;
   background-attachment: local;
   z-index: 2;
@@ -251,6 +260,18 @@ button {
 
 .positionRelative {
   position: relative;
+}
+
+.revealCallDate:checked ~ .callDate {
+  display: block;
+}
+
+.callDate {
+  display: none;
+}
+
+.confirmed_width {
+  width: 60%;
 }
 
 header {

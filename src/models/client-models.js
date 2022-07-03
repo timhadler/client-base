@@ -8,7 +8,7 @@ const db = require("./../database");
 // Fetches the client names associated with the reminder dates between d1 and d2
 // client details (clients table)
 exports.callList = async function (d1, d2) {
-    const sqlQuery = "SELECT name, clients.id, status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY name";
+    const sqlQuery = "SELECT name, clients.id, comments, rDate, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY name";
     const rows = await db.query(sqlQuery);
 
     //console.log(rows[0]);
@@ -175,7 +175,7 @@ exports.editReminder = async function(id, date) {
     await db.query(sqlQuery, [date, id]);
 }
 
-// Edits a reminder entry
+// Edits a comment entry
 exports.editComment = async function(id, text) {
     // Comments are null if textarea length == 1
     if (text.length <= 1) {
@@ -185,10 +185,16 @@ exports.editComment = async function(id, text) {
     await db.query(sqlQuery, [text, id]);
 }
 
-// Sets client status to tbc
+// Sets client status
 exports.setClientStatus = async function(status, id) {
-    const sqlQuery = "UPDATE clients SET STATUS=? WHERE id=?";
+    const sqlQuery = "UPDATE reminders SET STATUS=? WHERE id=?";
     await db.query(sqlQuery, [status, id]);
+}
+
+// Clear all clients with status confirmed to status call
+exports.resetConfirmedList = async function() {
+    const sqlQuery = "UPDATE reminders SET STATUS='call' WHERE STATUS='confirmed'";
+    await db.query(sqlQuery);
 }
 
 
