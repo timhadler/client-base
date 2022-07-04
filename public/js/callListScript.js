@@ -4,6 +4,17 @@ for (let i = 0; i< clientButs.length; i++) {
     clientButs[i].addEventListener('click', function() { clientPopup(clientButs[i].id); });
 };
 
+const clientCloseButs = document.getElementsByName("clientPopupClose");
+for (let i = 0; i< clientCloseButs.length; i++) {
+    clientCloseButs[i].addEventListener('click', function() { clientPopupClose(clientCloseButs[i].id); });
+};
+
+const statusBoxes = document.getElementsByName("clientStatus");
+for (let i = 0; i< statusBoxes.length; i++) {
+    if (statusBoxes[i].classList.contains("revealCallDate")) {
+        statusBoxes[i].addEventListener('change', function(event) { test(event, statusBoxes[i].id)});
+    }
+};
 
 // Functions
 // Edit address popup
@@ -15,5 +26,13 @@ function clientPopup(i) {
 }
 
 function clientPopupClose(i) {
-    document.getElementById("addressEditPopup-" + i).style.visibility = "hidden";
+    document.getElementById("clientPopup-" + i).style.display = "none";
+}
+
+function test(e, s) {
+    console.log(s);
+    console.log("datebox-" + s.substring(s.indexOf('-') + 1));
+    if (e.currentTarget.checked) {
+        document.getElementById("datebox-" + s.substring(s.indexOf('-') + 1)).stepUp(365);
+    }
 }

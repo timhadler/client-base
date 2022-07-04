@@ -15,6 +15,22 @@ exports.callList = async function (d1, d2) {
     return rows;
 };
 
+exports.TBCList = async function () {
+    const sqlQuery = "SELECT name, clients.id, comments, rDate, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='tbc' ORDER BY name";
+    const rows = await db.query(sqlQuery);
+
+    //console.log(rows[0]);
+    return rows;
+};
+
+exports.confirmedList = async function () {
+    const sqlQuery = "SELECT name, clients.id, comments, rDate, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='confirmed' ORDER BY name";
+    const rows = await db.query(sqlQuery);
+
+    //console.log(rows[0]);
+    return rows;
+};
+
 // Fetches clients resulting from a search query
 exports.searchList = async function(search) {
     const sqlQuery = "SELECT name, id FROM clients WHERE name LIKE '%" + search + "%'";

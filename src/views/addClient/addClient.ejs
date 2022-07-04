@@ -3,38 +3,40 @@
 
 
 <!-- Client details pane -->
-<div class="grid_col_1">
-    <div class="margin_t_l margin_l_l">
-        <!-- Details header -->
-        <h3 > Add Customer </h3>
+<div class="clientListTemp">
+    <div class="grid_col_1">
+        <div class="margin_t_l margin_l_l">
+            <!-- Details header -->
+            <h3 > Add Customer </h3>
 
-        <!-- Error message -->
-        <% if (locals.error) { %>
-            <p style="color:red"> <%= locals.error %> </p>
-        <% } %>
+            <!-- Error message -->
+            <% if (locals.error) { %>
+                <p style="color:red"> <%= locals.error %> </p>
+            <% } %>
 
-        <form action= "/clients/add-client" method="POST" class="details_grid pad-t-med pad-l-med">
-            <div class="grid_a_1">
-                <h3> Client: </h3> <br />
-                <%- include("../partials/inputForms/client") %>
-                <%- include("../partials/inputForms/comment") %>
-            </div>
-
-            <div class="grid_a_2">
-                <!--
-                <h3> Contact: </h3> <br />
-                <%//- include("../partials/inputForms/contact") %>
-                -->
-                <h3> Call back on: </h3> <br />
-                <%- include("../partials/inputForms/call") %>
-            </div>
-
-            <div class="grid_a_3_4">
-                <div class="add_button flex flex-jc-r flex-ai-b">
-                    <button type="submit" class="button_primary"> Submit </button>
-                    <a href="/" class="button button_secondary button_cancel margin_l_sm"> Cancel </a>
+            <form action= "/clients/add-client" method="POST" class="details_grid pad-t-med pad-l-med">
+                <div class="grid_a_1">
+                    <h3> Client: </h3> <br />
+                    <%- include("../partials/inputForms/client") %>
+                    <%- include("../partials/inputForms/comment") %>
                 </div>
-            </div>
-        </form>
+
+                <div class="grid_a_2">
+                    <!--
+                    <h3> Contact: </h3> <br />
+                    <%//- include("../partials/inputForms/contact") %>
+                    -->
+                    <h3> Call back on: </h3> <br />
+                    <%- include("../partials/inputForms/call") %>
+                </div>
+
+                <div class="grid_a_3_4">
+                    <div class="add_button flex flex-jc-r flex-ai-b">
+                        <button type="submit" class="button_primary"> Submit </button>
+                        <a href="/" class="button button_secondary button_cancel margin_l_sm"> Cancel </a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

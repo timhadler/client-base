@@ -5,7 +5,7 @@ const router = express.Router();
 const clients = require("./../models/client-models");
 
 router.get("/", (req, res) => {
-    res.send("How did you get here?");
+    res.render("clientDetails/client-index");
 });
 
 // Search
@@ -13,13 +13,23 @@ router.get("/search", async (req, res) => {
     try {
         if (req.query.search.length > 0) {
             SEARCH = req.query.search;
-            CLIENT_LIST = await clients.searchList(SEARCH);
-            res.render("index", {list: CLIENT_LIST});
+            SEARCH_LIST = await clients.searchList(SEARCH);
+            res.render("clientDetails/client-index");
         } else {
             SEARCH = "";
-            CLIENT_LIST = await clients.callList(D1, D2);
-            res.render("index");
+            SEARCH_LIST = [];
+            res.redirect("/clients");
         }
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+})
+
+router.get("/clear-search", async (req, res) => {
+    try {
+        SEARCH = "";
+        SEARCH_LIST = [];
+        res.redirect("/clients");
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -165,7 +175,7 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
         if (req.body.clientStatus) {
             await clients.setClientStatus(req.body.clientStatus, req.params.rId);
         }
-        if (req.body.rDate) {
+        if (req.body.rDate && req.body.clientStatus == "confirmed") {
             await clients.editReminder(req.params.rId, req.body.rDate);
         }
         if (req.body.comments) {
@@ -198,9 +208,6 @@ router.get("/:id", async (req, res) => {
         }
 
         if (details.client != null) {
-            if (SEARCH.length == 0) {
-                CLIENT_LIST = await clients.callList(D1, D2);
-            }
             res.status(200).render("clientDetails/client-details.ejs", {details:details});
         } else {
             res.redirect("/");

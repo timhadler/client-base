@@ -6,112 +6,114 @@ ie. details.client is an object
 
 <script type="module" src="/js/clientDetailsScript.js"> </script>
 
-<!-- Client List (Left pane) -->
-<%- include("../partials/call-list.ejs") %>
+<div class="clientListTemp">
+    <!-- Client List (Left pane) -->
+    <%- include("../partials/client-list.ejs") %>
 
-<!-- Client details pane -->
-<div class="grid_col_2">
-    <div class="margin_t_l margin_l_l">
-        <!-- Edit client popup -->
-        <form id="cliFormPopup" class="popup" action="/clients/<%=details.client.id%>/editClient" method="POST">
-            <%- include("../partials/inputForms/client", {name:details.client.name, company:details.client.company}) %>
-            <%- include("../partials/inputForms/comment", {comments:details.client.comments}) %>
-            <div class="flex flex-ai-c">
-                <button type="submit" class="button_primary margin_r_sm"> Submit </button>
-                <button id="clientCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
-            </div>
-        </form>
-
-        <!-- Details header -->
-        <div class="flex flex-ai-c flex-jc-sb">
-            <p id="client_name" class="size_medium bold"> <%= details.client.name %> </p>
-            <div class="flex flex-ai-c">
-                <button type="button" id="editClientButton" class="button_primary"> Edit </button>
-                <form onsubmit="confirmDelete(event)" action="<%= details.client.id %>/delete-client?_method=DELETE" method="POST">
-                    <button type="submit" class="button_primary button_primary_red margin_l_sm"> Delete </button>
-                </form>
-            </div>
-        </div>
-        <p class="italic"> <%= locals.details.client.company %> </p>
-
-        <div class="details_grid pad-t-med pad-l-med">
-            <div class="grid_a_1">
-                <!-- Address details -->
-                <div class="client_details">
-                    <!-- Header -->
-                    <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
-                        <p class="color_primary size_small"> Address </p>
-                        <button id="addAddressBut" type="button" class="button_secondary"> Add </button>
-                    </div>
-                    <hr class="line_header">
-
-                    <!-- Address list -->
-                    <div class="list_container margin_t_sm margin_l_sm">
-                        <ul id="client_details">
-                            <%- include("../partials/clientDetails/_address", {data:details.addresses, client_id:details.client.id}) %>
-                        </ul>
-                    </div>
+    <!-- Client details pane -->
+    <div class="grid_col_2">
+        <div class="margin_t_l margin_l_l">
+            <!-- Edit client popup -->
+            <form id="cliFormPopup" class="popup" action="/clients/<%=details.client.id%>/editClient" method="POST">
+                <%- include("../partials/inputForms/client", {name:details.client.name, company:details.client.company}) %>
+                <%- include("../partials/inputForms/comment", {comments:details.client.comments}) %>
+                <div class="flex flex-ai-c">
+                    <button type="submit" class="button_primary margin_r_sm"> Submit </button>
+                    <button id="clientCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
                 </div>
+            </form>
 
-                <!-- Contact details -->
-                <div class="client_details">
-                    <!-- Header -->
-                    <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
-                        <p class="color_primary size_small"> Contacts </p>
-                        <button id="addContactBut" type="button" class="button_secondary"> Add </button>
-                    </div>
-                    <hr class="line_header">
-
-                    <!-- Contacts list -->
-                    <div class="list_container margin_t_sm margin_l_sm">
-                        <ul id="client_details">
-                            <%- include("../partials/clientDetails/_contact", {data:details.contacts, client_id:details.client.id}) %>   
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="grid_a_2">
-                <!-- Call date details -->
-                <div class="client_details">
-                    <!-- Header -->
-                    <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
-                        <p class="color_primary size_small"> Call dates </p>
-                        <button id="addDateBut" type="button" class="button_secondary"> Add </button>
-                    </div>
-                    <hr class="line_header">
-
-                    <!-- Call date list -->
-                    <div class="list_container margin_t_sm margin_l_sm">
-                        <ul id="client_details">
-                            <%- include("../partials/clientDetails/_call", {data:details.calls, client_id:details.client.id}) %>   
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Comments -->
-                <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
-                    <p class="color_primary size_small"> Comments </p>
-                    <button id="editCommentButton" type="button" class="button_secondary"> Edit </button>
-                </div>
-                <hr class="line_header">
-
-                <!-- Edit comments popup -->
-                <div id="commentEditPopup" class="popup">
-                    <form action="/clients/edit-comments/<%= details.client.id %>" method="POST">
-                        <%- include("../partials/inputForms/comment", {comments:details.client.comments}) %>
-                        <div>
-                            <button type="submit" class="button_secondary"> Submit </button>
-                            <button id="commentCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
-                        </div>
+            <!-- Details header -->
+            <div class="flex flex-ai-c flex-jc-sb">
+                <p id="client_name" class="size_medium bold"> <%= details.client.name %> </p>
+                <div class="flex flex-ai-c">
+                    <button type="button" id="editClientButton" class="button_primary"> Edit </button>
+                    <form onsubmit="confirmDelete(event)" action="<%= details.client.id %>/delete-client?_method=DELETE" method="POST">
+                        <button type="submit" class="button_primary button_primary_red margin_l_sm"> Delete </button>
                     </form>
                 </div>
-            
-                <!-- Actual comments -->
-                <div class="list_container margin_t_sm margin_l_sm">
-                    <p> <%= details.client.comments %> </p>
-                </div>
             </div>
-            <!-- Services -->
+            <p class="italic"> <%= locals.details.client.company %> </p>
+
+            <div class="details_grid pad-t-med pad-l-med">
+                <div class="grid_a_1">
+                    <!-- Address details -->
+                    <div class="client_details">
+                        <!-- Header -->
+                        <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
+                            <p class="color_primary size_small"> Address </p>
+                            <button id="addAddressBut" type="button" class="button_secondary"> Add </button>
+                        </div>
+                        <hr class="line_header">
+
+                        <!-- Address list -->
+                        <div class="list_container margin_t_sm margin_l_sm">
+                            <ul id="client_details">
+                                <%- include("../partials/clientDetails/_address", {data:details.addresses, client_id:details.client.id}) %>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Contact details -->
+                    <div class="client_details">
+                        <!-- Header -->
+                        <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
+                            <p class="color_primary size_small"> Contacts </p>
+                            <button id="addContactBut" type="button" class="button_secondary"> Add </button>
+                        </div>
+                        <hr class="line_header">
+
+                        <!-- Contacts list -->
+                        <div class="list_container margin_t_sm margin_l_sm">
+                            <ul id="client_details">
+                                <%- include("../partials/clientDetails/_contact", {data:details.contacts, client_id:details.client.id}) %>   
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid_a_2">
+                    <!-- Call date details -->
+                    <div class="client_details">
+                        <!-- Header -->
+                        <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
+                            <p class="color_primary size_small"> Call dates </p>
+                            <button id="addDateBut" type="button" class="button_secondary"> Add </button>
+                        </div>
+                        <hr class="line_header">
+
+                        <!-- Call date list -->
+                        <div class="list_container margin_t_sm margin_l_sm">
+                            <ul id="client_details">
+                                <%- include("../partials/clientDetails/_call", {data:details.calls, client_id:details.client.id}) %>   
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Comments -->
+                    <div class="flex flex-ai-c flex-jc-sb margin_b_sm">
+                        <p class="color_primary size_small"> Comments </p>
+                        <button id="editCommentButton" type="button" class="button_secondary"> Edit </button>
+                    </div>
+                    <hr class="line_header">
+
+                    <!-- Edit comments popup -->
+                    <div id="commentEditPopup" class="popup">
+                        <form action="/clients/edit-comments/<%= details.client.id %>" method="POST">
+                            <%- include("../partials/inputForms/comment", {comments:details.client.comments}) %>
+                            <div>
+                                <button type="submit" class="button_secondary"> Submit </button>
+                                <button id="commentCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
+                            </div>
+                        </form>
+                    </div>
+                
+                    <!-- Actual comments -->
+                    <div class="list_container margin_t_sm margin_l_sm">
+                        <p> <%= details.client.comments %> </p>
+                    </div>
+                </div>
+                <!-- Services -->
+            </div>
         </div>
     </div>
 </div>

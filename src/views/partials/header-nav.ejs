@@ -1,12 +1,22 @@
 <!-- Header and nav bar-->
-<header>
-    <nav class="flex flex-jc-sb flex-ai-c">
-        <a href="/" class="logo"> ClientBase </a>
+<div class="callListTemp">
+    <header>
+        <nav class="flex flex-jc-sb flex-ai-c">
+            <div class="flex flex-ai-c">
+                <a href="/" class="logo"> ClientBase </a>
+                <div class="navItemBox">
+                    <a href="/clients"> Clients </a>
+                </div>
+                <div class="navItemBox">
+                    <a href="/"> Call list </a>
+                </div>
+            </div>
 
-        <form action="/logout?_method=DELETE" method="POST" class="user flex flex-ai-c"> 
-            <img src=/images/user-icon.png alt="user-icon" width=32px height=32px />
-            <button type="submit" class="button_secondary"> Logout </button>
-        </form>
-    </nav>
-</header>
+            <form action="/logout?_method=DELETE" method="POST" class="user flex flex-ai-c"> 
+                <img src=/images/user-icon.png alt="user-icon" width=32px height=32px />
+                <button type="submit" class="button_secondary"> Logout </button>
+            </form>
+        </nav>
+    </header>
+</div>
 <hr class="line_header"/>

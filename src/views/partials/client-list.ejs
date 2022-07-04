@@ -1,5 +1,7 @@
+<script type="module" src="/js/clientListScript.js"> </script>
+
 <!-- Left Pane -->
-<div id="leftPane" name="test" class="grid_col_1 section_divider">
+<div id="leftPane" name="test" class="grid_col_1 section_divider_clientList">
     <div class="pad-t-med pad-r-sm">
         <!-- Add customer button and search bar -->
         <a href="/clients/add-client" class="button button_primary"> Add&nbsp;Customer </a>
@@ -8,31 +10,17 @@
         </form>
         <br />
 
-        <% if (SEARCH.length == 0) { %>
-            <div>
-                <form id="datesForm" action="/setDates" method="GET">
-                    <input id="date1_input" type="date" name="date1" value="<%= D1 %>"> <br />
-                    to
-                    <div class="flex flex-ai-c flex-jc-sb">
-                        <input id="date2_input" type="date" name="date2" value="<%= D2 %>">
-                        <button type="submit" class="button_secondary"> Set </button>
-                    </div>
-                </form>
-            </div>
-            <br />
-        <% } %>
-
         <!-- Call list header -->
         <p class="size_small"> 
             <% if(SEARCH.length > 0) { %> 
                 <div class="flex flex-ai-c flex-jc-sb">
                     Search: <%= SEARCH %> 
-                    <form id="cancelSearchForm" action="/" method="GET">
+                    <form id="cancelSearchForm" action="/clients/clear-search" method="GET">
                         <button type="submit"><span style="width: 15px; height: 1px;" class="close_form"></span></button>
                     </form>
                 </div>
             <% } else { %>
-                Call List
+                Client List
             <% } %>
         </p>
         <hr class="line_header">
@@ -40,8 +28,8 @@
         <!-- Call list -->
         <div class="inner_section">
             <ul id="cList">
-                <% for (let i = 0; i < CLIENT_LIST.length; i++) { %>
-                    <li><a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> <%= CLIENT_LIST[i].name %> </a></li>
+                <% for (let i = 0; i < SEARCH_LIST.length; i++) { %>
+                    <li><a href=<%="/clients/" + SEARCH_LIST[i].id%> class="color_secondary"> <%= SEARCH_LIST[i].name %> </a></li>
                 <% } %>
             </ul>
         </div>

@@ -1,135 +1,147 @@
 <script type="module" src="/js/callListScript.js"> </script>
 
-<form class="grid_col_1 margin_t_med margin_b_med" id="datesForm" action="/setDates" method="GET">
-    <div class="flex flex-ai-c">
-        <div>
-            <input class="margin_r_sm" id="date1_input" type="date" name="date1" value="<%= D1 %>">
-            to
-            <input class="margin_l_sm" id="date2_input" type="date" name="date2" value="<%= D2 %>">
+<div class="callListTemp">
+    <form class="grid_col_1 margin_t_med margin_b_med" id="datesForm" action="/setDates" method="GET">
+        <div class="flex flex-ai-c">
+            <div>
+                <input class="margin_r_sm" id="date1_input" type="date" name="date1" value="<%= D1 %>">
+                to
+                <input class="margin_l_sm" id="date2_input" type="date" name="date2" value="<%= D2 %>">
+            </div>
+            <button class="button_secondary margin_l_sm" type="submit"> Set </button>
         </div>
-        <button class="button_secondary margin_l_sm" type="submit"> Set </button>
-    </div>
-</form>
+    </form>
 
-<div class="grid_col_1">
-    <p class="flex flex-jc-c color_primary size_medium"> Call List </p>
-    <hr />
-    
-    <div class="inner_section">
-        <ul id="cList" class="section_divider">
-            <% for (let i = 0; i < CLIENT_LIST.length; i++) { %>
-                <% if (CLIENT_LIST[i].status == "call") { %>
-                    <li class="positionRelative"> 
-                        <button id="<%= CLIENT_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary"> <%= CLIENT_LIST[i].name %> </button>
-                        <!--<li><a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> <%= CLIENT_LIST[i].name %> </a></li>-->   
-                        
-                        <!-- Client Popup -->
-                        <form id=<%= "clientPopup-" + CLIENT_LIST[i].rId %> class="clientPopup" action="/clients/set-client-status-<%= CLIENT_LIST[i].id %>-<%= CLIENT_LIST[i].rId %>" method="POST">
-                            <P class="bold"> <%= CLIENT_LIST[i].name %> </P>
-                            <input type="radio" name="clientStatus" value="tbc">
-                            <label> To be Confirmed </label> <br />
-                            <input type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
-                            <label> Confirmed </label>
-                            <br /> <br />
-                            <div class="callDate">
-                                <label> Call back on: </label> <br />
-                                <div style="text-align: center ;">
-                                    <%- include("partials/inputForms/call", {date:rDateToHTMLDate(CLIENT_LIST[i].rDate.toLocaleDateString('en-GB'))}) %>
+    <div class="grid_col_1">
+        <p class="flex flex-jc-c color_primary size_medium"> Call List </p>
+        <hr />
+        
+        <div class="inner_section">
+            <ul id="cList" class="section_divider_callList">
+                <% for (let i = 0; i < CLIENT_LIST.length; i++) { %>
+                    <% if (CLIENT_LIST[i].status == "call") { %>
+                        <li class="positionRelative"> 
+                            <button id="<%= CLIENT_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary size_small"> <%= CLIENT_LIST[i].name %> </button>
+                            <!--<li><a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> <%= CLIENT_LIST[i].name %> </a></li>-->   
+                            
+                            <!-- Client Popup -->
+                            <form id=<%= "clientPopup-" + CLIENT_LIST[i].rId %> class="clientPopup" action="/clients/set-client-status-<%= CLIENT_LIST[i].id %>-<%= CLIENT_LIST[i].rId %>" method="POST">
+                                <div class="flex flex-ai-c flex-jc-sb">
+                                    <p class="bold"> <%= CLIENT_LIST[i].name + " (" + CLIENT_LIST[i].rDate.toLocaleDateString('en-GB') + ")" %> </p>
+                                    <span id="<%= CLIENT_LIST[i].rId %>" name="clientPopupClose" class="close_form"></span>
                                 </div>
-                                <br />
-                            </div>
-                            <%- include("partials/inputForms/comment", {comments:CLIENT_LIST[i].comments}) %>
-                            <br />
-                            <div style="text-align: center ;">
-                                <a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> Client Details </a>
-                                <br />
-                                <button type="submit" class="button_primary"> Submit </button>
-                            </div>
-                        </form>
-                    </li>
-                <% } %>
-            <% } %>
-        </ul>
-    </div>
-
-</div>
-
-<div class="grid_col_2">
-    <p class="flex flex-jc-c color_primary size_medium"> To be confirmed </p>
-    <hr />
-    <div class="inner_section section_divider">
-        <ul id="tbcList">
-            <% for (let i = 0; i < CLIENT_LIST.length; i++) { %>
-                <% if (CLIENT_LIST[i].status == "tbc") { %>
-                    <li class="positionRelative"> 
-                        <button id="<%= CLIENT_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary"> <%= CLIENT_LIST[i].name %> </button>
-                        
-                        <!-- Client Popup -->
-                        <form id=<%= "clientPopup-" + CLIENT_LIST[i].rId %> class="clientPopup" action="/clients/set-client-status-<%= CLIENT_LIST[i].id%>-<%= CLIENT_LIST[i].rId %>" method="POST">
-                            <P class="bold"> <%= CLIENT_LIST[i].name %> </P>
-                            <input type="radio" name="clientStatus" value="call">
-                            <label> Call </label> <br />
-                            <input type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
-                            <label> Confirmed </label>
-                            <br /><br />
-                            <div class="callDate">
-                                <label> Call back on: </label> <br />
-                                <div style="text-align: center ;">
-                                    <%- include("partials/inputForms/call", {date:rDateToHTMLDate(CLIENT_LIST[i].rDate.toLocaleDateString('en-GB'))}) %>
+                                <input type="radio" name="clientStatus" value="tbc">
+                                <label> To be Confirmed </label> <br />
+                                <input id=<%= "confirmbox1-" + CLIENT_LIST[i].rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
+                                <label> Confirmed </label>
+                                <br /> <br />
+                                <div class="callDate">
+                                    <label> Call back on: </label> <br />
+                                    <div style="text-align: center ;">
+                                        <input id=<%= "datebox-" + CLIENT_LIST[i].rId %> required type="date" name="rDate" value="<%= rDateToHTMLDate(CLIENT_LIST[i].rDate.toLocaleDateString('en-GB')) %>"> <br />
+                                        <!--<label> <%= CLIENT_LIST[i].rDate.toString().slice(8, 11) + CLIENT_LIST[i].rDate.toString().slice(4, 8) + CLIENT_LIST[i].rDate.toString().slice(11, 15)%> </label>-->
+                                    </div>
+                                    <br />
                                 </div>
+                                <%- include("partials/inputForms/comment", {comments:CLIENT_LIST[i].comments}) %>
                                 <br />
-                            </div>
-                            <%- include("partials/inputForms/comment", {comments:CLIENT_LIST[i].comments}) %>
-                            <br />
-                            <div style="text-align: center ;">
-                                <a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> Client Details </a>
-                                <br />
-                                <button type="submit" class="button_primary"> Submit </button>
-                            </div>
-                        </form>
-                    </li>
+                                <div style="text-align: center ;">
+                                    <a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> Client Details </a>
+                                    <br />
+                                    <button type="submit" class="button_primary"> Submit </button>
+                                </div>
+                            </form>
+                        </li>
+                    <% } %>
                 <% } %>
-            <% } %>
-        </ul>
-    </div>
-</div>
+            </ul>
+        </div>
 
-<div class="grid_col_3">
-    <div class="flex flex-ai-c flex-jc-r"> 
-        <div class="flex flex-ai-c flex-jc-sb confirmed_width">
-            <p class="color_primary size_medium"> Confirmed </p> 
-            <form action="/clients/reset-confirmed-list" method="POST" class="flex flex-jc-r"> 
-                <button type="submit" class="button_clear"> Clear </button> 
-            </form> 
+    </div>
+
+    <div class="grid_col_2">
+        <p class="flex flex-jc-c color_primary size_medium"> To be confirmed </p>
+        <hr />
+        <div class="inner_section section_divider_callList">
+            <ul id="tbcList">
+                <% for (let i = 0; i < TBC_LIST.length; i++) { %>
+                    <% if (TBC_LIST[i].status == "tbc") { %>
+                        <li class="positionRelative"> 
+                            <button id="<%= TBC_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary size_small"> <%= TBC_LIST[i].name %> </button>
+                            
+                            <!-- Client Popup -->
+                            <form id=<%= "clientPopup-" + TBC_LIST[i].rId %> class="clientPopup" action="/clients/set-client-status-<%= TBC_LIST[i].id%>-<%= TBC_LIST[i].rId %>" method="POST">
+                                <div class="flex flex-ai-c flex-jc-sb">
+                                    <p class="bold"> <%= TBC_LIST[i].name + " (" + TBC_LIST[i].rDate.toLocaleDateString('en-GB') + ")" %> </p>
+                                    <span id="<%= TBC_LIST[i].rId %>" name="clientPopupClose" class="close_form"></span>
+                                </div>
+                                <input type="radio" name="clientStatus" value="call">
+                                <label> Call </label> <br />
+                                <input id=<%= "confirmbox2-" + TBC_LIST[i].rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
+                                <label> Confirmed </label>
+                                <br /><br />
+                                <div class="callDate">
+                                    <label> Call back on: </label> <br />
+                                    <div style="text-align: center ;">
+                                        <input id=<%= "datebox-" + TBC_LIST[i].rId %> required type="date" name="rDate" value="<%= rDateToHTMLDate(TBC_LIST[i].rDate.toLocaleDateString('en-GB')) %>"> <br />
+                                    </div>
+                                    <br />
+                                </div>
+                                <%- include("partials/inputForms/comment", {comments:TBC_LIST[i].comments}) %>
+                                <br />
+                                <div style="text-align: center ;">
+                                    <a href=<%="/clients/" + TBC_LIST[i].id%> class="color_secondary"> Client Details </a>
+                                    <br />
+                                    <button type="submit" class="button_primary"> Submit </button>
+                                </div>
+                            </form>
+                        </li>
+                    <% } %>
+                <% } %>
+            </ul>
         </div>
     </div>
-    <hr />
-    <div class="inner_section">
-        <ul id="confirmedList">
-            <% for (let i = 0; i < CLIENT_LIST.length; i++) { %>
-                <% if (CLIENT_LIST[i].status == "confirmed") { %>
-                    <li class="positionRelative"> 
-                        <button id="<%= CLIENT_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary"> <%= CLIENT_LIST[i].name %> </button>
-                        
-                        <!-- Client Popup -->
-                        <form id=<%= "clientPopup-" + CLIENT_LIST[i].rId %> class="clientPopup" action="/clients/set-client-status-<%= CLIENT_LIST[i].id%>-<%= CLIENT_LIST[i].rId %>" method="POST">
-                            <P class="bold"> <%= CLIENT_LIST[i].name %> </P>
-                            <input type="radio" name="clientStatus" value="call">
-                            <label> Call </label> <br />
-                            <input type="radio" name="clientStatus" value="tbc">
-                            <label> To be confirmed </label> <br />
-                            <%- include("partials/inputForms/comment", {comments:CLIENT_LIST[i].comments}) %>
-                            <br />
-                            <div style="text-align: center;">
-                                <a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> Client Details </a>
+
+    <div class="grid_col_3">
+        <div class="flex flex-ai-c flex-jc-r"> 
+            <div class="flex flex-ai-c flex-jc-sb confirmed_width">
+                <p class="color_primary size_medium"> Confirmed </p> 
+                <form action="/clients/reset-confirmed-list" method="POST" class="flex flex-jc-r"> 
+                    <button type="submit" class="button_clear"> Clear </button> 
+                </form> 
+            </div>
+        </div>
+        <hr />
+        <div class="inner_section">
+            <ul id="confirmedList">
+                <% for (let i = 0; i < CONFIRMED_LIST.length; i++) { %>
+                    <% if (CONFIRMED_LIST[i].status == "confirmed") { %>
+                        <li class="positionRelative"> 
+                            <button id="<%= CONFIRMED_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary size_small"> <%= CONFIRMED_LIST[i].name %> </button>
+                            
+                            <!-- Client Popup -->
+                            <form id=<%= "clientPopup-" + CONFIRMED_LIST[i].rId %> class="clientPopup" action="/clients/set-client-status-<%= CONFIRMED_LIST[i].id%>-<%= CONFIRMED_LIST[i].rId %>" method="POST">
+                                <div class="flex flex-ai-c flex-jc-sb">
+                                    <p class="bold"> <%= CONFIRMED_LIST[i].name + " (" + CONFIRMED_LIST[i].rDate.toLocaleDateString('en-GB') + ")" %> </p>
+                                    <span id="<%= CONFIRMED_LIST[i].rId %>" name="clientPopupClose" class="close_form"></span>
+                                </div>
+                                <input type="radio" name="clientStatus" value="call">
+                                <label> Call </label> <br />
+                                <input type="radio" name="clientStatus" value="tbc">
+                                <label> To be confirmed </label> <br />
+                                <%- include("partials/inputForms/comment", {comments:CONFIRMED_LIST[i].comments}) %>
                                 <br />
-                                <button type="submit" class="button_primary"> Submit </button>
-                            </div>
-                        </form>
-                    </li>
+                                <div style="text-align: center;">
+                                    <a href=<%="/clients/" + CONFIRMED_LIST[i].id%> class="color_secondary"> Client Details </a>
+                                    <br />
+                                    <button type="submit" class="button_primary"> Submit </button>
+                                </div>
+                            </form>
+                        </li>
+                    <% } %>
                 <% } %>
-            <% } %>
-        </ul>
+            </ul>
+        </div>
     </div>
 </div>
 
