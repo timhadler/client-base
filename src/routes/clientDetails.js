@@ -4,8 +4,14 @@ const res = require("express/lib/response");
 const router = express.Router();
 const clients = require("./../models/client-models");
 
-router.get("/", (req, res) => {
-    res.render("clientDetails/client-index");
+router.get("/", async (req, res) => {
+    try {
+        // fetch the first 50 clients
+        let clientList = await clients.clientList();
+        res.render("clientDetails/client-index", {clients:clientList});
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
 });
 
 // Search
@@ -201,6 +207,9 @@ router.post("/reset-confirmed-list", async (req, res) => {
 router.get("/:id", async (req, res) => {
     try {
         let details = await clients.clientDetails(req.params.id);
+
+        // fetch the first 50 clients for list
+        let clientList = await clients.clientList();
         
         // Convert dates to a nicer format to display
         for (let i = 0; i < details.calls.length; i++) {
@@ -208,7 +217,7 @@ router.get("/:id", async (req, res) => {
         }
 
         if (details.client != null) {
-            res.status(200).render("clientDetails/client-details.ejs", {details:details});
+            res.status(200).render("clientDetails/client-details.ejs", {details:details, clients:clientList});
         } else {
             res.redirect("/");
         }

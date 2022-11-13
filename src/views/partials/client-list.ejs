@@ -10,7 +10,7 @@
         </form>
         <br />
 
-        <!-- Call list header -->
+        <!-- list header -->
         <p class="size_small"> 
             <% if(SEARCH.length > 0) { %> 
                 <div class="flex flex-ai-c flex-jc-sb">
@@ -25,11 +25,12 @@
         </p>
         <hr class="line_header">
 
-        <!-- Call list -->
+        <!-- list -->
         <div class="inner_section">
             <ul id="cList">
-                <% for (let i = 0; i < SEARCH_LIST.length; i++) { %>
-                    <li><a href=<%="/clients/" + SEARCH_LIST[i].id%> class="color_secondary"> <%= SEARCH_LIST[i].name %> </a></li>
+                <% let list; if (SEARCH.length > 0) { list = SEARCH_LIST } else { list = locals.clients }; %>
+                <% for (let i = 0; i < list.length; i++) { %>
+                    <li><a href=<%="/clients/" + list[i].id%> class="color_secondary"> <%= list[i].name %> </a></li>
                 <% } %>
             </ul>
         </div>
