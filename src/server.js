@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded( {extended: false } ));
 app.use(flash());
 app.use(session({ 
     secret: process.env.SESSION_SECRET,
-    resave: true,
+    resave: false,
     saveUninitialized: false
  }));
  app.use(passport.initialize());
@@ -43,13 +43,6 @@ app.use(session({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-/**
- * Routes
- */
-app.use("/", indexRouter);
-app.use("/clients", checkAuthenticated, clientRouter);
-//app.use("/clients", clientRouter);
 
 app.listen(process.env.PORT);
 console.log("Listening on port: " + process.env.PORT);
@@ -131,3 +124,10 @@ async function getUserByName(username) {
         res.status(500).send(error.message);
     }
 };
+
+/**
+ * Routes
+ */
+app.use("/", checkAuthenticated, indexRouter);
+app.use("/clients", checkAuthenticated, clientRouter);
+//app.use("/clients", clientRouter);

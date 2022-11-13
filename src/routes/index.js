@@ -13,7 +13,7 @@ global.SEARCH = "";
 global.D1 = getDate(0);
 global.D2 = getDate(31);
 
-router.get("/", checkAuthenticated, async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         CLIENT_LIST = await clients.callList(D1, D2);
         TBC_LIST = await clients.TBCList();
@@ -26,7 +26,7 @@ router.get("/", checkAuthenticated, async (req, res) => {
     }
 });
 
-router.get("/setDates", checkAuthenticated, (req, res) => {
+router.get("/setDates", (req, res) => {
     D1 = req.query.date1;
     D2 = req.query.date2;
     res.redirect("/");
