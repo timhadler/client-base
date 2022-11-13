@@ -7,9 +7,6 @@ global.CLIENT_LIST = [];
 global.TBC_LIST = [];
 global.CONFIRMED_LIST = [];
 
-global.SEARCH_LIST = [];
-global.SEARCH = "";
-
 global.D1 = getDate(0);
 global.D2 = getDate(31);
 

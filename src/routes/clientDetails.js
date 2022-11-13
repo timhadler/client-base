@@ -14,6 +14,9 @@ router.get("/", async (req, res) => {
     }
 });
 
+global.SEARCH_LIST = [];
+global.SEARCH = "";
+
 // Search
 router.get("/search", async (req, res) => {
     try {
