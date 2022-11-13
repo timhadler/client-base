@@ -20,7 +20,7 @@ router.get("/search", async (req, res) => {
         if (req.query.search.length > 0) {
             SEARCH = req.query.search;
             SEARCH_LIST = await clients.searchList(SEARCH);
-            res.redirect("/clients");
+            res.render("clientDetails/client-index");
         } else {
             SEARCH = "";
             SEARCH_LIST = [];
