@@ -9,7 +9,7 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const passport  = require("passport");
 const flash = require("express-flash");
-const session = require("cookie-session");
+const session = require("express-session");
 
 const initializePassport = require("./passport-config");
 initializePassport(
@@ -130,4 +130,3 @@ async function getUserByName(username) {
  */
 app.use("/", checkAuthenticated, indexRouter);
 app.use("/clients", checkAuthenticated, clientRouter);
-//app.use("/clients", clientRouter);
