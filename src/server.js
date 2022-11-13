@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded( {extended: false } ));
 app.use(flash());
 app.use(session({ 
     secret: process.env.SESSION_SECRET,
-    resave: false,
+    resave: true,
     saveUninitialized: false
  }));
  app.use(passport.initialize());
