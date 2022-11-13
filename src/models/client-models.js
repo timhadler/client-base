@@ -4,6 +4,13 @@ const db = require("./../database");
 /***********************************************************
  * Retrieval
  ***********************************************************/
+// Fetches the first 50 clients alphabetically from database
+exports.clientList = async function() {
+    const sqlQuery = "SELECT name, id FROM clients ORDER BY NAME LIMIT 50";
+    const rows = await db.query(sqlQuery);
+
+    return rows;
+};
 
 // Fetches the client names associated with the reminder dates between d1 and d2
 // client details (clients table)
