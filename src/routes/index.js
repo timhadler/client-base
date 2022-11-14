@@ -16,7 +16,7 @@ global.D2 = getDate(31);
 router.get("/", async (req, res) => {
     try {
         CLIENT_LIST = await clients.callList(D1, D2);
-        TBC_LIST = await clients.TBCList();
+        TBC_LIST = await clients.TBCList(D1, D2);
         CONFIRMED_LIST = await clients.confirmedList();
 
         res.render("index");

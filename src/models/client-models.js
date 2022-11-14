@@ -15,15 +15,15 @@ exports.clientList = async function() {
 // Fetches the client names associated with the reminder dates between d1 and d2
 // client details (clients table)
 exports.callList = async function (d1, d2) {
-    const sqlQuery = "SELECT name, clients.id, comments, rDate, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY name";
+    const sqlQuery = "SELECT name, clients.id, comments, rDate, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate";
     const rows = await db.query(sqlQuery);
 
     //console.log(rows[0]);
     return rows;
 };
 
-exports.TBCList = async function () {
-    const sqlQuery = "SELECT name, clients.id, comments, rDate, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='tbc' ORDER BY name";
+exports.TBCList = async function (d1, d2) {
+    const sqlQuery = "SELECT name, clients.id, comments, rDate, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='tbc' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate";
     const rows = await db.query(sqlQuery);
 
     //console.log(rows[0]);
