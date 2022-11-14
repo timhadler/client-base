@@ -10,6 +10,7 @@ const bcrypt = require("bcrypt");
 const passport  = require("passport");
 const flash = require("express-flash");
 const session = require("express-session");
+const MemoryStore = require('memorystore')(session);
 
 const initializePassport = require("./passport-config");
 initializePassport(
@@ -37,7 +38,10 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {maxAge:86400000} // one day
+    cookie: {maxAge:86400000}, // one day
+    store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+      })
  }));
  app.use(passport.initialize());
  app.use(passport.session());
