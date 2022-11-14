@@ -9,7 +9,7 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const passport  = require("passport");
 const flash = require("express-flash");
-const session = require("cookie-session");
+const session = require("express-session");
 
 const initializePassport = require("./passport-config");
 initializePassport(
@@ -36,7 +36,8 @@ app.use(flash());
 app.use(session({ 
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {maxAge:86400000} // one day
  }));
  app.use(passport.initialize());
  app.use(passport.session());
@@ -88,9 +89,11 @@ app.post("/login", passport.authenticate("local", {
     failureFlash: true
 }));
 
-app.delete("/logout", (req, res) => {
-    req.logout();
-    res.redirect("/login");
+app.delete("/logout", (req, res, next) => {
+    req.logout(function(err) {
+        if (err) { return next(err); }
+        res.redirect("/login");
+    });
 });
 
 // Helpers
