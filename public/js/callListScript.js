@@ -30,8 +30,8 @@ function clientPopupClose(i) {
 }
 
 function test(e, s) {
-    console.log(s);
-    console.log("datebox-" + s.substring(s.indexOf('-') + 1));
+    //console.log(s);
+    //console.log("datebox-" + s.substring(s.indexOf('-') + 1));
     if (e.currentTarget.checked) {
         document.getElementById("datebox-" + s.substring(s.indexOf('-') + 1)).stepUp(365);
     }
