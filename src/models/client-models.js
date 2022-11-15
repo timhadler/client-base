@@ -220,8 +220,8 @@ exports.setReminderFlag = async function(id, value) {
 
 // Clear all clients with status confirmed to status call
 exports.resetConfirmedList = async function() {
-    const sqlQuery = "UPDATE reminders SET STATUS='call' WHERE STATUS='confirmed'";
-    await db.query(sqlQuery);
+    const sqlQuery = "UPDATE reminders SET STATUS='call', flag=? WHERE STATUS='confirmed'";
+    await db.query(sqlQuery, null);
 }
 
 

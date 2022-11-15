@@ -185,6 +185,9 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
             await clients.editReminder(req.params.rId, req.body.rDate);
         }
 
+        let value = 0;
+        if (req.body.flagStatus == "flagged") { value = 1; } else {value = null};
+        await clients.setReminderFlag(req.params.rId, value);
         await clients.editComment(req.params.id, req.body.comments);
         
         res.status(201).redirect("/");
