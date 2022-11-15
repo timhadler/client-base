@@ -22,7 +22,6 @@
                     <% if (CLIENT_LIST[i].status == "call") { %>
                         <li class="positionRelative"> 
                             <button id="<%= CLIENT_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary size_small"> <%= CLIENT_LIST[i].name %> </button>
-                            <!--<li><a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> <%= CLIENT_LIST[i].name %> </a></li>-->   
                             
                             <!-- Client Popup -->
                             <form id=<%= "clientPopup-" + CLIENT_LIST[i].rId %> class="clientPopup" action="/clients/set-client-status-<%= CLIENT_LIST[i].id %>-<%= CLIENT_LIST[i].rId %>" method="POST">
