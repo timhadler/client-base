@@ -184,9 +184,9 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
         if (req.body.rDate && req.body.clientStatus == "confirmed") {
             await clients.editReminder(req.params.rId, req.body.rDate);
         }
-        if (req.body.comments) {
-            await clients.editComment(req.params.id, req.body.comments);
-        }
+
+        await clients.editComment(req.params.id, req.body.comments);
+        
         res.status(201).redirect("/");
     } catch (error) {
         res.status(500).send(error.message);
