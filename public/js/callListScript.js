@@ -16,6 +16,17 @@ for (let i = 0; i< statusBoxes.length; i++) {
     }
 };
 
+// Prevent TBC list scroll bar resetting to 0 when the page is reloaded
+// Call list
+window.addEventListener('DOMContentLoaded', function() { cList.scrollTop = sessionStorage.getItem('lastScrollPos') })
+const cList = document.getElementById("cList");
+cList.addEventListener('scroll', function() { sessionStorage.setItem('lastScrollPos', cList.scrollTop) });
+
+// TBC list
+window.addEventListener('DOMContentLoaded', function() { tbcList.scrollTop = sessionStorage.getItem('lastScrollPos') })
+const tbcList = document.getElementById("tbcList");
+tbcList.addEventListener('scroll', function() { sessionStorage.setItem('lastScrollPos', tbcList.scrollTop) });
+
 // Functions
 // Edit address popup
 function clientPopup(i) {
