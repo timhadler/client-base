@@ -33,7 +33,6 @@ ul {
 
 li {
   color: #0652C3;
-  cursor: pointer;
 }
 
 li:not(:first-child) {
@@ -223,7 +222,7 @@ button {
   grid-column: 2/span 2;
 }
 
-.close_form {
+.close_formx {
   display: block;
   width: 25px;
   border-top: 5px solid red;
@@ -277,6 +276,32 @@ button {
 .overflow-auto {
   height: 80vh;
   overflow: auto;
+}
+
+.close_form {
+  display: block;
+  width: 25px;
+  height: 25px;
+  z-index: 5;
+}
+
+.close_form:hover {
+  opacity: 1;
+}
+
+.close_form:before, .close_form:after {
+  content: " ";
+  height: 25px;
+  width: 2px;
+  background-color: red;
+}
+
+.close_form:before {
+  transform: rotate(45deg);
+}
+
+.close_form:after {
+  transform: rotate(-45deg);
 }
 
 header {
