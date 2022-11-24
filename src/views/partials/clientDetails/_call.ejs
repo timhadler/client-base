@@ -27,12 +27,10 @@
 
             <%- include("../confirmDelete") %>
 
-            <div class="flex flex-ai-c">
+            <form onsubmit="confirmDelete(event)" action="/clients/delete-date/<%= data[i].client_id %>-<%= data[i].id %>?_method=DELETE" method="POST" class="flex flex-ai-c">
                 <button id="<%= data[i].id %>" name="rDateEditButton" type="button" class="button_secondary"> Edit </button>
-                <form onsubmit="confirmDelete(event)" action="/clients/delete-date/<%= data[i].client_id %>-<%= data[i].id %>?_method=DELETE" method="POST">
-                    <button type="submit"><span class="close_form"></span></button>
-                </form>
-            </div>
+                <button type="submit" class="close-button"><span class="close_form"></span></button>
+            </form>
         </div> 
     </li>
 <% } %>
