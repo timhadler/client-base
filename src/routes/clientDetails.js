@@ -181,7 +181,7 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
         if (req.body.clientStatus) {
             await clients.setClientStatus(req.body.clientStatus, req.params.rId);
         }
-        if (req.body.rDate && req.body.clientStatus == "confirmed") {
+        if (req.body.rDate && (req.body.clientStatus == "confirmed" || req.body.clientStatus == "call")) {
             await clients.editReminder(req.params.rId, req.body.rDate);
         }
 
