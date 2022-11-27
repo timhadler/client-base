@@ -3,12 +3,12 @@ const router = express.Router();
 const clients = require("./../models/client-models");
 //const globals = require("./../globals");
 
-global.CLIENT_LIST = [];
-global.TBC_LIST = [];
-global.CONFIRMED_LIST = [];
+global.CLIENT_LIST = [];        // all clients with reminder dates inbetween D1 and D2, regardless of reminder status
+global.TBC_LIST = [];           // all clients associated with reminder dates with status of "tbc"           
+global.CONFIRMED_LIST = [];     // all clients associated with reminder dates with status of "confirmed"    
 
 global.SEARCH_LIST = [];
-global.SEARCH = "";
+global.SEARCH = "";             // This is the search query from the client-list search bar
 
 global.D1 = getDate(0);
 global.D2 = getDate(31);

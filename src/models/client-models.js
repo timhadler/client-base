@@ -12,8 +12,7 @@ exports.clientList = async function() {
     return rows;
 };
 
-// Fetches the client names associated with the reminder dates between d1 and d2
-// client details (clients table)
+// Fetches the client details associated with the reminder dates between d1 and d2
 exports.callList = async function (d1, d2) {
     const sqlQuery = "SELECT name, clients.id, comments, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate";
     const rows = await db.query(sqlQuery);
@@ -22,6 +21,7 @@ exports.callList = async function (d1, d2) {
     return rows;
 };
 
+// Fetches the client details associated with the reminder dates between d1 and d2 and have status "tbc"
 exports.TBCList = async function (d1, d2) {
     const sqlQuery = "SELECT name, clients.id, comments, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='tbc' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate";
     const rows = await db.query(sqlQuery);
@@ -30,6 +30,7 @@ exports.TBCList = async function (d1, d2) {
     return rows;
 };
 
+// Fetches all clients with reminders statuses "confirmed"
 exports.confirmedList = async function () {
     const sqlQuery = "SELECT name, clients.id, comments, rDate, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='confirmed' ORDER BY name";
     const rows = await db.query(sqlQuery);
