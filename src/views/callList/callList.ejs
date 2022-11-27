@@ -27,42 +27,7 @@
                             </button>
                             
                             <!-- Client Popup -->
-                            <form id=<%= "clientPopup-" + CLIENT_LIST[i].rId %> class="clientPopup" action="/clients/set-client-status-<%= CLIENT_LIST[i].id %>-<%= CLIENT_LIST[i].rId %>" method="POST">
-                                <div class="flex flex-ai-c flex-jc-sb">
-                                    <p class="bold"> <%= CLIENT_LIST[i].name + " (" + CLIENT_LIST[i].rDate.toLocaleDateString('en-GB') + ")" %> </p>
-                                    <div class="flex flex-ai-c">
-                                        <div class="flagCheckBoxContainer">
-                                            <input type="checkbox" name="flagStatus" value="flagged" <% if (CLIENT_LIST[i].flag) { %> checked="true" <% } %>>
-                                            <label> * </label> <br />
-                                        </div>
-                                        <span id="<%= CLIENT_LIST[i].rId %>" name="clientPopupClose" class="close_form"></span>
-                                    </div>
-                                </div>
-
-                                <input id=<%= "declinebox1-" + CLIENT_LIST[i].rId %> type="radio" name="clientStatus" class="revealCallDate" value="call">
-                                <label> Declined </label> <br />
-                                <input type="radio" name="clientStatus" value="tbc">
-                                <label> To be Confirmed </label> <br />
-                                <input id=<%= "confirmbox1-" + CLIENT_LIST[i].rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
-                                <label> Confirmed </label>
-
-                                <br /> <br />
-                                <div class="callDate">
-                                    <label> Call back on: </label> <br />
-                                    <div style="text-align: center ;">
-                                        <input id=<%= "datebox-" + CLIENT_LIST[i].rId %> required type="date" name="rDate" value="<%= rDateToHTMLDate(CLIENT_LIST[i].rDate.toLocaleDateString('en-GB')) %>"> <br />
-                                    </div>
-                                    <br />
-                                </div>
-
-                                <%- include("../partials/inputForms/comment", {comments:CLIENT_LIST[i].comments}) %>
-                                <br />
-                                <div style="text-align: center ;">
-                                    <a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> Client Details </a>
-                                    <br />
-                                    <button type="submit" class="button_primary"> Submit </button>
-                                </div>
-                            </form>
+                            <%- include("../partials/callList/callList-popup", {client: CLIENT_LIST[i]}) %>
                         </li>
                     <% } %>
                 <% } %>
@@ -85,39 +50,7 @@
                             </button>
                             
                             <!-- Client Popup -->
-                            <form id=<%= "clientPopup-" + TBC_LIST[i].rId %> class="clientPopup" action="/clients/set-client-status-<%= TBC_LIST[i].id%>-<%= TBC_LIST[i].rId %>" method="POST">
-                                <div class="flex flex-ai-c flex-jc-sb">
-                                    <p class="bold"> <%= TBC_LIST[i].name + " (" + TBC_LIST[i].rDate.toLocaleDateString('en-GB') + ")" %> </p>
-                                    <div class="flex flex-ai-c">
-                                        <div class="flagCheckBoxContainer">
-                                            <input type="checkbox" name="flagStatus" value="flagged" <% if (TBC_LIST[i].flag) { %> checked="true" <% } %>>
-                                            <label> * </label> <br />
-                                        </div>
-                                        <span id="<%= TBC_LIST[i].rId %>" name="clientPopupClose" class="close_form"></span>
-                                    </div>
-                                </div>
-
-                                <input id=<%= "declinebox2-" + TBC_LIST[i].rId %> type="radio" name="clientStatus" class="revealCallDate" value="call">
-                                <label> Declined </label> <br />
-                                <input id=<%= "confirmbox2-" + TBC_LIST[i].rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
-                                <label> Confirmed </label>
-
-                                <br /><br />
-                                <div class="callDate">
-                                    <label> Call back on: </label> <br />
-                                    <div style="text-align: center ;">
-                                        <input id=<%= "datebox-" + TBC_LIST[i].rId %> required type="date" name="rDate" value="<%= rDateToHTMLDate(TBC_LIST[i].rDate.toLocaleDateString('en-GB')) %>"> <br />
-                                    </div>
-                                    <br />
-                                </div>
-                                <%- include("../partials/inputForms/comment", {comments:TBC_LIST[i].comments}) %>
-                                <br />
-                                <div style="text-align: center ;">
-                                    <a href=<%="/clients/" + TBC_LIST[i].id%> class="color_secondary"> Client Details </a>
-                                    <br />
-                                    <button type="submit" class="button_primary"> Submit </button>
-                                </div>
-                            </form>
+                            <%- include("../partials/callList/callList-popup", {client: TBC_LIST[i]}) %>
                         </li>
                     <% } %>
                 <% } %>
@@ -143,23 +76,7 @@
                             <button id="<%= CONFIRMED_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary size_small"> <%= CONFIRMED_LIST[i].name %> </button>
                             
                             <!-- Client Popup -->
-                            <form id=<%= "clientPopup-" + CONFIRMED_LIST[i].rId %> class="clientPopup" action="/clients/set-client-status-<%= CONFIRMED_LIST[i].id%>-<%= CONFIRMED_LIST[i].rId %>" method="POST">
-                                <div class="flex flex-ai-c flex-jc-sb">
-                                    <p class="bold"> <%= CONFIRMED_LIST[i].name + " (" + CONFIRMED_LIST[i].rDate.toLocaleDateString('en-GB') + ")" %> </p>
-                                    <span id="<%= CONFIRMED_LIST[i].rId %>" name="clientPopupClose" class="close_form"></span>
-                                </div>
-                                <input type="radio" name="clientStatus" value="call">
-                                <label> Call </label> <br />
-                                <input type="radio" name="clientStatus" value="tbc">
-                                <label> To be confirmed </label> <br />
-                                <%- include("../partials/inputForms/comment", {comments:CONFIRMED_LIST[i].comments}) %>
-                                <br />
-                                <div style="text-align: center;">
-                                    <a href=<%="/clients/" + CONFIRMED_LIST[i].id%> class="color_secondary"> Client Details </a>
-                                    <br />
-                                    <button type="submit" class="button_primary"> Submit </button>
-                                </div>
-                            </form>
+                            <%- include("../partials/callList/callList-popup", {client: CONFIRMED_LIST[i]}) %>
                         </li>
                     <% } %>
                 <% } %>
@@ -167,17 +84,3 @@
         </div>
     </div>
 </div>
-
-
-<%
-function rDateToHTMLDate(rDate) {
-    let y = rDate.slice(-4);
-    let m = rDate.slice(-7, -5);
-    let d = rDate.slice(0, 2);
-
-    if(Number.isNaN(Number(d))) {
-        d = "0" + d.slice(0, 1);
-    }
-    return y + "-" + m + "-" + d;
-}
-%>

@@ -1,0 +1,80 @@
+<!-- Client popups for the callList
+     Different input options for the Call, TBC, and Confirmed lists -->
+
+<form id=<%= "clientPopup-" + locals.client.rId %> class="clientPopup" action="/clients/set-client-status-<%= locals.client.id %>-<%= locals.client.rId %>" method="POST">
+    <!-- Header -->
+    <div class="flex flex-ai-c flex-jc-sb">
+        <p class="bold"> <%= locals.client.name + " (" +locals.client.rDate.toLocaleDateString('en-GB') + ")" %> </p>
+        <% if (locals.client.status == "confirmed")  { %>
+            <span id="<%= locals.client.rId %>" name="clientPopupClose" class="close_form"></span>
+        <% } else { %>
+            <div class="flex flex-ai-c">
+                <div class="flagCheckBoxContainer">
+                    <input type="checkbox" name="flagStatus" value="flagged" <% if (locals.client.flag) { %> checked="true" <% } %>>
+                    <label> * </label> <br />
+                </div>
+                <span id="<%= locals.client.rId %>" name="clientPopupClose" class="close_form"></span>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Status inputs -->
+    <% if (locals.client.status == "call") { %>
+        <input id=<%= "declinebox1-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="call">
+        <label> Declined </label> <br />
+        <input type="radio" name="clientStatus" value="tbc">
+        <label> To be Confirmed </label> <br />
+        <input id=<%= "confirmbox1-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
+        <label> Confirmed </label>
+
+    <% } else if (locals.client.status == "tbc") { %>
+        <input id=<%= "declinebox2-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="call">
+        <label> Declined </label> <br />
+        <input id=<%= "confirmbox2-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
+        <label> Confirmed </label>
+
+    <% } else if (locals.client.status == "confirmed") { %>
+        <input type="radio" name="clientStatus" value="call">
+        <label> Call </label> <br />
+        <input type="radio" name="clientStatus" value="tbc">
+        <label> To be confirmed </label> <br />
+    <% } %>
+
+    <br />
+
+    <!-- Call date for call and tbc popups, initially hidden -->
+    <% if (locals.client.status == "call" || locals.client.status == "tbc") { %>
+        <br />
+        <div class="callDate">
+            <label> Call back on: </label> <br />
+            <div style="text-align: center ;">
+                <input id=<%= "datebox-" + locals.client.rId %> required type="date" name="rDate" value="<%= rDateToHTMLDate(locals.client.rDate.toLocaleDateString('en-GB')) %>"> <br />
+            </div>
+            <br />
+        </div>
+    <% } %>
+
+    <!-- Client comments -->
+    <%- include("../inputForms/comment", {comments:client.comments}) %>
+    <br />
+
+    <!-- Client details link and Submit button -->
+    <div style="text-align: center ;">
+        <a href=<%="/clients/" + locals.client.id%> class="color_secondary"> Client Details </a>
+        <br />
+        <button type="submit" class="button_primary"> Submit </button>
+    </div>
+</form>
+
+<%
+function rDateToHTMLDate(rDate) {
+    let y = rDate.slice(-4);
+    let m = rDate.slice(-7, -5);
+    let d = rDate.slice(0, 2);
+
+    if(Number.isNaN(Number(d))) {
+        d = "0" + d.slice(0, 1);
+    }
+    return y + "-" + m + "-" + d;
+}
+%>
