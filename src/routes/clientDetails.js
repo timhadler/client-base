@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
     try {
         // fetch the first 50 clients
         let clientList = await clients.clientList();
-        res.render("clientDetails/client-index", {clients:clientList});
+        res.render("clients/client-index", {clients:clientList});
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -20,7 +20,7 @@ router.get("/search", async (req, res) => {
         if (req.query.search.length > 0) {
             SEARCH = req.query.search;
             SEARCH_LIST = await clients.searchList(SEARCH);
-            res.render("clientDetails/client-index");
+            res.render("clients/client-index");
         } else {
             SEARCH = "";
             SEARCH_LIST = [];
@@ -220,7 +220,7 @@ router.get("/:id", async (req, res) => {
         }
 
         if (details.client != null) {
-            res.status(200).render("clientDetails/client-details.ejs", {details:details, clients:clientList});
+            res.status(200).render("clients/client-details.ejs", {details:details, clients:clientList});
         } else {
             res.redirect("/");
         }
