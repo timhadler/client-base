@@ -55,7 +55,7 @@
                                     <br />
                                 </div>
 
-                                <%- include("partials/inputForms/comment", {comments:CLIENT_LIST[i].comments}) %>
+                                <%- include("../partials/inputForms/comment", {comments:CLIENT_LIST[i].comments}) %>
                                 <br />
                                 <div style="text-align: center ;">
                                     <a href=<%="/clients/" + CLIENT_LIST[i].id%> class="color_secondary"> Client Details </a>
@@ -110,7 +110,7 @@
                                     </div>
                                     <br />
                                 </div>
-                                <%- include("partials/inputForms/comment", {comments:TBC_LIST[i].comments}) %>
+                                <%- include("../partials/inputForms/comment", {comments:TBC_LIST[i].comments}) %>
                                 <br />
                                 <div style="text-align: center ;">
                                     <a href=<%="/clients/" + TBC_LIST[i].id%> class="color_secondary"> Client Details </a>
@@ -152,7 +152,7 @@
                                 <label> Call </label> <br />
                                 <input type="radio" name="clientStatus" value="tbc">
                                 <label> To be confirmed </label> <br />
-                                <%- include("partials/inputForms/comment", {comments:CONFIRMED_LIST[i].comments}) %>
+                                <%- include("../partials/inputForms/comment", {comments:CONFIRMED_LIST[i].comments}) %>
                                 <br />
                                 <div style="text-align: center;">
                                     <a href=<%="/clients/" + CONFIRMED_LIST[i].id%> class="color_secondary"> Client Details </a>

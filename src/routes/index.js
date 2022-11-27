@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
         TBC_LIST = await clients.TBCList(D1, D2);
         CONFIRMED_LIST = await clients.confirmedList();
 
-        res.render("index");
+        res.render("callList/callList");
     } catch (error) {
         console.error(error);
         res.status(500).send();
