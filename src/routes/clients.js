@@ -4,6 +4,10 @@ const res = require("express/lib/response");
 const router = express.Router();
 const clients = require("../models/client-models");
 
+// Globals
+global.SEARCH_LIST = [];    // This is the search list and query from the client-list search bar
+global.SEARCH = "";
+
 router.get("/", async (req, res) => {
     try {
         // fetch the first 50 clients
@@ -73,7 +77,7 @@ router.post("/add-client", async (req, res) => {
 });
 
 /***********************************************************
- * Edit tables
+ * Edit client tables
  ***********************************************************/
 // Edit client
 router.post("/:id/editClient", async (req, res) => {
@@ -175,38 +179,9 @@ router.post("/edit-comments/:id", async (req, res) => {
     }
 });
 
-// POST set client status
-router.post("/set-client-status-:id-:rId", async (req, res) => {
-    try {
-        if (req.body.clientStatus) {
-            await clients.setClientStatus(req.body.clientStatus, req.params.rId);
-        }
-        if (req.body.rDate && (req.body.clientStatus == "confirmed" || req.body.clientStatus == "call")) {
-            await clients.editReminder(req.params.rId, req.body.rDate);
-        }
-
-        let value = 0;
-        if (req.body.flagStatus == "flagged") { value = 1; } else {value = null};
-        await clients.setReminderFlag(req.params.rId, value);
-        await clients.editComment(req.params.id, req.body.comments);
-        
-        res.status(201).redirect("/");
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
-// POST clear confirmed list
-router.post("/reset-confirmed-list", async (req, res) => {
-    try {
-        await clients.resetConfirmedList();
-        res.status(201).redirect("/");
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
-// GET Client details
+/***********************************************************
+ * GET Client details
+ ***********************************************************/
 router.get("/:id", async (req, res) => {
     try {
         let details = await clients.clientDetails(req.params.id);

@@ -1,7 +1,7 @@
 <!-- Client popups for the callList
      Different input options for the Call, TBC, and Confirmed lists -->
 
-<form id=<%= "clientPopup-" + locals.client.rId %> class="clientPopup" action="/clients/set-client-status-<%= locals.client.id %>-<%= locals.client.rId %>" method="POST">
+<form id=<%= "clientPopup-" + locals.client.rId %> class="clientPopup" action="/set-client-status-<%= locals.client.id %>-<%= locals.client.rId %>" method="POST">
     <!-- Header -->
     <div class="flex flex-ai-c flex-jc-sb">
         <p class="bold"> <%= locals.client.name + " (" +locals.client.rDate.toLocaleDateString('en-GB') + ")" %> </p>
