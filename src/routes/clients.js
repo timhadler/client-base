@@ -2,7 +2,7 @@ const express = require("express");
 const req = require("express/lib/request");
 const res = require("express/lib/response");
 const router = express.Router();
-const clients = require("./../models/client-models");
+const clients = require("../models/client-models");
 
 router.get("/", async (req, res) => {
     try {
