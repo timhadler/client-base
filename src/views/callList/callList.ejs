@@ -21,17 +21,15 @@
         <div class="inner_section">
             <ul id="cList" class="section_divider_callList">
                 <% for (let i = 0; i < CLIENT_LIST.length; i++) { %>
-                    <% if (CLIENT_LIST[i].status == "call") { %>
-                        <li class="positionRelative"> 
-                            <button id="<%= CLIENT_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary size_small flex flex-ai-c"> 
-                                <%= CLIENT_LIST[i].name %> 
-                                <% if (CLIENT_LIST[i].flag) { %> <p style="color: black; font-size: larger;" class="margin_l_sm"> * </p> <% } %>
-                            </button>
-                            
-                            <!-- Client Popup -->
-                            <%- include("../partials/callList/callList-popup", {client: CLIENT_LIST[i]}) %>
-                        </li>
-                    <% } %>
+                    <li class="positionRelative"> 
+                        <button id="<%= CLIENT_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary size_small flex flex-ai-c"> 
+                            <%= CLIENT_LIST[i].name %> 
+                            <% if (CLIENT_LIST[i].flag) { %> <p style="color: black; font-size: larger;" class="margin_l_sm"> * </p> <% } %>
+                        </button>
+                        
+                        <!-- Client Popup -->
+                        <%- include("../partials/callList/callList-popup", {client: CLIENT_LIST[i]}) %>
+                    </li>
                 <% } %>
             </ul>
         </div>
@@ -45,17 +43,15 @@
         <div class="inner_section section_divider_callList">
             <ul id="tbcList">
                 <% for (let i = 0; i < TBC_LIST.length; i++) { %>
-                    <% if (TBC_LIST[i].status == "tbc") { %>
-                        <li class="positionRelative"> 
-                            <button id="<%= TBC_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary size_small flex flex-ai-c"> 
-                                <%= TBC_LIST[i].name %> 
-                                <% if (TBC_LIST[i].flag) { %> <p style="color: black; font-size: larger;" class="margin_l_sm"> * </p> <% } %>
-                            </button>
-                            
-                            <!-- Client Popup -->
-                            <%- include("../partials/callList/callList-popup", {client: TBC_LIST[i]}) %>
-                        </li>
-                    <% } %>
+                    <li class="positionRelative"> 
+                        <button id="<%= TBC_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary size_small flex flex-ai-c"> 
+                            <%= TBC_LIST[i].name %> 
+                            <% if (TBC_LIST[i].flag) { %> <p style="color: black; font-size: larger;" class="margin_l_sm"> * </p> <% } %>
+                        </button>
+                        
+                        <!-- Client Popup -->
+                        <%- include("../partials/callList/callList-popup", {client: TBC_LIST[i]}) %>
+                    </li>
                 <% } %>
             </ul>
         </div>
@@ -75,14 +71,12 @@
         <div class="inner_section section_divider_confirmedList">
             <ul id="confirmedList">
                 <% for (let i = 0; i < CONFIRMED_LIST.length; i++) { %>
-                    <% if (CONFIRMED_LIST[i].status == "confirmed") { %>
-                        <li class="positionRelative"> 
-                            <button id="<%= CONFIRMED_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary size_small"> <%= CONFIRMED_LIST[i].name %> </button>
-                            
-                            <!-- Client Popup -->
-                            <%- include("../partials/callList/callList-popup", {client: CONFIRMED_LIST[i]}) %>
-                        </li>
-                    <% } %>
+                    <li class="positionRelative"> 
+                        <button id="<%= CONFIRMED_LIST[i].rId %>" name="clientCallButton" type="button" class="color_secondary size_small"> <%= CONFIRMED_LIST[i].name %> </button>
+                        
+                        <!-- Client Popup -->
+                        <%- include("../partials/callList/callList-popup", {client: CONFIRMED_LIST[i]}) %>
+                    </li>
                 <% } %>
             </ul>
         </div>
