@@ -202,6 +202,81 @@ hr {
   align-items: end;
 }
 
+/***********************************************************
+ * Margins and Paddings
+ ***********************************************************/
+.pad-r-sm {
+  padding-right: 10px;
+}
+
+.pad-l-sm {
+  padding-left: 10px;
+}
+
+.pad-l-med {
+  padding-left: 15px;
+}
+
+.pad-l-lar {
+  padding-left: 25px;
+}
+
+.pad-t-med {
+  padding-top: 15px;
+}
+
+.pad-t-lar {
+  padding-top: 25px;
+}
+
+.margin_med {
+  margin: 15px;
+}
+
+.margin_r_sm {
+  margin-right: 10px;
+}
+
+.margin_r_large {
+  margin-right: 35px;
+}
+
+.margin_l_sm {
+  margin-left: 10px;
+}
+
+.margin_l_med {
+  margin-left: 15px;
+}
+
+.margin_l_large {
+  margin-left: 35px;
+}
+
+.margin_l_l {
+  margin-left: 30px;
+}
+
+.margin_t_sm {
+  margin-top: 10px;
+}
+
+.margin_t_med {
+  margin-top: 15px;
+}
+
+.margin_t_l {
+  margin-top: 30px;
+}
+
+.margin_b_sm {
+  margin-bottom: 10px;
+}
+
+.margin_b_med {
+  margin-bottom: 15px;
+}
+
 .size_large {
   font-size: 24px;
 }
@@ -331,83 +406,6 @@ nav {
   box-shadow: 0px 0.5px grey;
 }
 
-.inner_section {
-  padding-left: 10px;
-  padding-top: 10px;
-}
-
-.pad-r-sm {
-  padding-right: 10px;
-}
-
-.pad-t-med {
-  padding-top: 15px;
-}
-
-.pad-l-med {
-  padding-left: 15px;
-}
-
-.pad-l-sm {
-  padding-left: 10px;
-}
-
-.pad-t-lar {
-  padding-top: 25px;
-}
-
-.pad-l-lar {
-  padding-left: 25px;
-}
-
-.margin_med {
-  margin: 15px;
-}
-
-.margin_b_sm {
-  margin-bottom: 10px;
-}
-
-.margin_r_sm {
-  margin-right: 10px;
-}
-
-.margin_t_sm {
-  margin-top: 10px;
-}
-
-.margin_l_sm {
-  margin-left: 10px;
-}
-
-.margin_r_large {
-  margin-right: 35px;
-}
-
-.margin_b_med {
-  margin-bottom: 15px;
-}
-
-.margin_t_med {
-  margin-top: 15px;
-}
-
-.margin_l_med {
-  margin-left: 15px;
-}
-
-.margin_l_large {
-  margin-left: 35px;
-}
-
-.margin_t_l {
-  margin-top: 30px;
-}
-
-.margin_l_l {
-  margin-left: 30px;
-}
-
 .callListDisplay {
   display: grid;
   grid-template-columns: 100px 1fr 1fr 1fr 100px;
@@ -531,6 +529,11 @@ nav {
   width: 100%;
   border-right: 1px solid #1f1209;
   overflow: auto;
+}
+
+.inner_section {
+  padding-left: 10px;
+  padding-top: 10px;
 }
 
 /*# sourceMappingURL=styles.css.map */
