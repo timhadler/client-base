@@ -1,0 +1,35 @@
+// Grid_col_1 etc are in globals.scss
+
+// Popup classes for the client popups on the call list page
+.clientPopup {
+    display: none;
+    position: absolute;
+    padding: 15px;
+    border: 1px solid grey;
+    background-color: lightgrey;
+    background-attachment:local;
+    z-index: 2;
+}
+
+.clientPopup a {
+    text-decoration: underline;
+}
+
+// Call date form within the client popup, initially hidden
+.revealCallDate:checked ~ .callDate {
+    display: block;
+}
+
+.callDate {
+    display: none;
+}
+
+.flagCheckBoxContainer {
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+// Confirmed list header dimension
+.confirmed_width {
+    width: 60%;
+}

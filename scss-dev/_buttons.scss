@@ -1,0 +1,121 @@
+button {
+    background-color: white;
+    display: inline-block;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.button {
+    display: inline-block;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+
+    &_primary {
+        height: 31px;
+        font-size: $font-medium;
+        background-color: $primary;
+        color: white;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    &_primary_red {
+        background-color: white;
+        color: red;
+        border: 1px solid red;
+    }
+
+    &_secondary {
+        height: 21px;
+        font-size: $font-small;
+        border: 1px solid $primary;
+        background-color: white;
+        color: $primary;
+        padding-left: 8x;
+        padding-right: 8px;
+    }
+
+    &_clear {
+        height: 17px;
+        font-size: $font-v-small;
+        border: none;
+        color: $primary;
+    }
+
+    &_cancel {
+        border-color: red;
+        color: red;
+    }
+}
+
+/***********************************************************
+ * Dropdown button
+ ***********************************************************/
+.dropdown {
+    position: relative;
+}
+
+.drop_button {
+    border-radius: 0;
+}
+
+.drop_content {
+    display: none;
+    position: absolute;
+    background-color: lightgray;
+    min-width: 150px;
+    z-index: 1;
+}
+
+.drop_content li {
+    color: black;
+    list-style: none;
+    padding-top: 10px;
+}
+
+.show {display:block;}
+
+/***********************************************************
+ * Red x close
+ ***********************************************************/
+.close_form {
+    display: inline-block;
+    width: $font-small;
+    height: $font-small;;
+    position: relative;
+    cursor: pointer;
+}
+
+.close_form:hover {
+    opacity: 0.5;
+}
+
+.close-button > .close_form {
+    right: 4px;
+}
+
+.close_form:after {
+    content: '';
+    height: $font-small;;
+    border-left: 2px solid red;
+    position: absolute;
+    transform: rotate(45deg);
+    left: 50%;
+}
+
+.close_form:before {
+    content: '';
+    height: $font-small;;
+    border-left: 2px solid red;
+    position: absolute;
+    transform: rotate(-45deg);
+    left: 50%;
+}
+.close-button {
+    height: 16px;
+    width: 16px;
+}

@@ -1,0 +1,33 @@
+header {
+    grid-column: 2 / span 3;
+}
+
+nav {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.navItemBox {
+    size: 100%;
+    padding-right: 20px;
+}
+
+.navItemBox:hover {
+    text-decoration: underline;
+}
+
+.logo {
+    color: $primary;
+    font-size: $font_large;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.user {
+    font-weight: lighter;
+}
+
+.line_header{
+    grid-column: 1 / span all;
+    box-shadow: 0px 0.5px grey;
+}
