@@ -1,0 +1,4 @@
+<button id="<%= locals.client.rId %>" name="clientCallButton" type="button" class="color_secondary size_small flex flex-ai-c"> 
+    <%= locals.client.name %> 
+    <% if (locals.client.flag && locals.client.status != "confirmed") { %> <p style="color: black; font-size: larger;" class="margin_l_sm"> * </p> <% } %>
+</button>
