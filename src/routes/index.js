@@ -3,7 +3,7 @@ const router = express.Router();
 const clients = require("./../models/client-models");
 //const globals = require("./../globals");
 
-global.CLIENT_LIST = [];        // all clients with reminder dates inbetween D1 and D2, regardless of reminder status
+global.CLIENT_LIST = [];        // all clients with reminder dates inbetween D1 and D2 with status of "call"
 global.TBC_LIST = [];           // all clients associated with reminder dates with status of "tbc"           
 global.CONFIRMED_LIST = [];     // all clients associated with reminder dates with status of "confirmed"    
 
