@@ -48,7 +48,7 @@ ie. details.client is an object
 
                         <!-- Address list -->
                         <div class="list_container margin_t_sm margin_l_sm">
-                            <ul id="client_details">
+                            <ul>
                                 <%- include("../partials/clients/clientDetails/_address", {data:details.addresses, client_id:details.client.id}) %>
                             </ul>
                         </div>
@@ -65,7 +65,7 @@ ie. details.client is an object
 
                         <!-- Contacts list -->
                         <div class="list_container margin_t_sm margin_l_sm">
-                            <ul id="client_details">
+                            <ul>
                                 <%- include("../partials/clients/clientDetails/_contact", {data:details.contacts, client_id:details.client.id}) %>   
                             </ul>
                         </div>
@@ -83,7 +83,7 @@ ie. details.client is an object
 
                         <!-- Call date list -->
                         <div class="list_container margin_t_sm margin_l_sm">
-                            <ul id="client_details">
+                            <ul>
                                 <%- include("../partials/clients/clientDetails/_call", {data:details.calls, client_id:details.client.id}) %>   
                             </ul>
                         </div>

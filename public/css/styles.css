@@ -516,6 +516,7 @@ nav {
 .list_container {
   height: 150px;
   overflow-y: auto;
+  padding-right: 6px;
 }
 
 .section_divider_clientList {
