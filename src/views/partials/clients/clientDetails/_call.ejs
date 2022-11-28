@@ -1,7 +1,7 @@
 <!-- Add popup -->
 <div id="addCallPopup" class="popup">
     <form class="flex flex-ai-c flex-jc-sb" action="/clients/add-reminder/<%= client_id %>" method="POST">
-        <%- include("../inputForms/call") %>
+        <%- include("../../inputForms/call") %>
         <div>
             <button type="submit" class="button_secondary"> Submit </button>
             <button id="dateCloseAddForm" type="button" class="button_secondary button_cancel"> Cancel </button>
@@ -14,7 +14,7 @@
         <!-- Edit popup -->
         <div id="<%= "rDateEditPopup-" + data[i].id %>" class="popup">
             <form class="flex flex-ai-c flex-jc-sb" action="/clients/edit-reminder/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
-                <%- include("../inputForms/call", { date:rDateToHTMLDate(data[i].rDate)}) %>
+                <%- include("../../inputForms/call", { date:rDateToHTMLDate(data[i].rDate)}) %>
                 <div>
                     <button type="submit" class="button_secondary"> Submit </button>
                     <button id="<%= data[i].id %>" name="rDateCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
@@ -25,7 +25,7 @@
         <div class="flex flex-ai-c flex-jc-sb">
             <p> <%=data[i].rDate%> </p>
 
-            <%- include("../confirmDelete") %>
+            <%- include("../../confirmDelete") %>
 
             <form onsubmit="confirmDelete(event)" action="/clients/delete-date/<%= data[i].client_id %>-<%= data[i].id %>?_method=DELETE" method="POST" class="flex flex-ai-c">
                 <button id="<%= data[i].id %>" name="rDateEditButton" type="button" class="button_secondary"> Edit </button>

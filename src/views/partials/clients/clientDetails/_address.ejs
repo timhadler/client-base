@@ -1,7 +1,7 @@
 <!-- Add popup -->
 <div>
     <form id="addAddressPopup" class="popup" action="/clients/add-address-<%=client_id%>" method="POST">
-        <%- include("../inputForms/address") %>
+        <%- include("../../inputForms/address") %>
         <div class="flex flex-ai-c flex-jc-r">
             <button type="submit" class="button_primary margin_r_sm"> Submit </button>
             <button id="addressCloseAddFormButton" type="button" class="button_secondary button_cancel"> Cancel </button>
@@ -14,7 +14,7 @@
         <!-- Edit popup -->
         <div id="<%= "addressEditPopup-" + data[i].id %>" class="popup">
             <form action="/clients/edit-address/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
-                <%- include("../inputForms/address", { street:data[i].street, suburb:data[i].suburb, city:data[i].city, pc:data[i].pc, fa:data[i].fa, ca:data[i].clientAddress}) %>
+                <%- include("../../inputForms/address", { street:data[i].street, suburb:data[i].suburb, city:data[i].city, pc:data[i].pc, fa:data[i].fa, ca:data[i].clientAddress}) %>
                 <div>
                     <button type="submit" class="button_secondary"> Submit </button>
                     <button id="<%= data[i].id %>" name="addressCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
@@ -29,7 +29,7 @@
                 <%= data[i].fa %>
             <% } %>
 
-            <%- include("../confirmDelete") %>
+            <%- include("../../confirmDelete") %>
 
             <form onsubmit="confirmDelete(event)" action="/clients/delete-address/<%= data[i].client_id %>-<%= data[i].id %>?_method=DELETE" method="POST" class="flex flex-ai-c">
                 <button id="<%= data[i].id %>" name="addressEditButton" type="button" class="button button_secondary"> Edit </button>

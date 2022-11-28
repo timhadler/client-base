@@ -1,6 +1,6 @@
 <!-- Add form -->
 <form id="addContactPopup" class="popup" action="/clients/add-contact/<%=client_id%>" method="POST">
-    <%- include("../inputForms/contact") %>
+    <%- include("../../inputForms/contact") %>
     <div class="flex flex-ai-c flex-jc-r">
         <button type="submit" class="button_primary margin_r_sm"> Submit </button>
         <button id="contactCloseAddFormBut" type="button" class="button_secondary button_cancel"> Cancel </button>
@@ -12,7 +12,7 @@
         <!-- Edit popup -->
         <div id="<%= "contactEditPopup-" + data[i].id %>" class="popup">
             <form action="/clients/edit-contact/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
-                <%- include("../inputForms/contact", { name:data[i].name, phone:data[i].phone, email:data[i].email }) %>
+                <%- include("../../inputForms/contact", { name:data[i].name, phone:data[i].phone, email:data[i].email }) %>
                 <div>
                     <button type="submit" class="button_secondary"> Submit </button>
                     <button id="<%= data[i].id %>" name="contactCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
@@ -20,7 +20,7 @@
             </form>
         </div>
 
-        <%- include("../confirmDelete") %>
+        <%- include("../../confirmDelete") %>
 
         <div class="flex flex-ai-c flex-jc-sb">
             <div class="margin_r_large" style="width: 100%;">
