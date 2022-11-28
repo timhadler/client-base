@@ -12,9 +12,9 @@ exports.clientList = async function() {
     return rows;
 };
 
-// Fetches the client details associated with the reminder dates between d1 and d2
+// Fetches the client details associated with the reminder dates between d1 and d2 and have status of "call"
 exports.callList = async function (d1, d2) {
-    const sqlQuery = "SELECT name, clients.id, comments, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate";
+    const sqlQuery = "SELECT name, clients.id, comments, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='call' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate";
     const rows = await db.query(sqlQuery);
 
     //console.log(rows[0]);
