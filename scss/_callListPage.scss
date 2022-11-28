@@ -33,3 +33,17 @@
 .confirmed_width {
     width: 60%;
 }
+
+// Section dividers
+.section_divider_callList {
+    height: 80vh;
+    border: none;
+    width:100%;
+    border-right: 1px solid #1f1209;
+    overflow: auto;
+}
+
+.section_divider_confirmedList {
+    height: 80vh;
+    overflow: auto;
+}

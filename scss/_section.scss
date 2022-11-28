@@ -81,35 +81,6 @@
     width: 100%;
 }
 
-.section_divider_clientList {
-    height: 90vh;
-    border: none;
-    width:100%;
-    border-right: 1px solid #1f1209;
-    overflow: auto;
-}
-
-.section_divider_callList {
-    height: 80vh;
-    border: none;
-    width:100%;
-    border-right: 1px solid #1f1209;
-    overflow: auto;
-}
-
-.section_divider_confirmedList {
-    height: 80vh;
-    overflow: auto;
-}
-
-.details_grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 2fr;
-    column-gap: 80px;
-    row-gap: 10px;
-}
-
 .grid_a_1 {
     grid-column-start: 1;
     grid-row-start: 1;;
@@ -126,23 +97,3 @@
     grid-column-end: 3;
     grid-row-start: 2;
 }
-
-.date_divider {
-    color: grey;
-    border-bottom: 1px solid grey;
-    cursor: default;
-    font-weight: lighter;
-}
-
-
-// List container
-.list_container {
-    height: 150px;
-    overflow-y: auto;
-}
-
-.login_container {
-    margin: auto;
-    margin-top: 50px;
-    text-align: center;
-  }

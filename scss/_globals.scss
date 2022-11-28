@@ -156,10 +156,24 @@ hr {
 /***********************************************************
  * Misc
  ***********************************************************/
+.login_container {
+    margin: auto;
+    margin-top: 50px;
+    text-align: center;
+}
+
 .hidden {
     display: none;
 }
 
 .positionRelative {
     position: relative;
+}
+
+// Not currently being used I dont think
+.date_divider {
+    color: grey;
+    border-bottom: 1px solid grey;
+    cursor: default;
+    font-weight: lighter;
 }

@@ -1,0 +1,44 @@
+// Grid_col_1 etc are in globals.scss
+
+// Search bar
+.search_bar {
+    font-size: $font-small;
+    border-radius: 8px;
+    height: 31px;
+}
+
+// Popup class for the add and edit address, contact etc forms on the clientsDetails page
+.popup {
+    visibility: hidden;
+    position: absolute;
+    background-color: white;
+    z-index: 1;
+
+    &-call {
+        width: 400px;
+    }
+}
+
+// For formatting the client details part of the clients page
+.details_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 2fr;
+    column-gap: 80px;
+    row-gap: 10px;
+}
+
+// List container
+.list_container {
+    height: 150px;
+    overflow-y: auto;
+}
+
+// Section divider
+.section_divider_clientList {
+    height: 90vh;
+    border: none;
+    width:100%;
+    border-right: 1px solid #1f1209;
+    overflow: auto;
+}
