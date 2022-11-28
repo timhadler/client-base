@@ -1,4 +1,26 @@
-// Grid_col_1 etc are in globals.scss
+// Grid_col_1 etc are in globals.scss as these are used on the callList page as well
+.clientListDisplay {
+    display: grid;
+    grid-template-columns:100px minmax(100px, 250px) minmax(200px, 2000px) 100px;
+    grid-template-rows: auto;
+}
+
+.grid_a_1 {
+    grid-column-start: 1;
+    grid-row-start: 1;;
+    width:100%;
+}
+
+.grid_a_2 {
+    grid-column-start: 2;
+    grid-row-start: 1;;
+}
+
+.grid_a_3_4 {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 2;
+}
 
 // Search bar
 .search_bar {
@@ -26,6 +48,14 @@
     grid-template-rows: 2fr;
     column-gap: 80px;
     row-gap: 10px;
+}
+
+.details_grid input[type="text"] {
+    margin:0;
+}
+
+.client_details {
+    width: 100%;
 }
 
 // List container

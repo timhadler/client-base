@@ -1,4 +1,9 @@
 // Grid_col_1 etc are in globals.scss
+.callListDisplay{
+    display: grid;
+    grid-template-columns:100px 1fr 1fr 1fr 100px;
+    grid-template-rows: auto;
+}
 
 // Popup classes for the client popups on the call list page
 .clientPopup {
