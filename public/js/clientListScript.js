@@ -12,3 +12,14 @@ window.addEventListener('DOMContentLoaded', function() { cList.scrollTop = sessi
 const cList = document.getElementById("leftPane");
 cList.addEventListener('scroll', function() { sessionStorage.setItem('lastScrollPos', cList.scrollTop) });
 
+// Add client popup
+document.getElementById("addClientPopupButton").addEventListener('click', function() { addClientPopup() });
+document.getElementById("addClientCloseButton").addEventListener('click', function() { addClientPopupClose() });
+
+function addClientPopup() {
+    document.getElementById("addClientPopup").style.visibility = "visible";
+}
+
+function addClientPopupClose() {
+    document.getElementById("addClientPopup").style.visibility = "hidden";
+}
