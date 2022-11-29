@@ -68,8 +68,10 @@ router.post("/add-client", async (req, res) => {
     } catch (error) {
         // If error was caused by a duplicate name
         if (error.message.includes("Duplicate entry")) {
-            const error = "Name already exists in client database";
-            res.render("addClient/addClient.ejs", {error:error});
+            const error = "Client already exists in database: " + req.body.name;
+            let clientList = await clients.clientList();
+
+            res.render("clients/client-index", {clients:clientList, error:error});
         } else {
             res.status(400).send(error.message);
         }

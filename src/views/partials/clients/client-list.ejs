@@ -25,7 +25,10 @@
 <div id="leftPane" name="test" class="grid_col_1 section_divider_clientList">
     <div class="pad-t-med pad-r-sm">
         <!-- Add customer button and search bar -->
-        <button id="addClientPopupButton" type="button" class="button button_primary"> Add Client </button>
+        <button id="addClientPopupButton" type="button" class="button button_primary width-100"> Add Client </button>
+        <!-- Error message for duplicate client entry -->
+        <p class="error_message size_small"> <%= locals.error %> </p>
+
         <form id="searchForm" action="/clients/search" method="GET">
             <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
         </form>
