@@ -12,6 +12,9 @@ router.get("/", async (req, res) => {
     try {
         // fetch the first 50 clients
         let clientList = await clients.clientList();
+        if (SEARCH.length > 0) {
+            SEARCH_LIST = await clients.searchList(SEARCH);
+        }
         res.render("clients/client-index", {clients:clientList});
     } catch (error) {
         res.status(500).send(error.message);
