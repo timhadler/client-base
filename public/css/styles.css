@@ -15,10 +15,11 @@ button {
   cursor: pointer;
 }
 .button_primary {
-  height: 31px;
   font-size: 20px;
   background-color: #009AAF;
   color: white;
+  padding-top: 5px;
+  padding-bottom: 5px;
   padding-left: 15px;
   padding-right: 15px;
 }

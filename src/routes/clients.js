@@ -81,6 +81,11 @@ router.post("/add-client", async (req, res) => {
     }
 });
 
+// Import clients
+router.get("/import-clients", (req, res) => {
+    res.status(500).render("clients/importClients")
+});
+
 /***********************************************************
  * Edit client tables
  ***********************************************************/

@@ -1,6 +1,6 @@
 <script type="module" src="/js/clientListScript.js"> </script>
 
-<!-- Add Client popup -->
+<!-- Add Client popup and overlay to dim background -->
 <div id="addClientOverlay" class="overlay"></div>
 
 <div id="addClientPopup" class="addClientPopup">
@@ -17,7 +17,8 @@
         <div class="center-x">
             <label> Call back on: </label> <br />
             <%- include("../inputForms/call") %>
-            <br />
+            <br /> <br />
+            <a href="/clients/import-clients" type="button" class="button button_secondary margin_b_sm"> Import Clients </a>
             <button type="submit" class="button_primary"> Submit </button>
         </div>
     </form>

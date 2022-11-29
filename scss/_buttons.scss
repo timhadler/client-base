@@ -15,10 +15,12 @@ button {
     cursor: pointer;
 
     &_primary {
-        height: 31px;
+        //height: 31px;
         font-size: $font-medium;
         background-color: $primary;
         color: white;
+        padding-top: 5px;
+        padding-bottom: 5px;
         padding-left: 15px;
         padding-right: 15px;
     }
