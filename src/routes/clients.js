@@ -211,7 +211,7 @@ router.get("/:id", async (req, res) => {
 router.delete("/:id/delete-client", async (req, res) => {
     try {
         await clients.deleteClientData(req.params.id);
-        res.status(204).redirect("/");
+        res.status(204).redirect("/clients");
     } catch (error) {
         res.status(500).send(error.message);
     }
