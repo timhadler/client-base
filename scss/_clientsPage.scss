@@ -50,6 +50,7 @@
     font-size: $font-small;
     border-radius: 8px;
     height: 31px;
+    width: 100%;
 }
 
 // Popup class for the add and edit address, contact etc forms on the clientsDetails page
@@ -93,7 +94,7 @@
     position: fixed;
     background-color: white;
     border: 1px solid black;
-    z-index: 1;
+    z-index: 5;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
