@@ -365,6 +365,10 @@ hr {
   width: 100%;
 }
 
+.center-x {
+  text-align: center;
+}
+
 .date_divider {
   color: grey;
   border-bottom: 1px solid grey;
@@ -534,6 +538,23 @@ nav {
 .inner_section {
   padding-left: 10px;
   padding-top: 10px;
+}
+
+/***********************************************************
+ * Add Client popup
+ ***********************************************************/
+.addClientPopup {
+  visibility: hidden;
+  position: fixed;
+  background-color: white;
+  border: 1px solid black;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: auto;
+  width: 250px;
+  padding: 35px;
 }
 
 /*# sourceMappingURL=styles.css.map */

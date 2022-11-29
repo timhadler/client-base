@@ -1,10 +1,31 @@
 <script type="module" src="/js/clientListScript.js"> </script>
 
+<!-- Add Client popup -->
+<div id="addClientPopup" class="addClientPopup">
+    <div class="flex flex-ai-c flex-jc-sb">
+        <h3 > Add Customer </h3> <br />
+        <span id="addClientCloseButton" class="close_form"></span>
+    </div>
+    <br />
+    <form action= "/clients/add-client" method="POST">
+        <%- include("../inputForms/client") %>
+        <label> Comments: </label> <br />
+        <textarea name="comments" class="height-100" cols="21" rows="6"><%= locals.comments %></textarea> <br /> <br />
+
+        <div class="center-x">
+            <label> Call back on: </label> <br />
+            <%- include("../inputForms/call") %>
+            <br />
+            <button type="submit" class="button_primary"> Submit </button>
+        </div>
+    </form>
+</div>
+
 <!-- Left Pane -->
 <div id="leftPane" name="test" class="grid_col_1 section_divider_clientList">
     <div class="pad-t-med pad-r-sm">
         <!-- Add customer button and search bar -->
-        <a href="/clients/add-client" class="button button_primary"> Add&nbsp;Customer </a>
+        <button id="addClientPopupButton" type="button" class="button button_primary"> Add Client </button>
         <form id="searchForm" action="/clients/search" method="GET">
             <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
         </form>
