@@ -8,11 +8,20 @@
         <div class="center-x">
             <button class="button_secondary margin_b_med"> Download Excel Template </button>
 
-            <form id="clientImportForm" action="/clients/import-clients-preview" method="post">
+            <form id="clientImportForm" action="/clients/import-clients-preview" enctype="multipart/form-data" method="post">
                 <label> Upload Client Excel File: </label> <br />
                 <input id="clientImportFile" type="file" name="importExcel" class="clientsFile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
             </form>
         </div>
         <%= locals.test %>
+    </div>
+
+    <div class="grid_col_2_s2 margin_t_l margin_l_l">
+        <p> <%= locals.message %> </p>
+        <% if (typeof locals.fails != 'undefined') { %> 
+            <% for (let i = 0; i < locals.fails.length; i++) { %>
+                <p> <%= fails[i].name + ' - ' + fails[i].message %> </p>
+            <% } %>
+        <% } %>
     </div>
 </div>
