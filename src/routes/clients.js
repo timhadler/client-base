@@ -3,9 +3,6 @@ const req = require("express/lib/request");
 const res = require("express/lib/response");
 const router = express.Router();
 const clients = require("../models/client-models");
-xl = require("xlsx");
-const multer = require('multer');                   // For uploading files
-const upload = multer({ dest: "uploads/" });
 
 // Globals
 global.SEARCH_LIST = [];    // This is the search list and query from the client-list search bar
@@ -85,68 +82,10 @@ router.get("/import-clients", (req, res) => {
     }
 });
 
-router.post("/import-clients-preview", upload.single("importExcel"), async (req, res) => {
-    try {
-        // Verifying file
-        const acceptedFileTypes = ['xlsx', 'csv', 'xlsm'];
-        const mandatoryExcelHeaders = ['First', 'Last', 'Company', 'Email', 'Mobile', 'Address1', 'Suburb', 'City', 'Postcode', 'rDate'];
-
-        if (req.file == null) {
-            res.redirect("/clients/import-clients");
-        } else if (acceptedFileTypes.includes(req.file.originalname.split('.')[1])) {
-            let n = 0;          // number of succesful client uploads
-            let fails = [];     // List of clients that resulted in error and the error message
-
-            const workbook = xl.readFile(req.file.path);
-            const sheet_name_list = workbook.SheetNames;
-            const clientObjs = xl.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-
-            // Check excel format
-            const containsAll = mandatoryExcelHeaders.every(element => {
-                return Object.getOwnPropertyNames(clientObjs[0]).includes(element);
-            });
-            if (!containsAll) {
-                res.render("clients/importClients", {message:"Incorrect excel format"});
-            } else {
-                for (let i = 0; i < clientObjs.length; i++) {
-                    const date = clientObjs[i].rDate;
-                    let comments = clientObjs[i].Comments;
-                    const address = clientObjs[i].Address1;
-                    const phone = clientObjs[i].Mobile;
-                    console.log(phone);
-                    if (typeof comments == 'undefined') { comments = "" };  // Avoid reading length of undefined error
-
-                    try {
-                        const client_id = await clients.createClient(clientObjs[i].First + " " + clientObjs[i].Last, clientObjs[i].Company, comments);
-                        n++;
-                        if (typeof address != 'undefined') { 
-                            await clients.createAddress(address, clientObjs[i].Suburb, clientObjs[i].City, clientObjs[i].Postcode, "Unknown", 1, client_id);
-                        }
-                        if (typeof phone != 'undefined') {
-                            if (phone.length > 0) { await clients.createContact(clientObjs[i].First, phone, clientObjs[i].Email, client_id); };
-                        }
-                        await clients.createReminder(convertDate(date), client_id);
-                    } catch (error) {
-                        // If error was caused by a duplicate name
-                        if (error.message.includes("Duplicate entry") || error.code == 'ER_DUP_ENTRY') {
-                            fails.push({name:clientObjs[i].First + " " + clientObjs[i].Last, message:"Client already exists in database"});
-                            continue;
-                        } else if (error.message.includes("Incorrect date value")) {
-                            fails.push({name:clientObjs[i].First + " " + clientObjs[i].Last, message:"No date or incorrect date format, no reminder addded for this client"});
-                            continue;
-                        } else {
-                            fails.push({name:clientObjs[i].First + " " + clientObjs[i].Last, message:error.message});
-                            continue;
-                        }
-                    }
-                }
-                const message = n + " clients successfully uploaded"
-                res.render("clients/importClients", {message:message, fails:fails});
-            }
-        } 
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
+router.post("/import-clients-preview", (req, res) => {
+    let test = "false"
+    if (req.body.importExcel) {test = "true"};
+    res.render("clients/importClients", {test:test})
 });
 
 /***********************************************************
@@ -329,56 +268,6 @@ function isClientAddress(i) {
     } else {
         return  0;
     }
-}
-
-// Converts a date to format suitable for inserting into database
-// Input eg: "01-Feb-2021"
-// Output: "2022-02-01"
-function convertDate(date) {
-    const day = date.slice(0, 2);
-    let month = date.slice(3, 6);
-    const year = date.slice(7, 11);
-
-    switch(month) {
-        case ("Jan"): 
-            month = "01";
-            break;
-        case ("Feb"): 
-            month = "02";
-        break;
-        case ("Mar"): 
-            month = "03";
-            break;
-        case ("Apr"): 
-            month = "04";
-            break;
-        case ("May"): 
-            month = "05";
-            break;
-        case ("Jun"): 
-            month = "06";
-            break;
-        case ("Jul"): 
-            month = "07";
-            break;
-        case ("Aug"): 
-            month = "08";
-            break;
-        case ("Sep"): 
-            month = "09";
-            break;
-        case ("Oct"): 
-            month = "10";
-            break;
-        case ("Nov"): 
-            month = "11";
-            break;
-        case ("Dec"): 
-            month = "12";
-            break;
-    }
-    const nDate = year + "-" + month + "-" + day
-    return nDate;
 }
 
 module.exports = router;
