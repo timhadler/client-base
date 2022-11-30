@@ -1,11 +1,18 @@
+<script type="module" src="/js/importClientsScript.js"> </script>
+
 <div class="clientListDisplay">
     <div class="grid_col_1 section_divider_clientList pad-t-med pad-r-sm">
         <h3> Import Clients </h3>
         <br />
 
         <div class="center-x">
-            <button class="button_primary margin_b_med"> Upload Client Excel File </button>
-            <button class="button_secondary"> Download Excel Template </button>
+            <button class="button_secondary margin_b_med"> Download Excel Template </button>
+
+            <form id="clientImportForm" action="/clients/import-clients-preview" method="post">
+                <label> Upload Client Excel File: </label> <br />
+                <input id="clientImportFile" type="file" name="importExcel" class="clientsFile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+            </form>
         </div>
+        <%= locals.test %>
     </div>
 </div>

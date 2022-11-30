@@ -38,7 +38,7 @@ router.get("/search", async (req, res) => {
     }
 })
 
-router.get("/clear-search", async (req, res) => {
+router.get("/clear-search", (req, res) => {
     try {
         SEARCH = "";
         SEARCH_LIST = [];
@@ -51,14 +51,6 @@ router.get("/clear-search", async (req, res) => {
 /***********************************************************
  * Add client
  ***********************************************************/
-router.get("/add-client", async (req, res) => {
-    try {
-        res.render("addClient/addClient.ejs");
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
 router.post("/add-client", async (req, res) => {
     try {
         const body = req.body;
@@ -83,7 +75,17 @@ router.post("/add-client", async (req, res) => {
 
 // Import clients
 router.get("/import-clients", (req, res) => {
-    res.status(500).render("clients/importClients")
+    try {
+        res.render("clients/importClients")
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+router.post("/import-clients-preview", (req, res) => {
+    let test = "false"
+    if (req.body.importExcel) {test = "true"};
+    res.render("clients/importClients", {test:test})
 });
 
 /***********************************************************
