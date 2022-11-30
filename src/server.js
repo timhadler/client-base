@@ -135,6 +135,8 @@ async function getUserByName(username) {
 /**
  * Routes
  */
-app.use("/", checkAuthenticated, indexRouter);
-app.use("/clients", checkAuthenticated, clientRouter);
-//app.use("/clients", clientRouter);
+//app.use("/", checkAuthenticated, indexRouter);
+//app.use("/clients", checkAuthenticated, clientRouter);
+
+app.use("/", indexRouter);
+app.use("/clients", clientRouter);
