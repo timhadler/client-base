@@ -16,6 +16,14 @@
     z-index: 2;
 }
 
+.clientCallButtonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 98%;
+    border-bottom: 1px solid lightgray;
+}
+
 .clientPopup a {
     text-decoration: underline;
 }
