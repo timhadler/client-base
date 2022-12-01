@@ -85,7 +85,7 @@ router.get("/import-clients", (req, res) => {
     }
 });
 
-router.post("/import-clients-preview", upload.single("importExcel"), async (req, res) => {
+router.post("/import-clients", upload.single("importExcel"), async (req, res) => {
     try {
         // Verifying file
         const acceptedFileTypes = ['xlsx', 'csv', 'xlsm'];
@@ -98,6 +98,7 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
             let fails = [];         // List of clients that resulted in error and the error message
             let duplicates = [];    // List of clients that failed due to a duplicate name error
             let noReminderDate = [];
+            let incorrectReminders = [];
 
             const workbook = xl.readFile(req.file.path);
             const sheet_name_list = workbook.SheetNames;
@@ -136,6 +137,9 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
                         } else if (error.message.includes("Incorrect date value") || error.message.includes("Column 'rDate' cannot be null")) {
                             noReminderDate.push(clientObjs[i].First + " " + clientObjs[i].Last);
                             continue;
+                        } else if (error.message.includes("date.slice is not a function")) {
+                            incorrectReminders.push(clientObjs[i].First + " " + clientObjs[i].Last);
+                            continue;
                         } else {
                             fails.push({name:clientObjs[i].First + " " + clientObjs[i].Last, message:error.message});
                             continue;
@@ -143,7 +147,7 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
                     }
                 }
                 const message = n + "/" + clientNumber +" clients successfully uploaded"
-                res.render("clients/importClients", {message:message, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate});
+                res.render("clients/importClients", {message:message, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate, incorrectReminders:incorrectReminders});
             }
         } else {
             res.render("clients/importClients", {error:"Incorrect file type"});
