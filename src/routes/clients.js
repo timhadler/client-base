@@ -101,7 +101,7 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
 
             const workbook = xl.readFile(req.file.path);
             const sheet_name_list = workbook.SheetNames;
-            const clientObjs = xl.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            const clientObjs = xl.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], {defval:""});
 
             // Check excel format
             const containsAll = mandatoryExcelHeaders.every(element => {
