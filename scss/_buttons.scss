@@ -12,6 +12,9 @@ button {
     border: none;
     border-radius: 8px;
     text-align: center;
+    text-justify: center;
+    padding-left: 10px;
+    padding-right: 10px;
     cursor: pointer;
 
     &_primary {

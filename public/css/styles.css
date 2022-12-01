@@ -13,6 +13,9 @@ button {
   border: none;
   border-radius: 8px;
   text-align: center;
+  text-justify: center;
+  padding-left: 10px;
+  padding-right: 10px;
   cursor: pointer;
 }
 .button_primary {
@@ -215,7 +218,7 @@ hr {
   visibility: hidden;
   height: 100%;
   width: 100%;
-  background-color: grey;
+  background-color: gray;
   opacity: 50%;
   z-index: 4;
 }
