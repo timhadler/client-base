@@ -133,6 +133,14 @@ hr {
     padding-top: 25px;
 }
 
+.pad-b-sm {
+    padding-bottom: 10px;
+}
+
+.pad-b-med {
+    padding-bottom: 15px;
+}
+
 // Margins
 .margin_med {
     margin: 15px;
@@ -277,4 +285,13 @@ hr {
 
 .error_message {
     color: red;
+}
+
+.link {
+    font-size: $font-v-small;
+    color: blue;
+}
+
+.link:hover {
+    text-decoration: underline;
 }
