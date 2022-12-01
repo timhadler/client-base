@@ -97,6 +97,7 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
             let n = 0;              // number of succesful client uploads
             let fails = [];         // List of clients that resulted in error and the error message
             let duplicates = [];    // List of clients that failed due to a duplicate name error
+            let noReminderDate = [];
 
             const workbook = xl.readFile(req.file.path);
             const sheet_name_list = workbook.SheetNames;
@@ -110,11 +111,10 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
                 res.render("clients/importClients", {error:"Incorrect excel format"});
             } else {
                 for (let i = 0; i < clientObjs.length; i++) {
-                    const date = clientObjs[i].LAppt;
+                    const date = clientObjs[i].rDate;
                     let comments = clientObjs[i].Comments;
                     const address = clientObjs[i].Address1;
                     const phone = clientObjs[i].Mobile;
-                    console.log(phone);
                     if (typeof comments == 'undefined') { comments = "" };  // Avoid reading length of undefined error
 
                     try {
@@ -133,7 +133,7 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
                             duplicates.push(clientObjs[i].First + " " + clientObjs[i].Last);
                             continue;
                         } else if (error.message.includes("Incorrect date value") || error.message.includes("Column 'rDate' cannot be null")) {
-                            fails.push({name:clientObjs[i].First + " " + clientObjs[i].Last, message:"No date or incorrect date format, no reminder added for this client"});
+                            noReminderDate.push(clientObjs[i].First + " " + clientObjs[i].Last);
                             continue;
                         } else {
                             fails.push({name:clientObjs[i].First + " " + clientObjs[i].Last, message:error.message});
@@ -142,7 +142,7 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
                     }
                 }
                 const message = n + " clients successfully uploaded"
-                res.render("clients/importClients", {message:message, fails:fails, duplicates:duplicates});
+                res.render("clients/importClients", {message:message, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate});
             }
         } else {
             res.render("clients/importClients", {error:"Incorrect file type"});
