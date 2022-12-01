@@ -10,8 +10,8 @@
         <% } else { %>
             <div class="flex flex-ai-c">
                 <div class="flagCheckBoxContainer">
+                    <label class="flagCheckBox">  </label>
                     <input type="checkbox" name="flagStatus" value="flagged" <% if (locals.client.flag) { %> checked="true" <% } %>>
-                    <label> * </label> <br />
                 </div>
                 <span id="<%= locals.client.rId %>" name="clientPopupClose" class="close_form"></span>
             </div>
