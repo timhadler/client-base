@@ -1,17 +1,24 @@
 <script type="module" src="/js/importClientsScript.js"> </script>
 
 <div class="clientListDisplay">
+    <!-- Left pane, import input -->
     <div class="grid_col_1 section_divider_clientList pad-t-med pad-r-sm">
         <h3> Import Clients </h3>
         <br />
-        <form id="clientImportForm" action="/clients/import-clients-preview" enctype="multipart/form-data" method="post">
-            <label> Upload Client Excel File: </label> <br />
+        <form id="clientImportForm" action="/clients/import-clients" enctype="multipart/form-data" method="post">
+            <label class="size_v_small"> Upload Client Excel File: </label> <br />
             <input id="clientImportFile" type="file" name="importExcel" class="clientsFile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
         </form>
+        <br />
+        <a href="files/importTemplate.xlsx" class="link" download> Download Excel Template </a>
     </div>
 
     <div class="grid_col_2_s2 margin_t_l margin_l_l">
         <div style="height: 90vh;overflow:auto;">
+            <!-- Import Info -->
+
+
+            <!-- Import Results -->
             <p class="error_message"> <%= locals.error %> </p>
             <p> <%= locals.message %> </p>
             <br />
@@ -36,6 +43,18 @@
                     <div class="inner_section">
                         <% for (let i = 0; i < noReminderLength; i++) { %>
                             <p> <%= noReminderDate[i] %> </p>
+                        <% } %>
+                    </div>
+                <% } %>
+            <% } %>
+
+            <% if (typeof locals.incorrectReminders != 'undefined') {
+                let incorrectLength = locals.incorrectReminders.length;
+                if (incorrectLength > 0) { %>
+                    <p> <%= "There were " + incorrectLength + " clients with an incorrect reminder date format, these clients have been uploaded wothout a reminder date" %> </p>
+                    <div class="inner_section">
+                        <% for (let i = 0; i < incorrectLength; i++) { %>
+                            <p> <%= incorrectReminders[i] %> </p>
                         <% } %>
                     </div>
                 <% } %>
