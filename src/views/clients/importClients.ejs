@@ -13,14 +13,35 @@
                 <input id="clientImportFile" type="file" name="importExcel" class="clientsFile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
             </form>
         </div>
-        <%= locals.test %>
     </div>
 
     <div class="grid_col_2_s2 margin_t_l margin_l_l">
+        <p class="error_message"> <%= locals.error %> </p>
         <p> <%= locals.message %> </p>
-        <% if (typeof locals.fails != 'undefined') { %> 
-            <% for (let i = 0; i < locals.fails.length; i++) { %>
-                <p> <%= fails[i].name + ' - ' + fails[i].message %> </p>
+        <br />
+
+        <% if (typeof locals.duplicates != 'undefined') { 
+            let dupLength = locals.duplicates.length;
+            if (dupLength > 0) { %>
+                <p> <%= "There were " + dupLength + " clients with duplicate names already in database: " %> </p>
+                <div class="inner_section">
+                    <% for (let i = 0; i < dupLength; i++) { %>
+                        <p> <%= duplicates[i] %> </p>
+                    <% } %>
+                </div>
+            <% } %>
+            <br />
+        <% } %>
+
+        <% if (typeof locals.fails != 'undefined') {
+            let failLength = locals.fails.length;
+            if (failLength > 0) { %>
+                <p> Other errors: </p>
+                <div class="inner_section">
+                    <% for (let i = 0; i < locals.fails.length; i++) { %>
+                        <p> <%= fails[i].name + ' - ' + fails[i].message %> </p>
+                    <% } %>
+                </div>
             <% } %>
         <% } %>
     </div>

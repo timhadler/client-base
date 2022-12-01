@@ -94,8 +94,9 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
         if (req.file == null) {
             res.redirect("/clients/import-clients");
         } else if (acceptedFileTypes.includes(req.file.originalname.split('.')[1])) {
-            let n = 0;          // number of succesful client uploads
-            let fails = [];     // List of clients that resulted in error and the error message
+            let n = 0;              // number of succesful client uploads
+            let fails = [];         // List of clients that resulted in error and the error message
+            let duplicates = [];    // List of clients that failed due to a duplicate name error
 
             const workbook = xl.readFile(req.file.path);
             const sheet_name_list = workbook.SheetNames;
@@ -106,7 +107,7 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
                 return Object.getOwnPropertyNames(clientObjs[0]).includes(element);
             });
             if (!containsAll) {
-                res.render("clients/importClients", {message:"Incorrect excel format"});
+                res.render("clients/importClients", {error:"Incorrect excel format"});
             } else {
                 for (let i = 0; i < clientObjs.length; i++) {
                     const date = clientObjs[i].LAppt;
@@ -129,10 +130,10 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
                     } catch (error) {
                         // If error was caused by a duplicate name
                         if (error.message.includes("Duplicate entry") || error.code == 'ER_DUP_ENTRY') {
-                            fails.push({name:clientObjs[i].First + " " + clientObjs[i].Last, message:"Client already exists in database"});
+                            duplicates.push(clientObjs[i].First + " " + clientObjs[i].Last);
                             continue;
-                        } else if (error.message.includes("Incorrect date value")) {
-                            fails.push({name:clientObjs[i].First + " " + clientObjs[i].Last, message:"No date or incorrect date format, no reminder addded for this client"});
+                        } else if (error.message.includes("Incorrect date value") || error.message.includes("Column 'rDate' cannot be null")) {
+                            fails.push({name:clientObjs[i].First + " " + clientObjs[i].Last, message:"No date or incorrect date format, no reminder added for this client"});
                             continue;
                         } else {
                             fails.push({name:clientObjs[i].First + " " + clientObjs[i].Last, message:error.message});
@@ -141,9 +142,11 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
                     }
                 }
                 const message = n + " clients successfully uploaded"
-                res.render("clients/importClients", {message:message, fails:fails});
+                res.render("clients/importClients", {message:message, fails:fails, duplicates:duplicates});
             }
-        } 
+        } else {
+            res.render("clients/importClients", {error:"Incorrect file type"});
+        }
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -335,6 +338,10 @@ function isClientAddress(i) {
 // Input eg: "01-Feb-2021"
 // Output: "2022-02-01"
 function convertDate(date) {
+    if (typeof date == 'undefined') {
+        return null;
+    }
+
     const day = date.slice(0, 2);
     let month = date.slice(3, 6);
     const year = date.slice(7, 11);
