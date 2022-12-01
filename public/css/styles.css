@@ -204,6 +204,22 @@ hr {
   align-items: end;
 }
 
+.list_item_divider {
+  border-bottom: 1px solid lightgray;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.overlay {
+  position: fixed;
+  visibility: hidden;
+  height: 100%;
+  width: 100%;
+  background-color: grey;
+  opacity: 50%;
+  z-index: 4;
+}
+
 /***********************************************************
  * Margins and Paddings
  ***********************************************************/
@@ -375,23 +391,6 @@ hr {
   color: red;
 }
 
-.overlay {
-  position: fixed;
-  visibility: hidden;
-  height: 100%;
-  width: 100%;
-  background-color: grey;
-  opacity: 50%;
-  z-index: 4;
-}
-
-.date_divider {
-  color: grey;
-  border-bottom: 1px solid grey;
-  cursor: default;
-  font-weight: lighter;
-}
-
 header {
   grid-column: 2/span 3;
 }
@@ -440,14 +439,6 @@ nav {
   background-color: lightgrey;
   background-attachment: local;
   z-index: 2;
-}
-
-.clientCallButtonContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 98%;
-  border-bottom: 1px solid lightgray;
 }
 
 .clientPopup a {

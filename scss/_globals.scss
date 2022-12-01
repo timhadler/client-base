@@ -89,6 +89,22 @@ hr {
     }
 }
 
+.list_item_divider {
+    border-bottom: 1px solid lightgray;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.overlay {
+    position: fixed;
+    visibility: hidden;
+    height: 100%;
+    width: 100%;
+    background-color: grey;
+    opacity: 50%;
+    z-index: 4;
+}
+
 /***********************************************************
  * Margins and Paddings
  ***********************************************************/
@@ -261,22 +277,4 @@ hr {
 
 .error_message {
     color: red;
-}
-
-.overlay {
-    position: fixed;
-    visibility: hidden;
-    height: 100%;
-    width: 100%;
-    background-color: grey;
-    opacity: 50%;
-    z-index: 4;
-}
-
-// Not currently being used I dont think
-.date_divider {
-    color: grey;
-    border-bottom: 1px solid grey;
-    cursor: default;
-    font-weight: lighter;
 }
