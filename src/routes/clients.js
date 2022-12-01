@@ -110,7 +110,8 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
             if (!containsAll) {
                 res.render("clients/importClients", {error:"Incorrect excel format"});
             } else {
-                for (let i = 0; i < clientObjs.length; i++) {
+                let clientNumber = clientObjs.length;
+                for (let i = 0; i < clientNumber; i++) {
                     const date = clientObjs[i].rDate;
                     let comments = clientObjs[i].Comments;
                     const address = clientObjs[i].Address1;
@@ -141,7 +142,7 @@ router.post("/import-clients-preview", upload.single("importExcel"), async (req,
                         }
                     }
                 }
-                const message = n + " clients successfully uploaded"
+                const message = n + "/" + clientNumber +" clients successfully uploaded"
                 res.render("clients/importClients", {message:message, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate});
             }
         } else {
