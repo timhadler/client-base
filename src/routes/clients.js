@@ -89,7 +89,7 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
     try {
         // Verifying file
         const acceptedFileTypes = ['xlsx', 'csv', 'xlsm'];
-        const mandatoryExcelHeaders = ['First', 'Last', 'Company', 'Email', 'Phone', 'Street', 'Suburb', 'City', 'Postcode', 'ReminderDate'];
+        const mandatoryExcelHeaders = ['First', 'Last', 'Company', 'Email', 'Phone', 'Street', 'Suburb', 'City', 'Postcode', 'Comments', 'ReminderDate'];
 
         if (req.file == null) {
             res.redirect("/clients/import-clients");
@@ -137,7 +137,7 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                         } else if (error.message.includes("Incorrect date value") || error.message.includes("Column 'rDate' cannot be null")) {
                             noReminderDate.push(clientObjs[i].First + " " + clientObjs[i].Last);
                             continue;
-                        } else if (error.message.includes("date.slice is not a function")) {
+                        } else if (error.message.includes("date.slice is not a function") || error.message.includes("date.split is not a function")) {
                             incorrectReminders.push(clientObjs[i].First + " " + clientObjs[i].Last);
                             continue;
                         } else {
@@ -347,9 +347,22 @@ function convertDate(date) {
         return null;
     }
 
-    const day = date.slice(0, 2);
-    let month = date.slice(3, 6);
-    const year = date.slice(7, 11);
+    let s = date.split('-');
+    if (s.length != 3) {
+        s = date.split('/');
+    }
+
+    let day = s[0];
+    let month = s[1];
+    const year = s[2];
+
+    if (day.length == 1) {
+        day = '0' + day;
+    }
+
+    // const day = date.slice(0, 2);
+    // let month = date.slice(3, 6);
+    // const year = date.slice(7, 11);
 
     switch(month) {
         case ("Jan"): 
