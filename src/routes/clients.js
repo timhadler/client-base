@@ -89,7 +89,7 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
     try {
         // Verifying file
         const acceptedFileTypes = ['xlsx', 'csv', 'xlsm'];
-        const mandatoryExcelHeaders = ['First', 'Last', 'Company', 'Email', 'Mobile', 'Address1', 'Suburb', 'City', 'Postcode', 'rDate'];
+        const mandatoryExcelHeaders = ['First', 'Last', 'Company', 'Email', 'Phone', 'Street', 'Suburb', 'City', 'Postcode', 'ReminderDate'];
 
         if (req.file == null) {
             res.redirect("/clients/import-clients");
@@ -113,10 +113,10 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
             } else {
                 let clientNumber = clientObjs.length;
                 for (let i = 0; i < clientNumber; i++) {
-                    const date = clientObjs[i].rDate;
+                    const date = clientObjs[i].ReminderDate;
                     let comments = clientObjs[i].Comments;
-                    const address = clientObjs[i].Address1;
-                    const phone = clientObjs[i].Mobile;
+                    const address = clientObjs[i].Street;
+                    const phone = clientObjs[i].Phone;
                     if (typeof comments == 'undefined') { comments = "" };  // Avoid reading length of undefined error
 
                     try {
