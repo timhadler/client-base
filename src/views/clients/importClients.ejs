@@ -9,14 +9,19 @@
             <label class="size_v_small"> Upload Client Excel File: </label> <br />
             <input id="clientImportFile" type="file" name="importExcel" class="clientsFile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
         </form>
-        <br />
-        <a href="/files/importTemplate.xlsx" class="link" download> Download Excel Template </a>
     </div>
 
     <div class="grid_col_2_s2 margin_t_l margin_l_l">
         <div style="height: 90vh;overflow:auto;">
             <!-- Import Info -->
-
+            <p> Make sure your Excel file contains the following headers: First, Last, Company, Email, Phone, Street, Suburb, City, Postcode, Comments, ReminderDate.
+                You can download a template <a href="/files/importTemplate.xlsx" class="link" download> here </a>. The First and ReminderDate columns can not be left empty
+                to succesfully upload a client. 
+            </p> <br />
+            <p> In order to make sure the Reminder Date is uploaded correctly, please make sure the ReminderDate column values are General, 
+                and in the formate: "04-Feb-2022". To prevent Excel from automatically converting the input to a Date value, type a single qoute (')
+                infront of your input, eg. '04-Feb-2022 will make sure the date remains a General.
+            </p> <br />
 
             <!-- Import Results -->
             <p class="error_message"> <%= locals.error %> </p>
