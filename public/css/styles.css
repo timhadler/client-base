@@ -203,6 +203,9 @@ hr {
 .flex-ai-c {
   align-items: center;
 }
+.flex-ai-t {
+  align-items: start;
+}
 .flex-ai-b {
   align-items: end;
 }
@@ -357,16 +360,16 @@ hr {
   grid-column: 4;
 }
 
-.grid_col_2_s2 {
-  grid-column: 3/span 2;
+.grid_col_1_s2 {
+  grid-column: 2/span 2;
 }
 
 .grid_col_1_s3 {
   grid-column: 2/span 3;
 }
 
-.grid_col_1_s2 {
-  grid-column: 2/span 2;
+.grid_col_2_s2 {
+  grid-column: 3/span 2;
 }
 
 /***********************************************************
@@ -453,12 +456,18 @@ nav {
 
 .clientPopup {
   display: none;
+  grid-template-columns: 20px 260px 30px;
+  grid-template-rows: auto;
   position: absolute;
-  padding: 15px;
-  border: 1px solid grey;
-  background-color: lightgrey;
+  border: 1px solid black;
+  background-color: lightgray;
   background-attachment: local;
   z-index: 2;
+}
+
+.popupHeaderLine {
+  grid-column: 1/span all;
+  border-bottom: 2px solid grey;
 }
 
 .clientPopup a {
@@ -495,8 +504,11 @@ nav {
   overflow: auto;
 }
 
-.flagCheckBox::before {
+.flagCheckBox::after {
   content: " ⚑";
+  color: black;
+  margin-left: 10px;
+  margin-right: 5px;
 }
 
 .clientListDisplay {

@@ -28,11 +28,10 @@ const tbcList = document.getElementById("tbcList");
 tbcList.addEventListener('scroll', function() { sessionStorage.setItem('lastScrollPos', tbcList.scrollTop) });
 
 // Functions
-// Edit address popup
 function clientPopup(i) {
     const popup = document.getElementById("clientPopup-" + i);
 
-    popup.style.display = "block";
+    popup.style.display = "grid";
     //popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 }
 

@@ -3,66 +3,69 @@
 
 <form id=<%= "clientPopup-" + locals.client.rId %> class="clientPopup" action="/set-client-status-<%= locals.client.id %>-<%= locals.client.rId %>" method="POST">
     <!-- Header -->
-    <div class="flex flex-ai-c flex-jc-sb">
+    <div class="flex flex-ai-t flex-jc-sb grid_col_1" style="margin-top: 20px; margin-bottom: 3px;">
         <p class="bold"> <%= locals.client.name + " (" +locals.client.rDate.toLocaleDateString('en-GB') + ")" %> </p>
-        <% if (locals.client.status == "confirmed")  { %>
-            <span id="<%= locals.client.rId %>" name="clientPopupClose" class="close_form"></span>
-        <% } else { %>
+        <% if (locals.client.status == "call" || locals.client.status == "tbc") { %>
             <div class="flex flex-ai-c">
-                <div class="flagCheckBoxContainer">
-                    <label class="flagCheckBox">  </label>
-                    <input type="checkbox" name="flagStatus" value="flagged" <% if (locals.client.flag) { %> checked="true" <% } %>>
-                </div>
-                <span id="<%= locals.client.rId %>" name="clientPopupClose" class="close_form"></span>
+                <div class="flagCheckBox">  </div>
+                <input type="checkbox" name="flagStatus" style="margin: 0; height: 15px;" value="flagged" <% if (locals.client.flag) { %> checked="true" <% } %>>
             </div>
         <% } %>
     </div>
 
-    <!-- Status inputs -->
-    <% if (locals.client.status == "call") { %>
-        <input id=<%= "declinebox1-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="call">
-        <label> Declined </label> <br />
-        <input type="radio" name="clientStatus" value="tbc">
-        <label> To be Confirmed </label> <br />
-        <input id=<%= "confirmbox1-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
-        <label> Confirmed </label>
+    <div class="grid_col_2" style="margin-top: 20px;">
+        <span id="<%= locals.client.rId %>" name="clientPopupClose" class="close_form"></span>
+    </div>
+    <hr class="popupHeaderLine" />
 
-    <% } else if (locals.client.status == "tbc") { %>
-        <input id=<%= "declinebox2-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="call">
-        <label> Declined </label> <br />
-        <input id=<%= "confirmbox2-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
-        <label> Confirmed </label>
+    <div class="grid_col_1_s2">
+        <!-- Status inputs -->
+        <% if (locals.client.status == "call") { %>
+            <input id=<%= "declinebox1-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="call">
+            <label> Declined </label> <br />
+            <input type="radio" name="clientStatus" value="tbc">
+            <label> To be Confirmed </label> <br />
+            <input id=<%= "confirmbox1-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
+            <label> Confirmed </label>
 
-    <% } else if (locals.client.status == "confirmed") { %>
-        <input type="radio" name="clientStatus" value="call">
-        <label> Call </label> <br />
-        <input type="radio" name="clientStatus" value="tbc">
-        <label> To be confirmed </label> <br />
-    <% } %>
+        <% } else if (locals.client.status == "tbc") { %>
+            <input id=<%= "declinebox2-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="call">
+            <label> Declined </label> <br />
+            <input id=<%= "confirmbox2-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
+            <label> Confirmed </label>
 
-    <br />
+        <% } else if (locals.client.status == "confirmed") { %>
+            <input type="radio" name="clientStatus" value="call">
+            <label> Call </label> <br />
+            <input type="radio" name="clientStatus" value="tbc">
+            <label> To be confirmed </label> <br />
+        <% } %>
 
-    <!-- Call date for call and tbc popups, initially hidden -->
-    <% if (locals.client.status == "call" || locals.client.status == "tbc") { %>
         <br />
-        <div class="callDate">
-            <label> Call back on: </label> <br />
-            <div style="text-align: center ;">
-                <input id=<%= "datebox-" + locals.client.rId %> required type="date" name="rDate" value="<%= rDateToHTMLDate(locals.client.rDate.toLocaleDateString('en-GB')) %>"> <br />
-            </div>
+
+        <!-- Call date for call and tbc popups, initially hidden -->
+        <% if (locals.client.status == "call" || locals.client.status == "tbc") { %>
             <br />
-        </div>
-    <% } %>
+            <div class="callDate">
+                <label> Call back on: </label> <br />
+                <div style="text-align: center ;">
+                    <input id=<%= "datebox-" + locals.client.rId %> required type="date" name="rDate" value="<%= rDateToHTMLDate(locals.client.rDate.toLocaleDateString('en-GB')) %>"> <br />
+                </div>
+                <br />
+            </div>
+        <% } %>
 
-    <!-- Client comments -->
-    <%- include("../inputForms/comment", {comments:client.comments}) %>
-    <br />
-
-    <!-- Client details link and Submit button -->
-    <div style="text-align: center ;">
-        <a href=<%="/clients/" + locals.client.id%> class="color_secondary"> Client Details </a>
+        <!-- Client comments -->
+        <label> Comments: </label> <br />
+        <textarea name="comments" style="width: 260px;" cols="27" rows="6"><%= locals.comments %></textarea>
         <br />
-        <button type="submit" class="button_primary"> Submit </button>
+
+        <!-- Client details link and Submit button -->
+        <div style="text-align: center; margin-bottom: 20px; width: 260px;">
+            <a href=<%="/clients/" + locals.client.id%> class="color_secondary"> Client Details </a>
+            <br />
+            <button type="submit" class="button_primary"> Submit </button>
+        </div>
     </div>
 </form>
 

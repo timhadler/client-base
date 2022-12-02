@@ -84,6 +84,10 @@ hr {
         align-items: center;
     }
 
+    &-ai-t {
+        align-items: start;
+    }
+
     &-ai-b {
         align-items: end;
     }
@@ -242,16 +246,16 @@ hr {
     grid-column: 4;
 }
 
-.grid_col_2_s2 {
-    grid-column: 3 / span 2;
+.grid_col_1_s2 {
+    grid-column: 2 / span 2;
 }
 
 .grid_col_1_s3 {
     grid-column: 2 / span 3;
 }
 
-.grid_col_1_s2 {
-    grid-column: 2 / span 2;
+.grid_col_2_s2 {
+    grid-column: 3 / span 2;
 }
 
 /***********************************************************
