@@ -304,3 +304,13 @@ hr {
 .link:hover {
     text-decoration: underline;
 }
+
+// Name buttons that appear in lists (client list, call lists)
+.nameButton {
+    font-size: $font-small;
+    color: $secondary;
+}
+
+.nameButton:hover {
+    opacity: 50%;
+}

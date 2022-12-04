@@ -419,6 +419,15 @@ hr {
   text-decoration: underline;
 }
 
+.nameButton {
+  font-size: 16px;
+  color: #0652C3;
+}
+
+.nameButton:hover {
+  opacity: 50%;
+}
+
 header {
   grid-column: 2/span 3;
 }

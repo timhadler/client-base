@@ -57,7 +57,7 @@
             <ul id="cList">
                 <% let list; if (SEARCH.length > 0) { list = SEARCH_LIST } else { list = locals.clients }; %>
                 <% for (let i = 0; i < list.length; i++) { %>
-                    <li class="list_item_divider"><a href=<%="/clients/" + list[i].id%> class="color_secondary"> <%= list[i].name %> </a></li>
+                    <li class="list_item_divider"><a href=<%="/clients/" + list[i].id%> class="nameButton"> <%= list[i].name %> </a></li>
                 <% } %>
             </ul>
         </div>
