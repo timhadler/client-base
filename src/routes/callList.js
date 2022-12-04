@@ -26,7 +26,8 @@ router.get("/", async (req, res) => {
 router.get("/setDates", (req, res) => {
     D1 = req.query.date1;
     D2 = req.query.date2;
-    res.redirect("/");
+    const month = req.query.monthCL;
+    res.redirect("/?month=" + month);
 });
 
 // POST set client status
