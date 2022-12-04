@@ -156,9 +156,11 @@ exports.createReminder = async function(rDate, id) {
 
 // Creates an address entry
 exports.createAddress = async function(street, suburb, city, pc, fa, clientAddress, id) {
-    const params = processParameters([street, suburb, city, pc, fa, clientAddress, id]);
-    const sqlQuery = "INSERT INTO addresses (street, suburb, city, pc, fa, clientAddress, client_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
-    await db.query(sqlQuery, params);
+    if (street.length > 0) {
+        const params = processParameters([street, suburb, city, pc, fa, clientAddress, id]);
+        const sqlQuery = "INSERT INTO addresses (street, suburb, city, pc, fa, clientAddress, client_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
+        await db.query(sqlQuery, params);
+    }
 }
 
 exports.creatUser = async function(username, password) {
