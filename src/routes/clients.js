@@ -117,12 +117,13 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                     let comments = clientObjs[i].Comments;
                     const address = clientObjs[i].Street;
                     const phone = clientObjs[i].Phone;
+
                     if (typeof comments == 'undefined') { comments = "" };  // Avoid reading length of undefined error
 
                     try {
                         const client_id = await clients.createClient(clientObjs[i].First + " " + clientObjs[i].Last, clientObjs[i].Company, comments);
                         n++;
-                        if (typeof address != 'undefined') { 
+                        if (address != null && typeof address != 'undefined') { 
                             await clients.createAddress(address, clientObjs[i].Suburb, clientObjs[i].City, clientObjs[i].Postcode, "Unknown", 1, client_id);
                         }
                         if (typeof phone != 'undefined') {
@@ -351,6 +352,9 @@ function convertDate(date) {
     if (s.length != 3) {
         s = date.split('/');
     }
+    if (s.length != 0) {
+        return null;
+    }
 
     let day = s[0];
     let month = s[1];
@@ -358,6 +362,9 @@ function convertDate(date) {
 
     if (day.length == 1) {
         day = '0' + day;
+    }
+    if (month.length == 1) {
+        month = '0' + month;
     }
 
     // const day = date.slice(0, 2);
