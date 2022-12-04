@@ -230,7 +230,7 @@ router.post("/add-reminder/:id", async (req, res) => {
         const body = req.body;
 
         await clients.createReminder(body.rDate, req.params.id)
-        CLIENT_LIST = await clients.callList(D1, D2);
+        //CLIENT_LIST = await clients.callList(D1, D2);
         res.status(201).redirect("/clients/" + req.params.id);
     } catch (error) {
         res.status(500).send(error.message);

@@ -2,20 +2,24 @@ const express = require("express");
 const router = express.Router();
 const clients = require("./../models/client-models");
 
-global.CLIENT_LIST = [];        // all clients with reminder dates inbetween D1 and D2 with status of "call"
-global.TBC_LIST = [];           // all clients associated with reminder dates with status of "tbc"           
-global.CONFIRMED_LIST = [];     // all clients associated with reminder dates with status of "confirmed"    
+//global.CLIENT_LIST = [];        // all clients with reminder dates inbetween D1 and D2 with status of "call"
+//global.TBC_LIST = [];           // all clients associated with reminder dates with status of "tbc"           
+//global.CONFIRMED_LIST = [];     // all clients associated with reminder dates with status of "confirmed"    
 
 global.D1 = getDate(0);
 global.D2 = getDate(31);
 
 router.get("/", async (req, res) => {
     try {
-        CLIENT_LIST = await clients.callList(D1, D2);
-        TBC_LIST = await clients.TBCList(D1, D2);
-        CONFIRMED_LIST = await clients.confirmedList();
+        // CLIENT_LIST = await clients.callList(D1, D2);
+        // TBC_LIST = await clients.TBCList(D1, D2);
+        // CONFIRMED_LIST = await clients.confirmedList();
 
-        res.render("callList/callList");
+        const callList = await clients.callList(D1, D2);
+        const tbcList = await clients.TBCList(D1, D2);
+        const confirmedList = await clients.confirmedList();
+
+        res.render("callList/callList", {callList:callList, tbcList:tbcList, confirmedList:confirmedList});
     } catch (error) {
         console.error(error);
         res.status(500).send();

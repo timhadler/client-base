@@ -22,13 +22,13 @@
         
         <div class="inner_section">
             <ul id="cList" class="section_divider_callList">
-                <% for (let i = 0; i < CLIENT_LIST.length; i++) { %>
+                <% for (let i = 0; i < callList.length; i++) { %>
                     <li class="positionRelative"> 
                         <!-- Name button that appears in lists, brings up popup -->
-                        <%- include("../partials/callList/callList-popupButton", {client: CLIENT_LIST[i]}) %>
+                        <%- include("../partials/callList/callList-popupButton", {client: callList[i]}) %>
                         
                         <!-- Client Popup -->
-                        <%- include("../partials/callList/callList-popup", {client: CLIENT_LIST[i]}) %>
+                        <%- include("../partials/callList/callList-popup", {client: callList[i]}) %>
                     </li>
                 <% } %>
             </ul>
@@ -43,13 +43,13 @@
         <hr />
         <div class="inner_section section_divider_callList">
             <ul id="tbcList">
-                <% for (let i = 0; i < TBC_LIST.length; i++) { %>
+                <% for (let i = 0; i < tbcList.length; i++) { %>
                     <li class="positionRelative"> 
                         <!-- Name button that appears in lists, brings up popup -->
-                        <%- include("../partials/callList/callList-popupButton", {client: TBC_LIST[i]}) %>
+                        <%- include("../partials/callList/callList-popupButton", {client: tbcList[i]}) %>
                         
                         <!-- Client Popup -->
-                        <%- include("../partials/callList/callList-popup", {client: TBC_LIST[i]}) %>
+                        <%- include("../partials/callList/callList-popup", {client: tbcList[i]}) %>
                     </li>
                 <% } %>
             </ul>
@@ -70,13 +70,13 @@
         <hr />
         <div class="inner_section section_divider_confirmedList">
             <ul id="confirmedList">
-                <% for (let i = 0; i < CONFIRMED_LIST.length; i++) { %>
+                <% for (let i = 0; i < confirmedList.length; i++) { %>
                     <li class="positionRelative"> 
                         <!-- Name button that appears in lists, brings up popup -->
-                        <%- include("../partials/callList/callList-popupButton", {client: CONFIRMED_LIST[i]}) %>
+                        <%- include("../partials/callList/callList-popupButton", {client: confirmedList[i]}) %>
                         
                         <!-- Client Popup -->
-                        <%- include("../partials/callList/callList-popup", {client: CONFIRMED_LIST[i]}) %>
+                        <%- include("../partials/callList/callList-popup", {client: confirmedList[i]}) %>
                     </li>
                 <% } %>
             </ul>
