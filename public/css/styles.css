@@ -345,6 +345,11 @@ hr {
   color: #0652C3;
 }
 
+.text_reference {
+  color: brown;
+  font-style: italic;
+}
+
 /***********************************************************
  * Grids (callList and clietDetails use these)
  ***********************************************************/

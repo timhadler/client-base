@@ -11,16 +11,17 @@
         </form>
     </div>
 
-    <div class="grid_col_2_s2 margin_t_l margin_l_l">
+    <div class="grid_col_2 margin_t_l margin_l_l">
         <div style="height: 90vh;overflow:auto;">
             <!-- Import Info -->
-            <p> Make sure your Excel file contains the following headers: First, Last, Company, Email, Phone, Street, Suburb, City, Postcode, Comments, ReminderDate.
-                You can download a template <a href="/files/importTemplate.xlsx" class="link" download> here </a>. The First and ReminderDate columns can not be left empty
-                to succesfully upload a client. 
+            <p> Make sure your Excel file contains the following headers: <span class="text_reference"> First, Last, Company, Email, Phone, Street, Suburb, 
+                City, Postcode, Comments, ReminderDate </span>. You can download a template <a href="/files/importTemplate.xlsx" class="link" download> here </a>. 
+                The <span class="text_reference"> First </span> column can not be left empty. If a reminder date is not provided the client will be uploaded without one, 
+                and will  not appear in the <a href="/" class="link"> Call List </a> 
             </p> <br />
-            <p> In order to make sure the Reminder Date is uploaded correctly, please make sure the ReminderDate column values are General, 
-                and in the formate: "04-Feb-2022". To prevent Excel from automatically converting the input to a Date value, type a single qoute (')
-                infront of your input, eg. '04-Feb-2022 will make sure the date remains a General.
+            <p> In order to make sure the reminder date is uploaded correctly, please make sure the <span class="text_reference"> ReminderDate </span>
+                column values are 'General' in Excel, and in the formate: <span class="italic"> 04-Feb-2022, 04-02-2022, or 4/2/2022 </span>. To prevent Excel from automatically converting the input to a 
+                Date value, type a single qoute (') infront of your input, eg. <span class="italic"> '04-Feb-2022 </span> will make sure the date remains a 'General' value.
             </p> <br />
 
             <!-- Import Results -->
