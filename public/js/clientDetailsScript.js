@@ -101,7 +101,6 @@ function editCommentForm() {
     const popup = document.getElementById("commentEditPopup");
 
     popup.style.visibility = "visible";
-    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 }
 
 function editCommentCloseForm() {
@@ -113,7 +112,6 @@ function addDateForm(i) {
     const popup = document.getElementById("addCallPopup");
 
     popup.style.visibility = "visible";
-    //popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 
     document.getElementById("overlay").style.visibility = "visible";
 }
@@ -128,7 +126,6 @@ function editDateForm(i) {
     const popup = document.getElementById("rDateEditPopup-" + i);
 
     popup.style.visibility = "visible";
-    //popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 
     document.getElementById("overlay").style.visibility = "visible";
 }

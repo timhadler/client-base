@@ -104,10 +104,13 @@ ie. details.client is an object
                     <!-- Edit comments popup -->
                     <div id="commentEditPopup" class="popup">
                         <form action="/clients/edit-comments/<%= details.client.id %>" method="POST">
-                            <%- include("../partials/inputForms/comment", {comments:details.client.comments}) %>
-                            <div>
+                            <div class="flex flex-jc-r">
+                                <span id="commentCancelPopupButton" class="close_form"></span>
+                            </div>
+                            <textarea name="comments" class="height-100" cols="33" rows="6"><%= details.client.comments %></textarea>
+
+                            <div class="center-x">
                                 <button type="submit" class="button_secondary"> Submit </button>
-                                <button id="commentCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
                             </div>
                         </form>
                     </div>
