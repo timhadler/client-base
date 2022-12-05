@@ -3,7 +3,7 @@
  ***********************************************************/
 // Address buttons
 document.getElementById("addAddressBut").addEventListener('click', function() { addAddressForm() });
-document.getElementById("addressCloseAddFormButton").addEventListener('click', function() { addAddressCloseForm() });
+document.getElementById("addAddressCloseButton").addEventListener('click', function() { addAddressCloseForm() });
 
 // Date buttons
 document.getElementById("addDateBut").addEventListener('click', function() { addDateForm() });
@@ -63,11 +63,12 @@ function addAddressForm() {
     const popup = document.getElementById("addAddressPopup");
 
     popup.style.visibility = "visible";
-    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
+    document.getElementById("overlay").style.visibility = "visible";
 }
 
 function addAddressCloseForm() {
     document.getElementById("addAddressPopup").style.visibility = "hidden";
+    document.getElementById("overlay").style.visibility = "hidden";
 }
 
 // Edit address popup
