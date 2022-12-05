@@ -95,7 +95,7 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
             res.redirect("/clients/import-clients");
         } else if (acceptedFileTypes.includes(req.file.originalname.split('.')[1])) {
             let n = 0;              // number of succesful client uploads
-            let fails = [];         // List of clients that resulted in error and the error message
+            let fails = [];         // List of clients that resulted in error and the error message, list of objects
             let duplicates = [];    // List of clients that failed due to a duplicate name error
             let noReminderDate = [];
             let incorrectReminders = [];
@@ -117,32 +117,34 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                     let comments = clientObjs[i].Comments;
                     const address = clientObjs[i].Street;
                     const phone = clientObjs[i].Phone;
+                    const firstName = clientObjs[i].First;
 
                     if (typeof comments == 'undefined') { comments = "" };  // Avoid reading length of undefined error
+                    if (firstName.trim().length == 0) { fails.push({name:("Client (index: " + i + ") failed upload"), message:"No name provided"}); continue;};   // If no name was provided, push to fails list
 
                     try {
-                        const client_id = await clients.createClient(clientObjs[i].First + " " + clientObjs[i].Last, clientObjs[i].Company, comments);
+                        const client_id = await clients.createClient(firstName + " " + clientObjs[i].Last, clientObjs[i].Company, comments);
                         n++;
                         if (address != null && typeof address != 'undefined') { 
                             await clients.createAddress(address, clientObjs[i].Suburb, clientObjs[i].City, clientObjs[i].Postcode, "Unknown", 1, client_id);
                         }
                         if (typeof phone != 'undefined') {
-                            if (phone.length > 0) { await clients.createContact(clientObjs[i].First, phone, clientObjs[i].Email, client_id); };
+                            if (phone.length > 0) { await clients.createContact(firstName, phone, clientObjs[i].Email, client_id); };
                         }
                         await clients.createReminder(convertDate(date), client_id);
                     } catch (error) {
                         // If error was caused by a duplicate name
                         if (error.message.includes("Duplicate entry") || error.code == 'ER_DUP_ENTRY') {
-                            duplicates.push(clientObjs[i].First + " " + clientObjs[i].Last);
+                            duplicates.push(firstName + " " + clientObjs[i].Last);
                             continue;
                         } else if (error.message.includes("Incorrect date value") || error.message.includes("Column 'rDate' cannot be null")) {
-                            noReminderDate.push(clientObjs[i].First + " " + clientObjs[i].Last);
+                            noReminderDate.push(firstName + " " + clientObjs[i].Last);
                             continue;
                         } else if (error.message.includes("date.slice is not a function") || error.message.includes("date.split is not a function")) {
                             incorrectReminders.push(clientObjs[i].First + " " + clientObjs[i].Last);
                             continue;
                         } else {
-                            fails.push({name:clientObjs[i].First + " " + clientObjs[i].Last, message:error.message});
+                            fails.push({name:firstName + " " + clientObjs[i].Last, message:error.message});
                             continue;
                         }
                     }

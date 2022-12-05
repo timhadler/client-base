@@ -38,8 +38,8 @@
                             <p> <%= duplicates[i] %> </p>
                         <% } %>
                     </div>
+                    <br />
                 <% } %>
-                <br />
             <% } %>
 
             <% if (typeof locals.noReminderDate != 'undefined') {
@@ -51,6 +51,7 @@
                             <p> <%= noReminderDate[i] %> </p>
                         <% } %>
                     </div>
+                    <br />
                 <% } %>
             <% } %>
 
@@ -63,13 +64,14 @@
                             <p> <%= incorrectReminders[i] %> </p>
                         <% } %>
                     </div>
+                    <br />
                 <% } %>
             <% } %>
 
             <% if (typeof locals.fails != 'undefined') {
                 let failLength = locals.fails.length;
                 if (failLength > 0) { %>
-                    <p> Other errors: </p>
+                    <p> <%= "Other errors (" + failLength + "):" %> </p>
                     <div class="inner_section">
                         <% for (let i = 0; i < failLength; i++) { %>
                             <p> <%= fails[i].name + ' - ' + fails[i].message %> </p>
