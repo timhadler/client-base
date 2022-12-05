@@ -17,7 +17,7 @@ document.getElementById("contactCloseAddFormBut").addEventListener('click', func
  * Edit buttons
  ***********************************************************/
 document.getElementById("editClientButton").addEventListener('click', function() { editClientForm() });
-document.getElementById("clientCancelPopupButton").addEventListener('click', function() { editClientCloseForm() });
+document.getElementById("editClientCloseButton").addEventListener('click', function() { editClientCloseForm() });
 
 document.getElementById("editCommentButton").addEventListener('click', function() { editCommentForm() });
 document.getElementById("commentCancelPopupButton").addEventListener('click', function() { editCommentCloseForm() });
@@ -87,11 +87,12 @@ function editClientForm() {
     const popup = document.getElementById("cliFormPopup");
 
     popup.style.visibility = "visible";
-    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
+    document.getElementById("overlay").style.visibility = "visible";
 }
 
 function editClientCloseForm() {
     document.getElementById("cliFormPopup").style.visibility = "hidden";
+    document.getElementById("overlay").style.visibility = "hidden";
 }
 
 // Edit Comments popup

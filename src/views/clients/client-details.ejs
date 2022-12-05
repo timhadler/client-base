@@ -14,14 +14,21 @@ ie. details.client is an object
     <div class="grid_col_2">
         <div class="margin_t_l margin_l_l">
             <!-- Edit client popup -->
-            <form id="cliFormPopup" class="popup" action="/clients/<%=details.client.id%>/editClient" method="POST">
-                <%- include("../partials/inputForms/client", {name:details.client.name, company:details.client.company}) %>
-                <%- include("../partials/inputForms/comment", {comments:details.client.comments}) %>
-                <div class="flex flex-ai-c">
-                    <button type="submit" class="button_primary margin_r_sm"> Submit </button>
-                    <button id="clientCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
-                </div>
-            </form>
+            <div id="cliFormPopup" class="centeredPopupCP centeredPopupCP-editClient">
+                <form action="/clients/<%=details.client.id%>/editClient" method="POST">
+                    <div class="flex flex-ai-c flex-jc-sb">
+                        <h3 class="italic"> Edit Customer </h3> <br />
+                        <span id="editClientCloseButton" class="close_form"></span>
+                    </div>
+                    <br />
+                    <%- include("../partials/inputForms/client", {name:details.client.name, company:details.client.company}) %>
+                    <label> Comments: </label> <br />
+                    <textarea name="comments" class="height-100" cols="21" rows="6"><%= locals.comments %></textarea> <br /> <br />
+                    <div class="center-x">
+                        <button type="submit" class="button_primary"> Submit </button>
+                    </div>
+                </form>
+            </div>
 
             <!-- Details header -->
             <div class="flex flex-ai-c flex-jc-sb">

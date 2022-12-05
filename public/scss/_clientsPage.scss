@@ -53,18 +53,6 @@
     width: 100%;
 }
 
-// Popup class for the add and edit address, contact etc forms on the clientsDetails page
-.popup {
-    visibility: hidden;
-    position: absolute;
-    background-color: white;
-    z-index: 1;
-
-    &-call {
-        width: 400px;
-    }
-}
-
 // List container
 .list_container {
     height: 83%;
@@ -86,10 +74,29 @@
     padding-top: 10px;
 }
 
+ // Import clients
+ .clientsFile {
+    display: inline-block;
+    width: 245px;
+ }
+
+// Popup class for the add and edit address, contact etc forms on the clientsDetails page
+.popup {
+    visibility: hidden;
+    position: absolute;
+    background-color: white;
+    z-index: 1;
+
+    &-call {
+        width: 400px;
+    }
+}
+
 /***********************************************************
- * Add Client popup
+ * Centered popups
  ***********************************************************/
- .addClientPopup {
+ // Add client popup
+ .centeredPopupCP {
     visibility: hidden;
     position: fixed;
     background-color: white;
@@ -99,12 +106,13 @@
     left: 50%;
     transform: translate(-50%, -50%);
     height: auto;
-    width: 250px;
     padding: 35px;
- }
 
- // Import clients
- .clientsFile {
-    display: inline-block;
-    width: 245px;
+    &-addClient {
+        width: 250px;
+    }
+
+    &-editClient {
+        width: 250px;
+    }
  }

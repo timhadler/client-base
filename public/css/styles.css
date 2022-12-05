@@ -592,16 +592,6 @@ nav {
   width: 100%;
 }
 
-.popup {
-  visibility: hidden;
-  position: absolute;
-  background-color: white;
-  z-index: 1;
-}
-.popup-call {
-  width: 400px;
-}
-
 .list_container {
   height: 83%;
   overflow-y: auto;
@@ -621,10 +611,25 @@ nav {
   padding-top: 10px;
 }
 
+.clientsFile {
+  display: inline-block;
+  width: 245px;
+}
+
+.popup {
+  visibility: hidden;
+  position: absolute;
+  background-color: white;
+  z-index: 1;
+}
+.popup-call {
+  width: 400px;
+}
+
 /***********************************************************
- * Add Client popup
+ * Centered popups
  ***********************************************************/
-.addClientPopup {
+.centeredPopupCP {
   visibility: hidden;
   position: fixed;
   background-color: white;
@@ -634,13 +639,13 @@ nav {
   left: 50%;
   transform: translate(-50%, -50%);
   height: auto;
-  width: 250px;
   padding: 35px;
 }
-
-.clientsFile {
-  display: inline-block;
-  width: 245px;
+.centeredPopupCP-addClient {
+  width: 250px;
+}
+.centeredPopupCP-editClient {
+  width: 250px;
 }
 
 /*# sourceMappingURL=styles.css.map */
