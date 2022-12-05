@@ -4,13 +4,16 @@
     <!-- Call List Header -->
     <form class="grid_col_1 margin_t_med margin_b_med" id="datesForm" action="/setDates" method="GET">
         <div class="flex flex-ai-c">
+            <!--
             <div>
-                <input class="margin_r_sm" id="date1_input" type="date" name="date1" value="<%= D1 %>">
+                <input class="margin_r_sm" id="date1_input" type="date" name="date1" value="">
                 to
-                <input class="margin_l_sm" id="date2_input" type="date" name="date2" value="<%= D2 %>">
+                <input class="margin_l_sm" id="date2_input" type="date" name="date2" value="">
             </div>
-            <input type="month" name="monthCL" value="<%= locals.month %>">
             <button class="button_secondary margin_l_sm" type="submit"> Set </button>
+            -->
+            <label class="margin_r_sm"> Select month: </label>
+            <input id="monthInputCL" type="month" name="monthCL" value="<%= locals.month %>">
         </div>
     </form>
 

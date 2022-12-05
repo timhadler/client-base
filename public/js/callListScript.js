@@ -27,6 +27,9 @@ window.addEventListener('DOMContentLoaded', function() { tbcList.scrollTop = ses
 const tbcList = document.getElementById("tbcList");
 tbcList.addEventListener('scroll', function() { sessionStorage.setItem('lastScrollPos', tbcList.scrollTop) });
 
+// Submit month input form when month is selcted
+document.getElementById("monthInputCL").addEventListener('change', function() { document.getElementById("datesForm").submit(); } )
+
 // Functions
 function clientPopup(i) {
     const popup = document.getElementById("clientPopup-" + i);

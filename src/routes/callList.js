@@ -6,8 +6,8 @@ const clients = require("./../models/client-models");
 //global.TBC_LIST = [];           // all clients associated with reminder dates with status of "tbc"           
 //global.CONFIRMED_LIST = [];     // all clients associated with reminder dates with status of "confirmed"    
 
-global.D1 = getDate(0);
-global.D2 = getDate(31);
+//global.D1 = getDate(0);
+//global.D2 = getDate(31);
 
 router.get("/", async (req, res) => {
     try {
@@ -15,23 +15,40 @@ router.get("/", async (req, res) => {
         // TBC_LIST = await clients.TBCList(D1, D2);
         // CONFIRMED_LIST = await clients.confirmedList();
 
-        const callList = await clients.callList(D1, D2);
-        const tbcList = await clients.TBCList(D1, D2);
+        // Get the dates that define the current month
+        const d1 = getDate(0).slice(0, 8) + "01"
+        const d2 = d1.slice(0, 8) + getLastDate(d1.slice(5, 7));
+
+        const callList = await clients.callList(d1, d2);
+        const tbcList = await clients.TBCList(d1, d2);
         const confirmedList = await clients.confirmedList();
 
-        res.render("callList/callList", {callList:callList, tbcList:tbcList, confirmedList:confirmedList});
+        res.render("callList/callList", {month:getDate(0).slice(0, 7), callList:callList, tbcList:tbcList, confirmedList:confirmedList});
     } catch (error) {
-        console.error(error);
         res.status(500).send();
     }
 });
 
 // Set the date range for the call and tbc list
-router.get("/setDates", (req, res) => {
-    D1 = req.query.date1;
-    D2 = req.query.date2;
+router.get("/setDates", async (req, res) => {
+    try {
+    // D1 = req.query.date1;
+    // D2 = req.query.date2;
     const month = req.query.monthCL;
-    res.redirect("/?month=" + month);
+
+    // Get the dates that define the selected month
+    const d1 = month + "-01"
+    const d2 = month + "-" + getLastDate(d1.slice(5, 7));
+
+    const callList = await clients.callList(d1, d2);
+    const tbcList = await clients.TBCList(d1, d2);
+    const confirmedList = await clients.confirmedList();
+
+    res.render("callList/callList", {month:month, callList:callList, tbcList:tbcList, confirmedList:confirmedList});
+    //res.redirect("/?month=" + month);
+    } catch (error) {
+        res.status(500).send();
+    }
 });
 
 // POST set client status
@@ -65,7 +82,7 @@ router.post("/reset-confirmed-list", async (req, res) => {
     }
 });
 
-// Gets the date n days from the current date (yyyy-mm-dd)
+// Gets the date n days from the current date (output: yyyy-mm-dd)
 function getDate(n) {
     let date = new Date();
     date.setDate(date.getDate() + n);
@@ -73,5 +90,30 @@ function getDate(n) {
 
     return date;
 };
+
+// Returns string of the last date in a given month
+// Input: "12", Output: "31"
+function getLastDate(m) {
+    let d = "31"
+
+    switch(m) {
+        case ("02"):
+            d = "28";
+            break;
+        case ("04"):
+            d = "30";
+            break;
+        case ("06"):
+            d = "30";
+            break;
+        case ("09"):
+            d = "30";
+            break;
+        case ("11"):
+            d = "30";
+            break
+    }
+    return d;
+}
 
 module.exports = router;
