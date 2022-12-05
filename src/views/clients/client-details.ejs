@@ -14,7 +14,7 @@ ie. details.client is an object
     <div class="grid_col_2">
         <div class="margin_t_l margin_l_l">
             <!-- Edit client popup -->
-            <div id="cliFormPopup" class="centeredPopupCP centeredPopupCP-editClient">
+            <div id="cliFormPopup" class="centeredPopupCP">
                 <form action="/clients/<%=details.client.id%>/editClient" method="POST">
                     <div class="flex flex-ai-c flex-jc-sb">
                         <h3 class="italic"> Edit Customer </h3> <br />
@@ -23,7 +23,7 @@ ie. details.client is an object
                     <br />
                     <%- include("../partials/inputForms/client", {name:details.client.name, company:details.client.company}) %>
                     <label> Comments: </label> <br />
-                    <textarea name="comments" class="height-100" cols="21" rows="6"><%= locals.comments %></textarea> <br /> <br />
+                    <textarea name="comments" class="height-100 width-100" cols="21" rows="6"><%= locals.comments %></textarea> <br /> <br />
                     <div class="center-x">
                         <button type="submit" class="button_primary"> Submit </button>
                     </div>

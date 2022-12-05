@@ -1,6 +1,6 @@
 <script type="module" src="/js/clientListScript.js"> </script>
 
-<div id="addClientPopup" class="centeredPopupCP centeredPopupCP-addClient">
+<div id="addClientPopup" class="centeredPopupCP">
     <div class="flex flex-ai-c flex-jc-sb">
         <h3 class="italic"> Add Customer </h3> <br />
         <span id="addClientCloseButton" class="close_form"></span>
@@ -9,13 +9,13 @@
     <form action= "/clients/add-client" method="POST">
         <%- include("../inputForms/client") %>
         <label> Comments: </label> <br />
-        <textarea name="comments" class="height-100" cols="21" rows="6"><%= locals.comments %></textarea> <br /> <br />
+        <textarea name="comments" class="height-100 width-100" cols="21" rows="6"><%= locals.comments %></textarea> <br /> <br />
 
         <div class="center-x">
             <label> Call back on: </label> <br />
             <%- include("../inputForms/call") %>
             <br /> <br />
-            <a href="/clients/import-clients" type="button" class="button button_secondary margin_b_sm"> Import Clients </a>
+            <a href="/clients/import-clients" type="button" class="button button_secondary margin_b_sm"> Import Clients </a> <br />
             <button type="submit" class="button_primary"> Submit </button>
         </div>
     </form>

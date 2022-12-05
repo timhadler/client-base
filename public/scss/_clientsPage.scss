@@ -107,12 +107,5 @@
     transform: translate(-50%, -50%);
     height: auto;
     padding: 35px;
-
-    &-addClient {
-        width: 250px;
-    }
-
-    &-editClient {
-        width: 250px;
-    }
+    min-width: 300px;
  }

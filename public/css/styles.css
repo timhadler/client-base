@@ -640,12 +640,7 @@ nav {
   transform: translate(-50%, -50%);
   height: auto;
   padding: 35px;
-}
-.centeredPopupCP-addClient {
-  width: 250px;
-}
-.centeredPopupCP-editClient {
-  width: 250px;
+  min-width: 300px;
 }
 
 /*# sourceMappingURL=styles.css.map */
