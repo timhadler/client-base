@@ -8,19 +8,27 @@ nav {
 }
 
 .navItemBox {
-    size: 100%;
-    padding-right: 20px;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+    border-radius: 4px;
+    margin-right: 20px;
 }
 
 .navItemBox:hover {
-    text-decoration: underline;
+    background-color: $primary;
+    //opacity: 50%;
+}
+
+.highlightNav {
+    border-bottom: 4px solid $primary;
 }
 
 .logo {
     color: $primary;
     font-size: $font_large;
     font-weight: bold;
-    margin-right: 15px;
+    margin-right: 40px;
 }
 
 .user {
