@@ -149,8 +149,7 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                         }
                     }
                 }
-                const message = n + "/" + clientNumber +" clients successfully uploaded"
-                res.render("clients/importClients", {message:message, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate, incorrectReminders:incorrectReminders});
+                res.render("clients/importClients", {successes:n, total:clientNumber, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate, incorrectReminders:incorrectReminders});
             }
         } else {
             res.render("clients/importClients", {error:"Incorrect file type"});
@@ -354,7 +353,7 @@ function convertDate(date) {
     if (s.length != 3) {
         s = date.split('/');
     }
-    if (s.length != 0) {
+    if (s.length != 3) {
         return null;
     }
 

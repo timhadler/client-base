@@ -26,13 +26,20 @@
 
             <!-- Import Results -->
             <p class="error_message"> <%= locals.error %> </p>
-            <p> <%= locals.message %> </p>
+
+            <% if (typeof locals.successes != 'undefined') { %>
+                <% const message = locals.successes + "/" + locals.total + " clients successfully uploaded." %>
+                <% if(locals.successes == locals.total) { %> <p class="success_message"> <%= message %> </p> <% }
+                else if(locals.successes > 0) { %> <p class="yellow_message"> <%= message %> </p> <% }
+                else { %> <p class="error_message"> <%= message %> </p> <% }
+                %>
+            <% } %>
             <br />
 
             <% if (typeof locals.duplicates != 'undefined') { 
                 let dupLength = locals.duplicates.length;
                 if (dupLength > 0) { %>
-                    <p> <%= "There were " + dupLength + " clients with duplicate names already in database: " %> </p>
+                    <p> There were <span class="yellow_message"> <%= dupLength %> </span> clients with duplicate names already in database: </p>
                     <div class="inner_section">
                         <% for (let i = 0; i < dupLength; i++) { %>
                             <p> <%= duplicates[i] %> </p>
@@ -45,7 +52,7 @@
             <% if (typeof locals.noReminderDate != 'undefined') {
                 let noReminderLength = locals.noReminderDate.length;
                 if (noReminderLength > 0) { %>
-                    <p> <%= "There were " + noReminderLength + " clients with no reminder date provided" %> </p>
+                    <p> There were <span class="yellow_message"> <%=noReminderLength %> </span> clients with no reminder date provided </p>
                     <div class="inner_section">
                         <% for (let i = 0; i < noReminderLength; i++) { %>
                             <p> <%= noReminderDate[i] %> </p>
@@ -58,7 +65,7 @@
             <% if (typeof locals.incorrectReminders != 'undefined') {
                 let incorrectLength = locals.incorrectReminders.length;
                 if (incorrectLength > 0) { %>
-                    <p> <%= "There were " + incorrectLength + " clients with an incorrect reminder date format, these clients have been uploaded wothout a reminder date" %> </p>
+                    <p> There were <span class="yellow_message"> <%= incorrectLength %> </span> clients with an incorrect reminder date format, these clients have been uploaded wothout a reminder date </p>
                     <div class="inner_section">
                         <% for (let i = 0; i < incorrectLength; i++) { %>
                             <p> <%= incorrectReminders[i] %> </p>
@@ -71,7 +78,7 @@
             <% if (typeof locals.fails != 'undefined') {
                 let failLength = locals.fails.length;
                 if (failLength > 0) { %>
-                    <p> <%= "Other errors (" + failLength + "):" %> </p>
+                    <p> Other errors <span class="error_message"> <%= '(' + failLength + ')' %> </span> </p>
                     <div class="inner_section">
                         <% for (let i = 0; i < failLength; i++) { %>
                             <p> <%= fails[i].name + ' - ' + fails[i].message %> </p>

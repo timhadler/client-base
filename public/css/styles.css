@@ -410,6 +410,14 @@ hr {
   color: red;
 }
 
+.success_message {
+  color: green;
+}
+
+.yellow_message {
+  color: orange;
+}
+
 .link {
   font-size: 14px;
   color: blue;
