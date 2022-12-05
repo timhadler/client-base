@@ -18,10 +18,10 @@ document.getElementById("addClientCloseButton").addEventListener('click', functi
 
 function addClientPopup() {
     document.getElementById("addClientPopup").style.visibility = "visible";
-    document.getElementById("addClientOverlay").style.visibility = "visible";
+    document.getElementById("overlay").style.visibility = "visible";
 }
 
 function addClientPopupClose() {
     document.getElementById("addClientPopup").style.visibility = "hidden";
-    document.getElementById("addClientOverlay").style.visibility = "hidden";
+    document.getElementById("overlay").style.visibility = "hidden";
 }
