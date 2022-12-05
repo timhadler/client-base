@@ -4,7 +4,7 @@ if (url.includes(".com/clients") || url.includes("3000/clients")) {
     console.log("here");
     document.getElementById("navCallList").classList.remove("highlightNav");
     document.getElementById("navClients").classList.add("highlightNav");
-} else if (url.includes(".com/") || url.includes("3000/")) {
+} else if ((url.includes(".com/") || url.includes("3000/")) && !url.includes("login")) {
     document.getElementById("navClients").classList.remove("highlightNav");
     document.getElementById("navCallList").classList.add("highlightNav");
 };
