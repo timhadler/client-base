@@ -11,7 +11,7 @@ document.getElementById("dateCloseAddForm").addEventListener('click', function()
 
 // Contact buttons
 document.getElementById("addContactBut").addEventListener('click', function() { addContactForm() });
-document.getElementById("contactCloseAddFormBut").addEventListener('click', function() { addContactCloseForm() });
+document.getElementById("addContactCloseButton").addEventListener('click', function() { addContactCloseForm() });
 
 /***********************************************************
  * Edit buttons
@@ -137,11 +137,12 @@ function addContactForm(i) {
     const popup = document.getElementById("addContactPopup");
 
     popup.style.visibility = "visible";
-    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
+    document.getElementById("overlay").style.visibility = "visible";
 }
 
 function addContactCloseForm(i) {
     document.getElementById("addContactPopup").style.visibility = "hidden";
+    document.getElementById("overlay").style.visibility = "hidden";
 }
 
 // Edit contact popup

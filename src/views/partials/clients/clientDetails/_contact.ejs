@@ -1,11 +1,17 @@
 <!-- Add form -->
-<form id="addContactPopup" class="popup" action="/clients/add-contact/<%=client_id%>" method="POST">
-    <%- include("../../inputForms/contact") %>
-    <div class="flex flex-ai-c flex-jc-r">
-        <button type="submit" class="button_primary margin_r_sm"> Submit </button>
-        <button id="contactCloseAddFormBut" type="button" class="button_secondary button_cancel"> Cancel </button>
-    </div>
-</form>
+<div id="addContactPopup" class="centeredPopupCP">
+    <form action="/clients/add-contact/<%=client_id%>" method="POST">
+        <div class="flex flex-ai-c flex-jc-sb">
+            <h3 class="italic"> Add Contact </h3> <br />
+            <span id="addContactCloseButton" class="close_form"></span>
+        </div>
+        <br />
+        <%- include("../../inputForms/contact") %>
+        <div class="center-x">
+            <button type="submit" class="button_primary margin_r_sm"> Submit </button>
+        </div>
+    </form>
+</div>
 
 <% for (let i=0; i < data.length; i++) { %>
     <li>
