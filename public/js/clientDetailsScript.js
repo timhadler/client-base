@@ -113,11 +113,14 @@ function addDateForm(i) {
     const popup = document.getElementById("addCallPopup");
 
     popup.style.visibility = "visible";
-    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
+    //popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
+
+    document.getElementById("overlay").style.visibility = "visible";
 }
 
 function addDateCloseForm(i) {
     document.getElementById("addCallPopup").style.visibility = "hidden";
+    document.getElementById("overlay").style.visibility = "hidden";
 }
 
 // Edit date popup
@@ -125,11 +128,14 @@ function editDateForm(i) {
     const popup = document.getElementById("rDateEditPopup-" + i);
 
     popup.style.visibility = "visible";
-    popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
+    //popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
+
+    document.getElementById("overlay").style.visibility = "visible";
 }
 
 function editDateCloseForm(i) {
     document.getElementById("rDateEditPopup-" + i).style.visibility = "hidden";
+    document.getElementById("overlay").style.visibility = "hidden";
 }
 
 // Add contact popup

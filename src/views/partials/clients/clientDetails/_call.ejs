@@ -1,11 +1,9 @@
 <!-- Add popup -->
 <div id="addCallPopup" class="popup">
-    <form class="flex flex-ai-c flex-jc-sb" action="/clients/add-reminder/<%= client_id %>" method="POST">
+    <form class="flex flex-ai-c" action="/clients/add-reminder/<%= client_id %>" method="POST">
         <%- include("../../inputForms/call") %>
-        <div>
-            <button type="submit" class="button_secondary"> Submit </button>
-            <button id="dateCloseAddForm" type="button" class="button_secondary button_cancel"> Cancel </button>
-        </div>
+        <button type="submit" class="button_secondary margin_l_l margin_r_sm"> Submit </button>
+        <span id="dateCloseAddForm" class="close_form"></span>
     </form>
 </div>
 
@@ -13,12 +11,10 @@
     <li>
         <!-- Edit popup -->
         <div id="<%= "rDateEditPopup-" + data[i].id %>" class="popup">
-            <form class="flex flex-ai-c flex-jc-sb" action="/clients/edit-reminder/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
+            <form class="flex flex-ai-c" action="/clients/edit-reminder/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
                 <%- include("../../inputForms/call", { date:rDateToHTMLDate(data[i].rDate)}) %>
-                <div>
-                    <button type="submit" class="button_secondary"> Submit </button>
-                    <button id="<%= data[i].id %>" name="rDateCancelPopupButton" type="button" class="button_secondary button_cancel"> Cancel </button>
-                </div>
+                <button type="submit" class="button_secondary margin_l_l margin_r_sm"> Submit </button>
+                <span id="<%= data[i].id %>" name="rDateCancelPopupButton" class="close_form"></span>
             </form>
         </div>
 
