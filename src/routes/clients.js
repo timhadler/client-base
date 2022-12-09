@@ -150,7 +150,7 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                     }
                 }
             }
-            res.status(201).render("clients/importClients", {successes:n, total:clientNumber, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate, incorrectReminders:incorrectReminders});
+            res.status(200).render("clients/importClients", {successes:n, total:clientNumber, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate, incorrectReminders:incorrectReminders});
         }
     } catch (error) {
         res.status(500).send(error.message);
