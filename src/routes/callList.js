@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
         const tbcList = await clients.TBCList(d1, d2);
         const confirmedList = await clients.confirmedList();
 
-        res.render("callList/callList", {month:getDate(0).slice(0, 7), callList:callList, tbcList:tbcList, confirmedList:confirmedList});
+        res.status(200).render("callList/callList", {month:getDate(0).slice(0, 7), callList:callList, tbcList:tbcList, confirmedList:confirmedList});
     } catch (error) {
         res.status(500).send();
     }
@@ -44,7 +44,7 @@ router.get("/setDates", async (req, res) => {
     const tbcList = await clients.TBCList(d1, d2);
     const confirmedList = await clients.confirmedList();
 
-    res.render("callList/callList", {month:month, callList:callList, tbcList:tbcList, confirmedList:confirmedList});
+    res.status(200).render("callList/callList", {month:month, callList:callList, tbcList:tbcList, confirmedList:confirmedList});
     //res.redirect("/?month=" + month);
     } catch (error) {
         res.status(500).send();

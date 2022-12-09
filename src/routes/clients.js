@@ -8,7 +8,7 @@ const multer = require('multer');                   // For uploading files
 const upload = multer({ dest: "uploads/" });
 
 // Globals
-global.SEARCH_LIST = [];    // This is the search list and query from the client-list search bar
+global.SEARCH_LIST = [];    // This is the search list and query from the client-list search bar, accessed in client-list.ejs
 global.SEARCH = "";
 
 router.get("/", async (req, res) => {
@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
         if (SEARCH.length > 0) {
             SEARCH_LIST = await clients.searchList(SEARCH);
         }
-        res.render("clients/client-index", {clients:clientList});
+        res.status(200).render("clients/client-index", {clients:clientList});
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -29,8 +29,9 @@ router.get("/search", async (req, res) => {
     try {
         if (req.query.search.length > 0) {
             SEARCH = req.query.search;
-            SEARCH_LIST = await clients.searchList(SEARCH);
-            res.render("clients/client-index");
+            //SEARCH_LIST = await clients.searchList(SEARCH);
+            //res.status(200).render("clients/client-index");
+            res.redirect("/clients");
         } else {
             SEARCH = "";
             SEARCH_LIST = [];
@@ -79,7 +80,7 @@ router.post("/add-client", async (req, res) => {
 // Import clients
 router.get("/import-clients", (req, res) => {
     try {
-        res.render("clients/importClients")
+        res.status(200).render("clients/importClients")
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -149,7 +150,7 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                     }
                 }
             }
-            res.render("clients/importClients", {successes:n, total:clientNumber, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate, incorrectReminders:incorrectReminders});
+            res.status(201).render("clients/importClients", {successes:n, total:clientNumber, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate, incorrectReminders:incorrectReminders});
         }
     } catch (error) {
         res.status(500).send(error.message);
