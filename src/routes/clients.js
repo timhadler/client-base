@@ -3,7 +3,7 @@ const req = require("express/lib/request");
 const res = require("express/lib/response");
 const router = express.Router();
 const clients = require("../models/client-models");
-xl = require("xlsx");
+xl = require("../modules/excel-JS");
 const multer = require('multer');                   // For uploading files
 const upload = multer({ dest: "uploads/" });
 
@@ -88,72 +88,84 @@ router.get("/import-clients", (req, res) => {
 router.post("/import-clients", upload.single("importExcel"), async (req, res) => {
     try {
         // Verifying file
-        const acceptedFileTypes = ['xlsx', 'csv', 'xlsm'];
         const mandatoryExcelHeaders = ['First', 'Last', 'Company', 'Email', 'Phone', 'Street', 'Suburb', 'City', 'Postcode', 'Comments', 'ReminderDate'];
 
         if (req.file == null) {
             res.redirect("/clients/import-clients");
-        } else if (acceptedFileTypes.includes(req.file.originalname.split('.')[1])) {
+        } else {
             let n = 0;              // number of succesful client uploads
             let fails = [];         // List of clients that resulted in error and the error message, list of objects
             let duplicates = [];    // List of clients that failed due to a duplicate name error
             let noReminderDate = [];
             let incorrectReminders = [];
+            let clientObjs = [];
 
-            const workbook = xl.readFile(req.file.path);
-            const sheet_name_list = workbook.SheetNames;
-            const clientObjs = xl.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], {defval:""});
+            try {
+                clientObjs = xl.readData(req.file.originalname, (req.file.path), mandatoryExcelHeaders);
+            } catch (error) {
+                let message = error.message;
+                if (message.includes("no such file or directory")) {
+                    message = "No such file or directory.";
+                }
+                res.render("clients/importClients", {error:message});
+                return;
+            }
 
-            // Check excel format
-            const containsAll = mandatoryExcelHeaders.every(element => {
-                return Object.getOwnPropertyNames(clientObjs[0]).includes(element);
-            });
-            if (!containsAll) {
-                res.render("clients/importClients", {error:"Incorrect excel format"});
-            } else {
-                let clientNumber = clientObjs.length;
-                for (let i = 0; i < clientNumber; i++) {
-                    const date = clientObjs[i].ReminderDate;
-                    let comments = clientObjs[i].Comments;
-                    const address = clientObjs[i].Street;
-                    const phone = clientObjs[i].Phone;
-                    const firstName = clientObjs[i].First;
+            let clientNumber = clientObjs.length;
+            for (let i = 0; i < clientNumber; i++) {
+                const date = clientObjs[i].ReminderDate;
+                let comments = clientObjs[i].Comments;
+                const address = clientObjs[i].Street;
+                const phone = clientObjs[i].Phone;
+                const firstName = clientObjs[i].First;
 
-                    if (typeof comments == 'undefined') { comments = "" };  // Avoid reading length of undefined error
-                    if (firstName.trim().length == 0) { fails.push({name:("Client (index: " + i + ") failed upload"), message:"No name provided"}); continue;};   // If no name was provided, push to fails list
+                if (typeof comments == 'undefined') { comments = "" };  // Avoid reading length of undefined error
+                if (firstName.trim().length == 0) { fails.push({name:("Client (index: " + i + ") failed upload"), message:"No name provided"}); continue;};   // If no name was provided, push to fails list
 
-                    try {
-                        const client_id = await clients.createClient(firstName + " " + clientObjs[i].Last, clientObjs[i].Company, comments);
-                        n++;
-                        if (address != null && typeof address != 'undefined') { 
-                            await clients.createAddress(address, clientObjs[i].Suburb, clientObjs[i].City, clientObjs[i].Postcode, "Unknown", 1, client_id);
-                        }
-                        if (typeof phone != 'undefined') {
-                            if (phone.length > 0) { await clients.createContact(firstName, phone, clientObjs[i].Email, client_id); };
-                        }
-                        await clients.createReminder(convertDate(date), client_id);
-                    } catch (error) {
-                        // If error was caused by a duplicate name
-                        if (error.message.includes("Duplicate entry") || error.code == 'ER_DUP_ENTRY') {
-                            duplicates.push(firstName + " " + clientObjs[i].Last);
-                            continue;
-                        } else if (error.message.includes("Incorrect date value") || error.message.includes("Column 'rDate' cannot be null")) {
-                            noReminderDate.push(firstName + " " + clientObjs[i].Last);
-                            continue;
-                        } else if (error.message.includes("date.slice is not a function") || error.message.includes("date.split is not a function")) {
-                            incorrectReminders.push(clientObjs[i].First + " " + clientObjs[i].Last);
-                            continue;
-                        } else {
-                            fails.push({name:firstName + " " + clientObjs[i].Last, message:error.message});
-                            continue;
-                        }
+                try {
+                    const client_id = await clients.createClient(firstName + " " + clientObjs[i].Last, clientObjs[i].Company, comments);
+                    n++;
+                    if (address != null && typeof address != 'undefined') { 
+                        await clients.createAddress(address, clientObjs[i].Suburb, clientObjs[i].City, clientObjs[i].Postcode, "Unknown", 1, client_id);
+                    }
+                    if (typeof phone != 'undefined') {
+                        if (phone.length > 0) { await clients.createContact(firstName, phone, clientObjs[i].Email, client_id); };
+                    }
+                    await clients.createReminder(convertDate(date), client_id);
+                } catch (error) {
+                    // If error was caused by a duplicate name
+                    if (error.message.includes("Duplicate entry") || error.code == 'ER_DUP_ENTRY') {
+                        duplicates.push(firstName + " " + clientObjs[i].Last);
+                        continue;
+                    } else if (error.message.includes("Incorrect date value") || error.message.includes("Column 'rDate' cannot be null")) {
+                        noReminderDate.push(firstName + " " + clientObjs[i].Last);
+                        continue;
+                    } else if (error.message.includes("date.slice is not a function") || error.message.includes("date.split is not a function")) {
+                        incorrectReminders.push(clientObjs[i].First + " " + clientObjs[i].Last);
+                        continue;
+                    } else {
+                        fails.push({name:firstName + " " + clientObjs[i].Last, message:error.message});
+                        continue;
                     }
                 }
-                res.render("clients/importClients", {successes:n, total:clientNumber, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate, incorrectReminders:incorrectReminders});
             }
-        } else {
-            res.render("clients/importClients", {error:"Incorrect file type"});
+            res.render("clients/importClients", {successes:n, total:clientNumber, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate, incorrectReminders:incorrectReminders});
         }
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// Export clients
+router.get("/exportClients", async (req, res) => {
+    try {
+        let details1 = await clients.clientDetails(38);
+        const obj1 = [details1.client.id, details1.client.name, details1.client.comments, details1.addresses[0].street];
+
+        const data = [obj1];
+        
+        xl.writeTable(data, "exports/clientExport.xlsx");
+        res.send(data);
     } catch (error) {
         res.status(500).send(error.message);
     }
