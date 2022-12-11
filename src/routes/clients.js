@@ -7,50 +7,33 @@ xl = require("../modules/excel-JS");
 const multer = require('multer');                   // For uploading files
 const upload = multer({ dest: "uploads/" });
 
-// Globals
-global.SEARCH_LIST = [];    // This is the search list and query from the client-list search bar, accessed in client-list.ejs
-global.SEARCH = "";
-
 router.get("/", async (req, res) => {
     try {
         // fetch the first 50 clients
-        let clientList = await clients.clientList();
-        if (SEARCH.length > 0) {
-            SEARCH_LIST = await clients.searchList(SEARCH);
+        let list = [];
+        let details = null;
+        if (typeof req.query.search != 'undefined') {
+            if (req.query.search.length > 0) {
+                list = await clients.searchList(req.query.search);
+            } else {
+                list = await clients.clientList();
+            }
+        } else {
+            list = await clients.clientList();
         }
-        res.status(200).render("clients/client-index", {clients:clientList});
+        if (typeof req.query.clientID != 'undefined') {
+            details = await clients.clientDetails(req.query.clientID);
+            
+            // Convert dates to a nicer format to display
+            for (let i = 0; i < details.calls.length; i++) {
+                details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString('en-GB');
+            }
+        }
+        res.status(200).render("clients/clients", {clients:list, search:req.query.search, details:details});
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
-
-// Search
-router.get("/search", async (req, res) => {
-    try {
-        if (req.query.search.length > 0) {
-            SEARCH = req.query.search;
-            //SEARCH_LIST = await clients.searchList(SEARCH);
-            //res.status(200).render("clients/client-index");
-            res.redirect("/clients");
-        } else {
-            SEARCH = "";
-            SEARCH_LIST = [];
-            res.redirect("/clients");
-        }
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-})
-
-router.get("/clear-search", (req, res) => {
-    try {
-        SEARCH = "";
-        SEARCH_LIST = [];
-        res.redirect("/clients");
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-})
 
 /***********************************************************
  * Add client
@@ -60,17 +43,15 @@ router.post("/add-client", async (req, res) => {
         const body = req.body;
         let id = await clients.createClient(body.name, body.company, body.comments);
 
-        //await clients.createContact(body.contactName, body.number, body.email, id);
         await clients.createReminder(body.rDate, id);
-        res.status(201).redirect("/clients/" + id);
-
+        res.status(201).redirect("/clients/?clientID=" + id);
     } catch (error) {
         // If error was caused by a duplicate name
         if (error.message.includes("Duplicate entry")) {
             const error = "Client already exists in database: " + req.body.name;
             let clientList = await clients.clientList();
 
-            res.render("clients/client-index", {clients:clientList, error:error});
+            res.render("clients/clients", {clients:clientList, error:error});
         } else {
             res.status(400).send(error.message);
         }
@@ -193,20 +174,20 @@ router.post("/:id/editClient", async (req, res) => {
     try {
         const body = req.body;
         await clients.editClient(req.params.id, body.name, body.company, body.comments);
-        res.status(201).redirect("/clients/" + req.params.id);
+        res.status(201).redirect("/clients/?clientID=" + req.params.id);
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
 
-// POST add address (popup)
+// POST add address
 router.post("/add-address-:id", async (req, res) => {
     try {
         const body = req.body;
         let cAddress = isClientAddress(body.clientAddress);
 
         await clients.createAddress(body.street, body.suburb, body.city, body.pc, body.freshAir, cAddress, req.params.id);
-        res.status(201).redirect("/clients/" + req.params.id);
+        res.status(201).redirect("/clients/?clientID=" + req.params.id);
     } catch (error) {
         res.status(400).send(error.message);
     }
@@ -220,7 +201,7 @@ router.post("/edit-address/:addId-:cId", async (req, res) => {
             let cAddress = isClientAddress(body.clientAddress);
 
             await clients.editAddress(req.params.addId, body.street, body.suburb, body.city, body.pc, body.freshAir, cAddress);
-            res.status(201).redirect("/clients/" + req.params.cId);
+            res.status(201).redirect("/clients/?clientID=" + req.params.cId);
         }
     } catch (error) {
         res.status(500).send(error.message);
@@ -233,7 +214,7 @@ router.post("/add-contact/:id", async (req, res) => {
         const body = req.body;
 
         await clients.createContact(body.contactName, body.number, body.email, req.params.id);
-        res.status(201).redirect("/clients/" + req.params.id);
+        res.status(201).redirect("/clients/?clientID=" + req.params.id);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -245,7 +226,7 @@ router.post("/edit-contact/:conId-:cId", async (req, res) => {
         const body = req.body;
 
         await clients.editContact(req.params.conId, body.contactName, body.number, body.email);
-        res.status(201).redirect("/clients/" + req.params.cId);
+        res.status(201).redirect("/clients/?clientID=" + req.params.cId);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -258,7 +239,7 @@ router.post("/add-reminder/:id", async (req, res) => {
 
         await clients.createReminder(body.rDate, req.params.id)
         //CLIENT_LIST = await clients.callList(D1, D2);
-        res.status(201).redirect("/clients/" + req.params.id);
+        res.status(201).redirect("/clients/?clientID=" + req.params.id);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -270,7 +251,7 @@ router.post("/edit-reminder/:rId-:cId", async (req, res) => {
         const body = req.body;
 
         await clients.editReminder(req.params.rId, body.rDate);
-        res.status(201).redirect("/clients/" + req.params.cId);
+        res.status(201).redirect("/clients/?clientID=" + req.params.cId);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -282,32 +263,7 @@ router.post("/edit-comments/:id", async (req, res) => {
         const body = req.body;
 
         await clients.editComment(req.params.id, body.comments);
-        res.status(201).redirect("/clients/" + req.params.id);
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
-/***********************************************************
- * GET Client details
- ***********************************************************/
-router.get("/:id", async (req, res) => {
-    try {
-        let details = await clients.clientDetails(req.params.id);
-
-        // fetch the first 50 clients for list
-        let clientList = await clients.clientList();
-        
-        // Convert dates to a nicer format to display
-        for (let i = 0; i < details.calls.length; i++) {
-            details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString('en-GB');
-        }
-
-        if (details.client != null) {
-            res.status(200).render("clients/client-details.ejs", {details:details, clients:clientList});
-        } else {
-            res.redirect("/");
-        }
+        res.status(201).redirect("/clients/?clientID=" + req.params.id);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -330,7 +286,7 @@ router.delete("/:id/delete-client", async (req, res) => {
 router.delete("/delete-address/:cId-:addId", async (req, res) => {
     try {
         await clients.deleteAddress(req.params.addId);
-        res.status(204).redirect("/clients/" + req.params.cId);
+        res.status(204).redirect("/clients/?clientID=" + req.params.cId);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -340,7 +296,7 @@ router.delete("/delete-address/:cId-:addId", async (req, res) => {
 router.delete("/delete-date/:cId-:dId", async (req, res) => {
     try {
         await clients.deleteReminder(req.params.dId);
-        res.status(204).redirect("/clients/" + req.params.cId);
+        res.status(204).redirect("/clients/?clientID=" + req.params.cId);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -350,7 +306,7 @@ router.delete("/delete-date/:cId-:dId", async (req, res) => {
 router.delete("/delete-contact/:cId-:conId", async (req, res) => {
     try {
         await clients.deleteContact(req.params.conId);
-        res.status(204).redirect("/clients/" + req.params.cId);
+        res.status(204).redirect("/clients/?clientID=" + req.params.cId);
     } catch (error) {
         res.status(500).send(error.message);
     }

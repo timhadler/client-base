@@ -32,18 +32,16 @@
         <!-- Error message for duplicate client entry -->
         <p class="error_message size_small"> <%= locals.error %> </p>
 
-        <form id="searchForm" action="/clients/search" method="GET">
+        <form id="searchForm" action="/clients/" method="GET">
             <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
         </form>
 
         <!-- list header -->
-        <p class="size_small"> 
-            <% if(SEARCH.length > 0) { %> 
+        <p class="size_small margin_t_sm"> 
+            <% if(typeof locals.search != 'undefined' && locals.search.length > 0) { %> 
                 <div class="flex flex-ai-c flex-jc-sb">
-                    Search: <%= SEARCH %> 
-                    <form id="cancelSearchForm" action="/clients/clear-search" method="GET">
-                        <button type="submit"><span class="close_form"></span></button>
-                    </form>
+                    Search: <%= locals.search %> 
+                    <a href="/clients/"><span class="close_form"></span></a>
                 </div>
             <% } else { %>
                 Client List
@@ -54,9 +52,15 @@
         <!-- list -->
         <div class="inner_section">
             <ul id="cList">
-                <% let list; if (SEARCH.length > 0) { list = SEARCH_LIST } else { list = locals.clients }; %>
-                <% for (let i = 0; i < list.length; i++) { %>
-                    <li class="list_item_divider"><a href=<%="/clients/" + list[i].id%> class="nameButton"> <%= list[i].name %> </a></li>
+                <% 
+                let reUrl = "/clients/?";
+                if (typeof locals.search != 'undefined' && locals.search.length > 0) {
+                    reUrl = reUrl + "search=" + locals.search + "&";
+                }
+                    //let str = "/clients/?search=" + locals.search + "?clientID=" + clients[i].id 
+                %>
+                <% for (let i = 0; i < locals.clients.length; i++) { %>
+                    <li class="list_item_divider"><a href=<%=reUrl + "clientID=" + clients[i].id  %> class="nameButton"> <%= clients[i].name %> </a></li>
                 <% } %>
             </ul>
         </div>
