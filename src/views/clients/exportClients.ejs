@@ -1,0 +1,23 @@
+<script type="module" src="/js/importClientsScript.js"> </script>
+
+<div class="clientListDisplay">
+    <!-- Left pane, import input -->
+    <div class="grid_col_1 section_divider_clientList pad-t-med pad-r-sm">
+        <h3 class="italic"> Export Clients </h3>
+        <br />
+        <form id="clientExportFilterForm" action="/clients/import-clients" method="post" class="exportFilterForm pad-y-sm center-x">
+            <select name="exportType">
+                <option value="clientList"> Client List </option>
+                <option value="clients-reminder"> Clients by Reminder </option>
+                <option value="clients-address"> Clients by Address </option>
+            </select> <br />
+            <button type="submit" class="button_secondary margin_t_sm"> Submit </button>
+        </form>
+    </div>
+
+    <div class="grid_col_2 margin_t_l margin_l_l">
+        <div style="height: 90vh;overflow:auto;">
+
+        </div>
+    </div>
+</div>

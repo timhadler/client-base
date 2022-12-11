@@ -113,6 +113,16 @@ hr {
  * Margins and Paddings
  ***********************************************************/
  // Padding
+.pad-y-sm {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.pad-y-med {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
 .pad-r-sm {
     padding-right: 10px;
 }

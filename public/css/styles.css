@@ -229,6 +229,16 @@ hr {
 /***********************************************************
  * Margins and Paddings
  ***********************************************************/
+.pad-y-sm {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.pad-y-med {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
 .pad-r-sm {
   padding-right: 10px;
 }
@@ -639,6 +649,11 @@ nav {
   height: auto;
   padding: 35px;
   min-width: 300px;
+}
+
+.exportFilterForm {
+  border: 1px solid black;
+  border-radius: 4px;
 }
 
 /*# sourceMappingURL=styles.css.map */

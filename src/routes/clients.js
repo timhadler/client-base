@@ -160,25 +160,26 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
 // Export clients
 router.get("/exportClients", async (req, res) => {
     try {
-        let details = [await clients.clientDetails(38)];
-        details.push(await clients.clientDetails(974));
-        let data = [];
-        for (let i = 0; i < details.length; i++) {
-            let address = {street: "", suburb:"", city:"", pc:""};
-            let contact = {email:"", phone:""};
-            let call = "";
+        // let details = [await clients.clientDetails(38)];
+        // details.push(await clients.clientDetails(974));
+        // let data = [];
+        // for (let i = 0; i < details.length; i++) {
+        //     let address = {street: "", suburb:"", city:"", pc:""};
+        //     let contact = {email:"", phone:""};
+        //     let call = "";
 
-            if (details[i].addresses.length > 0) { address = details[i].addresses[0] };
-            if (details[i].contacts.length > 0) { contact = details[i].contacts[0]; };
-            if (details[i].calls.length > 0) { call = details[i].calls[0].rDate.toLocaleDateString('en-GB');; };
+        //     if (details[i].addresses.length > 0) { address = details[i].addresses[0] };
+        //     if (details[i].contacts.length > 0) { contact = details[i].contacts[0]; };
+        //     if (details[i].calls.length > 0) { call = details[i].calls[0].rDate.toLocaleDateString('en-GB');; };
 
-            data.push({Name:details[i].client.name, Company:details[i].client.company, Email:contact.email, Phone: contact.phone, 
-                Street:address.street, Suburb:address.suburb, City: address.city, Postcode:address.pc,
-                Comments:details[i].client.comments, Reminder:call});
-        }
+        //     data.push({Name:details[i].client.name, Company:details[i].client.company, Email:contact.email, Phone: contact.phone, 
+        //         Street:address.street, Suburb:address.suburb, City: address.city, Postcode:address.pc,
+        //         Comments:details[i].client.comments, Reminder:call});
+        // }
         
-        xl.writeTable(data, "exports/clientExport.xlsx");
-        res.send(data);
+        // xl.writeTable(data, "exports/clientExport.xlsx");
+        // res.send(data);
+        res.status(200).render("clients/exportClients");
     } catch (error) {
         res.status(500).send(error.message);
     }

@@ -15,7 +15,6 @@
             <label> Call back on: </label> <br />
             <%- include("../inputForms/call") %>
             <br /> <br />
-            <a href="/clients/import-clients" type="button" class="button button_secondary margin_b_sm"> Import Clients </a> <br />
             <button type="submit" class="button_primary"> Submit </button>
         </div>
     </form>
@@ -26,14 +25,16 @@
     <div class="pad-t-med pad-r-sm">
         <!-- Add customer button and search bar -->
         <button id="addClientPopupButton" type="button" class="button button_primary width-100"> Add Client </button>
-        <a href="/clients/exportClients" class="link"> Export Clients </a>
+        <div class="flex flex-ai-c flex-jc-sb margin_t_sm">
+            <a href="/clients/import-clients" style="width: 48%;" type="button" class="button button_secondary size_v_small"> Import </a>
+            <a href="/clients/exportClients" style="width: 48%;" class="button button_secondary size_v_small"> Export </a>
+        </div>
         <!-- Error message for duplicate client entry -->
         <p class="error_message size_small"> <%= locals.error %> </p>
 
         <form id="searchForm" action="/clients/search" method="GET">
             <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
         </form>
-        <br />
 
         <!-- list header -->
         <p class="size_small"> 
