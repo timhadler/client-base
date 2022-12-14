@@ -6,8 +6,9 @@ const clients = require("./../models/client-models");
 //global.TBC_LIST = [];           // all clients associated with reminder dates with status of "tbc"           
 //global.CONFIRMED_LIST = [];     // all clients associated with reminder dates with status of "confirmed"    
 
-//global.D1 = getDate(0);
-//global.D2 = getDate(31);
+// Get the dates that define the current month
+global.D1 = getDate(0).slice(0, 8) + "01"
+global.D2 = D1.slice(0, 8) + getLastDate(D1.slice(5, 7));
 
 router.get("/", async (req, res) => {
     try {
@@ -15,15 +16,11 @@ router.get("/", async (req, res) => {
         // TBC_LIST = await clients.TBCList(D1, D2);
         // CONFIRMED_LIST = await clients.confirmedList();
 
-        // Get the dates that define the current month
-        const d1 = getDate(0).slice(0, 8) + "01"
-        const d2 = d1.slice(0, 8) + getLastDate(d1.slice(5, 7));
-
-        const callList = await clients.callList(d1, d2);
-        const tbcList = await clients.TBCList(d1, d2);
+        const callList = await clients.callList(D1, D2);
+        const tbcList = await clients.TBCList(D1, D2);
         const confirmedList = await clients.confirmedList();
 
-        res.status(200).render("callList/callList", {month:getDate(0).slice(0, 7), callList:callList, tbcList:tbcList, confirmedList:confirmedList});
+        res.status(200).render("callList/callList", {month:D1.slice(0, 7), callList:callList, tbcList:tbcList, confirmedList:confirmedList});
     } catch (error) {
         res.status(500).send();
     }
@@ -37,14 +34,15 @@ router.get("/setDates", async (req, res) => {
     const month = req.query.monthCL;
 
     // Get the dates that define the selected month
-    const d1 = month + "-01"
-    const d2 = month + "-" + getLastDate(d1.slice(5, 7));
+    D1 = month + "-01"
+    D2 = month + "-" + getLastDate(D1.slice(5, 7));
+    res.status(200).redirect("/");
 
-    const callList = await clients.callList(d1, d2);
-    const tbcList = await clients.TBCList(d1, d2);
-    const confirmedList = await clients.confirmedList();
+    // const callList = await clients.callList(d1, d2);
+    // const tbcList = await clients.TBCList(d1, d2);
+    // const confirmedList = await clients.confirmedList();
 
-    res.status(200).render("callList/callList", {month:month, callList:callList, tbcList:tbcList, confirmedList:confirmedList});
+    // res.status(200).render("callList/callList", {month:month, callList:callList, tbcList:tbcList, confirmedList:confirmedList});
     //res.redirect("/?month=" + month);
     } catch (error) {
         res.status(500).send();
