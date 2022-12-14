@@ -1,5 +1,6 @@
 <script type="module" src="/js/clientListScript.js"> </script>
 
+<!-- Add client popup -->
 <div id="addClientPopup" class="centeredPopupCP">
     <div class="flex flex-ai-c flex-jc-sb">
         <h3 class="italic"> Add Customer </h3> <br />
@@ -29,6 +30,7 @@
             <a href="/clients/import-clients" style="width: 48%;" type="button" class="button button_secondary size_v_small"> Import </a>
             <a href="/clients/exportClients" style="width: 48%;" class="button button_secondary size_v_small"> Export </a>
         </div>
+        <br />
         <!-- Error message for duplicate client entry -->
         <p class="error_message size_small"> <%= locals.error %> </p>
 
