@@ -31,7 +31,12 @@ router.get("/", async (req, res) => {
         }
         res.status(200).render("clients/clients", {clients:list, search:req.query.search, details:details});
     } catch (error) {
-        res.status(500).send(error.message);
+        // Check if error resulted from search query, single qoutes cause sql syntax error
+        if (error.message.includes("You have an error in your SQL syntax") && error.message.includes("WHERE name LIKE")) {
+            res.status(400).render("clients/clients", {clients:[], error:"Error in search, single qoutes (') are not allowed: " + req.query.search});
+        } else {
+            res.status(500).send(error.message);
+        }
     }
 });
 
