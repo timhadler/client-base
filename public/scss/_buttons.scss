@@ -44,6 +44,17 @@ button {
         padding-right: 8px;
     }
 
+    &_importClients {
+        font-size: $font-medium;
+        border: 1px solid $primary;
+        background-color: white;
+        color: $primary;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
     &_clear {
         height: 17px;
         font-size: $font-v-small;

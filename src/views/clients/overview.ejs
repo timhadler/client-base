@@ -1,0 +1,43 @@
+<script type="module" src="/js/clientListScript.js"> </script>
+
+<!-- Add client popup -->
+<div id="addClientPopup" class="centeredPopupCP">
+    <div class="flex flex-ai-c flex-jc-sb">
+        <h3 class="italic"> Add Customer </h3> <br />
+        <span id="addClientCloseButton" class="close_form"></span>
+    </div>
+    <br />
+    <form action= "/clients/add-client" method="POST">
+        <%- include("../partials/inputForms/client") %>
+        <label> Comments: </label> <br />
+        <textarea name="comments" class="height-100 width-100" cols="21" rows="6"><%= locals.comments %></textarea> <br /> <br />
+
+        <div class="center-x">
+            <label> Call back on: </label> <br />
+            <%- include("../partials/inputForms/call") %>
+            <br /> <br />
+            <button type="submit" class="button_primary"> Submit </button>
+        </div>
+    </form>
+</div>
+
+<div class="clientListDisplay">
+    <!-- Search and add/import client buttons -->
+    <div class="grid_col_1_s2 clients_header_box">
+        <div class="flex flex-ai-c">
+            <form id="searchForm2" action="/clients/" class="margin_r_med" method="GET">
+                <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
+            </form>
+            <span class="underline"> 4015 Clients </span>
+        </div>
+        <div class="flex flex-ai-c">
+            <button id="addClientPopupButton" type="button" class="button button_primary width-100 margin_r_med"> Add Client </button>
+            <a href="/clients/import-clients" class="button button_importClients"> Import </a>
+        </div>
+    </div>
+
+    <!-- Left pane -->
+    <div id="leftPane" class="grid_col_1 section_divider_clientList">
+        <h3> Filter </h3>
+    </div>
+</div>

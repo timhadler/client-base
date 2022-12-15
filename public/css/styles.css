@@ -41,6 +41,16 @@ button {
   padding-left: 8x;
   padding-right: 8px;
 }
+.button_importClients {
+  font-size: 20px;
+  border: 1px solid #009AAF;
+  background-color: white;
+  color: #009AAF;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 14px;
+  padding-right: 14px;
+}
 .button_clear {
   height: 17px;
   font-size: 14px;
@@ -277,6 +287,10 @@ hr {
 
 .margin_r_sm {
   margin-right: 10px;
+}
+
+.margin_r_med {
+  margin-right: 15px;
 }
 
 .margin_r_large {
@@ -595,6 +609,15 @@ nav {
   grid-row-start: 2;
 }
 
+.clients_header_box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid grey;
+}
+
 .search_bar {
   font-size: 16px;
   border-radius: 8px;
@@ -612,7 +635,7 @@ nav {
   height: 90vh;
   border: none;
   width: 100%;
-  border-right: 1px solid #1f1209;
+  border-right: 1px solid grey;
   overflow: auto;
 }
 
