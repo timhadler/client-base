@@ -28,7 +28,7 @@
             <form id="searchForm2" action="/clients/" class="margin_r_med" method="GET">
                 <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
             </form>
-            <span class="underline"> 4015 Clients </span>
+            <span class="underline"> <%= locals.nClients + " Clients" %> </span>
         </div>
         <div class="flex flex-ai-c">
             <button id="addClientPopupButton" type="button" class="button button_primary width-100 margin_r_med"> Add Client </button>

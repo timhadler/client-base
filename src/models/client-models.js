@@ -4,6 +4,14 @@ const db = require("./../database");
 /***********************************************************
  * Retrieval
  ***********************************************************/
+// Get number of clients in database
+exports.clientNumber = async function() {
+    const sqlQuery = "SELECT COUNT(*) as n FROM clients";
+    const rows = await db.query(sqlQuery);
+
+    return rows[0].n;
+};
+
 // Fetches the first 50 clients alphabetically from database
 exports.clientList = async function() {
     const sqlQuery = "SELECT name, id FROM clients ORDER BY NAME LIMIT 50";

@@ -42,7 +42,8 @@ router.get("/", async (req, res) => {
 
 router.get("/overview", async (req, res) => {
     try {
-        res.status(200).render("clients/overview");
+        const nClients = await clients.clientNumber();
+        res.status(200).render("clients/overview", {nClients:nClients});
     } catch (error) {
         res.status(500).send(error.message);
     }
