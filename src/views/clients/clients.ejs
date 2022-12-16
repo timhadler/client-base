@@ -7,6 +7,8 @@ ie. details.client is an object
 <script type="module" src="/js/clientDetailsScript.js"> </script>
 
 <div class="clientListDisplay">
+    <!-- Clients Header -->
+    <%- include("../partials/clients/clientsHeader", { nClients:locals.nClients }) %>
     <!-- Client List (Left pane) -->
     <%- include("../partials/clients/client-list.ejs") %>
 

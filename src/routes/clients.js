@@ -12,6 +12,7 @@ router.get("/", async (req, res) => {
         // fetch the first 50 clients
         let list = [];
         let details = null;
+        const nClients = await clients.clientNumber();
         if (typeof req.query.search != 'undefined') {
             if (req.query.search.length > 0) {
                 list = await clients.searchList(req.query.search);
@@ -29,11 +30,12 @@ router.get("/", async (req, res) => {
                 details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString('en-GB');
             }
         }
-        res.status(200).render("clients/clients", {clients:list, search:req.query.search, details:details});
+        res.status(200).render("clients/clients", {clients:list, search:req.query.search, details:details, nClients:nClients});
     } catch (error) {
         // Check if error resulted from search query, single qoutes cause sql syntax error
         if (error.message.includes("You have an error in your SQL syntax") && error.message.includes("WHERE name LIKE")) {
-            res.status(400).render("clients/clients", {clients:[], error:"Error in search, single qoutes (') are not allowed: " + req.query.search});
+            const nClients = await clients.clientNumber();
+            res.status(400).render("clients/clients", {clients:[], nClients:nClients, error:"Error in search, single qoutes (') are not allowed: " + req.query.search});
         } else {
             res.status(500).send(error.message);
         }
