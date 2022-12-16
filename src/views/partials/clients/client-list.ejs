@@ -24,19 +24,9 @@
 <!-- Left Pane -->
 <div id="leftPane" name="test" class="grid_col_1 section_divider_clientList">
     <div class="pad-t-med pad-r-sm">
-        <!-- Add customer button and search bar -->
-        <button id="addClientPopupButton" type="button" class="button button_primary width-100"> Add Client </button>
-        <div class="flex flex-ai-c flex-jc-sb margin_t_sm">
-            <a href="/clients/import-clients" style="width: 48%;" type="button" class="button button_secondary size_v_small"> Import </a>
-            <a href="/clients/exportClients" style="width: 48%;" class="button button_secondary size_v_small"> Export </a>
-        </div>
-        <br />
         <!-- Error message for duplicate client entry -->
         <p class="error_message size_small"> <%= locals.error %> </p>
-
-        <form id="searchForm" action="/clients/" method="GET">
-            <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
-        </form>
+        <!--<a href="/clients/overview" class="link"> Overview </a>-->
 
         <!-- list header -->
         <p class="size_small margin_t_sm"> 
