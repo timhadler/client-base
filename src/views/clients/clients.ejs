@@ -4,8 +4,6 @@ ie. details.client is an object
     details.addresses, contacts, and calls are lists of objects
 -->
 
-<script type="module" src="/js/clientDetailsScript.js"> </script>
-
 <div class="clientListDisplay">
     <!-- Clients Header -->
     <%- include("../partials/clients/clientsHeader", { nClients:locals.nClients }) %>
@@ -13,6 +11,7 @@ ie. details.client is an object
     <%- include("../partials/clients/client-list.ejs") %>
 
     <% if (typeof locals.details != 'undefined' && locals.details != null) { %>
+        <script type="module" src="/js/clientDetailsScript.js"> </script>
         <!-- Client details pane -->
         <div class="grid_col_2">
             <div class="margin_t_l margin_l_l">
