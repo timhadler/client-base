@@ -47,7 +47,7 @@
                 <% 
                 let reUrl = "/clients/?";
                 if (typeof locals.search != 'undefined' && locals.search.length > 0) {
-                    reUrl = reUrl + "search=" + locals.search + "&";
+                    reUrl = reUrl + "search=" + locals.search.replace(/ /g, "+") + "&";
                 }
                     //let str = "/clients/?search=" + locals.search + "?clientID=" + clients[i].id 
                 %>
