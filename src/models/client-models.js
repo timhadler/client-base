@@ -114,22 +114,16 @@ exports.getUserByUsername = async function(username) {
     };
 }
 
-// Reveives a client with a given name
-exports.getClientByName = async function(name) {
+// Returns a list of all clients in db with the provided name
+exports.getClientsByName = async function(name) {
     const sqlQuery = "SELECT * from clients WHERE name=?";
     const rows = await db.query(sqlQuery, name);
-
-    if (rows.length > 0) {
-        return rows[0];
-    } else {
-        return null;
-    };
+    return rows;
 }
 
 /***********************************************************
  * Creation
  ***********************************************************/
-
 // Creates a client entry
 // Returns the id of the created client
 exports.createClient = async function(name, company, comments) {
@@ -145,13 +139,14 @@ exports.createClient = async function(name, company, comments) {
         sqlQuery = "INSERT INTO clients (name, company) VALUES(?, ?)";
     }
     await db.query(sqlQuery, params);
-
-    return await getClientId(name);
+    const rows = await db.query("SELECT MAX(id) AS lastID FROM clients");
+    return rows[0].lastID;
+    //return await getClientId(name);
 }
 
 // Creates a contact entry
 exports.createContact = async function(name, phone, email, id) {
-    let params = processParameters([name, phone, email, id]);
+    let params = [name, phone, email, id];
     const sqlQuery = "INSERT INTO contacts (name, phone, email, client_id) VALUES(?, ?, ?, ?)";
     await db.query(sqlQuery, params);
 }
@@ -277,14 +272,14 @@ exports.deleteUser = async function(id) {
  * Helper functions - DATABASE
  ***********************************************************/
 // Returns the id of a given client name
-async function getClientId(name) {
-    const sqlQuery = "SELECT id FROM clients WHERE name=?";
-    const rows = await db.query(sqlQuery, name);
-    if (rows.length > 1) {
-        console.log("Carefull multiple clients with name: " + name);
-    }
-    return rows[rows.length - 1].id;
-};
+// async function getClientId(name) {
+//     const sqlQuery = "SELECT LAST_INSERT_ID();";
+//     const rows = await db.query(sqlQuery);
+//     console.log(rows);
+//     console.log(rows[0])
+
+//     return rows;
+// };
 
 // Fetches the address details of a given client_id
 async function addressDetails(id) {
