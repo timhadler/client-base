@@ -146,7 +146,7 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                 const firstName = clientObjs[i].First;
 
                 if (typeof comments == 'undefined') { comments = "" };  // Avoid reading length of undefined error
-                if (firstName.trim().length == 0) { fails.push({name:("Client (index: " + i + ") failed upload"), message:"No name provided"}); continue;};   // If no name was provided, push to fails list
+                if (firstName.trim().length == 0) { fails.push({name:("Client (index: " + (i + 2) + ") failed upload"), message:"No name provided"}); continue;};   // If no name was provided, push to fails list
 
                 try {
                     const clientName = firstName + " " + clientObjs[i].Last;
