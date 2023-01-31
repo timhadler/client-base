@@ -12,7 +12,7 @@ for (let i = 0; i< clientCloseButs.length; i++) {
 const statusBoxes = document.getElementsByName("clientStatus");
 for (let i = 0; i< statusBoxes.length; i++) {
     if (statusBoxes[i].classList.contains("revealCallDate")) {
-        statusBoxes[i].addEventListener('change', function(event) { test(event, statusBoxes[i].id)});
+        statusBoxes[i].addEventListener('change', function(event) { incrementYear(event, statusBoxes[i].id)});
     }
 };
 
@@ -42,10 +42,14 @@ function clientPopupClose(i) {
     document.getElementById("clientPopup-" + i).style.display = "none";
 }
 
-function test(e, s) {
+function incrementYear(e, s) {
     //console.log(s);
     //console.log("datebox-" + s.substring(s.indexOf('-') + 1));
     if (e.currentTarget.checked) {
-        document.getElementById("datebox-" + s.substring(s.indexOf('-') + 1)).stepUp(365);
+        let date =  document.getElementById("datebox-" + s.substring(s.indexOf('-') + 1));
+        const newYear = parseInt(date.dataset.defaultdate.slice(0, 4)) + 1;
+        const newDate = newYear.toString() + date.dataset.defaultdate.slice(4);
+
+        date.value = newDate;
     }
 }

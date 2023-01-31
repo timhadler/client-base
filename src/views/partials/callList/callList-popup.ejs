@@ -49,7 +49,7 @@
             <div class="callDate">
                 <label> Call back on: </label> <br />
                 <div style="text-align: center ;">
-                    <input id=<%= "datebox-" + locals.client.rId %> required type="date" name="rDate" value="<%= rDateToHTMLDate(locals.client.rDate.toLocaleDateString('en-GB')) %>"> <br />
+                    <input id=<%= "datebox-" + locals.client.rId %> required type="date" name="rDate" data-defaultdate="<%= rDateToHTMLDate(locals.client.rDate.toLocaleDateString('en-GB')) %>" value="<%= rDateToHTMLDate(locals.client.rDate.toLocaleDateString('en-GB')) %>"> <br />
                 </div>
                 <br />
             </div>
