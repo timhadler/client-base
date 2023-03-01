@@ -198,7 +198,8 @@ router.post("/:id/editClient", async (req, res) => {
     try {
         const body = req.body;
         await clients.editClient(req.params.id, body.name, body.company, body.comments);
-        res.status(201).redirect("/clients/?clientID=" + req.params.id);
+        res.status(201).redirect('back');
+        //res.status(201).redirect("/clients/?clientID=" + req.params.id);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -211,7 +212,8 @@ router.post("/add-address-:id", async (req, res) => {
         let cAddress = isClientAddress(body.clientAddress);
 
         await clients.createAddress(body.street, body.suburb, body.city, body.pc, body.freshAir, cAddress, req.params.id);
-        res.status(201).redirect("/clients/?clientID=" + req.params.id);
+        res.status(201).redirect('back');
+        //res.status(201).redirect("/clients/?clientID=" + req.params.id);
     } catch (error) {
         res.status(400).send(error.message);
     }
@@ -225,7 +227,8 @@ router.post("/edit-address/:addId-:cId", async (req, res) => {
             let cAddress = isClientAddress(body.clientAddress);
 
             await clients.editAddress(req.params.addId, body.street, body.suburb, body.city, body.pc, body.freshAir, cAddress);
-            res.status(201).redirect("/clients/?clientID=" + req.params.cId);
+            res.status(201).redirect('back');
+            //res.status(201).redirect("/clients/?clientID=" + req.params.cId);
         }
     } catch (error) {
         res.status(500).send(error.message);
@@ -238,7 +241,8 @@ router.post("/add-contact/:id", async (req, res) => {
         const body = req.body;
 
         await clients.createContact(body.contactName, body.number, body.email, req.params.id);
-        res.status(201).redirect("/clients/?clientID=" + req.params.id);
+        res.status(201).redirect('back');
+        //res.status(201).redirect("/clients/?clientID=" + req.params.id);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -250,7 +254,8 @@ router.post("/edit-contact/:conId-:cId", async (req, res) => {
         const body = req.body;
 
         await clients.editContact(req.params.conId, body.contactName, body.number, body.email);
-        res.status(201).redirect("/clients/?clientID=" + req.params.cId);
+        res.status(201).redirect('back');
+        //res.status(201).redirect("/clients/?clientID=" + req.params.cId);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -262,8 +267,8 @@ router.post("/add-reminder/:id", async (req, res) => {
         const body = req.body;
 
         await clients.createReminder(body.rDate, req.params.id)
-        //CLIENT_LIST = await clients.callList(D1, D2);
-        res.status(201).redirect("/clients/?clientID=" + req.params.id);
+        res.status(201).redirect('back');
+        //res.status(201).redirect("/clients/?clientID=" + req.params.id);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -275,7 +280,8 @@ router.post("/edit-reminder/:rId-:cId", async (req, res) => {
         const body = req.body;
 
         await clients.editReminder(req.params.rId, body.rDate);
-        res.status(201).redirect("/clients/?clientID=" + req.params.cId);
+        res.status(201).redirect('back');
+        //res.status(201).redirect("/clients/?clientID=" + req.params.cId);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -287,7 +293,8 @@ router.post("/edit-comments/:id", async (req, res) => {
         const body = req.body;
 
         await clients.editComment(req.params.id, body.comments);
-        res.status(201).redirect("/clients/?clientID=" + req.params.id);
+        res.status(201).redirect('back');
+        //res.status(201).redirect("/clients/?clientID=" + req.params.id);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -300,7 +307,8 @@ router.post("/edit-comments/:id", async (req, res) => {
 router.delete("/:id/delete-client", async (req, res) => {
     try {
         await clients.deleteClientData(req.params.id);
-        res.status(204).redirect("/clients");
+        console.log(req.get('referer'));
+        res.status(204).redirect(req.get('referer').slice(0, req.get('referer').indexOf("clientID=")));
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -310,7 +318,8 @@ router.delete("/:id/delete-client", async (req, res) => {
 router.delete("/delete-address/:cId-:addId", async (req, res) => {
     try {
         await clients.deleteAddress(req.params.addId);
-        res.status(204).redirect("/clients/?clientID=" + req.params.cId);
+        res.status(204).redirect('back');
+        //res.status(204).redirect("/clients/?clientID=" + req.params.cId);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -320,7 +329,8 @@ router.delete("/delete-address/:cId-:addId", async (req, res) => {
 router.delete("/delete-date/:cId-:dId", async (req, res) => {
     try {
         await clients.deleteReminder(req.params.dId);
-        res.status(204).redirect("/clients/?clientID=" + req.params.cId);
+        res.status(204).redirect('back');
+        //res.status(204).redirect("/clients/?clientID=" + req.params.cId);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -330,7 +340,8 @@ router.delete("/delete-date/:cId-:dId", async (req, res) => {
 router.delete("/delete-contact/:cId-:conId", async (req, res) => {
     try {
         await clients.deleteContact(req.params.conId);
-        res.status(204).redirect("/clients/?clientID=" + req.params.cId);
+        res.status(204).redirect('back');
+        //res.status(204).redirect("/clients/?clientID=" + req.params.cId);
     } catch (error) {
         res.status(500).send(error.message);
     }
