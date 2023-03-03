@@ -1,32 +1,14 @@
-<script type="module" src="/js/clientListScript.js"> </script>
-
-<!-- Add client popup -->
-<div id="addClientPopup" class="centeredPopupCP">
-    <div class="flex flex-ai-c flex-jc-sb">
-        <h3 class="italic"> Add Customer </h3> <br />
-        <span id="addClientCloseButton" class="close_form"></span>
-    </div>
-    <br />
-    <form action= "/clients/add-client" method="POST">
-        <%- include("../partials/inputForms/client") %>
-        <label> Comments: </label> <br />
-        <textarea name="comments" class="height-100 width-100" cols="21" rows="6"><%= locals.comments %></textarea> <br /> <br />
-
-        <div class="center-x">
-            <label> Call back on: </label> <br />
-            <%- include("../partials/inputForms/call") %>
-            <br /> <br />
-            <button type="submit" class="button_primary"> Submit </button>
-        </div>
-    </form>
-</div>
-
 <div class="clientListDisplay">
-    <!-- Clients Header -->
-    <%- include("../partials/clients/clientsHeader", { nClients:locals.nClients }) %>
+    <div class="grid_col_1_s2">
+        <!-- Clients Header -->
+        <%- include("../partials/clientOverview/overviewHeader", { nClients:locals.nClients }) %>
 
-    <!-- Left pane -->
-    <div id="leftPane" class="grid_col_1 section_divider_clientList">
-        <h3> Filter </h3>
+        <div style="overflow: auto; height: 80vh;">
+            <ul>
+                <% for (let i = 0; i < locals.list.length; i++) { %>
+                    <li class="list_item_divider"> <%= list[i].name %> </li>
+                <% } %>
+            </ul>
+        </div>
     </div>
 </div>

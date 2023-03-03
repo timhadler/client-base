@@ -10,7 +10,9 @@ const upload = multer({ dest: "uploads/" });
 router.get("/", async (req, res) => {
     try {
         const nClients = await clients.clientNumber();
-        res.status(200).render("clientOverview/overview", {nClients:nClients});
+        const list = await clients.clientList();
+
+        res.status(200).render("clientOverview/overview", {nClients:nClients, list:list});
     } catch (error) {
         res.status(500).send(error.message);
     }
