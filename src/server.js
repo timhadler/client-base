@@ -22,6 +22,7 @@ initializePassport(
 const clients = require("./models/client-models");
 const indexRouter = require("./routes/callList");
 const clientRouter = require("./routes/clients");
+const overviewRouter = require("./routes/clientOverview");
 const { Passport } = require("passport/lib");
 const req = require("express/lib/request");
 
@@ -137,4 +138,8 @@ async function getUserByName(username) {
  */
 app.use("/", checkAuthenticated, indexRouter);
 app.use("/clients", checkAuthenticated, clientRouter);
-//app.use("/clients", clientRouter);
+app.use("/clientOverview", checkAuthenticated, overviewRouter);
+
+// app.use("/", indexRouter);
+// app.use("/clients", clientRouter);
+// app.use("/clientOverview", overviewRouter);
