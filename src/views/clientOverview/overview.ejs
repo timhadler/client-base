@@ -1,14 +1,34 @@
+<script type="module" src="/js/clientOverviewScript.js"> </script>
+
 <div class="clientListDisplay">
     <div class="grid_col_1_s2">
+        <% if (typeof locals.message != "undefined") { %>
+            <% if (locals.message.includes("Succesfully")) { %>
+                <p class="italic success_message"> <%= locals.message %> </p>
+            <% } else { %>
+                <p class="italic error_message"> <%= locals.message %> </p>
+            <% } %>
+        <% } %>
         <!-- Clients Header -->
         <%- include("../partials/clientOverview/overviewHeader", { nClients:locals.nClients }) %>
 
-        <div style="overflow: auto; height: 80vh;">
-            <ul>
-                <% for (let i = 0; i < locals.list.length; i++) { %>
-                    <li class="list_item_divider"> <%= list[i].name %> </li>
-                <% } %>
-            </ul>
-        </div>
+        <button id="addReminderButton" type="button"> Add reminder </button>
+
+        <form id="clientOverviewForm">
+            <div id="addReminderPopup" class="centeredPopupCP">
+                <span id="addReminderCloseButton" class="close_form"></span>
+                <div style="text-align: center ;">
+                    <input name="rDate" type="date">
+                    <button id="addReminderSubmit" type="button"> Submit </button>
+                </div>
+            </div>
+            <div style="overflow: auto; height: 80vh;">
+                <ul>
+                    <% for (let i = 0; i < locals.list.length; i++) { %>
+                        <li class="list_item_divider"> <input type="checkbox" name="selectedClients" value="<%= list[i].id %>"> <%= list[i].name %> </li>
+                    <% } %>
+                </ul>
+            </div>
+        </form>
     </div>
 </div>
