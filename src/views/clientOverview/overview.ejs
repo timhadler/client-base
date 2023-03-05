@@ -9,12 +9,13 @@
                 <p class="italic error_message"> <%= locals.message %> </p>
             <% } %>
         <% } %>
-        <!-- Clients Header -->
+        <!-- Clients Header and filter popup -->
         <%- include("../partials/clientOverview/overviewHeader", { nClients:locals.nClients }) %>
 
         <button id="addReminderButton" type="button"> Add reminder </button>
 
         <form id="clientOverviewForm">
+            <!-- Add reminder popup -->
             <div id="addReminderPopup" class="centeredPopupCP">
                 <span id="addReminderCloseButton" class="close_form"></span>
                 <div style="text-align: center ;">
