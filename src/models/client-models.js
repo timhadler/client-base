@@ -121,6 +121,13 @@ exports.getClientsByName = async function(name) {
     return rows;
 }
 
+// Retrives the client name and ids of clients with no reminder Date
+exports.getClientsNoRDate = async function() {
+    const sqlQuery = "SELECT clients.id, name FROM clients LEFT JOIN reminders ON clients.id = reminders.client_id WHERE reminders.id IS NULL";
+    const rows = await db.query(sqlQuery);
+    return rows;
+}
+
 /***********************************************************
  * Creation
  ***********************************************************/
