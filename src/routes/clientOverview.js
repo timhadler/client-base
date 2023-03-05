@@ -18,6 +18,24 @@ router.get("/", async (req, res) => {
     }
 })
 
+// Filter clients
+router.post("/filter", async (req, res) => {
+    try {
+        const nClients = await clients.clientNumber();
+        var list = [];
+
+        if (typeof req.body.noRDate != "undefined") {
+            list = await clients.getClientsNoRDate();
+        } else {
+            list = await clients.clientList();
+        };
+
+        res.status(200).render("clientOverview/overview", {nClients:nClients, list:list})
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 // Add given reminder to selected clients
 router.post("/addReminderDate", async (req, res) => {
     try {
@@ -42,6 +60,6 @@ router.post("/addReminderDate", async (req, res) => {
     } catch (error) {
         res.status(500).send(error.message);
     }
-})
+});
 
 module.exports = router;
