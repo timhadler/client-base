@@ -7,6 +7,9 @@ xl = require("../modules/excel-JS");
 const multer = require('multer');                   // For uploading files
 const upload = multer({ dest: "uploads/" });
 
+// Constants
+const rowLimit = 50;
+
 router.get("/", async (req, res) => {
     try {
         // fetch the first 50 clients
@@ -17,10 +20,10 @@ router.get("/", async (req, res) => {
             if (req.query.search.length > 0) {
                 list = await clients.searchList(req.query.search);
             } else {
-                list = await clients.clientList();
+                list = await clients.clientList(rowLimit);
             }
         } else {
-            list = await clients.clientList();
+            list = await clients.clientList(rowLimit);
         }
         if (typeof req.query.clientID != 'undefined') {
             details = await clients.clientDetails(req.query.clientID);
@@ -93,7 +96,7 @@ router.post("/add-client", async (req, res) => {
         // If error was caused by a duplicate name
         if (error.message.includes("Duplicate entry")) {
             const error = "Client already exists in database: " + req.body.name;
-            let clientList = await clients.clientList();
+            let clientList = await clients.clientList(rowLimit);
 
             res.render("clients/clients", {clients:clientList, error:error});
         } else {

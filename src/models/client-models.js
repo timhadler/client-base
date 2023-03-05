@@ -12,12 +12,18 @@ exports.clientNumber = async function() {
     return rows[0].n;
 };
 
-// Fetches the first 50 clients alphabetically from database
-exports.clientList = async function() {
-    const sqlQuery = "SELECT name, id FROM clients ORDER BY NAME LIMIT 50";
+// Fetches the first x clients alphabetically from database
+// If x is null, returns all clients in alphabetical order
+exports.clientList = async function(x) {
+    var sqlQuery = "";
+    if (x == null) {
+        sqlQuery = "SELECT name, id FROM clients ORDER BY NAME";
+    } else {
+        sqlQuery = "SELECT name, id FROM clients ORDER BY NAME LIMIT " + x;
+    }
     const rows = await db.query(sqlQuery);
 
-    return rows;
+    return rows;s
 };
 
 // Fetches the client details associated with the reminder dates between d1 and d2 and have status of "call"

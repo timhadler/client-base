@@ -10,7 +10,7 @@ const upload = multer({ dest: "uploads/" });
 router.get("/", async (req, res) => {
     try {
         const nClients = await clients.clientNumber();
-        const list = await clients.clientList();
+        const list = [];
 
         res.status(200).render("clientOverview/overview", {nClients:nClients, list:list, message:req.query.message});
     } catch (error) {
@@ -27,7 +27,8 @@ router.post("/filter", async (req, res) => {
         if (typeof req.body.noRDate != "undefined") {
             list = await clients.getClientsNoRDate();
         } else {
-            list = await clients.clientList();
+            // Get all clients
+            list = await clients.clientList(null);
         };
 
         res.status(200).render("clientOverview/overview", {nClients:nClients, list:list})
