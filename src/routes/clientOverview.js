@@ -7,31 +7,38 @@ xl = require("../modules/excel-JS");
 const multer = require('multer');                   // For uploading files
 const upload = multer({ dest: "uploads/" });
 
+// Filter parameters are passed as queries
 router.get("/", async (req, res) => {
-    try {
-        const nClients = await clients.clientNumber();
-        const list = [];
-
-        res.status(200).render("clientOverview/overview", {nClients:nClients, list:list, message:req.query.message});
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-})
-
-// Filter clients
-router.post("/filter", async (req, res) => {
     try {
         const nClients = await clients.clientNumber();
         var list = [];
 
-        if (typeof req.body.noRDate != "undefined") {
+        if (typeof req.query.noRDate != "undefined") {
             list = await clients.getClientsNoRDate();
         } else {
             // Get all clients
             list = await clients.clientList(null);
         };
 
-        res.status(200).render("clientOverview/overview", {nClients:nClients, list:list})
+        if (typeof req.query.search != 'undefined') {
+            if (req.query.search.length > 0) {
+                // If filter has been applied, search is applied to filtered list
+                if (list.length > 0) {
+                    var nList = [];
+                    for (let i = 0; i < list.length; i++) {
+                        if (list[i].name.toLowerCase().includes(req.query.search.toLowerCase())) {
+                            nList.push(list[i]);
+                        }
+                    }
+                    list = nList;
+                } else {
+                    list = await clients.searchList(req.query.search);
+                }
+            }
+        }
+        res.locals.search = req.query.search;
+        res.locals.noRDate = req.query.noRDate;
+        res.status(200).render("clientOverview/overview", {nClients:nClients, list:list, message:req.query.message})
     } catch (error) {
         res.status(500).send(error.message);
     }

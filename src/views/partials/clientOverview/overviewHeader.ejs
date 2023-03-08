@@ -1,31 +1,30 @@
     <!-- Filter and import client buttons -->
     <div class="clients_header_box">
         <div class="flex flex-ai-c">
+                <!-- Filter popup -->
+                <div id="ovFilterPopup" style="padding: 10px;" class="centeredPopupCP">
+                    <div class="flex flex-ai-c flex-jc-sb">
+                        <h3 style="text-align: center;"> Filter </h3>
+                        <span id="filterCloseButton" class="close_form"></span>
+                    </div>
+                    <!-- Filter form -->
+                    <form id="ovFilterForm" action="/clientOverview/" method="GET">
+                        <!-- Clients with no reminder date -->
+                        <input type="checkbox" name="noRDate" value="noRDate"  <% if (typeof locals.noRDate != 'undefined') {  %> checked="true" <% } %>> 
+                        <label for="noRDate"> No reminder dates </label> <br />
+                        <label for="search"> Name: </label>
+                        <input type="text" name="search" value="<%= locals.search %>"> <br />
+
+                        <br />
+                        <div style="justify-content: center;" class="flex flex-jc-sb">
+                            <button class="button_primary" type="submit"> Submit </button>
+                        </div>
+                    </form>
+                </div>
             <button id="filterButton" type="button" class="button_primary margin_r_med"> Filter </button>
-            <% if (locals.list.length > 0) { %>
-                <span class="underline"> <%= locals.list.length + " / " + locals.nClients + " Clients" %> </span>
-            <% } else { %>
-                <span class="underline"> <%= locals.nClients + " Clients" %> </span>
-            <% } %>
+            <span class="underline"> <%= locals.list.length + " / " + locals.nClients + " Clients" %> </span>
         </div>
         <div class="flex flex-ai-c">
             <a href="/clients/import-clients" class="button button_importClients"> Import </a>
         </div>
-    </div>
-
-    <!-- Filter popup -->
-    <div id="ovFilterPopup" style="padding: 10px;" class="centeredPopupCP">
-        <div class="flex flex-ai-c flex-jc-sb">
-            <h3 style="text-align: center;"> Filter </h3>
-            <span id="filterCloseButton" class="close_form"></span>
-        </div>
-        <!-- Filter form -->
-        <form id="ovFilterForm" action="/clientOverview/filter" method="POST">
-            <!-- Clients with no reminder date -->
-            <input type="checkbox" name="noRDate" value="noRDate"> 
-            <label for="noRDate"> No reminder dates </label> <br /> <br />
-            <div style="justify-content: center;" class="flex flex-jc-sb">
-                <button class="button_primary" type="submit"> Submit </button>
-            </div>
-        </form>
     </div>
