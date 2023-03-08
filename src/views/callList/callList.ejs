@@ -20,11 +20,15 @@
     <!-- Call List -->
     <div class="grid_col_1">
         <!-- Header -->
-        <p class="flex flex-jc-c color_primary size_medium"> Call List </p>
+        <div class="flex flex-ai-c flex-jc-sb">
+            <input id="CLCheckbox" type="checkbox">
+            <p class="color_primary size_medium"> Call List </p>
+            <p> </p>
+        </div>
         <hr />
         
-        <div class="inner_section">
-            <ul id="cList" class="section_divider_callList">
+        <div class="inner_section section_divider_callList">
+            <ul id="cList">
                 <% for (let i = 0; i < callList.length; i++) { %>
                     <li class="positionRelative"> 
                         <!-- Name button that appears in lists, brings up popup -->
@@ -42,7 +46,11 @@
     <!-- To Be Confirmed -->
     <div class="grid_col_2">
         <!-- Header -->
-        <p class="flex flex-jc-c color_primary size_medium"> To be confirmed </p>
+        <div class="flex flex-ai-c flex-jc-sb">
+            <input id="TBCCheckbox" type="checkbox">
+            <p class="flex flex-jc-c color_primary size_medium"> To be confirmed </p>
+            <p> </p>
+        </div>
         <hr />
         <div class="inner_section section_divider_callList">
             <ul id="tbcList">

@@ -1,5 +1,10 @@
 <div style="width: 98%;" class="flex flex-ai-c flex-jc-sb list_item_divider">
-    <button id="<%= locals.client.rId %>" name="clientCallButton" type="button" class="nameButton"> <%= locals.client.name %> </button>
+    <div class="flex flex-ai-c">
+        <% if (locals.client.status != "confirmed") { %>
+            <input type="checkbox" name="selectedClients" value="<%= locals.client.id %>">
+        <% } %>
+        <button id="<%= locals.client.rId %>" name="clientCallButton" type="button" class="nameButton"> <%= locals.client.name %> </button>
+    </div>
     <% if (locals.client.flag && locals.client.status != "confirmed") { %> 
         <p class="flagCheckBox">  </p> 
     <% } %>

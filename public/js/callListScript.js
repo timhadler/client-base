@@ -1,4 +1,4 @@
-// client popups
+// Client popups
 const clientButs = document.getElementsByName("clientCallButton");
 for (let i = 0; i< clientButs.length; i++) {
     clientButs[i].addEventListener('click', function() { clientPopup(clientButs[i].id); });
@@ -16,6 +16,10 @@ for (let i = 0; i< statusBoxes.length; i++) {
     }
 };
 
+// Checkboxes
+document.getElementById("CLCheckbox").addEventListener('change', function() { checkAll(this) });
+document.getElementById("TBCCheckbox").addEventListener('change', function() { checkAll(this) });
+
 // Prevent TBC list scroll bar resetting to 0 when the page is reloaded
 // Call list
 window.addEventListener('DOMContentLoaded', function() { cList.scrollTop = sessionStorage.getItem('lastScrollPos') })
@@ -30,7 +34,9 @@ tbcList.addEventListener('scroll', function() { sessionStorage.setItem('lastScro
 // Submit month input form when month is selcted
 document.getElementById("monthInputCL").addEventListener('change', function() { document.getElementById("datesForm").submit(); } )
 
-// Functions
+/***********************************************************
+ * Functions
+ ***********************************************************/
 function clientPopup(i) {
     const popup = document.getElementById("clientPopup-" + i);
 
@@ -42,9 +48,31 @@ function clientPopupClose(i) {
     document.getElementById("clientPopup-" + i).style.display = "none";
 }
 
+function checkAll(cb) {
+    var clients = document.getElementsByName("selectedClients");
+    var list;
+    var checkStatus;
+
+    // Find which parent checkbox has been checked
+    if (cb.id == "CLCheckbox") { list = "cList" }
+    else if (cb.id = "TBCCheckbox") { list = "tbcList" }
+
+    // Has it been checked or unchecked?
+    if (cb.checked) {
+        checkStatus = true;
+    } else {
+        checkStatus = false;
+    }
+
+    // Check or uncheck the appropriate checkboxes
+    for (let i = 0; i < clients.length; i++) {
+        if (isChildOf(clients[i], list)) {
+            clients[i].checked = checkStatus;
+        }
+    }
+}
+
 function incrementYear(e, s) {
-    //console.log(s);
-    //console.log("datebox-" + s.substring(s.indexOf('-') + 1));
     if (e.currentTarget.checked) {
         let date =  document.getElementById("datebox-" + s.substring(s.indexOf('-') + 1));
         const newYear = parseInt(date.dataset.defaultdate.slice(0, 4)) + 1;
@@ -52,4 +80,16 @@ function incrementYear(e, s) {
 
         date.value = newDate;
     }
+}
+
+// Helper, checks if el is a child element of an element with a given id
+// Returns true or false if no parent is found with the given id
+function isChildOf(el, id) {
+    while (el && el.parentElement) {
+        el = el.parentElement;
+        if (el.id == id) {
+            return true;
+        }
+    }
+    return false;
 }
