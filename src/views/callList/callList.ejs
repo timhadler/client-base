@@ -15,6 +15,31 @@
             <label class="margin_r_sm"> Select month: </label>
             <input id="monthInputCL" type="month" name="monthCL" value="<%= locals.month %>">
         </div>
+        <button id="setStatusButton" type="button" class="color_secondary"> Set status </button>
+    </form>
+
+    <!-- Checkbox form and popup -->
+    <form id="checkBoxForm" action="/set-client-status-multi" method="POST">
+        <div id="setStatusPopup" class="centeredPopupCP">
+            <div class="flex flex-ai-c flex-jc-sb">
+                <h3 style="text-align: center;"> Set reminder status </h3>
+                <span id="setStatusCloseButton" class="close_form"></span>
+            </div>
+            <br />
+            <input type="radio" name="clientStatus" class="revealCallDate" value="call">
+            <label> Declined </label> <br />
+            <input type="radio" name="clientStatus" value="tbc">
+            <label> To be Confirmed </label> <br />
+            <input type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
+            <label> Confirmed </label>
+            <br /> <br />
+            <input name="incrementYear" type="checkbox" value="incrementYear">
+            <label for="incrementYear"> Increment year by 1? </label>
+            <br /> <br />
+            <div style="justify-content: center;" class="flex flex-jc-sb">
+                <button class="button_primary" type="submit"> Submit </button>
+            </div>
+        </div>
     </form>
 
     <!-- Call List -->

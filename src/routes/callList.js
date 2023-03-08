@@ -70,6 +70,24 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
     }
 });
 
+// POST set multiple client statuses using checkboxes
+router.post("/set-client-status-multi", async (req, res) => {
+    try {
+        const rIds = req.body["selectedClients"];
+        console.log(rIds);
+        if (req.body.incrementYear != 'undefined') {
+            // Increment year for all clients
+        }
+        if (typeof rIds != "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
+        
+        }
+
+        res.status(201).redirect("/");
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 // POST clear confirmed list
 router.post("/reset-confirmed-list", async (req, res) => {
     try {

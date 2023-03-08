@@ -16,6 +16,10 @@ for (let i = 0; i< statusBoxes.length; i++) {
     }
 };
 
+// Set status button
+document.getElementById("setStatusButton").addEventListener('click', function() { setStatusPopup() });
+document.getElementById("setStatusCloseButton").addEventListener('click', function() { setStatusClose() });
+
 // Checkboxes
 document.getElementById("CLCheckbox").addEventListener('change', function() { checkAll(this) });
 document.getElementById("TBCCheckbox").addEventListener('change', function() { checkAll(this) });
@@ -46,6 +50,16 @@ function clientPopup(i) {
 
 function clientPopupClose(i) {
     document.getElementById("clientPopup-" + i).style.display = "none";
+}
+
+function setStatusPopup() {
+    document.getElementById("setStatusPopup").style.visibility = "visible";
+    overlay.style.visibility = "visible";
+}
+
+function setStatusClose() {
+    document.getElementById("setStatusPopup").style.visibility = "hidden";
+    overlay.style.visibility = "hidden";
 }
 
 function checkAll(cb) {
