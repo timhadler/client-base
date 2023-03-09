@@ -96,6 +96,14 @@ exports.contact = async function(id) {
     return rows[0];
 }
 
+// Retrieves a reminder with a given id
+exports.reminder = async function(id) {
+    const sqlQuery = "SELECT * from reminders WHERE id=?";
+    const rows = await db.query(sqlQuery, id);
+
+    return rows[0];
+}
+
 // Reveives a user with a given id
 exports.getUserById = async function(id) {
     const sqlQuery = "SELECT * from users WHERE id=?";
