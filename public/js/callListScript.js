@@ -16,6 +16,10 @@ for (let i = 0; i< statusBoxes.length; i++) {
     }
 };
 
+// Date range buttons
+document.getElementById("customDateButton").addEventListener('click', function() { customDate() });
+document.getElementById("monthDateButton").addEventListener('click', function() { monthDate() });
+
 // Set status button
 document.getElementById("setStatusButton").addEventListener('click', function() { setStatusPopup() });
 document.getElementById("setStatusCloseButton").addEventListener('click', function() { setStatusClose() });
@@ -36,11 +40,12 @@ const tbcList = document.getElementById("tbcList");
 tbcList.addEventListener('scroll', function() { sessionStorage.setItem('lastScrollPos', tbcList.scrollTop) });
 
 // Submit month input form when month is selcted
-document.getElementById("monthInputCL").addEventListener('change', function() { document.getElementById("datesForm").submit(); } )
+document.getElementById("monthInputCL").addEventListener('change', function() { document.getElementById("monthDateForm").submit(); } )
 
 /***********************************************************
  * Functions
  ***********************************************************/
+// CLient popup
 function clientPopup(i) {
     const popup = document.getElementById("clientPopup-" + i);
 
@@ -52,6 +57,18 @@ function clientPopupClose(i) {
     document.getElementById("clientPopup-" + i).style.display = "none";
 }
 
+// Date range forms
+function customDate() {
+    document.getElementById("monthDateForm").style.display = "none";
+    document.getElementById("customeDateForm").style.display = "block";
+}
+
+function monthDate() {
+    document.getElementById("customeDateForm").style.display = "none";
+    document.getElementById("monthDateForm").style.display = "block";
+}
+
+// Set status popup
 function setStatusPopup() {
     document.getElementById("setStatusPopup").style.visibility = "visible";
     overlay.style.visibility = "visible";

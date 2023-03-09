@@ -2,21 +2,27 @@
 
 <div class="callListDisplay">
     <!-- Call List Header -->
-    <form class="grid_col_1 margin_t_med margin_b_med" id="datesForm" action="/setDates" method="GET">
-        <div class="flex flex-ai-c">
-            <!--
-            <div>
-                <input class="margin_r_sm" id="date1_input" type="date" name="date1" value="">
-                to
-                <input class="margin_l_sm" id="date2_input" type="date" name="date2" value="">
+    <div class="grid_col_1 margin_t_med margin_b_med">
+        <form id="monthDateForm" <% if (locals.month == "custom") { %> style="display: none;" <% } %> action="/setDates" method="GET">
+            <div class="flex flex-ai-c">
+                <label class="margin_r_sm"> Select month: </label>
+                <input id="monthInputCL" type="month" name="monthCL" value="<%= locals.month %>">
+                <button id="customDateButton" type="button" class="color_secondary"> Custom date range </button>
             </div>
-            <button class="button_secondary margin_l_sm" type="submit"> Set </button>
-            -->
-            <label class="margin_r_sm"> Select month: </label>
-            <input id="monthInputCL" type="month" name="monthCL" value="<%= locals.month %>">
-        </div>
-        <button id="setStatusButton" type="button" class="color_secondary"> Set status </button>
-    </form>
+        </form>
+        <form id="customeDateForm" <% if (locals.month != "custom") { %> style="display: none;" <% } %> action="/setDates" method="GET">
+            <div class="flex flex-ai-c">
+                <div>
+                    <input class="margin_r_sm" id="date1_input" type="date" name="date1" value="<%= locals.d1 %>">
+                    to
+                    <input class="margin_l_sm" id="date2_input" type="date" name="date2" value="<%= locals.d2 %>">
+                </div>
+                <button class="button_secondary margin_l_sm margin_r_med" type="submit"> Set </button>
+                <button id="monthDateButton" type="button" class="color_secondary"> By Month </button> 
+            </div>
+        </form>
+        <button id="setStatusButton" type="button" style="justify-self: left;" class="color_secondary"> Set status </button>
+    </div>
 
     <!-- Checkbox form and popup -->
     <form id="checkBoxForm" action="/set-client-status-multi" method="POST">
