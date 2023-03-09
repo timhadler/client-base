@@ -56,6 +56,7 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
             await clients.setClientStatus(req.body.clientStatus, req.params.rId);
         }
         if (req.body.rDate && (req.body.clientStatus == "confirmed" || req.body.clientStatus == "call")) {
+            console.log(req.body.rDate)
             await clients.editReminder(req.params.rId, req.body.rDate);
         }
 
@@ -73,13 +74,31 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
 // POST set multiple client statuses using checkboxes
 router.post("/set-client-status-multi", async (req, res) => {
     try {
-        const rIds = req.body["selectedClients"];
-        console.log(rIds);
-        if (req.body.incrementYear != 'undefined') {
-            // Increment year for all clients
+        var rIds = req.body["selectedClients"];
+
+        if (typeof rIds == "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
+            rIds = [rIds];
+        } else if (typeof rIds == 'undefined') {
+            rIds = [];
         }
-        if (typeof rIds != "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
-        
+        if (req.body.clientStatus) {
+            if (req.body.incrementYear == 'incrementYear') {
+                // Increment year for all clients
+                for (let i = 0; i < rIds.length; i++) {
+                    let rDate = await clients.reminder(rIds[i]);
+                    let nYear = 0;
+
+                    rDate = rDate.rDate.toLocaleDateString('en-GB');
+                    nYear = parseInt(rDate.slice(6)) + 1;
+                    rDate = nYear.toString() + "-" + rDate.slice(3, 5) + "-" + rDate.slice(0, 2);
+
+                    await clients.editReminder(rIds[i], rDate);
+                }
+            }
+            // Set clients status
+            for (let i = 0; i < rIds.length; i++) {
+                await clients.setClientStatus(req.body.clientStatus, rIds[i]);
+            }
         }
 
         res.status(201).redirect("/");
