@@ -2,7 +2,7 @@
 
 <div class="callListDisplay">
     <!-- Call List Header -->
-    <div class="grid_col_1 margin_t_med margin_b_med">
+    <div class="grid_col_1 margin_t_med margin_b_sm">
         <form id="monthDateForm" <% if (locals.month == "custom") { %> style="display: none;" <% } %> action="/setDates" method="GET">
             <div class="flex flex-ai-c">
                 <label class="margin_r_sm"> Select month: </label>
@@ -21,6 +21,10 @@
                 <button id="monthDateButton" type="button" class="color_secondary"> By Month </button> 
             </div>
         </form>
+    </div>
+
+    <!-- Multi operation buttons and border -->
+    <div style="border-top: 1px solid grey;" class="grid_col_1_s3"> 
         <button id="setStatusButton" type="button" style="justify-self: left;" class="color_secondary"> Set status </button>
     </div>
 

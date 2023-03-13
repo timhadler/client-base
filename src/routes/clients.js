@@ -301,7 +301,6 @@ router.post("/edit-comments/:id", async (req, res) => {
 router.delete("/:id/delete-client", async (req, res) => {
     try {
         await clients.deleteClientData(req.params.id);
-        console.log(req.get('referer'));
         res.status(204).redirect(req.get('referer').slice(0, req.get('referer').indexOf("clientID=")));
     } catch (error) {
         res.status(500).send(error.message);
