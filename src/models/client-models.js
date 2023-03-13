@@ -23,7 +23,7 @@ exports.clientList = async function(x) {
     }
     const rows = await db.query(sqlQuery);
 
-    return rows;s
+    return rows;
 };
 
 // Fetches the client details associated with the reminder dates between d1 and d2 and have status of "call"
