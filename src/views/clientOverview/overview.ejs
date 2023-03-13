@@ -13,14 +13,19 @@
         <%- include("../partials/clientOverview/overviewHeader", { nClients:locals.nClients }) %>
 
         <button id="addReminderButton" type="button"> Add reminder </button>
+        <button id="ovDeleteButton" type="button"> Delete </button>
 
         <form id="clientOverviewForm">
             <!-- Add reminder popup -->
             <div id="addReminderPopup" class="centeredPopupCP">
-                <span id="addReminderCloseButton" class="close_form"></span>
+                <div class="flex flex-ai-c flex-jc-sb">
+                    <h3> Add Reminder </h3>
+                    <span id="addReminderCloseButton" class="close_form"></span>
+                </div>
+                <br />
                 <div style="text-align: center ;">
-                    <input name="rDate" type="date">
-                    <button id="addReminderSubmit" type="button"> Submit </button>
+                    <input name="rDate" type="date"> <br /> <br />
+                    <button id="addReminderSubmit" type="button" class="button_primary"> Submit </button>
                 </div>
             </div>
             <div style="overflow: auto; height: 80vh;">

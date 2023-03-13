@@ -70,4 +70,27 @@ router.post("/addReminderDate", async (req, res) => {
     }
 });
 
+// Delete
+router.delete("/delete", async (req, res) => {
+    try {
+        const ids = req.body["selectedClients"];
+        var message = "";
+
+        if (typeof ids != "undefined") {
+            if (typeof ids != "string") {       // If only one client has been selected, ids will be a string, object list if more than one
+                for (let i = 0; i < ids.length; i++) {
+                    await clients.deleteClientData(ids[i]);
+                    message = "Succesfully deleted " + ids.length + " clients";
+                }
+            } else {
+                await clients.deleteClientData(ids);
+                message = "Succesfully deleted 1 client";
+            }
+        }
+        res.status(204).redirect("/clientOverview/?message=" + message);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 module.exports = router;

@@ -7,6 +7,9 @@ const addReminderSubmitButt = document.getElementById("addReminderSubmit").addEv
 const addReminderPopupButt = document.getElementById("addReminderButton").addEventListener('click', function() { addReminderPopup() });
 const addReminderCloseButt = document.getElementById("addReminderCloseButton").addEventListener('click', function() { addReminderClose() });
 
+// Delete button
+document.getElementById("ovDeleteButton").addEventListener('click', function() { deleteClients() });
+
 // Filter buttons
 document.getElementById("filterButton").addEventListener('click', function() { filterPopup() });
 document.getElementById("filterCloseButton").addEventListener('click', function() { filterClose() });
@@ -26,6 +29,18 @@ function addReminderPopup() {
 function addReminderClose() {
     document.getElementById("addReminderPopup").style.visibility = "hidden";
     overlay.style.visibility = "hidden";
+}
+
+// Delete
+function deleteClients() {
+    clientOverviewForm.action = "/clientOverview/delete?_method=DELETE";
+    clientOverviewForm.method = "POST";
+
+    // Confirm delete
+    let confirmed = confirm("Are you sure? Delete all these clients and all related data?");
+    if (confirmed) {
+        clientOverviewForm.submit();
+    }
 }
 
 // Filter popup
