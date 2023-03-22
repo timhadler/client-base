@@ -108,7 +108,7 @@ router.post("/add-client", async (req, res) => {
 router.post("/import-clients", upload.single("importExcel"), async (req, res) => {
     try {
         // Verifying file
-        const mandatoryExcelHeaders = ['First', 'Last', 'Company', 'Email', 'Phone', 'Street', 'Suburb', 'City', 'Postcode', 'ReminderDate'];
+        const mandatoryExcelHeaders = ['First', 'Last', 'Company', 'Email', 'Mobile', 'Street', 'Suburb', 'City', 'Postcode', 'ReminderDate'];
 
         if (req.file == null) {
             res.redirect("/clients/import-clients");
@@ -136,7 +136,7 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                 const date = clientObjs[i].ReminderDate;
                 let comments = clientObjs[i].Comments;
                 const address = clientObjs[i].Street;
-                const phone = clientObjs[i].Phone;
+                const phone = clientObjs[i].Mobile;
                 const firstName = clientObjs[i].First;
 
                 if (typeof comments == 'undefined') { comments = "" };  // Avoid reading length of undefined error
