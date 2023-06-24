@@ -115,12 +115,8 @@ button {
     cursor: pointer;
 }
 
-.close_form:hover {
+.close-button:hover {
     opacity: 0.5;
-}
-
-.close-button > .close_form {
-    right: 4px;
 }
 
 .close_form:after {
@@ -130,17 +126,4 @@ button {
     position: absolute;
     transform: rotate(45deg);
     left: 50%;
-}
-
-.close_form:before {
-    content: '';
-    height: $font-small;;
-    border-left: 2px solid red;
-    position: absolute;
-    transform: rotate(-45deg);
-    left: 50%;
-}
-.close-button {
-    height: 16px;
-    width: 16px;
 }
