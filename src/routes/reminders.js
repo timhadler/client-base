@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const clients = require("./../models/client-models");
+const clients = require("../models/client-models");
 
 //global.CLIENT_LIST = [];        // all clients with reminder dates inbetween D1 and D2 with status of "call"
 //global.TBC_LIST = [];           // all clients associated with reminder dates with status of "tbc"           
@@ -64,7 +64,6 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
             await clients.setClientStatus(req.body.clientStatus, req.params.rId);
         }
         if (req.body.rDate && (req.body.clientStatus == "confirmed" || req.body.clientStatus == "call")) {
-            console.log(req.body.rDate)
             await clients.editReminder(req.params.rId, req.body.rDate);
         }
 

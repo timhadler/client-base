@@ -20,7 +20,7 @@ initializePassport(
 );
 
 const clients = require("./models/client-models");
-const indexRouter = require("./routes/callList");
+const indexRouter = require("./routes/reminders");
 const clientRouter = require("./routes/clients");
 const overviewRouter = require("./routes/clientOverview");
 const { Passport } = require("passport/lib");
