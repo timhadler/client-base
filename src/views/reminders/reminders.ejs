@@ -1,34 +1,20 @@
 <script type="module" src="/js/remindersScript.js"> </script>
 
 <div class="remindersDisplay">
-    <!-- Call List Header -->
-    <div class="grid_col_1 margin_t_med margin_b_sm">
-        <form id="monthDateForm" <% if (locals.month == "custom") { %> style="display: none;" <% } %> action="/setDates" method="GET">
-            <div class="flex flex-ai-c">
-                <label class="margin_r_sm"> Select month: </label>
-                <input id="monthInputCL" type="month" name="monthCL" value="<%= locals.month %>">
-                <button id="customDateButton" type="button" class="color_secondary"> Custom date range </button>
-            </div>
-        </form>
-        <form id="customeDateForm" <% if (locals.month != "custom") { %> style="display: none;" <% } %> action="/setDates" method="GET">
-            <div class="flex flex-ai-c">
-                <div>
-                    <input class="margin_r_sm" id="date1_input" type="date" name="date1" value="<%= locals.d1 %>">
-                    to
-                    <input class="margin_l_sm" id="date2_input" type="date" name="date2" value="<%= locals.d2 %>">
-                </div>
-                <button class="button_secondary margin_l_sm margin_r_med" type="submit"> Set </button>
-                <button id="monthDateButton" type="button" class="color_secondary"> By Month </button> 
-            </div>
-        </form>
+    <!-- Page Tabs -->
+    <div class="grid_col_1 margin_t_med margin_b_sm flex flex-ai-c tabs">
+        <button id="actionsTabLink" class="remindersTabLink">Actions</button>
+        <button id="awaitingTabLink" class="remindersTabLink">Awaiting Response</button>
+        <button id="completedTabLink" class="remindersTabLink">Recently Completed</button>
     </div>
 
-    <!-- Multi operation buttons and border -->
+    <!-- Multi operation buttons and border 
     <div style="border-top: 1px solid grey;" class="grid_col_1_s3"> 
         <button id="setStatusButton" type="button" style="justify-self: left;" class="color_secondary"> Set status </button>
     </div>
+    -->
 
-    <!-- Checkbox form and popup -->
+    <!-- Checkbox form and popup
     <form id="checkBoxForm" action="/set-client-status-multi" method="POST">
         <div id="setStatusPopup" class="centeredPopupCP">
             <div class="flex flex-ai-c flex-jc-sb">
@@ -51,81 +37,113 @@
             </div>
         </div>
     </form>
+    -->
 
-    <!-- Call List -->
-    <div class="grid_col_1">
-        <!-- Header -->
-        <div class="flex flex-ai-c flex-jc-sb">
-            <input id="CLCheckbox" type="checkbox">
-            <p class="color_primary size_medium"> Call List </p>
-            <p> </p>
+    <!-- Actions tab cointent -->
+    <div id="actions" class="grid_col_1_s2 tabContent">
+        <!--
+        <div class="margin_t_med margin_b_sm">
+            <form id="monthDateForm" <% if (locals.month == "custom") { %> style="display: none;" <% } %> action="/setDates" method="GET">
+                <div class="flex flex-ai-c">
+                    <label class="margin_r_sm"> Select month: </label>
+                    <input id="monthInputCL" type="month" name="monthCL" value="<%= locals.month %>">
+                    <button id="customDateButton" type="button" class="color_secondary"> Custom date range </button>
+                </div>
+            </form>
+            <form id="customeDateForm" <% if (locals.month != "custom") { %> style="display: none;" <% } %> action="/setDates" method="GET">
+                <div class="flex flex-ai-c">
+                    <div>
+                        <input class="margin_r_sm" id="date1_input" type="date" name="date1" value="<%= locals.d1 %>">
+                        to
+                        <input class="margin_l_sm" id="date2_input" type="date" name="date2" value="<%= locals.d2 %>">
+                    </div>
+                    <button class="button_secondary margin_l_sm margin_r_med" type="submit"> Set </button>
+                    <button id="monthDateButton" type="button" class="color_secondary"> By Month </button> 
+                </div>
+            </form>
         </div>
-        <hr />
-        
-        <div class="inner_section section_divider_callList">
-            <ul id="cList">
-                <% for (let i = 0; i < callList.length; i++) { %>
-                    <li class="positionRelative"> 
-                        <!-- Name button that appears in lists, brings up popup -->
-                        <%- include("../partials/callList/callList-popupButton", {client: callList[i]}) %>
-                        
-                        <!-- Client Popup -->
-                        <%- include("../partials/callList/callList-popup", {client: callList[i]}) %>
-                    </li>
-                <% } %>
-            </ul>
+    -->
+        <!-- Pending list -->
+        <div style="flex:1;">
+            <!-- Header -->
+            <div class="flex flex-ai-c flex-jc-sb">
+                <input id="CLCheckbox" type="checkbox">
+                <p class="color_primary size_medium"> Pending </p>
+                <p> </p>
+            </div>
+            <hr />
+            
+            <div class="inner_section reminders_list_container section_divider_callList">
+                <ul id="cList">
+                    <% for (let i = 0; i < callList.length; i++) { %>
+                        <li class="positionRelative"> 
+                            <!-- Name button that appears in lists, brings up popup -->
+                            <%- include("../partials/callList/reminderPopupButton", {client: callList[i]}) %>
+                            
+                            <!-- Client Popup -->
+                            <%- include("../partials/callList/ReminderPopup", {client: callList[i]}) %>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
         </div>
 
+        <!-- To Be Confirmed -->
+        <div style="flex:1;">
+            <!-- Header -->
+            <div class="flex flex-ai-c flex-jc-sb">
+                <input id="TBCCheckbox" type="checkbox">
+                <p class="flex flex-jc-c color_primary size_medium"> To be confirmed </p>
+                <p> </p>
+            </div>
+            <hr />
+            <div class="inner_section reminders_list_container section_divider_callList">
+                <ul id="tbcList">
+                    <% for (let i = 0; i < tbcList.length; i++) { %>
+                        <li class="positionRelative"> 
+                            <!-- Name button that appears in lists, brings up popup -->
+                            <%- include("../partials/callList/reminderPopupButton", {client: tbcList[i]}) %>
+                            
+                            <!-- Client Popup -->
+                            <%- include("../partials/callList/ReminderPopup", {client: tbcList[i]}) %>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
     </div>
 
-    <!-- To Be Confirmed -->
-    <div class="grid_col_2">
-        <!-- Header -->
-        <div class="flex flex-ai-c flex-jc-sb">
-            <input id="TBCCheckbox" type="checkbox">
-            <p class="flex flex-jc-c color_primary size_medium"> To be confirmed </p>
-            <p> </p>
-        </div>
-        <hr />
-        <div class="inner_section section_divider_callList">
-            <ul id="tbcList">
-                <% for (let i = 0; i < tbcList.length; i++) { %>
-                    <li class="positionRelative"> 
-                        <!-- Name button that appears in lists, brings up popup -->
-                        <%- include("../partials/callList/callList-popupButton", {client: tbcList[i]}) %>
-                        
-                        <!-- Client Popup -->
-                        <%- include("../partials/callList/callList-popup", {client: tbcList[i]}) %>
-                    </li>
-                <% } %>
-            </ul>
-        </div>
+    <!-- Awaiting response -->
+    <div id="awaiting" class="tabContent">
+
     </div>
 
     <!-- Confirmed -->
-    <div class="grid_col_3">
-        <!-- Header and clear button-->
-        <div class="flex flex-ai-c flex-jc-r"> 
-            <div class="flex flex-ai-c flex-jc-sb confirmed_width">
-                <p class="color_primary size_medium"> Confirmed </p> 
-                <form action="/reset-confirmed-list" method="POST" class="flex flex-jc-r"> 
-                    <button type="submit" class="button_clear"> Clear </button> 
-                </form> 
+    <div id="completed" class="grid_col_1_s2 tabContent">
+        <div style="flex:1;">
+            <!-- Header and clear button-->
+            <div class="flex flex-ai-c flex-jc-r"> 
+                <div class="flex flex-ai-c flex-jc-sb confirmed_width">
+                    <p class="color_primary size_medium"> Confirmed </p> 
+                    <form action="/reset-confirmed-list" method="POST" class="flex flex-jc-r"> 
+                        <button type="submit" class="button_clear"> Clear </button> 
+                    </form> 
+                </div>
             </div>
-        </div>
-        <hr />
-        <div class="inner_section section_divider_confirmedList">
-            <ul id="confirmedList">
-                <% for (let i = 0; i < confirmedList.length; i++) { %>
-                    <li class="positionRelative"> 
-                        <!-- Name button that appears in lists, brings up popup -->
-                        <%- include("../partials/callList/callList-popupButton", {client: confirmedList[i]}) %>
-                        
-                        <!-- Client Popup -->
-                        <%- include("../partials/callList/callList-popup", {client: confirmedList[i]}) %>
-                    </li>
-                <% } %>
-            </ul>
+            <hr />
+            <div class="inner_section section_divider_confirmedList">
+                <ul id="confirmedList">
+                    <% for (let i = 0; i < confirmedList.length; i++) { %>
+                        <li class="positionRelative"> 
+                            <!-- Name button that appears in lists, brings up popup -->
+                            <%- include("../partials/callList/reminderPopupButton", {client: confirmedList[i]}) %>
+                            
+                            <!-- Client Popup -->
+                            <%- include("../partials/callList/ReminderPopup", {client: confirmedList[i]}) %>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

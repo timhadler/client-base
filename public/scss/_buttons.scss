@@ -106,6 +106,15 @@ button {
     cursor: pointer;
 }
 
+.close-button {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: red;
+    cursor: pointer;
+}
+
 .close_form:hover {
     opacity: 0.5;
 }

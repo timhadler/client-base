@@ -1,126 +1,51 @@
-// Client popups
+// Tab buttons event listeners
+document.getElementById("actionsTabLink").addEventListener('click', (event) => { openTab(event, "actions") });
+document.getElementById("awaitingTabLink").addEventListener('click', (event) => { openTab(event, "awaiting") });
+document.getElementById("completedTabLink").addEventListener('click', (event) => { openTab(event, "completed") });
+
+// Open action tabs on load
+document.getElementById('actions').style.display = 'flex';
+document.getElementById('actionsTabLink').classList.add('active');
+
+// Reminder popup list buttons
 const clientButs = document.getElementsByName("clientCallButton");
 for (let i = 0; i< clientButs.length; i++) {
-    clientButs[i].addEventListener('click', function() { clientPopup(clientButs[i].id); });
+    clientButs[i].addEventListener('click', function() { reminderPopup(clientButs[i].id); });
 };
 
 const clientCloseButs = document.getElementsByName("clientPopupClose");
 for (let i = 0; i< clientCloseButs.length; i++) {
-    clientCloseButs[i].addEventListener('click', function() { clientPopupClose(clientCloseButs[i].id); });
+    clientCloseButs[i].addEventListener('click', function() { reminderPopupClose(clientCloseButs[i].id); });
 };
 
-const statusBoxes = document.getElementsByName("clientStatus");
-for (let i = 0; i< statusBoxes.length; i++) {
-    if (statusBoxes[i].classList.contains("revealCallDate")) {
-        statusBoxes[i].addEventListener('change', function(event) { incrementYear(event, statusBoxes[i].id)});
+function openTab(evt, tabName) {
+    // Get all tab content elements and hide them
+    const tabContent = document.getElementsByClassName('tabContent');
+    for (let i = 0; i < tabContent.length; i++) {
+      tabContent[i].style.display = 'none';
     }
-};
-
-// Date range buttons
-document.getElementById("customDateButton").addEventListener('click', function() { customDate() });
-document.getElementById("monthDateButton").addEventListener('click', function() { monthDate() });
-
-// Set status button
-document.getElementById("setStatusButton").addEventListener('click', function() { setStatusPopup() });
-document.getElementById("setStatusCloseButton").addEventListener('click', function() { setStatusClose() });
-
-// Checkboxes
-document.getElementById("CLCheckbox").addEventListener('change', function() { checkAll(this) });
-document.getElementById("TBCCheckbox").addEventListener('change', function() { checkAll(this) });
-
-// Prevent TBC list scroll bar resetting to 0 when the page is reloaded
-// Call list
-window.addEventListener('DOMContentLoaded', function() { cList.scrollTop = sessionStorage.getItem('lastScrollPos') })
-const cList = document.getElementById("cList");
-cList.addEventListener('scroll', function() { sessionStorage.setItem('lastScrollPos', cList.scrollTop) });
-
-// TBC list
-window.addEventListener('DOMContentLoaded', function() { tbcList.scrollTop = sessionStorage.getItem('lastScrollPos') })
-const tbcList = document.getElementById("tbcList");
-tbcList.addEventListener('scroll', function() { sessionStorage.setItem('lastScrollPos', tbcList.scrollTop) });
-
-// Submit month input form when month is selcted
-document.getElementById("monthInputCL").addEventListener('change', function() { document.getElementById("monthDateForm").submit(); } )
-
-/***********************************************************
- * Functions
- ***********************************************************/
-// CLient popup
-function clientPopup(i) {
-    const popup = document.getElementById("clientPopup-" + i);
-
-    popup.style.display = "grid";
-    //popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
-}
-
-function clientPopupClose(i) {
-    document.getElementById("clientPopup-" + i).style.display = "none";
-}
-
-// Date range forms
-function customDate() {
-    document.getElementById("monthDateForm").style.display = "none";
-    document.getElementById("customeDateForm").style.display = "block";
-}
-
-function monthDate() {
-    document.getElementById("customeDateForm").style.display = "none";
-    document.getElementById("monthDateForm").style.display = "block";
-}
-
-// Set status popup
-function setStatusPopup() {
-    document.getElementById("setStatusPopup").style.visibility = "visible";
-    overlay.style.visibility = "visible";
-}
-
-function setStatusClose() {
-    document.getElementById("setStatusPopup").style.visibility = "hidden";
-    overlay.style.visibility = "hidden";
-}
-
-function checkAll(cb) {
-    var clients = document.getElementsByName("selectedClients");
-    var list;
-    var checkStatus;
-
-    // Find which parent checkbox has been checked
-    if (cb.id == "CLCheckbox") { list = "cList" }
-    else if (cb.id = "TBCCheckbox") { list = "tbcList" }
-
-    // Has it been checked or unchecked?
-    if (cb.checked) {
-        checkStatus = true;
-    } else {
-        checkStatus = false;
+  
+    // Get all tab links and remove the 'active' class
+    const tabLinks = document.getElementsByClassName('remindersTabLink');
+    for (let i = 0; i < tabLinks.length; i++) {
+      tabLinks[i].classList.remove('active');
     }
-
-    // Check or uncheck the appropriate checkboxes
-    for (let i = 0; i < clients.length; i++) {
-        if (isChildOf(clients[i], list)) {
-            clients[i].checked = checkStatus;
-        }
-    }
+  
+    // Show the selected tab content and mark the tab link as active
+    document.getElementById(tabName).style.display = "flex";
+    evt.currentTarget.classList.add('active');
 }
 
-function incrementYear(e, s) {
-    if (e.currentTarget.checked) {
-        let date =  document.getElementById("datebox-" + s.substring(s.indexOf('-') + 1));
-        const newYear = parseInt(date.dataset.defaultdate.slice(0, 4)) + 1;
-        const newDate = newYear.toString() + date.dataset.defaultdate.slice(4);
+// Reminder popup
+function reminderPopup(i) {
+  const popup = document.getElementById("clientPopup-" + i);
 
-        date.value = newDate;
-    }
+  popup.style.display = "grid";
+  document.getElementById("overlay").style.visibility = "visible";
+  //popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 }
 
-// Helper, checks if el is a child element of an element with a given id
-// Returns true or false if no parent is found with the given id
-function isChildOf(el, id) {
-    while (el && el.parentElement) {
-        el = el.parentElement;
-        if (el.id == id) {
-            return true;
-        }
-    }
-    return false;
+function reminderPopupClose(i) {
+  document.getElementById("clientPopup-" + i).style.display = "none";
+  document.getElementById("overlay").style.visibility = "hidden";
 }

@@ -3,28 +3,19 @@
 
 <form id=<%= "clientPopup-" + locals.client.rId %> class="clientPopup" action="/set-client-status-<%= locals.client.id %>-<%= locals.client.rId %>" method="POST">
     <!-- Header -->
-    <div class="flex flex-ai-t flex-jc-sb grid_col_1" style="margin-top: 20px; margin-bottom: 3px;">
-        <p class="bold"> <%= locals.client.name + " (" +locals.client.rDate.toLocaleDateString('en-GB') + ")" %> </p>
-        <% if (locals.client.status == "call" || locals.client.status == "tbc") { %>
-            <div class="flex flex-ai-c">
-                <div class="flagCheckBox">  </div>
-                <input type="checkbox" name="flagStatus" style="margin: 0; height: 15px;" value="flagged" <% if (locals.client.flag) { %> checked="true" <% } %>>
-            </div>
-        <% } %>
+    <div class="flex flex-ai-c flex-jc-sb margin_b_sm margin_t_sm">
+        <p class="bold size_small"> <%= locals.client.name + " (" +locals.client.rDate.toLocaleDateString('en-GB') + ")" %> </p>
+        <span id="<%= locals.client.rId %>" name="clientPopupClose" class="close-button">&times</span>
     </div>
 
-    <div class="grid_col_2" style="margin-top: 20px;">
-        <span id="<%= locals.client.rId %>" name="clientPopupClose" class="close_form"></span>
-    </div>
-    <hr class="popupHeaderLine" />
-
-    <div class="grid_col_1_s2">
+    <div class="">
         <!-- Status inputs -->
+        <p class="bold size_v_small"> Status </p>
         <% if (locals.client.status == "call") { %>
             <input id=<%= "declinebox1-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="call">
-            <label> Declined </label> <br />
+            <label> Declined </label> 
             <input type="radio" name="clientStatus" value="tbc">
-            <label> To be Confirmed </label> <br />
+            <label> To be Confirmed </label> 
             <input id=<%= "confirmbox1-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
             <label> Confirmed </label>
 
@@ -41,7 +32,18 @@
             <label> To be confirmed </label> <br />
         <% } %>
 
-        <br />
+        <br /> <br /> 
+
+        <p class="bold size_v_small"> Outcome </p>
+        <input type="radio" name="outcome">
+        <label> Booked </label>
+        <input type="radio" name="outcome">
+        <label> Call back later </label>
+        <input type="radio" name="outcome">
+        <label> Declined </label>
+
+        <br/>
+
 
         <!-- Call date for call and tbc popups, initially hidden -->
         <% if (locals.client.status == "call" || locals.client.status == "tbc") { %>
@@ -61,7 +63,7 @@
         <br />
 
         <!-- Client details link and Submit button -->
-        <div style="text-align: center; margin-bottom: 20px; width: 260px;">
+        <div style="text-align: center;">
             <a href=<%="/clients/?clientID=" + locals.client.id%> class="color_secondary"> Client Details </a>
             <br />
             <button type="submit" class="button_primary"> Submit </button>
