@@ -165,6 +165,10 @@ li {
   font-size: 14px;
 }
 
+input[type=checkbox] {
+  margin-right: 10px;
+}
+
 li:not(:first-child) {
   margin-top: 5px;
 }
@@ -612,6 +616,12 @@ nav {
 
 .Rproperty-value {
   color: black;
+}
+
+.RListHeader {
+  color: #009AAF;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .clientListDisplay {

@@ -39,6 +39,10 @@ li {
     font-size: $font-v-small;
 }
 
+input[type="checkbox"]{
+    margin-right: 10px;
+}
+
 li:not(:first-child) {
     margin-top: 5px;
 }

@@ -71,7 +71,6 @@ function revealStatusButton() {
 
   checkboxes.forEach(function(checkbox) {
     if (checkbox.checked) {
-      console.log("jd")
       anyChecked = true;
     }
   });

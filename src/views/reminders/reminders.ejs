@@ -65,9 +65,9 @@
         <!-- Pending list -->
         <div style="flex:1;">
             <!-- Header -->
-            <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
+            <div class="flex flex-ai-c margin_l_sm">
                 <input id="CLCheckbox" type="checkbox">
-                <p class="color_primary size_medium"> Pending </p>
+                <span class="RListHeader"> Pending </span>
                 <p> </p>
             </div>
             <hr />
@@ -90,9 +90,9 @@
         <!-- To Be Confirmed -->
         <div style="flex:1;">
             <!-- Header -->
-            <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
+            <div class="flex flex-ai-c margin_l_sm">
                 <input id="TBCCheckbox" type="checkbox">
-                <p class="flex flex-jc-c color_primary size_medium"> To be confirmed </p>
+                <span class="RListHeader"> Follow ups </span>
                 <p> </p>
             </div>
             <hr />
@@ -121,9 +121,9 @@
     <div id="completed" class="grid_col_1_s2 tabContent">
         <div style="flex:1;">
             <!-- Header and clear button-->
-            <div class="flex flex-ai-c flex-jc-r"> 
+            <div class="flex flex-ai-c"> 
                 <div class="flex flex-ai-c flex-jc-sb confirmed_width">
-                    <p class="color_primary size_medium"> Confirmed </p> 
+                    <span class="RListHeader"> Confirmed </span> 
                     <form action="/reset-confirmed-list" method="POST" class="flex flex-jc-r"> 
                         <button type="submit" class="button_clear"> Clear </button> 
                     </form> 
