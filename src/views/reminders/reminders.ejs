@@ -76,13 +76,13 @@
             
             <div class="inner_section reminders_list_container section_divider_callList">
                 <ul id="cList">
-                    <% for (let i = 0; i < callList.length; i++) { %>
+                    <% for (let i = 0; i < pending.length; i++) { %>
                         <li class="positionRelative"> 
                             <!-- Name button that appears in lists, brings up popup -->
-                            <%- include("../partials/callList/reminderPopupButton", {client: callList[i]}) %>
+                            <%- include("../partials/callList/reminderPopupButton", {client: pending[i]}) %>
                             
                             <!-- Client Popup -->
-                            <%- include("../partials/callList/ReminderPopup", {client: callList[i]}) %>
+                            <%- include("../partials/callList/ReminderPopup", {client: pending[i]}) %>
                         </li>
                     <% } %>
                 </ul>

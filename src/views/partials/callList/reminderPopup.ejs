@@ -9,15 +9,17 @@
     </div>
 
     <div class="">
-        <!-- Status inputs -->
-        <p class="bold size_v_small"> Status </p>
-        <% if (locals.client.status == "call") { %>
-            <input id=<%= "declinebox1-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="call">
-            <label> Declined </label> 
-            <input type="radio" name="clientStatus" value="tbc">
-            <label> To be Confirmed </label> 
-            <input id=<%= "confirmbox1-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
-            <label> Confirmed </label>
+        <!-- Action inputs -->
+        <p class="bold size_v_small"> Action </p>
+        <% if (locals.client.status == "pending") { %>
+            <input type="radio" name="action" class="revealCallOutcomes" value="call">
+            <label> Call </label> 
+            <input type="radio" name="action" value="text">
+            <label> Text </label> 
+            <input type="radio" name="action" value="email">
+            <label> Email </label>
+            <input type="radio" name="action" value="ignore">
+            <label> Ignore </label>
 
         <% } else if (locals.client.status == "tbc") { %>
             <input id=<%= "declinebox2-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="call">
@@ -34,21 +36,31 @@
 
         <br /> <br /> 
 
-        <p class="bold size_v_small"> Outcome </p>
-        <input type="radio" name="outcome">
-        <label> Booked </label>
-        <input type="radio" name="outcome">
-        <label> Call back later </label>
-        <input type="radio" name="outcome">
-        <label> Declined </label>
+        <div class="hidden callOutcomes">
+            <p class="bold size_v_small"> Outcome </p>
+            <input type="radio" name="outcome">
+            <label> Booked </label>
+            <input type="radio" name="outcome">
+            <label> Call back later </label>
+            <input type="radio" name="outcome">
+            <label> Declined </label>
+            <input type="radio" name="outcome">
+            <label> No answer </label>        
+            <br /> <br />
+            <!-- Add comment -->
+            <label> Add note: </label> <br />
+            <div class="flex flex-jc-c">
+                <textarea name="comments" style="width: 260px;" cols="27" rows="6"><%= locals.client.comments %></textarea>
+            </div>
+        </div>
 
         <br/>
 
 
-        <!-- Call date for call and tbc popups, initially hidden -->
+        <!-- Call date for call and tbc popups, initially hidden
         <% if (locals.client.status == "call" || locals.client.status == "tbc") { %>
             <br />
-            <div class="callDate">
+            <div class="hidden">
                 <label> Call back on: </label> <br />
                 <div style="text-align: center ;">
                     <input id=<%= "datebox-" + locals.client.rId %> required type="date" name="rDate" data-defaultdate="<%= rDateToHTMLDate(locals.client.rDate.toLocaleDateString('en-GB')) %>" value="<%= rDateToHTMLDate(locals.client.rDate.toLocaleDateString('en-GB')) %>"> <br />
@@ -56,11 +68,7 @@
                 <br />
             </div>
         <% } %>
-
-        <!-- Client comments -->
-        <label> Comments: </label> <br />
-        <textarea name="comments" style="width: 260px;" cols="27" rows="6"><%= locals.client.comments %></textarea>
-        <br />
+        -->
 
         <!-- Client details link and Submit button -->
         <div style="text-align: center;">

@@ -62,12 +62,8 @@
 }
 
 // Call date form within the client popup, initially hidden
-.revealCallDate:checked ~ .callDate {
+.revealCallOutcomes:checked ~ .callOutcomes {
     display: block;
-}
-
-.callDate {
-    display: none;
 }
 
 .flagCheckBoxContainer {

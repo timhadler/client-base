@@ -56,7 +56,6 @@ button {
   font-size: 14px;
   border: none;
   color: #009AAF;
-  margin-right: 40px;
 }
 .button_filter:hover {
   text-decoration: underline;
@@ -569,12 +568,8 @@ nav {
   text-decoration: underline;
 }
 
-.revealCallDate:checked ~ .callDate {
+.revealCallOutcomes:checked ~ .callOutcomes {
   display: block;
-}
-
-.callDate {
-  display: none;
 }
 
 .flagCheckBoxContainer {
