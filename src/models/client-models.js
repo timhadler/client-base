@@ -36,7 +36,15 @@ exports.pendingList = async function (d1, d2, limit) {
 
 // Fetches the client details associated with the reminder dates between d1 and d2 and have status "noResponse" or "followUp"
 exports.followUpList = async function (d1, d2, limit) {
-    const sqlQuery = "SELECT name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE status IN ('followUp', 'noResponse') AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate LIMIT " + limit;
+    const sqlQuery = "SELECT name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE status IN ('followUp', 'noResponse') AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY name LIMIT " + limit;
+    const rows = await db.query(sqlQuery);
+
+    return rows;
+};
+
+// Fetches the client details associated with remidners that have status "awaitingResponse"
+exports.awaitingList = async function () {
+    const sqlQuery = "SELECT name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='awaiting' ORDER BY name";
     const rows = await db.query(sqlQuery);
 
     return rows;
@@ -231,8 +239,8 @@ exports.editComment = async function(id, text) {
     await db.query(sqlQuery, [text, id]);
 }
 
-// Sets client status
-exports.setClientStatus = async function(status, id) {
+// Sets a reminder status
+exports.setReminderStatus = async function(status, id) {
     const sqlQuery = "UPDATE reminders SET STATUS=? WHERE id=?";
     await db.query(sqlQuery, [status, id]);
 }

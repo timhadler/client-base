@@ -1,10 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const clients = require("../models/client-models");
-
-//global.CLIENT_LIST = [];        // all clients with reminder dates inbetween D1 and D2 with status of "call"
-//global.TBC_LIST = [];           // all clients associated with reminder dates with status of "tbc"           
-//global.CONFIRMED_LIST = [];     // all clients associated with reminder dates with status of "confirmed"    
+const clients = require("../models/client-models");   
 
 // Get the dates that define the current month
 global.D1 = getDate(0).slice(0, 8) + "01"
@@ -18,9 +14,10 @@ router.get("/", async (req, res) => {
     try {
         const pending = await clients.pendingList(D1, D2, LIMIT_P);
         const followUp = await clients.followUpList(D1, D2, LIMIT_FU);
+        const awaiting = await clients.awaitingList();
         const completed = await clients.completedList();
 
-        res.status(200).render("reminders/reminders", {month:MONTH, d1:D1, d2:D2, pending:pending, followUp:followUp, completed:completed});
+        res.status(200).render("reminders/reminders", {month:MONTH, d1:D1, d2:D2, pending:pending, followUp:followUp, awaiting:awaiting, completed:completed});
     } catch (error) {
         res.status(500).send();
     }
@@ -29,28 +26,21 @@ router.get("/", async (req, res) => {
 // Set the date range for the call and tbc list
 router.get("/setDates", async (req, res) => {
     try {
-    // If req came from month date form
-    if (req.query.monthCL) {
-        const month = req.query.monthCL;
+        // If req came from month date form
+        if (req.query.monthCL) {
+            const month = req.query.monthCL;
 
-        // Get the dates that define the selected month
-        D1 = month + "-01";
-        D2 = month + "-" + getLastDate(D1.slice(5, 7));
-        MONTH = D1.slice(0, 7);
-        res.status(200).redirect("/");
-    } else {    // else the req comes from a custom date range form
-        D1 = req.query.date1;
-        D2 = req.query.date2;
-        MONTH = "custom";
-        res.status(200).redirect("/");
-    }
-
-    // const callList = await clients.callList(d1, d2);
-    // const tbcList = await clients.TBCList(d1, d2);
-    // const confirmedList = await clients.confirmedList();
-
-    // res.status(200).render("callList/callList", {month:month, callList:callList, tbcList:tbcList, confirmedList:confirmedList});
-    //res.redirect("/?month=" + month);
+            // Get the dates that define the selected month
+            D1 = month + "-01";
+            D2 = month + "-" + getLastDate(D1.slice(5, 7));
+            MONTH = D1.slice(0, 7);
+            res.status(200).redirect("/");
+        } else {    // else the req comes from a custom date range form
+            D1 = req.query.date1;
+            D2 = req.query.date2;
+            MONTH = "custom";
+            res.status(200).redirect("/");
+        }
     } catch (error) {
         res.status(500).send();
     }
@@ -60,8 +50,7 @@ router.get("/setDates", async (req, res) => {
 router.post("/set-client-status-:id-:rId", async (req, res) => {
     try {
         if (req.body.action) {
-            console.log(req.body.action);
-            //await clients.setClientStatus(req.body.clientStatus, req.params.rId);
+            //await clients.setReminderStatus(req.body.reminderStatus, req.params.rId);
         }
         // Change rDate
         /*
