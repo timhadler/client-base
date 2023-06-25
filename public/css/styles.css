@@ -162,6 +162,7 @@ ul {
 
 li {
   color: #0652C3;
+  font-size: 14px;
 }
 
 li:not(:first-child) {
@@ -213,8 +214,8 @@ hr {
 
 .list_item_divider {
   border-bottom: 1px solid lightgray;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 .overlay {
@@ -443,8 +444,13 @@ hr {
 }
 
 .nameButton {
-  font-size: 16px;
+  font-weight: bold;
+  text-align: left;
+  width: 150px;
+  padding: 0;
+  font-size: 14px;
   color: #0652C3;
+  margin-right: 20px;
 }
 
 .nameButton:hover {
@@ -586,6 +592,26 @@ nav {
   color: black;
   margin-left: 10px;
   margin-right: 5px;
+}
+
+.mobileProperty {
+  width: 80px;
+  align-items: center;
+  padding-right: 10px;
+}
+
+.RProperty {
+  align-items: center;
+  padding-right: 10px;
+}
+
+.Rproperty-name {
+  color: grey;
+  margin-right: 10px;
+}
+
+.Rproperty-value {
+  color: black;
 }
 
 .clientListDisplay {
