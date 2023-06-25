@@ -10,18 +10,17 @@ const clients = require("../models/client-models");
 global.D1 = getDate(0).slice(0, 8) + "01"
 global.D2 = D1.slice(0, 8) + getLastDate(D1.slice(5, 7));
 global.MONTH = D1.slice(0, 7);
+global.LIMIT_P = 25;
+global.LIMIT_FU = 25;
+const LIMIT_ADD = 25;
 
 router.get("/", async (req, res) => {
     try {
-        // CLIENT_LIST = await clients.callList(D1, D2);
-        // TBC_LIST = await clients.TBCList(D1, D2);
-        // CONFIRMED_LIST = await clients.confirmedList();
+        const pending = await clients.pendingList(D1, D2, LIMIT_P);
+        const followUp = await clients.followUpList(D1, D2, LIMIT_FU);
+        const completed = await clients.completedList();
 
-        const callList = await clients.callList(D1, D2);
-        const tbcList = await clients.TBCList(D1, D2);
-        const confirmedList = await clients.confirmedList();
-
-        res.status(200).render("reminders/reminders", {month:MONTH, d1:D1, d2:D2, callList:callList, tbcList:tbcList, confirmedList:confirmedList});
+        res.status(200).render("reminders/reminders", {month:MONTH, d1:D1, d2:D2, pending:pending, followUp:followUp, completed:completed});
     } catch (error) {
         res.status(500).send();
     }
@@ -60,17 +59,24 @@ router.get("/setDates", async (req, res) => {
 // POST set client status
 router.post("/set-client-status-:id-:rId", async (req, res) => {
     try {
-        if (req.body.clientStatus) {
-            await clients.setClientStatus(req.body.clientStatus, req.params.rId);
+        if (req.body.action) {
+            console.log(req.body.action);
+            //await clients.setClientStatus(req.body.clientStatus, req.params.rId);
         }
+        // Change rDate
+        /*
         if (req.body.rDate && (req.body.clientStatus == "confirmed" || req.body.clientStatus == "call")) {
             await clients.editReminder(req.params.rId, req.body.rDate);
         }
+        */
 
+        // Set flag/urgent and comments
+        /*
         let value = 0;
         if (req.body.flagStatus == "flagged") { value = 1; } else {value = null};
         await clients.setReminderFlag(req.params.rId, value);
         await clients.editComment(req.params.id, req.body.comments);
+        */
         
         res.status(201).redirect("/");
     } catch (error) {
@@ -109,6 +115,20 @@ router.post("/set-client-status-multi", async (req, res) => {
         }
 
         res.status(201).redirect("/");
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// Load more reminders of status pending
+router.get("/load-more-:limit", (req, res) => {
+    try {
+        if (req.params.limit == "p") {
+            LIMIT_P += LIMIT_ADD;
+        } else if (req.params.limit == "fu") {
+            LIMIT_FU += LIMIT_ADD;
+        }
+        res.redirect("/");
     } catch (error) {
         res.status(500).send(error.message);
     }

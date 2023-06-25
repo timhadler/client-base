@@ -32,6 +32,17 @@ for (let i = 0; i< clientCloseButs.length; i++) {
     clientCloseButs[i].addEventListener('click', function() { reminderPopupClose(clientCloseButs[i].id); });
 };
 
+// Prevent TBC list scroll bar resetting to 0 when the page is reloaded
+// Call list
+window.addEventListener('DOMContentLoaded', function() { pendingList.scrollTop = sessionStorage.getItem('lastScrollPos') })
+const pendingList = document.getElementById("pendingList");
+pendingList.addEventListener('scroll', function() { sessionStorage.setItem('lastScrollPos', cpendingListist.scrollTop) });
+
+// TBC list
+window.addEventListener('DOMContentLoaded', function() { followUpList.scrollTop = sessionStorage.getItem('lastScrollPos') })
+const followUpList = document.getElementById("followUpList");
+followUpList.addEventListener('scroll', function() { sessionStorage.setItem('lastScrollPos', followUpList.scrollTop) });
+
 function openTab(evt, tabName) {
     // Get all tab content elements and hide them
     const tabContent = document.getElementsByClassName('tabContent');
@@ -100,8 +111,8 @@ function checkAll(cb) {
   var checkStatus;
 
   // Find which parent checkbox has been checked
-  if (cb.id == "CLCheckbox") { list = "cList" }
-  else if (cb.id = "TBCCheckbox") { list = "tbcList" }
+  if (cb.id == "CLCheckbox") { list = "pendingList" }
+  else if (cb.id = "TBCCheckbox") { list = "followUpList" }
 
   // Has it been checked or unchecked?
   if (cb.checked) {

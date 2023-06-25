@@ -75,7 +75,7 @@
             <hr />
             
             <div class="inner_section reminders_list_container section_divider_callList">
-                <ul id="cList">
+                <ul id="pendingList">
                     <% for (let i = 0; i < pending.length; i++) { %>
                         <li class="positionRelative"> 
                             <!-- Name button that appears in lists, brings up popup -->
@@ -86,6 +86,11 @@
                         </li>
                     <% } %>
                 </ul>
+                <% if (pending.length >= 25) { %>
+                    <form id="load-more-form" action="/load-more-p" method="GET">
+                        <button type="submit"> Load more... </button>
+                    </form>
+                <% } %>
             </div>
         </div>
 
@@ -101,17 +106,22 @@
             </div>
             <hr />
             <div class="inner_section reminders_list_container section_divider_callList">
-                <ul id="tbcList">
-                    <% for (let i = 0; i < tbcList.length; i++) { %>
+                <ul id="followUpList">
+                    <% for (let i = 0; i < followUp.length; i++) { %>
                         <li class="positionRelative"> 
                             <!-- Name button that appears in lists, brings up popup -->
-                            <%- include("../partials/callList/reminderPopupButton", {client: tbcList[i]}) %>
+                            <%- include("../partials/callList/reminderPopupButton", {client: followUp[i]}) %>
                             
                             <!-- Client Popup -->
-                            <%- include("../partials/callList/ReminderPopup", {client: tbcList[i]}) %>
+                            <%- include("../partials/callList/ReminderPopup", {client: followUp[i]}) %>
                         </li>
                     <% } %>
                 </ul>
+                <% if (followUp.length >= 25) { %>
+                    <form id="load-more-form" action="/load-more-fu" method="GET">
+                        <button type="submit"> Load more... </button>
+                    </form>
+                <% } %>
             </div>
         </div>
     </div>
@@ -135,14 +145,14 @@
             </div>
             <hr />
             <div class="inner_section section_divider_confirmedList">
-                <ul id="confirmedList">
-                    <% for (let i = 0; i < confirmedList.length; i++) { %>
+                <ul id="completedList">
+                    <% for (let i = 0; i < completed.length; i++) { %>
                         <li class="positionRelative"> 
                             <!-- Name button that appears in lists, brings up popup -->
-                            <%- include("../partials/callList/reminderPopupButton", {client: confirmedList[i]}) %>
+                            <%- include("../partials/callList/reminderPopupButton", {client: completed[i]}) %>
                             
                             <!-- Client Popup -->
-                            <%- include("../partials/callList/ReminderPopup", {client: confirmedList[i]}) %>
+                            <%- include("../partials/callList/ReminderPopup", {client: completed[i]}) %>
                         </li>
                     <% } %>
                 </ul>
