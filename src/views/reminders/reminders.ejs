@@ -65,10 +65,12 @@
         <!-- Pending list -->
         <div style="flex:1;">
             <!-- Header -->
-            <div class="flex flex-ai-c margin_l_sm">
-                <input id="CLCheckbox" type="checkbox">
-                <span class="RListHeader"> Pending </span>
-                <p> </p>
+            <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
+                <div>
+                    <input id="CLCheckbox" type="checkbox">
+                    <span class="RListHeader"> Pending </span>
+                </div>
+                <button id="pendingFilterButton" style="margin-right: 40px;" class="button_filter"> Filter </button>
             </div>
             <hr />
             
@@ -90,10 +92,12 @@
         <!-- To Be Confirmed -->
         <div style="flex:1;">
             <!-- Header -->
-            <div class="flex flex-ai-c margin_l_sm">
-                <input id="TBCCheckbox" type="checkbox">
-                <span class="RListHeader"> Follow ups </span>
-                <p> </p>
+            <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
+                <div>
+                    <input id="TBCCheckbox" type="checkbox">
+                    <span class="RListHeader"> Follow ups </span>
+                </div>
+                <button id="FollowUpFilterButton" style="margin-right: 20px;" class="button_filter"> Filter </button>
             </div>
             <hr />
             <div class="inner_section reminders_list_container section_divider_callList">
@@ -124,8 +128,8 @@
             <div class="flex flex-ai-c"> 
                 <div class="flex flex-ai-c flex-jc-sb confirmed_width">
                     <span class="RListHeader"> Confirmed </span> 
-                    <form action="/reset-confirmed-list" method="POST" class="flex flex-jc-r"> 
-                        <button type="submit" class="button_clear"> Clear </button> 
+                    <form action="/reset-confirmed-list" method="POST"> 
+                        <button type="submit" class="button_filter"> Clear </button> 
                     </form> 
                 </div>
             </div>

@@ -51,11 +51,15 @@ button {
   padding-left: 14px;
   padding-right: 14px;
 }
-.button_clear {
+.button_filter {
   height: 17px;
   font-size: 14px;
   border: none;
   color: #009AAF;
+  margin-right: 40px;
+}
+.button_filter:hover {
+  text-decoration: underline;
 }
 .button_cancel {
   border-color: red;

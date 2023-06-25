@@ -55,11 +55,16 @@ button {
         padding-right: 14px;
     }
 
-    &_clear {
+    &_filter {
         height: 17px;
         font-size: $font-v-small;
         border: none;
         color: $primary;
+        margin-right: 40px;
+    }
+
+    &_filter:hover {
+        text-decoration: underline;
     }
 
     &_cancel {
