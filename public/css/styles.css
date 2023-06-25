@@ -549,6 +549,7 @@ nav {
 
 .clientPopup {
   display: none;
+  width: 415px;
   position: absolute;
   border: 1px solid black;
   background-color: white;
@@ -557,6 +558,25 @@ nav {
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   padding: 20px;
+}
+
+.commentsList {
+  height: 100px;
+  width: 375px;
+  word-wrap: break-word;
+  overflow: auto;
+}
+
+.commentsList li {
+  background-color: #ebebeb;
+  color: black;
+  width: 100%;
+  margin: 0;
+  padding: 4px;
+}
+
+.commentsList li:nth-child(odd) {
+  background-color: lightgrey;
 }
 
 .popupHeaderLine {

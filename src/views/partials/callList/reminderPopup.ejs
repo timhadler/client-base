@@ -4,14 +4,17 @@
 <form id=<%= "clientPopup-" + locals.client.rId %> class="clientPopup" action="/set-client-status-<%= locals.client.id %>-<%= locals.client.rId %>" method="POST">
     <!-- Header -->
     <div class="flex flex-ai-c flex-jc-sb margin_b_sm margin_t_sm">
-        <p class="bold size_small"> <%= locals.client.name + " (" +locals.client.rDate.toLocaleDateString('en-GB') + ")" %> </p>
+        <div class="flex flex-ai-c">
+            <p class="bold size_small pad-r-sm"> <%= locals.client.name + " (" +locals.client.rDate.toLocaleDateString('en-GB') + ")" %> </p>
+            <button class="button_secondary" type="button"> Make booking </button>
+        </div>
         <span id="<%= locals.client.rId %>" name="clientPopupClose" class="close-button">&times</span>
     </div>
 
     <div class="">
-        <!-- Action inputs -->
-        <p class="bold size_v_small"> Action </p>
-        <% if (locals.client.status == "pending") { %>
+        <% if (locals.client.status != "completed") { %>
+            <!-- Action inputs -->
+            <p class="bold size_v_small"> Action </p>
             <input type="radio" name="action" class="revealCallOutcomes" value="call">
             <label> Call </label> 
             <input type="radio" name="action" value="text">
@@ -20,24 +23,11 @@
             <label> Email </label>
             <input type="radio" name="action" value="ignore">
             <label> Ignore </label>
-
-        <% } else if (locals.client.status == "tbc") { %>
-            <input id=<%= "declinebox2-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="call">
-            <label> Declined </label> <br />
-            <input id=<%= "confirmbox2-" + locals.client.rId %> type="radio" name="clientStatus" class="revealCallDate" value="confirmed">
-            <label> Confirmed </label>
-
-        <% } else if (locals.client.status == "confirmed") { %>
-            <input type="radio" name="clientStatus" value="call">
-            <label> Call </label> <br />
-            <input type="radio" name="clientStatus" value="tbc">
-            <label> To be confirmed </label> <br />
+            <br /> <br />
         <% } %>
 
-        <br /> <br /> 
-
-        <div class="hidden callOutcomes">
-            <p class="bold size_v_small"> Outcome </p>
+        <div <% if (locals.client.status == "pending" || locals.client.status == "completed") { %> class="hidden callOutcomes" <% } %> >
+            <p class="bold size_v_small"> Response </p>
             <input type="radio" name="outcome">
             <label> Booked </label>
             <input type="radio" name="outcome">
@@ -47,15 +37,34 @@
             <input type="radio" name="outcome">
             <label> No answer </label>        
             <br /> <br />
-            <!-- Add comment -->
-            <label> Add note: </label> <br />
-            <div class="flex flex-jc-c">
-                <textarea name="comments" style="width: 260px;" cols="27" rows="6"><%= locals.client.comments %></textarea>
-            </div>
         </div>
 
-        <br/>
-
+        <!-- Add notes -->
+        <label> Add note: </label> <br />
+        <div class="flex flex-jc-c">
+            <textarea name="comments" style="width: 260px;" cols="27" rows="3"><%= locals.client.comments %></textarea>
+        </div>
+        <br />
+        <!-- Previous notes -->
+        <p class="bold size_v_small"> Previous notes </p>
+        <ul class="commentsList">
+            <li> 02/12/21 - Some comments </li>
+            <li> 02/12/21 - Some comments </li>
+            <li> 02/12/21 - Some loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooonger comments </li>
+            <li> Some more comments </li>
+        </ul>
+        <br />
+        <% if (locals.client.status == "awaiting" || locals.client.status == "followUp") { %>
+            <!-- Previous interactions, shown in awaiting, and follow up lists -->
+            <p class="bold size_v_small"> Previous interactions </p>
+            <ul class="commentsList">
+                <li> 02/12/21 - Called </li>
+                <li> 02/12/21 - Text </li>
+                <li> 02/12/21 - Emailed </li>
+                <li> 02/12/21 - Text </li>
+            </ul>
+            <br />
+        <% } %>
 
         <!-- Call date for call and tbc popups, initially hidden
         <% if (locals.client.status == "call" || locals.client.status == "tbc") { %>
@@ -73,7 +82,7 @@
         <!-- Client details link and Submit button -->
         <div style="text-align: center;">
             <a href=<%="/clients/?clientID=" + locals.client.id%> class="color_secondary"> Client Details </a>
-            <br />
+            <br /> <br />
             <button type="submit" class="button_primary"> Submit </button>
         </div>
     </div>
