@@ -8,13 +8,12 @@
         <button id="completedTabLink" class="remindersTabLink">Recently Completed</button>
     </div>
 
-    <!-- Multi operation buttons and border 
-    <div style="border-top: 1px solid grey;" class="grid_col_1_s3"> 
+    <!-- Multi operation buttons and border -->
+    <div id="setStatusDiv" class="grid_col_1 hidden"> 
         <button id="setStatusButton" type="button" style="justify-self: left;" class="color_secondary"> Set status </button>
     </div>
-    -->
 
-    <!-- Checkbox form and popup
+    <!-- Checkbox form and popup -->
     <form id="checkBoxForm" action="/set-client-status-multi" method="POST">
         <div id="setStatusPopup" class="centeredPopupCP">
             <div class="flex flex-ai-c flex-jc-sb">
@@ -37,7 +36,7 @@
             </div>
         </div>
     </form>
-    -->
+    
 
     <!-- Actions tab cointent -->
     <div id="actions" class="grid_col_1_s2 tabContent">
@@ -66,7 +65,7 @@
         <!-- Pending list -->
         <div style="flex:1;">
             <!-- Header -->
-            <div class="flex flex-ai-c flex-jc-sb">
+            <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
                 <input id="CLCheckbox" type="checkbox">
                 <p class="color_primary size_medium"> Pending </p>
                 <p> </p>
@@ -91,7 +90,7 @@
         <!-- To Be Confirmed -->
         <div style="flex:1;">
             <!-- Header -->
-            <div class="flex flex-ai-c flex-jc-sb">
+            <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
                 <input id="TBCCheckbox" type="checkbox">
                 <p class="flex flex-jc-c color_primary size_medium"> To be confirmed </p>
                 <p> </p>
