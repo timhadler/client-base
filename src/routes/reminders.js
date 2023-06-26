@@ -51,31 +51,33 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
     try {
         let action = req.body.action;
         let outcome = req.body.outcome;
+        let status = null;
         if (action) {
-            let status = null;
-            if (action == "text" || action == "email") {
-                status = "awaiting";
-            } else if (action == "call") {
-                if (outcome == "booked") {
-                    status = "completed"
-                    // Set outcome to booked
-                } else if (outcome == "followUp") {
-                    status = "followUp"
-                    // Add/change reminder date??
-                } else if (outcome == "declined") {
-                    status = "completed"
-                    // Set outcome to declined
-                } else if (outcome == "noAns") {
-                    status = "awaiting"
-                } else {
-                    status = "awaiting"
-                }
-            } else if (action = "ignore") {
-                status = "completed"
-                // Set reminder outcome to ignored
+            if (action == "ignore") {
+                status = "completed";
+                outcome = null;         // no outcome if ignored
             }
-            await clients.setReminderStatus(status, req.params.rId);
+            await clients.createInteraction(action, req.params.rId);
         }
+        if (outcome) {
+            if (outcome == "followUp") {
+                status = "followUp";
+                // Change rDate
+            } else if (outcome == "booked") {
+                status = "completed";
+                // Open booking window
+            } else if (outcome == "declined") {
+                status = "completed";
+            }
+        }
+        if (!status && action) {
+            status = "awaiting";
+        }
+        if (!outcome) {outcome = null};
+        if (status) {
+            await clients.setReminderStatus(status, outcome, req.params.rId);
+        }
+        console.log(req.params.rId);
         // Change rDate
         /*
         if (req.body.rDate && (req.body.clientStatus == "confirmed" || req.body.clientStatus == "call")) {
