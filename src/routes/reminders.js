@@ -49,8 +49,32 @@ router.get("/setDates", async (req, res) => {
 // POST set client status
 router.post("/set-client-status-:id-:rId", async (req, res) => {
     try {
-        if (req.body.action) {
-            //await clients.setReminderStatus(req.body.reminderStatus, req.params.rId);
+        let action = req.body.action;
+        let outcome = req.body.outcome;
+        if (action) {
+            let status = null;
+            if (action == "text" || action == "email") {
+                status = "awaiting";
+            } else if (action == "call") {
+                if (outcome == "booked") {
+                    status = "completed"
+                    // Set outcome to booked
+                } else if (outcome == "followUp") {
+                    status = "followUp"
+                    // Add/change reminder date??
+                } else if (outcome == "declined") {
+                    status = "completed"
+                    // Set outcome to declined
+                } else if (outcome == "noAns") {
+                    status = "awaiting"
+                } else {
+                    status = "awaiting"
+                }
+            } else if (action = "ignore") {
+                status = "completed"
+                // Set reminder outcome to ignored
+            }
+            await clients.setReminderStatus(status, req.params.rId);
         }
         // Change rDate
         /*

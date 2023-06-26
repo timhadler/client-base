@@ -27,14 +27,14 @@
         <% } %>
 
         <div <% if (locals.client.status == "pending" || locals.client.status == "completed") { %> class="hidden callOutcomes" <% } %> >
-            <p class="bold size_v_small"> Response </p>
-            <input type="radio" name="outcome">
+            <p class="bold size_v_small"> Outcome </p>
+            <input type="radio" name="outcome" value="booked">
             <label> Booked </label>
-            <input type="radio" name="outcome">
-            <label> Call back later </label>
-            <input type="radio" name="outcome">
+            <input type="radio" name="outcome" value="followUp">
+            <label> Follow up later </label>
+            <input type="radio" name="outcome" value="declined">
             <label> Declined </label>
-            <input type="radio" name="outcome">
+            <input type="radio" name="outcome" value="noAns">
             <label> No answer </label>        
             <br /> <br />
         </div>
