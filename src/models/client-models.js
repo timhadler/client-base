@@ -58,6 +58,14 @@ exports.completedList = async function () {
     return rows;
 };
 
+// Fetches all interactions associated with a given reminder
+exports.reminderInteractions = async function(id) {
+    const sqlQuery = "SELECT interaction, created FROM interactions WHERE reminder_id=" + id;
+    const rows = await db.query(sqlQuery);
+
+    return rows;
+}
+
 // Fetches clients resulting from a search query
 exports.searchList = async function(search) {
     const sqlQuery = "SELECT name, id FROM clients WHERE name LIKE '%" + search + "%'";
@@ -192,6 +200,12 @@ exports.createAddress = async function(street, suburb, city, pc, fa, clientAddre
     }
 }
 
+// Create an interaction entry
+exports.createInteraction =async function(action, id) {
+    const sqlQuery = "INSERT INTO interactions (reminder_id, interaction) VALUES(?, ?)";
+    await db.query(sqlQuery, [id, action]);
+}
+
 exports.creatUser = async function(username, password) {
     const sqlQuery = "INSERT INTO users (username, password) VALUES(?, ?)";
     const rows = await db.query(sqlQuery, [username, password]);
@@ -240,9 +254,9 @@ exports.editComment = async function(id, text) {
 }
 
 // Sets a reminder status
-exports.setReminderStatus = async function(status, id) {
-    const sqlQuery = "UPDATE reminders SET STATUS=? WHERE id=?";
-    await db.query(sqlQuery, [status, id]);
+exports.setReminderStatus = async function(status, outcome, id) {
+    const sqlQuery = "UPDATE reminders SET status=?, outcome=? WHERE id=?";
+    await db.query(sqlQuery, [status, outcome, id]);
 }
 
 exports.setReminderFlag = async function(id, value) {
