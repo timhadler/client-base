@@ -80,7 +80,7 @@
     text-decoration: underline;
 }
 
-// Call date form within the client popup, initially hidden
+// Response section within the reminder popup
 .revealCallOutcomes:checked ~ .callOutcomes {
     display: block;
 }

@@ -8,8 +8,9 @@ document.getElementById('actions').style.display = 'flex';
 document.getElementById('actionsTabLink').classList.add('active');
 
 // Sellect all Checkboxes
-document.getElementById("CLCheckbox").addEventListener('change', function() { checkAll(this) });
-document.getElementById("TBCCheckbox").addEventListener('change', function() { checkAll(this) });
+document.getElementById("PCheckbox").addEventListener('change', function() { checkAll(this) });
+document.getElementById("FUCheckbox").addEventListener('change', function() { checkAll(this) });
+document.getElementById("ACheckbox").addEventListener('change', function() { checkAll(this) });
 
 // Client button checkboxes
 const checkboxes = document.getElementsByName("selectedClients");
@@ -111,8 +112,9 @@ function checkAll(cb) {
   var checkStatus;
 
   // Find which parent checkbox has been checked
-  if (cb.id == "CLCheckbox") { list = "pendingList" }
-  else if (cb.id = "TBCCheckbox") { list = "followUpList" }
+  if (cb.id == "PCheckbox") { list = "pendingList" }
+  else if (cb.id = "FUCheckbox") { list = "followUpList" }
+  else if (cb.id = "ACheckbox") { list = "awaitingList" }
 
   // Has it been checked or unchecked?
   if (cb.checked) {

@@ -67,7 +67,7 @@
             <!-- Header -->
             <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
                 <div>
-                    <input id="CLCheckbox" type="checkbox">
+                    <input id="PCheckbox" type="checkbox">
                     <span class="RListHeader"> Pending </span>
                 </div>
                 <button id="pendingFilterButton" style="margin-right: 40px;" class="button_filter"> Filter </button>
@@ -94,12 +94,12 @@
             </div>
         </div>
 
-        <!-- To Be Confirmed -->
+        <!-- Follow ups-->
         <div style="flex:1;">
             <!-- Header -->
             <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
                 <div>
-                    <input id="TBCCheckbox" type="checkbox">
+                    <input id="FUCheckbox" type="checkbox">
                     <span class="RListHeader"> Follow ups </span>
                 </div>
                 <button id="FollowUpFilterButton" style="margin-right: 20px;" class="button_filter"> Filter </button>
@@ -127,8 +127,31 @@
     </div>
 
     <!-- Awaiting response -->
-    <div id="awaiting" class="tabContent">
-
+    <div id="awaiting" class="grid_col_1 tabContent">
+        <div style="flex:1;">
+            <!-- Header and filter button -->
+            <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
+                <div>
+                    <input id="ACheckbox" type="checkbox">
+                    <span class="RListHeader"> Follow ups </span>
+                </div>
+                <button id="FollowUpFilterButton" style="margin-right: 20px;" class="button_filter"> Filter </button>
+            </div>
+            <hr />
+            <div class="inner_section reminders_list_container section_divider_callList">
+                <ul id="awaitingList">
+                    <% for (let i = 0; i < awaiting.length; i++) { %>
+                        <li class="positionRelative"> 
+                            <!-- Name button that appears in lists, brings up popup -->
+                            <%- include("../partials/callList/reminderPopupButton", {client: awaiting[i]}) %>
+                            
+                            <!-- Client Popup -->
+                            <%- include("../partials/callList/ReminderPopup", {client: awaiting[i]}) %>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <!-- Confirmed -->
