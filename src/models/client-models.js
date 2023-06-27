@@ -66,6 +66,14 @@ exports.reminderInteractions = async function(id) {
     return rows;
 }
 
+// Fethes all notes related to a client with a given id
+exports.clientNotes = async function(id) {
+    const sqlQuery = "SELECT note, created FROM notes WHERE client_id = " + id;
+    const rows = await db.query(sqlQuery);
+
+    return rows;
+}
+
 // Fetches clients resulting from a search query
 exports.searchList = async function(search) {
     const sqlQuery = "SELECT name, id FROM clients WHERE name LIKE '%" + search + "%'";
@@ -201,9 +209,15 @@ exports.createAddress = async function(street, suburb, city, pc, fa, clientAddre
 }
 
 // Create an interaction entry
-exports.createInteraction =async function(action, id) {
+exports.createInteraction = async function(action, id) {
     const sqlQuery = "INSERT INTO interactions (reminder_id, interaction) VALUES(?, ?)";
     await db.query(sqlQuery, [id, action]);
+}
+
+// Creates a note entry
+exports.createNote = async function(note, id) {
+    const sqlQuery = "INSERT INTO notes (note, client_id) VALUES(?, ?)";
+    await db.query(sqlQuery, [note, id]);
 }
 
 exports.creatUser = async function(username, password) {

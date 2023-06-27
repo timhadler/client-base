@@ -57,6 +57,9 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
                 status = "completed";
                 outcome = null;         // no outcome if ignored
             }
+            if (outcome == "noAns") {
+                action += " - no answer";
+            }
             await clients.createInteraction(action, req.params.rId);
         }
         if (outcome) {
@@ -78,6 +81,11 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
             await clients.setReminderStatus(status, outcome, req.params.rId);
         }
         console.log(req.params.rId);
+
+        // Add note if one is provided
+        if (req.body.note) {
+            await clients.createNote(req.body.note, req.params.id);
+        }
         // Change rDate
         /*
         if (req.body.rDate && (req.body.clientStatus == "confirmed" || req.body.clientStatus == "call")) {
