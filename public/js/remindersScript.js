@@ -1,49 +1,33 @@
-// Tab buttons event listeners
-document.getElementById("actionsTabLink").addEventListener('click', (event) => { openTab(event, "actions") });
-document.getElementById("awaitingTabLink").addEventListener('click', (event) => { openTab(event, "awaiting") });
-document.getElementById("completedTabLink").addEventListener('click', (event) => { openTab(event, "completed") });
+$(document).ready(function() {
+  // Open action tabs on load
+  $('#actions').css('display', 'flex');
+  $('#actionsTabLink').addClass('active');
 
-// Open action tabs on load
-document.getElementById('actions').style.display = 'flex';
-document.getElementById('actionsTabLink').classList.add('active');
+  // Tab buttons event listeners
+  $('#actionsTabLink').on('click', function(evt) { openTab(evt, "actions") });
+  $('#awaitingTabLink').on('click', function(evt) { openTab(evt, "awaiting") });
+  $('#completedTabLink').on('click', function(evt) { openTab(evt, "completed") });
 
-// Sellect all Checkboxes
-document.getElementById("PCheckbox").addEventListener('change', function() { checkAll(this) });
-document.getElementById("FUCheckbox").addEventListener('change', function() { checkAll(this) });
-document.getElementById("ACheckbox").addEventListener('change', function() { checkAll(this) });
+  // Sellect all Checkboxes
+  $('#PCheckbox').on('change', function() { checkAll(this) });
+  $('#FUCheckbox').on('change', function() { checkAll(this) });
+  $('#ACheckbox').on('change', function() { checkAll(this) });
 
-// Client button checkboxes
-const checkboxes = document.getElementsByName("selectedClients");
-checkboxes.forEach(function(checkbox) {
-  checkbox.addEventListener('change', revealStatusButton);
+  // Client button checkboxes
+  $('input[name="selectedClients"]').change(revealStatusButton);  // Selects all inputs wuth name selectedClients
+
+  // Set status button
+  $('#setStatusButton').on('click', function() { setStatusPopup() });
+  $('#setStatusCloseButton').on('click', function() { setStatusClose() });
+
+  // Reminder list popup buttons
+  $('button[name="clientCallButton"]').on('click', function() { reminderPopup(this.id) });
+  $('span[name="clientPopupClose"]').on('click', function() { reminderPopupClose(this.id) });
 });
 
-// Set status button
-document.getElementById("setStatusButton").addEventListener('click', function() { setStatusPopup() });
-document.getElementById("setStatusCloseButton").addEventListener('click', function() { setStatusClose() });
-
-// Reminder popup list buttons
-const clientButs = document.getElementsByName("clientCallButton");
-for (let i = 0; i< clientButs.length; i++) {
-    clientButs[i].addEventListener('click', function() { reminderPopup(clientButs[i].id); });
-};
-
-const clientCloseButs = document.getElementsByName("clientPopupClose");
-for (let i = 0; i< clientCloseButs.length; i++) {
-    clientCloseButs[i].addEventListener('click', function() { reminderPopupClose(clientCloseButs[i].id); });
-};
-
-// Prevent TBC list scroll bar resetting to 0 when the page is reloaded
-// Call list
-window.addEventListener('DOMContentLoaded', function() { pendingList.scrollTop = sessionStorage.getItem('lastScrollPos') })
-const pendingList = document.getElementById("pendingList");
-pendingList.addEventListener('scroll', function() { sessionStorage.setItem('lastScrollPos', cpendingListist.scrollTop) });
-
-// TBC list
-window.addEventListener('DOMContentLoaded', function() { followUpList.scrollTop = sessionStorage.getItem('lastScrollPos') })
-const followUpList = document.getElementById("followUpList");
-followUpList.addEventListener('scroll', function() { sessionStorage.setItem('lastScrollPos', followUpList.scrollTop) });
-
+/*****************************************************************
+ * Functions
+ ****************************************************************/
 function openTab(evt, tabName) {
     // Get all tab content elements and hide them
     const tabContent = document.getElementsByClassName('tabContent');
