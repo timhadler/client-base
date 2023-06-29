@@ -1,0 +1,75 @@
+<!-- Client popups for the callList -->
+<div class="clientPopup">
+    <!-- Header -->
+    <div class="flex flex-ai-c flex-jc-sb margin_b_sm margin_t_sm">
+        <p class="popupHeader">  </p>
+        <span name="clientPopupClose" class="close-button">&times</span>
+    </div>
+
+    <div class="">
+
+        <!-- Action inputs -->
+        <div class="actionsDiv">
+            <p class="bold size_v_small"> Action </p>
+            <input type="radio" name="action" class="revealCallOutcomes" value="call">
+            <label> Call </label> 
+            <input type="radio" name="action" value="text">
+            <label> Text </label> 
+            <input type="radio" name="action" value="email">
+            <label> Email </label>
+            <input type="radio" name="action" value="ignore">
+            <label> Ignore </label>
+            <br /> <br />
+        </div>
+
+
+        <div class="hidden callOutcomes" >
+            <p class="bold size_v_small"> Outcome </p>
+            <input type="radio" name="outcome" value="booked">
+            <label> Booked </label>
+            <input type="radio" name="outcome" value="followUp">
+            <label> Follow up later </label>
+            <input type="radio" name="outcome" value="declined">
+            <label> Declined </label>
+            <input type="radio" name="outcome" value="noAns">
+            <label> No answer </label>        
+            <br /> <br />
+        </div>
+
+        <!-- Add notes -->
+        <label> Add note: </label> <br />
+        <div class="flex flex-jc-c">
+            <textarea name="note" style="width: 260px;" cols="27" rows="3"></textarea>
+        </div>
+        <br />
+        <!-- Previous notes -->
+        <p class="bold size_v_small"> Previous notes </p>
+        <ul class="commentsList">
+            <li> 02/12/21 - Some comments </li>
+            <li> 02/12/21 - Some comments </li>
+            <li> 02/12/21 - Some loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooonger comments </li>
+            <li> Some more comments </li>
+        </ul>
+        <br />
+        
+            <!-- Previous interactions, shown in awaiting, and follow up lists -->
+            <div class="interactionsDiv">
+                <p class="bold size_v_small"> Previous interactions </p>
+                <ul class="commentsList">
+                    <li> 02/12/21 - Called </li>
+                    <li> 02/12/21 - Text </li>
+                    <li> 02/12/21 - Emailed </li>
+                    <li> 02/12/21 - Text </li>
+                </ul>
+                <br />
+            </div>
+
+
+        <!-- Client details link and Submit button -->
+        <div style="text-align: center;">
+            <a  class="color_secondary"> Client Details </a>
+            <br /> <br />
+            <button type="submit" class="button_primary"> Submit </button>
+        </div>
+    </div>
+</div>
