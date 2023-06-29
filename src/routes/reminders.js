@@ -67,11 +67,17 @@ router.get("/setDates", async (req, res) => {
     }
 });
 
-// POST set client status
-router.post("/set-client-status-:id-:rId", async (req, res) => {
+// POST set client status, AJAX
+router.post("/set-reminder-status", async (req, res) => {
     try {
-        let action = req.body.action;
-        let outcome = req.body.outcome;
+        const formData = req.body.data;     // formData in form of query string from AJAX request
+        const rId = req.body.id;
+        const params = new URLSearchParams(formData);
+        const note = params.get('note');
+        let action = params.get('action');
+        let outcome = params.get('outcome');
+
+        //console.log(note)
         let status = null;
         if (action) {
             if (action == "ignore") {
@@ -81,7 +87,7 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
             if (outcome == "noAns") {
                 action += " - no answer";
             }
-            await clients.createInteraction(action, req.params.rId);
+            await clients.createInteraction(action, rId);
         }
         if (outcome) {
             if (outcome == "followUp") {
@@ -99,13 +105,13 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
         }
         if (!outcome) {outcome = null};
         if (status) {
-            await clients.setReminderStatus(status, outcome, req.params.rId);
+            await clients.setReminderStatus(status, outcome, rId);
         }
-        console.log(req.params.rId);
+        console.log(rId);
 
         // Add note if one is provided
-        if (req.body.note) {
-            await clients.createNote(req.body.note, req.params.id);
+        if (note) {
+            await clients.createNote(note, rId);
         }
         // Change rDate
         /*

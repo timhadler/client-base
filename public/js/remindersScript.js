@@ -88,6 +88,9 @@ function openPopup(data) {
     $popup.find('.revealCallOutcomes').on('change', function() { if (this.checked) { $(this).closest('.actionsDiv').next('.callOutcomes').css('display', 'block'); } });
     $popup.find('.hideCallOutcomes').on('change', function() { if (this.checked) { $popup.find('.callOutcomes').css('display', 'none'); } });
   }
+  // Submit form
+  $popup.find("#reminderPopupSubmitButton").on('click', function() { reminderSubmit(data.rId) })
+
   $('#reminder-' + data.rId).append($popup);
   $('#overlay').css('visibility', 'visible');
 }
@@ -95,6 +98,40 @@ function openPopup(data) {
 function closePopup() {
   $('.clientPopup').remove();
   $('#overlay').css('visibility', 'hidden');
+}
+
+// Submit the reminder popup form
+function reminderSubmit(rId) {
+  // Get the form data
+  var formData = $('#reminderPopupForm').serialize();
+
+  $.ajax({
+    url: "/set-reminder-status",
+    method: "POST",
+    data: { data:formData, id:rId },
+    success: function(res) {
+      reloadActiveLists();
+      closePopup();
+    },
+    error: function(xhr, status, error) {
+      // Handle AJAX error
+      console.log('AJAX Error while POSTING reminder form:', error, xhr, status);
+    }
+  });
+}
+
+// Reloads the current tabs lists
+function reloadActiveLists() {
+  var tabId = $(".remindersTabLink.active").attr('id');
+  
+  if (tabId.includes("action")) {
+    loadList("pendingList");
+    loadList("followUpList");
+  } else if (tabId.includes("awaiting")) {
+    loadList("awaitingList");
+  } else if (tabId.includes("completed")) {
+    loadList("completedList");
+  }
 }
 
 // Open list tab
