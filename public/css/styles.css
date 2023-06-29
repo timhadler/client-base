@@ -575,6 +575,10 @@ nav {
   padding: 4px;
 }
 
+.interactionsDiv {
+  display: none;
+}
+
 .commentsList li:nth-child(odd) {
   background-color: lightgrey;
 }
@@ -641,6 +645,12 @@ nav {
   color: #009AAF;
   font-size: 20px;
   font-weight: bold;
+}
+
+.popupHeader {
+  font-weight: bold;
+  font-size: 16px;
+  padding-right: 10px;
 }
 
 .clientListDisplay {

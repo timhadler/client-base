@@ -67,6 +67,10 @@
     padding: 4px;
 }
 
+.interactionsDiv {
+    display: none;
+}
+
 .commentsList li:nth-child(odd) {
     background-color: lightgrey;
 }
@@ -139,4 +143,11 @@
     color: $primary;
     font-size: $font-medium;
     font-weight: bold;
+}
+
+.popupHeader {
+    font-weight: bold;
+    font-size: $font-small;
+    padding-right: 10px;
+
 }
