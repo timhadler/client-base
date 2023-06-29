@@ -1,3 +1,6 @@
+var reminderPopupButtonHTML;
+var reminderPopupHTML;
+
 $(document).ready(function() {
   // Open action tabs on load
   $('#actions').css('display', 'flex');
@@ -13,9 +16,6 @@ $(document).ready(function() {
   $('#FUCheckbox').on('change', function() { checkAll(this) });
   $('#ACheckbox').on('change', function() { checkAll(this) });
 
-  // Client button checkboxes
-  $('input[name="selectedClients"]').change(revealStatusButton);  // Selects all inputs wuth name selectedClients
-
   // Set status button
   $('#setStatusButton').on('click', function() { setStatusPopup() });
   $('#setStatusCloseButton').on('click', function() { setStatusClose() });
@@ -23,11 +23,80 @@ $(document).ready(function() {
   // Reminder list popup buttons
   $('button[name="clientCallButton"]').on('click', function() { reminderPopup(this.id) });
   $('span[name="clientPopupClose"]').on('click', function() { reminderPopupClose(this.id) });
+
+  // Load html files into variables
+  $.get("html/reminderPopupButton.html", function(html) {
+    reminderPopupButtonHTML = html;
+  });
+  $.get("html/reminderPopup.html", function(html) {
+    reminderPopupHTML = html;
+  });
+
+  // Load reminder lists
+  loadAllLists();
 });
 
 /*****************************************************************
  * Functions
  ****************************************************************/
+// Load all reminder lists
+function loadAllLists() {
+  loadList("pendingList");
+  loadList("followUpList");
+  loadList("awaitingList");
+  loadList("completedList");
+};
+
+// AJAX Load a reminder list
+function loadList(l) {
+  $.ajax({
+    url: "load-reminder-list",
+    method: "GET",
+    data: { list:l },
+    success: function(res) {
+      const data = JSON.parse(res);
+      var list = $('#' + l);
+
+      list.empty(); // Clear the existing list items
+      for (var i = 0; i < data.length; i++) {
+        var li = $('<li>').addClass("positionRelative");
+        var $button = $(reminderPopupButtonHTML);
+        var $popup = $(reminderPopupHTML);
+
+        // Button
+        $button.find(".nameButton").text(data[i].name).data('id', data[i].rId).on('click', function() { reminderPopup($(this).data('id')) });
+        if (data[i].status != "completed") {
+          $button.find(".hidden").attr('id', 'cb-' + data[i].rId);
+          $button.find(".hidden").removeClass("hidden").on('change', function() { revealStatusButton(this) });
+        }
+        // Popup
+        $popup.attr('id', 'clientPopup-' + data[i].rId);
+        $popup.find('.close-button').data('id', data[i].rId).on('click', function() { reminderPopupClose($(this).data('id')) });
+        // Set values
+        $popup.find('.popupHeader').html(data[i].name);
+        if (data[i].status == 'awaiting' || data[i].status == 'followUp') {
+          $popup.find('.interactionsDiv').css('display', 'block');
+          $popup.find('.callOutcomes').css('display', 'block');
+        } else if (data[i].status == "completed") {                  // Hide actions section in completed list
+          $popup.find('.actionsDiv').css('display', 'none');
+        } else {
+          //$popup.find('.revealCallOutcomes').on('change', function() { if (this.checked) { $(this).closest('.actionsDiv').next('.callOutcomes').css('display', 'block'); } });
+        }
+
+        li.html($button);
+        li.append($popup);
+        //var button = $('<button>').text('Open Popup').data('popupId', i);
+        list.append(li);
+      }
+    },
+    error: function(xhr, status, error) {
+      // Handle AJAX error
+      console.log('AJAX Error while fetching ' +  l +  ' reminder list:', error);
+    }
+  });
+}
+
+// Open list tab
 function openTab(evt, tabName) {
     // Get all tab content elements and hide them
     const tabContent = document.getElementsByClassName('tabContent');
@@ -48,30 +117,21 @@ function openTab(evt, tabName) {
 
 // Reminder popup
 function reminderPopup(i) {
-  const popup = document.getElementById("clientPopup-" + i);
-
-  popup.style.display = "grid";
+  //const popup = document.getElementById("clientPopup-" + i);
+  $('#' + 'clientPopup-' + i).css('display', 'grid')
+  //popup.style.display = "grid";
   document.getElementById("overlay").style.visibility = "visible";
-  //popup.style.width = popup.parentNode.parentElement.clientWidth.toString() + "px";
 }
 
 function reminderPopupClose(i) {
-  document.getElementById("clientPopup-" + i).style.display = "none";
+  $('#' + 'clientPopup-' + i).css('display', 'none');
+  //document.getElementById("clientPopup-" + i).style.display = "none";
   document.getElementById("overlay").style.visibility = "hidden";
 }
 
 // Reveals set multi status button if any checkboxes are selected
-function revealStatusButton() {
-  const checkboxes = document.getElementsByName("selectedClients");
-  let anyChecked = false;
-
-  checkboxes.forEach(function(checkbox) {
-    if (checkbox.checked) {
-      anyChecked = true;
-    }
-  });
-
-  if (anyChecked) {
+function revealStatusButton(cb) {
+  if (cb.checked) {
     document.getElementById("setStatusDiv").style.display = 'block';
   } else {
     document.getElementById("setStatusDiv").style.display = 'none';
@@ -113,7 +173,7 @@ function checkAll(cb) {
           clients[i].checked = checkStatus;
       }
   }
-  revealStatusButton();
+  revealStatusButton(cb);
 }
 
 // Helper, checks if el is a child element of an element with a given id

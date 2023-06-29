@@ -12,12 +12,44 @@ const LIMIT_ADD = 25;
 
 router.get("/", async (req, res) => {
     try {
-        const pending = await clients.pendingList(D1, D2, LIMIT_P);
-        const followUp = await clients.followUpList(D1, D2, LIMIT_FU);
-        const awaiting = await clients.awaitingList();
-        const completed = await clients.completedList();
+        // const pending = await clients.pendingList(D1, D2, LIMIT_P);
+        // const followUp = await clients.followUpList(D1, D2, LIMIT_FU);
+        // const awaiting = await clients.awaitingList();
+        // const completed = await clients.completedList();
 
+        // res.status(200).render("reminders/reminders", {month:MONTH, d1:D1, d2:D2, pending:pending, followUp:followUp, awaiting:awaiting, completed:completed});
+
+        const pending = [];
+        const followUp = [];
+        const awaiting = [];
+        const completed = [];
         res.status(200).render("reminders/reminders", {month:MONTH, d1:D1, d2:D2, pending:pending, followUp:followUp, awaiting:awaiting, completed:completed});
+    } catch (error) {
+        res.status(500).send();
+    }
+});
+
+// Get pending list
+router.get("/load-reminder-list", async (req, res) => {
+    try {
+        var list = req.query.list;
+        var data = [];
+
+        switch (list) {
+            case "pendingList":
+              data = await clients.pendingList(D1, D2, LIMIT_P);
+              break;
+            case "followUpList":
+              data = await clients.followUpList(D1, D2, LIMIT_FU);
+              break;
+            case "awaitingList":
+              data = await clients.awaitingList();
+              break;
+            case "completedList":
+              data = await clients.completedList();
+              break;
+          }
+        res.json(JSON.stringify(data));
     } catch (error) {
         res.status(500).send();
     }
@@ -111,31 +143,32 @@ router.post("/set-client-status-:id-:rId", async (req, res) => {
 router.post("/set-client-status-multi", async (req, res) => {
     try {
         var rIds = req.body["selectedClients"];
+        console.log(rIds)
 
-        if (typeof rIds == "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
-            rIds = [rIds];
-        } else if (typeof rIds == 'undefined') {
-            rIds = [];
-        }
-        if (req.body.clientStatus) {
-            if (req.body.incrementYear == 'incrementYear') {
-                // Increment year for all clients
-                for (let i = 0; i < rIds.length; i++) {
-                    let rDate = await clients.reminder(rIds[i]);
-                    let nYear = 0;
+        // if (typeof rIds == "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
+        //     rIds = [rIds];
+        // } else if (typeof rIds == 'undefined') {
+        //     rIds = [];
+        // }
+        // if (req.body.clientStatus) {
+        //     if (req.body.incrementYear == 'incrementYear') {
+        //         // Increment year for all clients
+        //         for (let i = 0; i < rIds.length; i++) {
+        //             let rDate = await clients.reminder(rIds[i]);
+        //             let nYear = 0;
 
-                    rDate = rDate.rDate.toLocaleDateString('en-GB');
-                    nYear = parseInt(rDate.slice(6)) + 1;
-                    rDate = nYear.toString() + "-" + rDate.slice(3, 5) + "-" + rDate.slice(0, 2);
+        //             rDate = rDate.rDate.toLocaleDateString('en-GB');
+        //             nYear = parseInt(rDate.slice(6)) + 1;
+        //             rDate = nYear.toString() + "-" + rDate.slice(3, 5) + "-" + rDate.slice(0, 2);
 
-                    await clients.editReminder(rIds[i], rDate);
-                }
-            }
-            // Set clients status
-            for (let i = 0; i < rIds.length; i++) {
-                await clients.setClientStatus(req.body.clientStatus, rIds[i]);
-            }
-        }
+        //             await clients.editReminder(rIds[i], rDate);
+        //         }
+        //     }
+        //     // Set clients status
+        //     for (let i = 0; i < rIds.length; i++) {
+        //         await clients.setClientStatus(req.body.clientStatus, rIds[i]);
+        //     }
+        // }
 
         res.status(201).redirect("/");
     } catch (error) {
