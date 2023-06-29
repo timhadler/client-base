@@ -19,17 +19,13 @@ router.get("/", async (req, res) => {
 
         // res.status(200).render("reminders/reminders", {month:MONTH, d1:D1, d2:D2, pending:pending, followUp:followUp, awaiting:awaiting, completed:completed});
 
-        const pending = [];
-        const followUp = [];
-        const awaiting = [];
-        const completed = [];
-        res.status(200).render("reminders/reminders", {month:MONTH, d1:D1, d2:D2, pending:pending, followUp:followUp, awaiting:awaiting, completed:completed});
+        res.status(200).render("reminders/reminders", {month:MONTH, d1:D1, d2:D2});
     } catch (error) {
         res.status(500).send();
     }
 });
 
-// Get pending list
+// Get a given reminder list from database
 router.get("/load-reminder-list", async (req, res) => {
     try {
         var list = req.query.list;
@@ -185,16 +181,6 @@ router.get("/load-more-:limit", (req, res) => {
             LIMIT_FU += LIMIT_ADD;
         }
         res.redirect("/");
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
-// POST clear confirmed list
-router.post("/reset-confirmed-list", async (req, res) => {
-    try {
-        await clients.resetConfirmedList();
-        res.status(201).redirect("/");
     } catch (error) {
         res.status(500).send(error.message);
     }

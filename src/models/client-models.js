@@ -278,13 +278,6 @@ exports.setReminderFlag = async function(id, value) {
     await db.query(sqlQuery, [value, id]);
 }
 
-// Clear all clients with status confirmed to status call
-exports.resetConfirmedList = async function() {
-    const sqlQuery = "UPDATE reminders SET STATUS='pending', flag=? WHERE STATUS='confirmed'";
-    await db.query(sqlQuery, null);
-}
-
-
 /***********************************************************
  * Delete
  ***********************************************************/

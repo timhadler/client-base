@@ -76,22 +76,14 @@
             <hr />
             
             <div class="inner_section reminders_list_container section_divider_callList">
-                <ul id="pendingList">
-                    <% for (let i = 0; i < pending.length; i++) { %>
-                        <li class="positionRelative"> 
-                            <!-- Name button that appears in lists, brings up popup -->
-                            <%- include("../partials/callList/reminderPopupButton", {client: pending[i]}) %>
-                            
-                            <!-- Client Popup -->
-                            <%- include("../partials/callList/ReminderPopup", {client: pending[i]}) %>
-                        </li>
-                    <% } %>
-                </ul>
-                <% if (pending.length >= 25) { %>
+                <ul id="pendingList"></ul>
+                <!--
+                <% //if (pending.length >= 25) { %>
                     <form id="load-more-form" action="/load-more-p" method="GET">
                         <button type="submit"> Load more... </button>
                     </form>
-                <% } %>
+                <% //} %>
+                -->
             </div>
         </div>
 
@@ -107,22 +99,14 @@
             </div>
             <hr />
             <div class="inner_section reminders_list_container section_divider_callList">
-                <ul id="followUpList">
-                    <% for (let i = 0; i < followUp.length; i++) { %>
-                        <li class="positionRelative"> 
-                            <!-- Name button that appears in lists, brings up popup -->
-                            <%- include("../partials/callList/reminderPopupButton", {client: followUp[i]}) %>
-                            
-                            <!-- Client Popup -->
-                            <%- include("../partials/callList/ReminderPopup", {client: followUp[i]}) %>
-                        </li>
-                    <% } %>
-                </ul>
-                <% if (followUp.length >= 25) { %>
+                <ul id="followUpList"></ul>
+                <!--
+                <% //if (followUp.length >= 25) { %>
                     <form id="load-more-form" action="/load-more-fu" method="GET">
                         <button type="submit"> Load more... </button>
                     </form>
-                <% } %>
+                <% //} %>
+                -->
             </div>
         </div>
     </div>
@@ -134,23 +118,13 @@
             <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
                 <div>
                     <input id="ACheckbox" type="checkbox">
-                    <span class="RListHeader"> Follow ups </span>
+                    <span class="RListHeader"> Awaiting response </span>
                 </div>
                 <button id="FollowUpFilterButton" style="margin-right: 20px;" class="button_filter"> Filter </button>
             </div>
             <hr />
             <div class="inner_section reminders_list_container section_divider_callList">
-                <ul id="awaitingList">
-                    <% for (let i = 0; i < awaiting.length; i++) { %>
-                        <li class="positionRelative"> 
-                            <!-- Name button that appears in lists, brings up popup -->
-                            <%- include("../partials/callList/reminderPopupButton", {client: awaiting[i]}) %>
-                            
-                            <!-- Client Popup -->
-                            <%- include("../partials/callList/ReminderPopup", {client: awaiting[i]}) %>
-                        </li>
-                    <% } %>
-                </ul>
+                <ul id="awaitingList"></ul>
             </div>
         </div>
     </div>
@@ -159,27 +133,10 @@
     <div id="completed" class="grid_col_1_s2 tabContent">
         <div style="flex:1;">
             <!-- Header and clear button-->
-            <div class="flex flex-ai-c"> 
-                <div class="flex flex-ai-c flex-jc-sb confirmed_width">
-                    <span class="RListHeader"> Confirmed </span> 
-                    <form action="/reset-confirmed-list" method="POST"> 
-                        <button type="submit" class="button_filter"> Clear </button> 
-                    </form> 
-                </div>
-            </div>
+            <span class="RListHeader margin_l_sm"> Confirmed </span> 
             <hr />
             <div class="inner_section section_divider_confirmedList">
-                <ul id="completedList">
-                    <% for (let i = 0; i < completed.length; i++) { %>
-                        <li class="positionRelative"> 
-                            <!-- Name button that appears in lists, brings up popup -->
-                            <%- include("../partials/callList/reminderPopupButton", {client: completed[i]}) %>
-                            
-                            <!-- Client Popup -->
-                            <%- include("../partials/callList/ReminderPopup", {client: completed[i]}) %>
-                        </li>
-                    <% } %>
-                </ul>
+                <ul id="completedList"></ul>
             </div>
         </div>
     </div>
