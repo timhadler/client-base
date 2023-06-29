@@ -548,8 +548,7 @@ nav {
 }
 
 .clientPopup {
-  display: none;
-  width: 415px;
+  width: 425px;
   position: absolute;
   border: 1px solid black;
   background-color: white;

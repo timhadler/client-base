@@ -20,10 +20,6 @@ $(document).ready(function() {
   $('#setStatusButton').on('click', function() { setStatusPopup() });
   $('#setStatusCloseButton').on('click', function() { setStatusClose() });
 
-  // Reminder list popup buttons
-  $('button[name="clientCallButton"]').on('click', function() { reminderPopup(this.id) });
-  $('span[name="clientPopupClose"]').on('click', function() { reminderPopupClose(this.id) });
-
   // Load html files into variables
   $.get("html/reminderPopupButton.html", function(html) {
     reminderPopupButtonHTML = html;
@@ -32,21 +28,14 @@ $(document).ready(function() {
     reminderPopupHTML = html;
   });
 
-  // Load reminder lists
-  loadAllLists();
+  // Load reminder actions lists
+  loadList("pendingList");
+  loadList("followUpList");
 });
 
 /*****************************************************************
  * Functions
  ****************************************************************/
-// Load all reminder lists
-function loadAllLists() {
-  loadList("pendingList");
-  loadList("followUpList");
-  loadList("awaitingList");
-  loadList("completedList");
-};
-
 // AJAX Load a reminder list
 function loadList(l) {
   $.ajax({
@@ -59,33 +48,18 @@ function loadList(l) {
 
       list.empty(); // Clear the existing list items
       for (var i = 0; i < data.length; i++) {
-        var li = $('<li>').addClass("positionRelative");
+        let reminder = data[i];
+        let rId = reminder.rId;
+        var li = $('<li>').attr('id', "reminder-" + rId).addClass("positionRelative");
         var $button = $(reminderPopupButtonHTML);
-        var $popup = $(reminderPopupHTML);
 
         // Button
-        $button.find(".nameButton").text(data[i].name).data('id', data[i].rId).on('click', function() { reminderPopup($(this).data('id')) });
-        if (data[i].status != "completed") {
-          $button.find(".hidden").attr('id', 'cb-' + data[i].rId);
+        $button.find(".nameButton").text(reminder.name).on('click', function() { openPopup(reminder) });
+        if (reminder.status != "completed") {
           $button.find(".hidden").removeClass("hidden").on('change', function() { revealStatusButton(this) });
-        }
-        // Popup
-        $popup.attr('id', 'clientPopup-' + data[i].rId);
-        $popup.find('.close-button').data('id', data[i].rId).on('click', function() { reminderPopupClose($(this).data('id')) });
-        // Set values
-        $popup.find('.popupHeader').html(data[i].name);
-        if (data[i].status == 'awaiting' || data[i].status == 'followUp') {
-          $popup.find('.interactionsDiv').css('display', 'block');
-          $popup.find('.callOutcomes').css('display', 'block');
-        } else if (data[i].status == "completed") {                  // Hide actions section in completed list
-          $popup.find('.actionsDiv').css('display', 'none');
-        } else {
-          //$popup.find('.revealCallOutcomes').on('change', function() { if (this.checked) { $(this).closest('.actionsDiv').next('.callOutcomes').css('display', 'block'); } });
         }
 
         li.html($button);
-        li.append($popup);
-        //var button = $('<button>').text('Open Popup').data('popupId', i);
         list.append(li);
       }
     },
@@ -94,6 +68,33 @@ function loadList(l) {
       console.log('AJAX Error while fetching ' +  l +  ' reminder list:', error);
     }
   });
+}
+
+// Open reminder popup
+function openPopup(data) {
+  var $popup = $(reminderPopupHTML);
+
+  // Close button event listener
+  $popup.find('.close-button').on('click', function() { closePopup() });
+
+  // Set popup values
+  $popup.find('.popupHeader').html(data.name);
+  if (data.status == 'awaiting' || data.status == 'followUp') {
+    $popup.find('.interactionsDiv').css('display', 'block');
+    $popup.find('.callOutcomes').css('display', 'block');
+  } else if (data.status == "completed") {                  // Hide actions section in completed list
+    $popup.find('.actionsDiv').css('display', 'none');
+  } else {
+    $popup.find('.revealCallOutcomes').on('change', function() { if (this.checked) { $(this).closest('.actionsDiv').next('.callOutcomes').css('display', 'block'); } });
+    $popup.find('.hideCallOutcomes').on('change', function() { if (this.checked) { $popup.find('.callOutcomes').css('display', 'none'); } });
+  }
+  $('#reminder-' + data.rId).append($popup);
+  $('#overlay').css('visibility', 'visible');
+}
+
+function closePopup() {
+  $('.clientPopup').remove();
+  $('#overlay').css('visibility', 'hidden');
 }
 
 // Open list tab
@@ -109,24 +110,20 @@ function openTab(evt, tabName) {
     for (let i = 0; i < tabLinks.length; i++) {
       tabLinks[i].classList.remove('active');
     }
+
+    // Load the appropriate lists
+    if (tabName == "awaiting") {
+      loadList("awaitingList");
+    } else if (tabName =="completed") {
+      loadList("completedList");
+    } else if (tabName == "actions") {
+      loadList("pendingList");
+      loadList("followUpList");
+    }
   
     // Show the selected tab content and mark the tab link as active
     document.getElementById(tabName).style.display = "flex";
     evt.currentTarget.classList.add('active');
-}
-
-// Reminder popup
-function reminderPopup(i) {
-  //const popup = document.getElementById("clientPopup-" + i);
-  $('#' + 'clientPopup-' + i).css('display', 'grid')
-  //popup.style.display = "grid";
-  document.getElementById("overlay").style.visibility = "visible";
-}
-
-function reminderPopupClose(i) {
-  $('#' + 'clientPopup-' + i).css('display', 'none');
-  //document.getElementById("clientPopup-" + i).style.display = "none";
-  document.getElementById("overlay").style.visibility = "hidden";
 }
 
 // Reveals set multi status button if any checkboxes are selected
