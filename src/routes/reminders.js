@@ -12,13 +12,6 @@ const LIMIT_ADD = 25;
 
 router.get("/", async (req, res) => {
     try {
-        // const pending = await clients.pendingList(D1, D2, LIMIT_P);
-        // const followUp = await clients.followUpList(D1, D2, LIMIT_FU);
-        // const awaiting = await clients.awaitingList();
-        // const completed = await clients.completedList();
-
-        // res.status(200).render("reminders/reminders", {month:MONTH, d1:D1, d2:D2, pending:pending, followUp:followUp, awaiting:awaiting, completed:completed});
-
         res.status(200).render("reminders/reminders", {month:MONTH, d1:D1, d2:D2});
     } catch (error) {
         res.status(500).send();
