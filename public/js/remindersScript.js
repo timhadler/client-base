@@ -63,9 +63,9 @@ function loadList(l, offset=0) {
         // List item properties
         $button.find('.RProperty .Rproperty-value').html(new Date(data[i].rDate).toLocaleDateString('en-GB'));
         if (data[i].mobile) {
-          $button.find('.MobileProperty .Rproperty-value').html(data[i].mobile);
+          $button.find('.mobileProperty .Rproperty-value').html(data[i].mobile);
         } else {
-          $button.find('.MobileProperty').hide();
+          $button.find('.mobileProperty').css('visibility', 'hidden');
         }
         if (reminder.status != "completed") {
           $button.find(".hidden").removeClass("hidden").on('change', function() { revealStatusButton(this) });

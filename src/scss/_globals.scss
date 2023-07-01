@@ -336,11 +336,11 @@ hr {
 .nameButton {
     font-weight: bold;
     text-align: left;
-    width: 150px;
+    width: 170px;
     padding: 0;
     font-size: $font-v-small;
     color: $secondary;
-    margin-right: 20px;
+    //margin-right: auto;
 }
 
 .nameButton:hover {

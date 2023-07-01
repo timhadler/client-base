@@ -453,11 +453,10 @@ hr {
 .nameButton {
   font-weight: bold;
   text-align: left;
-  width: 150px;
+  width: 170px;
   padding: 0;
   font-size: 14px;
   color: #0652C3;
-  margin-right: 20px;
 }
 
 .nameButton:hover {
@@ -622,9 +621,10 @@ nav {
 }
 
 .mobileProperty {
-  width: 80px;
+  width: 230px;
   align-items: center;
-  padding-right: 10px;
+  padding-right: 30px;
+  margin-left: auto;
 }
 
 .RProperty {
