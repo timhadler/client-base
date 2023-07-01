@@ -52,7 +52,7 @@
 }
 
 .commentsList {
-    height: 100px;
+    max-height: 80px;
     width: 375px;
     word-wrap:break-word; 
     overflow: auto;
@@ -106,7 +106,8 @@
 }
 
 .section_divider_confirmedList {
-    overflow-y: scroll;
+    overflow-y: auto;
+    border: none;
 }
 
 // Client flag

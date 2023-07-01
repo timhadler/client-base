@@ -109,6 +109,38 @@ function openPopup(data) {
   // Submit form
   $popup.find("#reminderPopupSubmitButton").on('click', function() { reminderSubmit(data.rId) })
 
+  // Fetch note and interaction data
+  $.ajax({
+    url: "load-popup-data",
+    method: "GET",
+    data: { clientId:data.id, reminderId:data.rId },
+    success: function(res) {
+      const data = JSON.parse(res);
+      const notes = data.notes;
+      const interactions = data.interactions;
+
+      // Notes
+      if (notes.length == 0) {
+        // Hide notes section
+        $('#popupNotesDiv').hide();
+      }
+      for (var i = 0; i < notes.length; i++) {
+        let li = $('<li>').html(notes[i].note)
+        $('#reminderPopupNotes').append(li);
+      }
+
+      // Interactions
+      for (var i = 0; i < interactions.length; i++) {
+        let li = $('<li>').html(interactions[i].interaction);
+        $('#reminderPopupInteractions').append(li);
+      }
+    },
+    error: function(xhr, status, error) {
+      // Handle AJAX error
+      console.log('AJAX Error while opening popup:', error, xhr, status);
+    }
+  });
+
   $('#reminder-' + data.rId).append($popup);
   $('#overlay').css('visibility', 'visible');
 }

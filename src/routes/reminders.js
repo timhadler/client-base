@@ -65,6 +65,19 @@ router.get("/setDates", async (req, res) => {
     }
 });
 
+// Fetch the notes for given client
+router.get("/load-popup-data", async (req, res) => {
+    try {
+        const noteData = await clients.clientNotes(req.query.clientId);
+        const interactionData = await clients.reminderInteractions(req.query.reminderId);
+        const data = {notes:noteData, interactions:interactionData};
+
+        res.json(JSON.stringify(data));
+    } catch (error) {
+        res.status(500).send();
+    }
+});
+
 // POST set client status, AJAX
 router.post("/set-reminder-status", async (req, res) => {
     try {
@@ -105,7 +118,6 @@ router.post("/set-reminder-status", async (req, res) => {
         if (status) {
             await clients.setReminderStatus(status, outcome, rId);
         }
-        console.log(rId);
 
         // Add note if one is provided
         if (note) {
@@ -169,20 +181,9 @@ router.post("/set-client-status-multi", async (req, res) => {
     }
 });
 
-// Load more reminders of status pending
-router.get("/load-more-:limit", (req, res) => {
-    try {
-        if (req.params.limit == "p") {
-            LIMIT_P += LIMIT_ADD;
-        } else if (req.params.limit == "fu") {
-            LIMIT_FU += LIMIT_ADD;
-        }
-        res.redirect("/");
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
+/***********************************************
+Helper Functions
+ ***********************************************/
 // Gets the date n days from the current date (output: yyyy-mm-dd)
 function getDate(n) {
     let date = new Date();
