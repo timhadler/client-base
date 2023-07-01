@@ -23,7 +23,6 @@ router.get("/load-reminder-list", async (req, res) => {
 
         switch (list) {
             case "pendingList":
-            //   data = await clients.pendingList(D1, D2, LIMIT_P);
               data = await clients.pendingList(D1, D2, req.query.limit, req.query.offset);
               break;
             case "followUpList":

@@ -645,6 +645,11 @@ nav {
   color: #009AAF;
   font-size: 20px;
   font-weight: bold;
+  margin-right: 5px;
+}
+
+.reminderCount {
+  color: grey;
 }
 
 .popupHeader {

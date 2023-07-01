@@ -28,7 +28,7 @@ exports.clientList = async function(x) {
 
 // Fetches the client details associated with the reminder dates between d1 and d2 and have status of "pending"
 exports.pendingList = async function (d1, d2, limit, offset) {
-    const sqlQuery = "SELECT clients.id, name, mobile, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='pending' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate LIMIT " + limit + " OFFSET " + offset;
+    const sqlQuery = "SELECT COUNT(*) over() as n, clients.id, name, mobile, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='pending' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate LIMIT " + limit + " OFFSET " + offset;
     const rows = await db.query(sqlQuery);
 
     return rows;
@@ -36,7 +36,7 @@ exports.pendingList = async function (d1, d2, limit, offset) {
 
 // Fetches the client details associated with the reminder dates between d1 and d2 and have status "noResponse" or "followUp"
 exports.followUpList = async function (d1, d2, limit, offset) {
-    const sqlQuery = "SELECT name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE status IN ('followUp', 'noResponse') AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY name LIMIT " + limit + " OFFSET " + offset;
+    const sqlQuery = "SELECT COUNT(*) over() as n, name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE status IN ('followUp', 'noResponse') AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY name LIMIT " + limit + " OFFSET " + offset;
     const rows = await db.query(sqlQuery);
 
     return rows;
@@ -44,7 +44,7 @@ exports.followUpList = async function (d1, d2, limit, offset) {
 
 // Fetches the client details associated with remidners that have status "awaitingResponse"
 exports.awaitingList = async function (limit, offset) {
-    const sqlQuery = "SELECT name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='awaiting' ORDER BY name LIMIT " + limit + " OFFSET " + offset;
+    const sqlQuery = "SELECT COUNT(*) over() as n, name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='awaiting' ORDER BY name LIMIT " + limit + " OFFSET " + offset;
     const rows = await db.query(sqlQuery);
 
     return rows;

@@ -49,6 +49,19 @@ function loadList(l, offset=0) {
       const data = JSON.parse(res);
       var list = $('#' + l);
 
+      // Reminder count
+      let n = 0;
+      if (data.length > 0) {
+        n = data[0].n;
+        if (l == "pendingList") {
+          $('#pendingCount').html('(' + n + ')');
+        } else if (l == "followUpList") {
+          $('#followUpCount').html('(' + n + ')');
+        } else if (l == "awaitingList") {
+          $('#awaitingCount').html('(' + n + ')');
+        }
+      }
+
       if (offset === 0) {
         list.empty(); // Clear the list only for the initial load
       }
@@ -74,11 +87,10 @@ function loadList(l, offset=0) {
         li.html($button);
         list.append(li);
       }
-      //if (data.length < limit + offset) {
-        //$('.load-more[data-list="' + l + '"]').hide();
-        //let loadMoreButton = $("<button>").attr('type', 'button').text('Load more...').on('click', function() { loadMore() });
-        //list.append(loadMoreButton);
-      //}
+      // Hide load more button
+      if (list.find('li').length == n) {
+        $('.load-more[data-list="' + l + '"]').hide();
+      }
     },
     error: function(xhr, status, error) {
       // Handle AJAX error
