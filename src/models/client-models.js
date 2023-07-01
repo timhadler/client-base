@@ -28,7 +28,7 @@ exports.clientList = async function(x) {
 
 // Fetches the client details associated with the reminder dates between d1 and d2 and have status of "pending"
 exports.pendingList = async function (d1, d2, limit, offset) {
-    const sqlQuery = "SELECT name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='pending' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate LIMIT " + limit + " OFFSET " + offset;
+    const sqlQuery = "SELECT clients.id, name, mobile, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='pending' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY rDate LIMIT " + limit + " OFFSET " + offset;
     const rows = await db.query(sqlQuery);
 
     return rows;

@@ -60,6 +60,13 @@ function loadList(l, offset=0) {
 
         // Button
         $button.find(".nameButton").text(reminder.name).on('click', function() { openPopup(reminder) });
+        // List item properties
+        $button.find('.RProperty .Rproperty-value').html(new Date(data[i].rDate).toLocaleDateString('en-GB'));
+        if (data[i].mobile) {
+          $button.find('.MobileProperty .Rproperty-value').html(data[i].mobile);
+        } else {
+          $button.find('.MobileProperty').hide();
+        }
         if (reminder.status != "completed") {
           $button.find(".hidden").removeClass("hidden").on('change', function() { revealStatusButton(this) });
         }
@@ -94,6 +101,8 @@ function openPopup(data) {
 
   // Close button event listener
   $popup.find('.close-button').on('click', function() { closePopup() });
+  // Client details link
+  $popup.find('#reminderPopupDetailsLink').attr('href', '/clients/?clientID=' + data.id);
 
   // Set popup values
   $popup.find('.popupHeader').html(data.name);
