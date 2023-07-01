@@ -60,7 +60,7 @@ exports.completedList = async function () {
 
 // Fetches all interactions associated with a given reminder
 exports.reminderInteractions = async function(id) {
-    const sqlQuery = "SELECT interaction, created FROM interactions WHERE reminder_id=" + id;
+    const sqlQuery = "SELECT interaction, created FROM interactions WHERE reminder_id=" + id + " ORDER BY created DESC";
     const rows = await db.query(sqlQuery);
 
     return rows;
@@ -68,7 +68,7 @@ exports.reminderInteractions = async function(id) {
 
 // Fethes all notes related to a client with a given id
 exports.clientNotes = async function(id) {
-    const sqlQuery = "SELECT note, created FROM notes WHERE client_id = " + id;
+    const sqlQuery = "SELECT note, created FROM notes WHERE client_id = " + id + " ORDER BY created DESC";
     const rows = await db.query(sqlQuery);
 
     return rows;
