@@ -6,9 +6,6 @@ const clients = require("../models/client-models");
 global.D1 = getDate(0).slice(0, 8) + "01"
 global.D2 = D1.slice(0, 8) + getLastDate(D1.slice(5, 7));
 global.MONTH = D1.slice(0, 7);
-global.LIMIT_P = 25;
-global.LIMIT_FU = 25;
-const LIMIT_ADD = 25;
 
 router.get("/", async (req, res) => {
     try {
@@ -26,13 +23,14 @@ router.get("/load-reminder-list", async (req, res) => {
 
         switch (list) {
             case "pendingList":
-              data = await clients.pendingList(D1, D2, LIMIT_P);
+            //   data = await clients.pendingList(D1, D2, LIMIT_P);
+              data = await clients.pendingList(D1, D2, req.query.limit, req.query.offset);
               break;
             case "followUpList":
-              data = await clients.followUpList(D1, D2, LIMIT_FU);
+              data = await clients.followUpList(D1, D2, req.query.limit, req.query.offset);
               break;
             case "awaitingList":
-              data = await clients.awaitingList();
+              data = await clients.awaitingList(req.query.limit, req.query.offset);
               break;
             case "completedList":
               data = await clients.completedList();

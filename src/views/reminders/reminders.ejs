@@ -77,13 +77,7 @@
             
             <div class="inner_section reminders_list_container section_divider_callList">
                 <ul id="pendingList"></ul>
-                <!--
-                <% //if (pending.length >= 25) { %>
-                    <form id="load-more-form" action="/load-more-p" method="GET">
-                        <button type="submit"> Load more... </button>
-                    </form>
-                <% //} %>
-                -->
+                <button class="load-more" data-list="pendingList"> Load more... </button>
             </div>
         </div>
 
@@ -100,13 +94,7 @@
             <hr />
             <div class="inner_section reminders_list_container section_divider_callList">
                 <ul id="followUpList"></ul>
-                <!--
-                <% //if (followUp.length >= 25) { %>
-                    <form id="load-more-form" action="/load-more-fu" method="GET">
-                        <button type="submit"> Load more... </button>
-                    </form>
-                <% //} %>
-                -->
+                <button class="load-more" data-list="followUpList"> Load more... </button>
             </div>
         </div>
     </div>
@@ -125,6 +113,7 @@
             <hr />
             <div class="inner_section reminders_list_container section_divider_callList">
                 <ul id="awaitingList"></ul>
+                <button class="load-more" data-list="awaitingList"> Load more... </button>
             </div>
         </div>
     </div>

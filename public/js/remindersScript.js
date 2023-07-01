@@ -1,6 +1,8 @@
 var reminderPopupButtonHTML;
 var reminderPopupHTML;
 
+const LIMIT = 25;
+
 $(document).ready(function() {
   // Open action tabs on load
   $('#actions').css('display', 'flex');
@@ -31,22 +33,25 @@ $(document).ready(function() {
   // Load reminder actions lists
   loadList("pendingList");
   loadList("followUpList");
+  $('.load-more').on('click', function() { loadMore(this) });
 });
 
 /*****************************************************************
  * Functions
  ****************************************************************/
 // AJAX Load a reminder list
-function loadList(l) {
+function loadList(l, offset=0) {
   $.ajax({
     url: "load-reminder-list",
     method: "GET",
-    data: { list:l },
+    data: { list:l, limit:LIMIT, offset:offset },
     success: function(res) {
       const data = JSON.parse(res);
       var list = $('#' + l);
 
-      list.empty(); // Clear the existing list items
+      if (offset === 0) {
+        list.empty(); // Clear the list only for the initial load
+      }
       for (var i = 0; i < data.length; i++) {
         let reminder = data[i];
         let rId = reminder.rId;
@@ -62,12 +67,25 @@ function loadList(l) {
         li.html($button);
         list.append(li);
       }
+      //if (data.length < limit + offset) {
+        //$('.load-more[data-list="' + l + '"]').hide();
+        //let loadMoreButton = $("<button>").attr('type', 'button').text('Load more...').on('click', function() { loadMore() });
+        //list.append(loadMoreButton);
+      //}
     },
     error: function(xhr, status, error) {
       // Handle AJAX error
-      console.log('AJAX Error while fetching ' +  l +  ' reminder list:', error);
+      console.log('AJAX Error while fetching ' +  l +  ' reminder list:', error, xhr, status);
     }
   });
+}
+
+// Load more data into a list
+function loadMore(button) {
+  const listId = $(button).data('list');
+  let list = $('#' + listId);
+  let offset = list.find('li').length;
+  loadList(listId, offset)
 }
 
 // Open reminder popup
