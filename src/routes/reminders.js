@@ -95,8 +95,8 @@ router.post("/set-reminder-status", async (req, res) => {
                 status = "completed";
                 outcome = null;         // no outcome if ignored
             }
-            if (outcome == "noAns") {
-                action += " - no answer";
+            if (outcome) {
+                action += " - " + outcome;
             }
             await clients.createInteraction(action, rId);
         }
