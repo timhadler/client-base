@@ -53,13 +53,13 @@ function loadList(l, offset=0) {
       let n = 0;
       if (data.length > 0) {
         n = data[0].n;
-        if (l == "pendingList") {
-          $('#pendingCount').html('(' + n + ')');
-        } else if (l == "followUpList") {
-          $('#followUpCount').html('(' + n + ')');
-        } else if (l == "awaitingList") {
-          $('#awaitingCount').html('(' + n + ')');
-        }
+      }
+      if (l == "pendingList") {
+        $('#pendingCount').html('(' + n + ')');
+      } else if (l == "followUpList") {
+        $('#followUpCount').html('(' + n + ')');
+      } else if (l == "awaitingList") {
+        $('#awaitingCount').html('(' + n + ')');
       }
 
       if (offset === 0) {
