@@ -20,6 +20,7 @@ $(document).ready(function() {
 
   // Set status button
   $('#setStatusButton').on('click', function() { setStatusPopup() });
+  $('#reminderSetStautusMultiForm').find($('button[type="button"]')).on('click', function() { multiStatusSubmit() });
   $('#setStatusCloseButton').on('click', function() { setStatusClose() });
 
   // Load html files into variables
@@ -81,7 +82,7 @@ function loadList(l, offset=0) {
           $button.find('.mobileProperty').css('visibility', 'hidden');
         }
         if (reminder.status != "completed") {
-          $button.find(".hidden").removeClass("hidden").on('change', function() { revealStatusButton(this) });
+          $button.find(".hidden").removeClass("hidden").attr('value', rId).on('change', function() { revealStatusButton() });
         }
 
         li.html($button);
@@ -166,11 +167,6 @@ function openPopup(data) {
   $('#overlay').css('visibility', 'visible');
 }
 
-function closePopup() {
-  $('.clientPopup').remove();
-  $('#overlay').css('visibility', 'hidden');
-}
-
 // Submit the reminder popup form
 function reminderSubmit(rId) {
   // Get the form data
@@ -191,10 +187,35 @@ function reminderSubmit(rId) {
   });
 }
 
+// Submit the set multi status form
+function multiStatusSubmit() {
+  var formData = $('#reminderSetStautusMultiForm').serialize();
+  const selectedClients = $('input[type="checkbox"][name="selectedClients"]:checked');
+
+  for (let i = 0; i < selectedClients.length; i++) {
+    let rId = $(selectedClients[i]).attr('value');
+    $.ajax({
+      url: "/set-reminder-status",
+      method: "POST",
+      data: { data:formData, id:rId },
+      success: function(res) {
+        
+      },
+      error: function(xhr, status, error) {
+        // Handle AJAX error
+        console.log('AJAX Error while POSTING reminder form in multi submit:', error, xhr, status);
+      }
+    });
+  }
+  setStatusClose();
+  revealStatusButton();
+  location.reload()
+}
+
 // Reloads the current tabs lists
 function reloadActiveLists() {
   var tabId = $(".remindersTabLink.active").attr('id');
-  
+  console.log(tabId)
   if (tabId.includes("action")) {
     loadList("pendingList");
     loadList("followUpList");
@@ -234,9 +255,11 @@ function openTab(evt, tabName) {
     evt.currentTarget.classList.add('active');
 }
 
-// Reveals set multi status button if any checkboxes are selected
-function revealStatusButton(cb) {
-  if (cb.checked) {
+// Reveals set multi status popup button if any checkboxes are selected
+function revealStatusButton() {
+  const selected = $('input[type="checkbox"][name="selectedClients"]:checked');
+
+  if (selected.length > 0) {
     document.getElementById("setStatusDiv").style.display = 'block';
   } else {
     document.getElementById("setStatusDiv").style.display = 'none';
@@ -250,8 +273,15 @@ function setStatusPopup() {
 }
 
 function setStatusClose() {
-  document.getElementById("setStatusPopup").style.visibility = "hidden";
-  overlay.style.visibility = "hidden";
+  // document.getElementById("setStatusPopup").style.visibility = "hidden";
+  // overlay.style.visibility = "hidden";
+  $('#setStatusPopup').remove();
+  $('#overlay').css('visibility', 'hidden');
+}
+
+function closePopup() {
+  $('.clientPopup').remove();
+  $('#overlay').css('visibility', 'hidden');
 }
 
 // Checks all list items associated with a select all checkbox
@@ -278,7 +308,7 @@ function checkAll(cb) {
           clients[i].checked = checkStatus;
       }
   }
-  revealStatusButton(cb);
+  revealStatusButton();
 }
 
 // Helper, checks if el is a child element of an element with a given id

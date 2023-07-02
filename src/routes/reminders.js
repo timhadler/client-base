@@ -144,41 +144,41 @@ router.post("/set-reminder-status", async (req, res) => {
 });
 
 // POST set multiple client statuses using checkboxes
-router.post("/set-client-status-multi", async (req, res) => {
-    try {
-        var rIds = req.body["selectedClients"];
-        console.log(rIds)
+// router.post("/set-reminder-status-multi", async (req, res) => {
+//     try {
+//         var rIds = req.body["selectedClients"];
+//         console.log(rIds)
 
-        // if (typeof rIds == "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
-        //     rIds = [rIds];
-        // } else if (typeof rIds == 'undefined') {
-        //     rIds = [];
-        // }
-        // if (req.body.clientStatus) {
-        //     if (req.body.incrementYear == 'incrementYear') {
-        //         // Increment year for all clients
-        //         for (let i = 0; i < rIds.length; i++) {
-        //             let rDate = await clients.reminder(rIds[i]);
-        //             let nYear = 0;
+//         // if (typeof rIds == "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
+//         //     rIds = [rIds];
+//         // } else if (typeof rIds == 'undefined') {
+//         //     rIds = [];
+//         // }
+//         // if (req.body.clientStatus) {
+//         //     if (req.body.incrementYear == 'incrementYear') {
+//         //         // Increment year for all clients
+//         //         for (let i = 0; i < rIds.length; i++) {
+//         //             let rDate = await clients.reminder(rIds[i]);
+//         //             let nYear = 0;
 
-        //             rDate = rDate.rDate.toLocaleDateString('en-GB');
-        //             nYear = parseInt(rDate.slice(6)) + 1;
-        //             rDate = nYear.toString() + "-" + rDate.slice(3, 5) + "-" + rDate.slice(0, 2);
+//         //             rDate = rDate.rDate.toLocaleDateString('en-GB');
+//         //             nYear = parseInt(rDate.slice(6)) + 1;
+//         //             rDate = nYear.toString() + "-" + rDate.slice(3, 5) + "-" + rDate.slice(0, 2);
 
-        //             await clients.editReminder(rIds[i], rDate);
-        //         }
-        //     }
-        //     // Set clients status
-        //     for (let i = 0; i < rIds.length; i++) {
-        //         await clients.setClientStatus(req.body.clientStatus, rIds[i]);
-        //     }
-        // }
+//         //             await clients.editReminder(rIds[i], rDate);
+//         //         }
+//         //     }
+//         //     // Set clients status
+//         //     for (let i = 0; i < rIds.length; i++) {
+//         //         await clients.setClientStatus(req.body.clientStatus, rIds[i]);
+//         //     }
+//         // }
 
-        res.status(201).redirect("/");
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
+//         res.status(201).redirect("/");
+//     } catch (error) {
+//         res.status(500).send(error.message);
+//     }
+// });
 
 /***********************************************
 Helper Functions
