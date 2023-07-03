@@ -42,13 +42,6 @@
 .clientPopup {
     width: 425px;;
     position: absolute;
-    border: 1px solid black;
-    background-color: white;
-    background-attachment:local;
-    z-index: 5;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    padding: 20px;
 }
 
 .commentsList {
@@ -148,11 +141,4 @@
 
 .reminderCount {
     color: grey;
-}
-
-.popupHeader {
-    font-weight: bold;
-    font-size: $font-small;
-    padding-right: 10px;
-
 }
