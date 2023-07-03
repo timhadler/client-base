@@ -52,7 +52,7 @@ exports.awaitingList = async function (limit, offset) {
 
 // Fetches all clients with reminders statuses "completed"
 exports.completedList = async function () {
-    const sqlQuery = "SELECT name, clients.id, rDate, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='completed' ORDER BY name";
+    const sqlQuery = "SELECT name, clients.id, rDate, reminders.id AS rId, reminders.status, outcome FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='completed' ORDER BY name";
     const rows = await db.query(sqlQuery);
 
     return rows;

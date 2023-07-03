@@ -92,7 +92,7 @@ router.post("/set-reminder-status", async (req, res) => {
         if (action) {
             if (action == "ignore") {
                 status = "completed";
-                outcome = null;         // no outcome if ignored
+                outcome = "ignored";         // no outcome if ignored
             }
             if (outcome) {
                 action += " - " + outcome;

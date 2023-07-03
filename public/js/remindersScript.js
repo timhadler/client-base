@@ -77,11 +77,20 @@ function loadList(l, offset=0) {
         // List item properties
         if (l == "pendingList") {
           $button.find('.rProperty2 .Rproperty-name').html("Reminder: ");
-          $button.find('.rProperty2 .Rproperty-value').html(new Date(data[i].rDate).toLocaleDateString('en-GB'));
-          if (data[i].mobile) {
+          $button.find('.rProperty2 .Rproperty-value').html(new Date(reminder.rDate).toLocaleDateString('en-GB'));
+          if (reminder.mobile) {
             $button.find('.rProperty1 .Rproperty-name').html("Mobile: ");
-            $button.find('.rProperty1 .Rproperty-value').html(data[i].mobile);
+            $button.find('.rProperty1 .Rproperty-value').html(reminder.mobile);
           } 
+        } else if(l == "followUpList") {
+          if (reminder.status == "followUp") {
+            $button.find('.rProperty2 .Rproperty-name').html("Requires follow up: ");
+            $button.find('.rProperty2 .Rproperty-value').html(new Date(reminder.rDate).toLocaleDateString('en-GB'));
+          } else {
+            $button.find('.rProperty2 .Rproperty-value').html("No Answer");
+          }
+        } else if (l == "completedList") {
+          $button.find('.rProperty2 .Rproperty-name').html(reminder.outcome);
         }
         // Show the reminder checkbox in all lists but completed
         if (reminder.status != "completed") {
