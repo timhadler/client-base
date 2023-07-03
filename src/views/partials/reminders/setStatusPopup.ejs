@@ -1,19 +1,17 @@
-<!-- Client popups for the callList -->
-<div class="popup popup-reminder">
-    <!-- Header -->
+<div id="setStatusPopup" class="hidden popup">
     <div class="popupHeaderDiv">
-        <p class="popupHeader">  </p>
-        <span class="close-button">&times</span>
+        <h3 style="text-align: center;"> Set reminder status </h3>
+        <span id="setStatusCloseButton" class="close-button">&times</span>
     </div>
     <br />
-    <form id="reminderPopupForm">
+    <form id="reminderSetStautusMultiForm">
         <!-- Action inputs -->
         <div class="actionsDiv">
             <p class="bold size_v_small"> Action </p>
             <input id="rCallInput" type="radio" name="action" class="revealCallOutcomes" value="call">
             <label for="rCallInput"> Call </label> 
             <input id="rTextInput" type="radio" name="action" class="hideCallOutcomes" value="text">
-            <label for="rTextInput"> Text </label> 
+            <label for="rTextInput"></labelfor> Text </label> 
             <input id="rEmailInput" type="radio" name="action" class="hideCallOutcomes" value="email">
             <label for="rEmailInput"> Email </label>
             <input id="rIgnoreInput" type="radio" name="action" class="hideCallOutcomes" value="ignore">
@@ -22,7 +20,7 @@
         </div>
 
 
-        <div class="hidden callOutcomes" >
+        <div class="callOutcomes" >
             <p class="bold size_v_small"> Outcome </p>
             <input id="rBInput" type="radio" name="outcome" value="booked">
             <label for="rBInput"> Booked </label>
@@ -40,27 +38,9 @@
         <div class="flex flex-jc-c">
             <textarea name="note" style="width: 260px;" cols="27" rows="3"></textarea>
         </div>
-        <br />
-        <!-- Previous notes -->
-        <div id="popupNotesDiv">
-            <p class="bold size_v_small"> Client notes </p>
-            <ul id="reminderPopupNotes" class="commentsList"></ul>
-            <br />
-        </div>
-        
-        <!-- Previous interactions, shown in awaiting, and follow up lists -->
-        <div class="interactionsDiv">
-            <p class="bold size_v_small"> Previous interactions </p>
-            <ul id="reminderPopupInteractions" class="commentsList"></ul>
-            <br />
-        </div>
-
-
-        <!-- Client details link and Submit button -->
-        <div style="text-align: center;">
-            <a id="reminderPopupDetailsLink" class="color_secondary"> Client Details </a>
-            <br /> <br />
-            <button id="reminderPopupSubmitButton" type="button" class="button_primary"> Submit </button>
+        <br /> <br />
+        <div style="justify-content: center;" class="flex flex-jc-sb">
+            <button class="button_primary" type="button"> Submit </button>
         </div>
     </form>
 </div>

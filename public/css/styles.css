@@ -469,6 +469,7 @@ hr {
 }
 
 .popup {
+  position: absolute;
   border: 1px solid black;
   background-color: white;
   background-attachment: local;
@@ -479,13 +480,18 @@ hr {
 }
 .popup-reminder {
   width: 425px;
-  position: absolute;
 }
 
 .popupHeader {
   font-weight: bold;
   font-size: 16px;
   padding-right: 10px;
+}
+
+.popupHeaderDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 header {

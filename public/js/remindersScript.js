@@ -23,6 +23,10 @@ $(document).ready(function() {
   $('#reminderSetStautusMultiForm').find($('button[type="button"]')).on('click', function() { multiStatusSubmit() });
   $('#setStatusCloseButton').on('click', function() { setStatusClose() });
 
+  // List filter buttons
+  $('#pendingFilterButton').on('click', function() { filterPopup("pending") });
+  $('#filterPopupClose-pending').on('click', function() { filterPopupClose("pending") });
+
   // Load html files into variables
   $.get("html/reminderPopupButton.html", function(html) {
     reminderPopupButtonHTML = html;
@@ -179,6 +183,11 @@ function openPopup(data) {
   $('#overlay').css('visibility', 'visible');
 }
 
+function closePopup() {
+  $('.popup-reminder').remove();
+  $('#overlay').css('visibility', 'hidden');
+}
+
 // Submit the reminder popup form
 function reminderSubmit(rId) {
   // Get the form data
@@ -280,17 +289,22 @@ function revealStatusButton() {
 
 // Set status popup
 function setStatusPopup() {
-  $('#setStatusPopup').css('visibility', 'visible');
+  $('#setStatusPopup').css('display', 'block');
   $('#overlay').css('visibility', 'visible');
 }
 
 function setStatusClose() {
-  $('#setStatusPopup').css('visibility', 'hidden');
+  $('#setStatusPopup').css('display', 'none');
   $('#overlay').css('visibility', 'hidden');
 }
 
-function closePopup() {
-  $('.popup-reminder').remove();
+function filterPopup(list) {
+  $('#filterPopup-' + list).show();
+  $('#overlay').css('visibility', 'visible');
+}
+
+function filterPopupClose(list) {
+  $('#filterPopup-' + list).hide();
   $('#overlay').css('visibility', 'hidden');
 }
 
