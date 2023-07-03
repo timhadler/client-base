@@ -75,12 +75,15 @@ function loadList(l, offset=0) {
         // Button
         $button.find(".nameButton").text(reminder.name).on('click', function() { openPopup(reminder) });
         // List item properties
-        $button.find('.RProperty .Rproperty-value').html(new Date(data[i].rDate).toLocaleDateString('en-GB'));
-        if (data[i].mobile) {
-          $button.find('.mobileProperty .Rproperty-value').html(data[i].mobile);
-        } else {
-          $button.find('.mobileProperty').css('visibility', 'hidden');
+        if (l == "pendingList") {
+          $button.find('.rProperty2 .Rproperty-name').html("Reminder: ");
+          $button.find('.rProperty2 .Rproperty-value').html(new Date(data[i].rDate).toLocaleDateString('en-GB'));
+          if (data[i].mobile) {
+            $button.find('.rProperty1 .Rproperty-name').html("Mobile: ");
+            $button.find('.rProperty1 .Rproperty-value').html(data[i].mobile);
+          } 
         }
+        // Show the reminder checkbox in all lists but completed
         if (reminder.status != "completed") {
           $button.find(".hidden").removeClass("hidden").attr('value', rId).on('change', function() { revealStatusButton() });
         }
