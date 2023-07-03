@@ -227,7 +227,7 @@ function multiStatusSubmit() {
 // Reloads the current tabs lists
 function reloadActiveLists() {
   var tabId = $(".remindersTabLink.active").attr('id');
-  console.log(tabId)
+
   if (tabId.includes("action")) {
     loadList("pendingList");
     loadList("followUpList");
@@ -290,7 +290,7 @@ function setStatusClose() {
 }
 
 function closePopup() {
-  $('.clientPopup').remove();
+  $('.popup-reminder').remove();
   $('#overlay').css('visibility', 'hidden');
 }
 
