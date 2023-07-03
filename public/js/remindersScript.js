@@ -280,14 +280,16 @@ function revealStatusButton() {
 
 // Set status popup
 function setStatusPopup() {
-  document.getElementById("setStatusPopup").style.visibility = "visible";
-  overlay.style.visibility = "visible";
+  // document.getElementById("setStatusPopup").style.visibility = "visible";
+  // overlay.style.visibility = "visible";
+  $('#setStatusPopup').css('visibility', 'visible');
+  $('#overlay').css('visibility', 'visible');
 }
 
 function setStatusClose() {
   // document.getElementById("setStatusPopup").style.visibility = "hidden";
   // overlay.style.visibility = "hidden";
-  $('#setStatusPopup').remove();
+  $('#setStatusPopup').css('visibility', 'hidden');
   $('#overlay').css('visibility', 'hidden');
 }
 
