@@ -26,6 +26,7 @@ $(document).ready(function() {
   // List filter buttons
   $('#pendingFilterButton').on('click', function() { filterPopup("pending") });
   $('#filterPopupClose-pending').on('click', function() { filterPopupClose("pending") });
+  $('#rDateRangeFilter').on('change', function() { dateRangeFilter(this) });
 
   // Load html files into variables
   $.get("html/reminderPopupButton.html", function(html) {
@@ -298,6 +299,18 @@ function filterPopup(list) {
 function filterPopupClose(list) {
   $('#filterPopup-' + list).hide();
   $('#overlay').css('visibility', 'hidden');
+}
+
+function dateRangeFilter(filter) {
+  const option = $(filter).val();
+  
+  if (option == "month") {
+    $('#rMonthInput').show();
+    $('#rCustomInput').hide();
+  } else if (option == "custom") {
+    $('#rCustomInput').show();
+    $('#rMonthInput').hide();
+  }
 }
 
 // Checks all list items associated with a select all checkbox

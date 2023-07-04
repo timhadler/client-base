@@ -55,6 +55,11 @@ label {
     color: black;
 }
 
+select {
+    border: 1px solid black;
+    border-radius: 2px;
+}
+
 hr {
     border: none;
     width: 100%;
@@ -322,12 +327,21 @@ hr {
     &-reminder {
         width: 425px;;
     }
+
+    &-filter {
+        width: 375px;
+    }
 }
 
 .popupHeader {
     font-weight: bold;
     font-size: $font-small;
     padding-right: 10px;
+}
+
+.popupHeader2 {
+    font-weight: bold;
+    font-size: $font-v-small;
 }
 
 .popupHeaderDiv {

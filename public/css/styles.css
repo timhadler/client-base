@@ -184,6 +184,11 @@ label {
   color: black;
 }
 
+select {
+  border: 1px solid black;
+  border-radius: 2px;
+}
+
 hr {
   border: none;
   width: 100%;
@@ -439,11 +444,19 @@ hr {
 .popup-reminder {
   width: 425px;
 }
+.popup-filter {
+  width: 375px;
+}
 
 .popupHeader {
   font-weight: bold;
   font-size: 16px;
   padding-right: 10px;
+}
+
+.popupHeader2 {
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .popupHeaderDiv {
