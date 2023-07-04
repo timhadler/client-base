@@ -249,17 +249,9 @@ function reloadActiveLists() {
 
 // Open list tab
 function openTab(evt, tabName) {
-    // Get all tab content elements and hide them
-    const tabContent = document.getElementsByClassName('tabContent');
-    for (let i = 0; i < tabContent.length; i++) {
-      tabContent[i].style.display = 'none';
-    }
-  
-    // Get all tab links and remove the 'active' class
-    const tabLinks = document.getElementsByClassName('remindersTabLink');
-    for (let i = 0; i < tabLinks.length; i++) {
-      tabLinks[i].classList.remove('active');
-    }
+    // Hide tab contents nd remove active class
+    $('.tabContent').hide();
+    $('.remindersTabLink').removeClass('active');
 
     // Load the appropriate lists
     if (tabName == "awaiting") {
@@ -272,7 +264,7 @@ function openTab(evt, tabName) {
     }
   
     // Show the selected tab content and mark the tab link as active
-    document.getElementById(tabName).style.display = "flex";
+    $('#' + tabName).css('display', 'flex');
     evt.currentTarget.classList.add('active');
 }
 
@@ -281,9 +273,9 @@ function revealStatusButton() {
   const selected = $('input[type="checkbox"][name="selectedClients"]:checked');
 
   if (selected.length > 0) {
-    document.getElementById("setStatusDiv").style.display = 'block';
+    $('#setStatusDiv').show();
   } else {
-    document.getElementById("setStatusDiv").style.display = 'none';
+    $('#setStatusDiv').hide();
   }
 }
 
@@ -310,7 +302,7 @@ function filterPopupClose(list) {
 
 // Checks all list items associated with a select all checkbox
 function checkAll(cb) {
-  var clients = document.getElementsByName("selectedClients");
+  var clients = $('input[type="checkbox"][name="selectedClients"]');
   var list;
   var checkStatus;
 

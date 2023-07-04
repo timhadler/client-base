@@ -98,12 +98,6 @@ hr {
     }
 }
 
-.list_item_divider {
-    border-bottom: 1px solid lightgray;
-    padding-top: 3px;
-    padding-bottom: 3px;
-}
-
 .overlay {
     position: fixed;
     visibility: hidden;
@@ -213,7 +207,9 @@ hr {
     margin-bottom: 15px;
 }
 
+/***********************************************************
 // Font sizes and colours
+ ***********************************************************/
 .size_large {
     font-size: $font-large;
 }
@@ -283,6 +279,64 @@ hr {
 }
 
 /***********************************************************
+ * Lists
+ ***********************************************************/
+// Name buttons that appear in lists (client list, call lists)
+.nameButton {
+    font-weight: bold;
+    text-align: left;
+    width: 170px;
+    padding: 0;
+    font-size: $font-v-small;
+    color: $secondary;
+}
+
+.nameButton:hover {
+    opacity: 50%;
+}
+
+.overflowY {
+    overflow-y: auto;
+}
+
+.list_item_divider {
+    border-bottom: 1px solid lightgray;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+/***********************************************************
+ * Popups
+ ***********************************************************/
+// Popup
+.popup {
+    position: absolute;
+    border: 1px solid black;
+    background-color: white;
+    background-attachment:local;
+    z-index: 5;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+
+    &-reminder {
+        width: 425px;;
+    }
+}
+
+.popupHeader {
+    font-weight: bold;
+    font-size: $font-small;
+    padding-right: 10px;
+}
+
+.popupHeaderDiv {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/***********************************************************
  * Misc
  ***********************************************************/
 .login_container {
@@ -332,50 +386,7 @@ hr {
     text-decoration: underline;
 }
 
-// Name buttons that appear in lists (client list, call lists)
-.nameButton {
-    font-weight: bold;
-    text-align: left;
-    width: 170px;
-    padding: 0;
-    font-size: $font-v-small;
-    color: $secondary;
-    //margin-right: auto;
-}
-
-.nameButton:hover {
-    opacity: 50%;
-}
-
 .inner_section {
     padding-left: 10px;
     padding-top: 10px;
-}
-
-// Popup
-.popup {
-    position: absolute;
-    border: 1px solid black;
-    background-color: white;
-    background-attachment:local;
-    z-index: 5;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-
-    &-reminder {
-        width: 425px;;
-    }
-}
-
-.popupHeader {
-    font-weight: bold;
-    font-size: $font-small;
-    padding-right: 10px;
-}
-
-.popupHeaderDiv {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 }

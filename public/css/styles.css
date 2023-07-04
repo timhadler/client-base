@@ -219,12 +219,6 @@ hr {
   align-items: end;
 }
 
-.list_item_divider {
-  border-bottom: 1px solid lightgray;
-  padding-top: 3px;
-  padding-bottom: 3px;
-}
-
 .overlay {
   position: fixed;
   visibility: hidden;
@@ -332,6 +326,9 @@ hr {
   margin-bottom: 15px;
 }
 
+/***********************************************************
+// Font sizes and colours
+ ***********************************************************/
 .size_large {
   font-size: 24px;
 }
@@ -401,6 +398,61 @@ hr {
 }
 
 /***********************************************************
+ * Lists
+ ***********************************************************/
+.nameButton {
+  font-weight: bold;
+  text-align: left;
+  width: 170px;
+  padding: 0;
+  font-size: 14px;
+  color: #0652C3;
+}
+
+.nameButton:hover {
+  opacity: 50%;
+}
+
+.overflowY {
+  overflow-y: auto;
+}
+
+.list_item_divider {
+  border-bottom: 1px solid lightgray;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+/***********************************************************
+ * Popups
+ ***********************************************************/
+.popup {
+  position: absolute;
+  border: 1px solid black;
+  background-color: white;
+  background-attachment: local;
+  z-index: 5;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+}
+.popup-reminder {
+  width: 425px;
+}
+
+.popupHeader {
+  font-weight: bold;
+  font-size: 16px;
+  padding-right: 10px;
+}
+
+.popupHeaderDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/***********************************************************
  * Misc
  ***********************************************************/
 .login_container {
@@ -450,48 +502,9 @@ hr {
   text-decoration: underline;
 }
 
-.nameButton {
-  font-weight: bold;
-  text-align: left;
-  width: 170px;
-  padding: 0;
-  font-size: 14px;
-  color: #0652C3;
-}
-
-.nameButton:hover {
-  opacity: 50%;
-}
-
 .inner_section {
   padding-left: 10px;
   padding-top: 10px;
-}
-
-.popup {
-  position: absolute;
-  border: 1px solid black;
-  background-color: white;
-  background-attachment: local;
-  z-index: 5;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  padding: 20px;
-}
-.popup-reminder {
-  width: 425px;
-}
-
-.popupHeader {
-  font-weight: bold;
-  font-size: 16px;
-  padding-right: 10px;
-}
-
-.popupHeaderDiv {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 header {
@@ -620,16 +633,6 @@ nav {
 
 .confirmed_width {
   width: 60%;
-}
-
-.section_divider_callList {
-  overflow-y: auto;
-  border: none;
-}
-
-.section_divider_confirmedList {
-  overflow-y: auto;
-  border: none;
 }
 
 .flagCheckBox::after {

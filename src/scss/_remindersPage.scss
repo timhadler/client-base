@@ -91,18 +91,6 @@
     width: 60%;
 }
 
-// Section dividers
-.section_divider_callList {
-    overflow-y: auto;
-    border: none;
-    //border-right: 1px solid #1f1209;
-}
-
-.section_divider_confirmedList {
-    overflow-y: auto;
-    border: none;
-}
-
 // Client flag
 .flagCheckBox::after {
     content: ' \2691';
