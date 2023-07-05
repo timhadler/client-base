@@ -48,6 +48,16 @@ router.get("/filter", async (req, res) => {
         const list = req.query.list;
         const params = new URLSearchParams(formData);
         var data = [];
+        const month = params.get("rMonth");
+
+        if (params.get("dateRangeInput") == "custom") {
+            D1 = params.get("d1");
+            D2 = params.get("d2");
+        } else {                                            // else date range input is month
+            D1 = month + "-01";
+            D2 = month + "-" + getLastDate(D1.slice(5, 7));
+            MONTH = month;
+        }
 
         switch (list) {
             case "pending":
