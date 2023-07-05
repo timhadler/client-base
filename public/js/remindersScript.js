@@ -28,6 +28,8 @@ $(document).ready(function() {
   $('#followUpFilterButton').on('click', function() { filterPopup("followUp") });
   $('#filterPopupClose-followUp').on('click', function() { filterPopupClose("followUp") });
   $('#filterPopupClose-pending').on('click', function() { filterPopupClose("pending") });
+  $('#filterButton-pending').on('click', function() { filterSubmit('pending') });
+  $('#filterButton-followUp').on('click', function() { filterSubmit('followUp') });
   $('.rDateRangeFilter').on('change', function() { dateRangeFilter(this) });
 
   // Load html files into variables
@@ -39,92 +41,29 @@ $(document).ready(function() {
   });
 
   // Load reminder actions lists
-  loadList("pendingList");
-  loadList("followUpList");
+  queryListData("pendingList");
+  queryListData("followUpList");
   $('.load-more').on('click', function() { loadMore(this) });
 });
 
 /*****************************************************************
- * Functions
+ * AJAX Functions
  ****************************************************************/
 // AJAX Load a reminder list
-function loadList(l, offset=0) {
+function queryListData(l, offset=0) {
   $.ajax({
     url: "load-reminder-list",
     method: "GET",
     data: { list:l, limit:LIMIT, offset:offset },
     success: function(res) {
       const data = JSON.parse(res);
-      var list = $('#' + l);
-
-      // Reminder count
-      let n = 0;
-      if (data.length > 0) {
-        n = data[0].n;
-      }
-      if (l == "pendingList") {
-        $('#pendingCount').html('(' + n + ')');
-      } else if (l == "followUpList") {
-        $('#followUpCount').html('(' + n + ')');
-      } else if (l == "awaitingList") {
-        $('#awaitingCount').html('(' + n + ')');
-      }
-
-      if (offset === 0) {
-        list.empty(); // Clear the list only for the initial load
-      }
-      for (var i = 0; i < data.length; i++) {
-        let reminder = data[i];
-        let rId = reminder.rId;
-        var li = $('<li>').attr('id', "reminder-" + rId).addClass("positionRelative");
-        var $button = $(reminderPopupButtonHTML);
-
-        // Button
-        $button.find(".nameButton").text(reminder.name).on('click', function() { openPopup(reminder) });
-        // List item properties
-        if (l == "pendingList") {
-          $button.find('.rProperty2 .Rproperty-name').html("Reminder: ");
-          $button.find('.rProperty2 .Rproperty-value').html(new Date(reminder.rDate).toLocaleDateString('en-GB'));
-          if (reminder.mobile) {
-            $button.find('.rProperty1 .Rproperty-name').html("Mobile: ");
-            $button.find('.rProperty1 .Rproperty-value').html(reminder.mobile);
-          } 
-        } else if(l == "followUpList") {
-          if (reminder.status == "followUp") {
-            $button.find('.rProperty2 .Rproperty-name').html("Requires follow up: ");
-            $button.find('.rProperty2 .Rproperty-value').html(new Date(reminder.rDate).toLocaleDateString('en-GB'));
-          } else {
-            $button.find('.rProperty2 .Rproperty-value').html("No Answer");
-          }
-        } else if (l == "completedList") {
-          $button.find('.rProperty2 .Rproperty-name').html(reminder.outcome);
-        }
-        // Show the reminder checkbox in all lists but completed
-        if (reminder.status != "completed") {
-          $button.find(".hidden").removeClass("hidden").attr('value', rId).on('change', function() { revealStatusButton() });
-        }
-
-        li.html($button);
-        list.append(li);
-      }
-      // Hide load more button
-      if (list.find('li').length == n) {
-        $('.load-more[data-list="' + l + '"]').hide();
-      }
+      loadList(l, data, offset);
     },
     error: function(xhr, status, error) {
       // Handle AJAX error
       console.log('AJAX Error while fetching ' +  l +  ' reminder list:', error, xhr, status);
     }
   });
-}
-
-// Load more data into a list
-function loadMore(button) {
-  const listId = $(button).data('list');
-  let list = $('#' + listId);
-  let offset = list.find('li').length;
-  loadList(listId, offset)
 }
 
 // Open reminder popup
@@ -186,11 +125,6 @@ function openPopup(data) {
   $('#overlay').css('visibility', 'visible');
 }
 
-function closePopup() {
-  $('.popup-reminder').remove();
-  $('#overlay').css('visibility', 'hidden');
-}
-
 // Submit the reminder popup form
 function reminderSubmit(rId) {
   // Get the form data
@@ -236,17 +170,99 @@ function multiStatusSubmit() {
   location.reload()
 }
 
+// AJAX Submit filter 
+function filterSubmit(list) {
+  var formData = $('#filterForm-' + list).serialize();
+  console.log(formData)
+  $.ajax({
+    url: "/filter",
+    method: "GET",
+    data: { data:formData, list:list, limit:LIMIT, offset:0},
+    success: function(res) {
+      const data = JSON.parse(res);
+      loadList(list + "List", data);
+    },
+    error: function(xhr, status, error) {
+      // Handle AJAX error
+      console.log('AJAX Error while submitting filter form:', error, xhr, status);
+    }
+  });
+  filterPopupClose(list);
+}
+
+/*****************************************************************
+ * Functions
+ ****************************************************************/
+// Loads data into html list
+function loadList(l, data, offset=0) {
+  var list = $('#' + l);
+  // Reminder count
+  let n = 0;
+  if (data.length > 0) {
+    n = data[0].n;
+  }
+  if (l == "pendingList") {
+    $('#pendingCount').html('(' + n + ')');
+  } else if (l == "followUpList") {
+    $('#followUpCount').html('(' + n + ')');
+  } else if (l == "awaitingList") {
+    $('#awaitingCount').html('(' + n + ')');
+  }
+
+  if (offset === 0) {
+    list.empty(); // Clear the list only for the initial load
+  }
+  for (var i = 0; i < data.length; i++) {
+    let reminder = data[i];
+    let rId = reminder.rId;
+    var li = $('<li>').attr('id', "reminder-" + rId).addClass("positionRelative");
+    var $button = $(reminderPopupButtonHTML);
+
+    // Button
+    $button.find(".nameButton").text(reminder.name).on('click', function() { openPopup(reminder) });
+    // List item properties
+    if (l == "pendingList") {
+      $button.find('.rProperty2 .Rproperty-name').html("Reminder: ");
+      $button.find('.rProperty2 .Rproperty-value').html(new Date(reminder.rDate).toLocaleDateString('en-GB'));
+      if (reminder.mobile) {
+        $button.find('.rProperty1 .Rproperty-name').html("Mobile: ");
+        $button.find('.rProperty1 .Rproperty-value').html(reminder.mobile);
+      } 
+    } else if(l == "followUpList") {
+      if (reminder.status == "followUp") {
+        $button.find('.rProperty2 .Rproperty-name').html("Requires follow up: ");
+        $button.find('.rProperty2 .Rproperty-value').html(new Date(reminder.rDate).toLocaleDateString('en-GB'));
+      } else {
+        $button.find('.rProperty2 .Rproperty-value').html("No Answer");
+      }
+    } else if (l == "completedList") {
+      $button.find('.rProperty2 .Rproperty-name').html(reminder.outcome);
+    }
+    // Show the reminder checkbox in all lists but completed
+    if (reminder.status != "completed") {
+      $button.find(".hidden").removeClass("hidden").attr('value', rId).on('change', function() { revealStatusButton() });
+    }
+
+    li.html($button);
+    list.append(li);
+  }
+  // Hide load more button
+  if (list.find('li').length == n) {
+    $('.load-more[data-list="' + l + '"]').hide();
+  }
+}
+
 // Reloads the current tabs lists
 function reloadActiveLists() {
   var tabId = $(".remindersTabLink.active").attr('id');
 
   if (tabId.includes("action")) {
-    loadList("pendingList");
-    loadList("followUpList");
+    queryListData("pendingList");
+    queryListData("followUpList");
   } else if (tabId.includes("awaiting")) {
-    loadList("awaitingList");
+    queryListData("awaitingList");
   } else if (tabId.includes("completed")) {
-    loadList("completedList");
+    queryListData("completedList");
   }
 }
 
@@ -258,12 +274,12 @@ function openTab(evt, tabName) {
 
     // Load the appropriate lists
     if (tabName == "awaiting") {
-      loadList("awaitingList");
+      queryListData("awaitingList");
     } else if (tabName =="completed") {
-      loadList("completedList");
+      queryListData("completedList");
     } else if (tabName == "actions") {
-      loadList("pendingList");
-      loadList("followUpList");
+      queryListData("pendingList");
+      queryListData("followUpList");
     }
   
     // Show the selected tab content and mark the tab link as active
@@ -293,6 +309,13 @@ function setStatusClose() {
   $('#overlay').css('visibility', 'hidden');
 }
 
+// Close reminder popup
+function closePopup() {
+  $('.popup-reminder').remove();
+  $('#overlay').css('visibility', 'hidden');
+}
+
+// Filter popup
 function filterPopup(list) {
   $('#filterPopup-' + list).show();
   $('#overlay').css('visibility', 'visible');
@@ -303,6 +326,7 @@ function filterPopupClose(list) {
   $('#overlay').css('visibility', 'hidden');
 }
 
+// Filter date range, displays the appropriate input for the selection box
 function dateRangeFilter(filter) {
   const option = $(filter).val();
   
@@ -316,6 +340,14 @@ function dateRangeFilter(filter) {
     $(filter).siblings('.rMonthInput').hide();
     $(filter).siblings('.rCustomInput').hide();
   }
+}
+
+// Load more data into a list
+function loadMore(button) {
+  const listId = $(button).data('list');
+  let list = $('#' + listId);
+  let offset = list.find('li').length;
+  queryListData(listId, offset)
 }
 
 // Checks all list items associated with a select all checkbox

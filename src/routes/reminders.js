@@ -41,28 +41,53 @@ router.get("/load-reminder-list", async (req, res) => {
     }
 });
 
-// Set the date range for the call and tbc list
-router.get("/setDates", async (req, res) => {
+// Set the filter settings for a reminder list
+router.get("/filter", async (req, res) => {
     try {
-        // If req came from month date form
-        if (req.query.monthCL) {
-            const month = req.query.monthCL;
+        const formData = req.query.data;     // formData in form of query string from AJAX request
+        const list = req.query.list;
+        const params = new URLSearchParams(formData);
+        var data = [];
 
-            // Get the dates that define the selected month
-            D1 = month + "-01";
-            D2 = month + "-" + getLastDate(D1.slice(5, 7));
-            MONTH = D1.slice(0, 7);
-            res.status(200).redirect("/");
-        } else {    // else the req comes from a custom date range form
-            D1 = req.query.date1;
-            D2 = req.query.date2;
-            MONTH = "custom";
-            res.status(200).redirect("/");
-        }
+        switch (list) {
+            case "pending":
+              data = await clients.pendingList(D1, D2, req.query.limit, req.query.offset, params.get("orderByInput"));
+              break;
+            case "followUp":
+              data = await clients.followUpList(D1, D2, req.query.limit, req.query.offset, params.get("orderByInput"));
+              break;
+            case "awaiting":
+              data = await clients.awaitingList(req.query.limit, req.query.offset);
+              break;
+          }
+        res.json(JSON.stringify(data));
     } catch (error) {
-        res.status(500).send();
+        res.status(500).send(error).message;
     }
 });
+
+// // Set the date range for the call and tbc list
+// router.get("/setDates", async (req, res) => {
+//     try {
+//         // If req came from month date form
+//         if (req.query.monthCL) {
+//             const month = req.query.monthCL;
+
+//             // Get the dates that define the selected month
+//             D1 = month + "-01";
+//             D2 = month + "-" + getLastDate(D1.slice(5, 7));
+//             MONTH = D1.slice(0, 7);
+//             res.status(200).redirect("/");
+//         } else {    // else the req comes from a custom date range form
+//             D1 = req.query.date1;
+//             D2 = req.query.date2;
+//             MONTH = "custom";
+//             res.status(200).redirect("/");
+//         }
+//     } catch (error) {
+//         res.status(500).send();
+//     }
+// });
 
 // Fetch the notes for given client
 router.get("/load-popup-data", async (req, res) => {
