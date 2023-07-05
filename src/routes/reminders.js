@@ -2,14 +2,20 @@ const express = require("express");
 const router = express.Router();
 const clients = require("../models/client-models");   
 
-// Get the dates that define the current month
-global.D1 = getDate(0).slice(0, 8) + "01"
-global.D2 = D1.slice(0, 8) + getLastDate(D1.slice(5, 7));
-global.MONTH = D1.slice(0, 7);
+// Get the dates that define the current month for the pending list
+global.D1_P = getDate(0).slice(0, 8) + "01"
+global.D2_P = D1_P.slice(0, 8) + getLastDate(D1_P.slice(5, 7));
+global.MONTH_P = D1_P.slice(0, 7);
+global.ORDER_P = "rDate"
+// Follow up lists starts with getting all followUp entries from db
+global.D1_FU = "0001-01-01";
+global.D2_FU = "9999-12-31";
+global.MONTH_FU = MONTH_P;
+global.ORDER_FU = "rDate"
 
 router.get("/", async (req, res) => {
     try {
-        res.status(200).render("reminders/reminders", {month:MONTH, d1:D1, d2:D2});
+        res.status(200).render("reminders/reminders", {month_p:MONTH_P, month_fu:MONTH_FU, d1_p:D1_P, d2_p:D2_P, d1_fu:D1_FU, d2_fu:D2_FU});
     } catch (error) {
         res.status(500).send();
     }
@@ -23,10 +29,10 @@ router.get("/load-reminder-list", async (req, res) => {
 
         switch (list) {
             case "pendingList":
-              data = await clients.pendingList(D1, D2, req.query.limit, req.query.offset);
+              data = await clients.pendingList(D1_P, D2_P, req.query.limit, req.query.offset, ORDER_P);
               break;
             case "followUpList":
-              data = await clients.followUpList(D1, D2, req.query.limit, req.query.offset);
+              data = await clients.followUpList(D1_FU, D2_FU, req.query.limit, req.query.offset, ORDER_FU);
               break;
             case "awaitingList":
               data = await clients.awaitingList(req.query.limit, req.query.offset);
@@ -48,56 +54,44 @@ router.get("/filter", async (req, res) => {
         const list = req.query.list;
         const params = new URLSearchParams(formData);
         var data = [];
+        const order = params.get("orderByInput");
+        const dateRange = params.get("dateRangeInput");
         const month = params.get("rMonth");
 
-        if (params.get("dateRangeInput") == "custom") {
-            D1 = params.get("d1");
-            D2 = params.get("d2");
-        } else {                                            // else date range input is month
-            D1 = month + "-01";
-            D2 = month + "-" + getLastDate(D1.slice(5, 7));
-            MONTH = month;
+        var d1;
+        var d2;
+        var m = null;
+
+        if (dateRange == "custom") {
+            d1 = params.get("d1");
+            d2 = params.get("d2");
+        } else if (dateRange == "month") {
+            d1 = month + "-01";
+            d2 = month + "-" + getLastDate(d1.slice(5, 7));
+            m = month;
+        } else if (dateRange == "all") {
+            d1 = "0000-00-00";
+            d2 = "9999-12-31";
         }
 
-        switch (list) {
-            case "pending":
-              data = await clients.pendingList(D1, D2, req.query.limit, req.query.offset, params.get("orderByInput"));
-              break;
-            case "followUp":
-              data = await clients.followUpList(D1, D2, req.query.limit, req.query.offset, params.get("orderByInput"));
-              break;
-            case "awaiting":
-              data = await clients.awaitingList(req.query.limit, req.query.offset);
-              break;
-          }
+        if (list == "pending") {
+            D1_P = d1;
+            D2_P = d2;
+            ORDER_P = order;
+            if (m) { MONTH_P = m; }
+            data = await clients.pendingList(d1, d2, req.query.limit, req.query.offset, order);
+        } else if (list == "followUp") {
+            D1_FU = d1;
+            D2_FU = d2;
+            ORDER_FU = order;
+            if (m) { MONTH_FU = m; }
+            data = await clients.followUpList(d1, d2, req.query.limit, req.query.offset, order);
+        }
         res.json(JSON.stringify(data));
     } catch (error) {
         res.status(500).send(error).message;
     }
 });
-
-// // Set the date range for the call and tbc list
-// router.get("/setDates", async (req, res) => {
-//     try {
-//         // If req came from month date form
-//         if (req.query.monthCL) {
-//             const month = req.query.monthCL;
-
-//             // Get the dates that define the selected month
-//             D1 = month + "-01";
-//             D2 = month + "-" + getLastDate(D1.slice(5, 7));
-//             MONTH = D1.slice(0, 7);
-//             res.status(200).redirect("/");
-//         } else {    // else the req comes from a custom date range form
-//             D1 = req.query.date1;
-//             D2 = req.query.date2;
-//             MONTH = "custom";
-//             res.status(200).redirect("/");
-//         }
-//     } catch (error) {
-//         res.status(500).send();
-//     }
-// });
 
 // Fetch the notes for given client
 router.get("/load-popup-data", async (req, res) => {

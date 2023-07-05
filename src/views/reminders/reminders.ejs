@@ -18,8 +18,8 @@
 
     <!-- Actions tab content -->
     <div id="actions" class="grid_col_1_s2 tabContent">
-        <%- include("../partials/reminders/filterPopup", {list:"pending"}) %>
-        <%- include("../partials/reminders/filterPopup", {list:"followUp"}) %>
+        <%- include("../partials/reminders/filterPopup", {list:"pending", month:month_p, d1:d1_p, d2:d2_p}) %>
+        <%- include("../partials/reminders/filterPopup", {list:"followUp", month:month_fu, d1:d1_fu, d2:d2_fu}) %>
         <!-- Pending list -->
         <div style="flex:1;">
             <!-- Header -->
