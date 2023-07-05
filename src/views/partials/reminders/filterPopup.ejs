@@ -4,20 +4,34 @@
         <span id="filterPopupClose-<%= locals.list %>" class="close-button">&times</span>
     </div>
     <br />
-    <form id="">
-        <p class="popupHeader2"> Date range: </p>
-        <div class="flex flex-ai-c">
-            <!-- Maybe use class names instead of ids to grab in js, instead of adding list name to id dynamically -->
-            <select id="rDateRangeFilter" class="margin_r_sm">
-                <option value="month">Month</option>
-                <option value="custom">Custom</option>
-            </select>
-            <input id="rMonthInput" type="month" name="rMonth" value="<%= locals.month %>">
-            <div id="rCustomInput" class="hidden">
-                <input id="start" type="date" name="rMonth" value="<%= locals.d1 %>">
-                <span class="size_v_small"> to </span>
-                <input id="end" type="date" name="rMonth" value="<%= locals.d2 %>">
-            </div>
+    <p class="popupHeader2"> Date range: </p>
+    <div class="flex flex-ai-c">
+        <!-- Maybe use class names instead of ids to grab in js, instead of adding list name to id dynamically -->
+        <select name="dateRangeInput" class="margin_r_sm rDateRangeFilter" value="month">
+            <option value="all" <% if (locals.list == "followUp") { %>selected<% } %>>All</option>
+            <option value="month" <% if (locals.list == "pending") { %>selected<% } %>>Month</option>
+            <option value="custom">Custom</option>
+        </select>
+        <input class="rMonthInput <% if (locals.list == "followUp") { %>hidden<% } %>" type="month" name="rMonth" value="<%= locals.month %>">
+        <div class="hidden rCustomInput">
+            <input id="start" type="date" name="rMonth" value="<%= locals.d1 %>">
+            <span class="size_v_small"> to </span>
+            <input id="end" type="date" name="rMonth" value="<%= locals.d2 %>">
         </div>
-    </form>
+    </div>
+    <!-- Order by -->
+    <p class="popupHeader2"> Order by: </p>
+    <select id="rOrderInput" name="orderByInput">
+        <option value="name"> Name </option>
+        <option value="reminder"> Reminder date </option>
+    </select> <br />
+    <!-- Filter by status for folowUp list -->
+    <% if(locals.list == "followUp") { %>
+        <p class="popupHeader2"> Status: </p>
+        <input id="filterFollowUps" type="checkbox">
+        <label for="filterFollowUps"> Requires follow up </label>
+        <input id="filterNoAns" type="checkbox">
+        <label for="filterNoAns"> No answer </label>
+        <br />
+    <% } %>
 </div>

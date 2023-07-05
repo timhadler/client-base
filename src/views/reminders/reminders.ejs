@@ -16,30 +16,10 @@
         <%- include("../partials/reminders/setStatusPopup") %>
     </div>
 
-    <!-- Actions tab cointent -->
+    <!-- Actions tab content -->
     <div id="actions" class="grid_col_1_s2 tabContent">
-        <!--
-        <div class="margin_t_med margin_b_sm">
-            <form id="monthDateForm" <% if (locals.month == "custom") { %> style="display: none;" <% } %> action="/setDates" method="GET">
-                <div class="flex flex-ai-c">
-                    <label class="margin_r_sm"> Select month: </label>
-                    <input id="monthInputCL" type="month" name="monthCL" value="<%= locals.month %>">
-                    <button id="customDateButton" type="button" class="color_secondary"> Custom date range </button>
-                </div>
-            </form>
-            <form id="customeDateForm" <% if (locals.month != "custom") { %> style="display: none;" <% } %> action="/setDates" method="GET">
-                <div class="flex flex-ai-c">
-                    <div>
-                        <input class="margin_r_sm" id="date1_input" type="date" name="date1" value="<%= locals.d1 %>">
-                        to
-                        <input class="margin_l_sm" id="date2_input" type="date" name="date2" value="<%= locals.d2 %>">
-                    </div>
-                    <button class="button_secondary margin_l_sm margin_r_med" type="submit"> Set </button>
-                    <button id="monthDateButton" type="button" class="color_secondary"> By Month </button> 
-                </div>
-            </form>
-        </div>
-    -->
+        <%- include("../partials/reminders/filterPopup", {list:"pending"}) %>
+        <%- include("../partials/reminders/filterPopup", {list:"followUp"}) %>
         <!-- Pending list -->
         <div style="flex:1;">
             <!-- Header -->
@@ -49,10 +29,7 @@
                     <span class="RListHeader"> Pending </span>
                     <span id="pendingCount" class="reminderCount"></span>
                 </div>
-                <div>
-                    <button id="pendingFilterButton" style="margin-right: 40px;" class="button_filter"> Filter </button>
-                    <%- include("../partials/reminders/filterPopup", {list:"pending"}) %>
-                </div>
+                <button id="pendingFilterButton" style="margin-right: 40px;" class="button_filter"> Filter </button>
             </div>
             <hr />
             
@@ -71,7 +48,7 @@
                     <span class="RListHeader"> Follow ups </span>
                     <span id="followUpCount" class="reminderCount"></span>
                 </div>
-                <button id="FollowUpFilterButton" style="margin-right: 20px;" class="button_filter"> Filter </button>
+                <button id="followUpFilterButton" style="margin-right: 20px;" class="button_filter"> Filter </button>
             </div>
             <hr />
             <div class="inner_section reminders_list_container overflowY">

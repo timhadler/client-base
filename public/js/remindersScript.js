@@ -25,8 +25,10 @@ $(document).ready(function() {
 
   // List filter buttons
   $('#pendingFilterButton').on('click', function() { filterPopup("pending") });
+  $('#followUpFilterButton').on('click', function() { filterPopup("followUp") });
+  $('#filterPopupClose-followUp').on('click', function() { filterPopupClose("followUp") });
   $('#filterPopupClose-pending').on('click', function() { filterPopupClose("pending") });
-  $('#rDateRangeFilter').on('change', function() { dateRangeFilter(this) });
+  $('.rDateRangeFilter').on('change', function() { dateRangeFilter(this) });
 
   // Load html files into variables
   $.get("html/reminderPopupButton.html", function(html) {
@@ -305,11 +307,14 @@ function dateRangeFilter(filter) {
   const option = $(filter).val();
   
   if (option == "month") {
-    $('#rMonthInput').show();
-    $('#rCustomInput').hide();
+    $(filter).siblings('.rMonthInput').show();
+    $(filter).siblings('.rCustomInput').hide();
   } else if (option == "custom") {
-    $('#rCustomInput').show();
-    $('#rMonthInput').hide();
+    $(filter).siblings('.rMonthInput').hide();
+    $(filter).siblings('.rCustomInput').show();
+  } else if (option == "all") {
+    $(filter).siblings('.rMonthInput').hide();
+    $(filter).siblings('.rCustomInput').hide();
   }
 }
 

@@ -168,15 +168,15 @@ li {
   font-size: 14px;
 }
 
-input[type=checkbox] {
-  margin-right: 10px;
-}
-
 li:not(:first-child) {
   margin-top: 5px;
 }
 
 input, label {
+  margin: 0.4rem 0;
+}
+
+select {
   margin: 0.4rem 0;
 }
 
@@ -445,7 +445,9 @@ hr {
   width: 425px;
 }
 .popup-filter {
-  width: 375px;
+  min-width: 285px;
+  top: 15%;
+  left: 40%;
 }
 
 .popupHeader {

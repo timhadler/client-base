@@ -39,15 +39,15 @@ li {
     font-size: $font-v-small;
 }
 
-input[type="checkbox"]{
-    margin-right: 10px;
-}
-
 li:not(:first-child) {
     margin-top: 5px;
 }
 
 input, label {
+    margin: .4rem 0;
+}
+
+select {
     margin: .4rem 0;
 }
 
@@ -329,7 +329,9 @@ hr {
     }
 
     &-filter {
-        width: 375px;
+        min-width: 285px;
+        top: 15%;
+        left: 40%;
     }
 }
 
