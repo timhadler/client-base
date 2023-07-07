@@ -107,17 +107,73 @@ router.get("/load-popup-data", async (req, res) => {
 });
 
 // POST set client status, AJAX
-router.post("/set-reminder-status", async (req, res) => {
+router.post("/set-reminder-status", (req, res) => {
     try {
         const formData = req.body.data;     // formData in form of query string from AJAX request
         const rId = req.body.id;
         const params = new URLSearchParams(formData);
         const note = params.get('note');
-        let action = params.get('action');
-        let outcome = params.get('outcome');
+        const action = params.get('action');
+        const outcome = params.get('outcome');
 
-        //console.log(note)
-        let status = null;
+        setReminderStatus(action, outcome, note, rId);
+        res.status(201).json({ message: "Update successful" });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// POST set multiple client statuses using checkboxes
+router.post("/set-reminder-status-multi", async (req, res) => {
+    try {
+        var rIds = req.body.reminders;
+        const formData = req.body.formData;     // formData in form of query string from AJAX request
+        const params = new URLSearchParams(formData);
+        const note = params.get('note');
+        const action = params.get('action');
+        const outcome = params.get('outcome');
+
+        if (typeof rIds == "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
+            rIds = [rIds];
+        } else if (typeof rIds == "undefined") {
+            rIds = [];
+        }
+
+        for (let i = 0; i < rIds.length; i++) {
+            await setReminderStatus(action, outcome, note, rIds[i]);
+        }
+        //if (req.body.clientStatus) {
+            // if (req.body.incrementYear == 'incrementYear') {
+            //     // Increment year for all clients
+            //     for (let i = 0; i < rIds.length; i++) {
+            //         let rDate = await clients.reminder(rIds[i]);
+            //         let nYear = 0;
+
+            //         rDate = rDate.rDate.toLocaleDateString('en-GB');
+            //         nYear = parseInt(rDate.slice(6)) + 1;
+            //         rDate = nYear.toString() + "-" + rDate.slice(3, 5) + "-" + rDate.slice(0, 2);
+
+            //         await clients.editReminder(rIds[i], rDate);
+            //     }
+            // }
+            // Set clients status
+            // for (let i = 0; i < rIds.length; i++) {
+            //     await clients.setClientStatus(req.body.clientStatus, rIds[i]);
+            // }
+        //}
+
+        res.status(201).json("hooray");
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+/***********************************************
+Helper Functions
+ ***********************************************/
+// Updates a reminder entry in db
+async function setReminderStatus(action, outcome, note, rId) {
+    let status = null;
         if (action) {
             if (action == "ignore") {
                 status = "completed";
@@ -148,7 +204,7 @@ router.post("/set-reminder-status", async (req, res) => {
         }
 
         // Add note if one is provided
-        if (note) {
+        if (note.length > 0) {
             await clients.createNote(note, rId);
         }
         // Change rDate
@@ -165,53 +221,8 @@ router.post("/set-reminder-status", async (req, res) => {
         await clients.setReminderFlag(req.params.rId, value);
         await clients.editComment(req.params.id, req.body.comments);
         */
-        
-        res.status(201).redirect("/");
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
+};
 
-// POST set multiple client statuses using checkboxes
-// router.post("/set-reminder-status-multi", async (req, res) => {
-//     try {
-//         var rIds = req.body["selectedClients"];
-//         console.log(rIds)
-
-//         // if (typeof rIds == "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
-//         //     rIds = [rIds];
-//         // } else if (typeof rIds == 'undefined') {
-//         //     rIds = [];
-//         // }
-//         // if (req.body.clientStatus) {
-//         //     if (req.body.incrementYear == 'incrementYear') {
-//         //         // Increment year for all clients
-//         //         for (let i = 0; i < rIds.length; i++) {
-//         //             let rDate = await clients.reminder(rIds[i]);
-//         //             let nYear = 0;
-
-//         //             rDate = rDate.rDate.toLocaleDateString('en-GB');
-//         //             nYear = parseInt(rDate.slice(6)) + 1;
-//         //             rDate = nYear.toString() + "-" + rDate.slice(3, 5) + "-" + rDate.slice(0, 2);
-
-//         //             await clients.editReminder(rIds[i], rDate);
-//         //         }
-//         //     }
-//         //     // Set clients status
-//         //     for (let i = 0; i < rIds.length; i++) {
-//         //         await clients.setClientStatus(req.body.clientStatus, rIds[i]);
-//         //     }
-//         // }
-
-//         res.status(201).redirect("/");
-//     } catch (error) {
-//         res.status(500).send(error.message);
-//     }
-// });
-
-/***********************************************
-Helper Functions
- ***********************************************/
 // Gets the date n days from the current date (output: yyyy-mm-dd)
 function getDate(n) {
     let date = new Date();

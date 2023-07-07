@@ -149,25 +149,28 @@ function reminderSubmit(rId) {
 function multiStatusSubmit() {
   var formData = $('#reminderSetStautusMultiForm').serialize();
   const selectedClients = $('input[type="checkbox"][name="selectedClients"]:checked');
+  const values = selectedClients.map(function() {
+    return $(this).val();
+  }).get();
 
-  for (let i = 0; i < selectedClients.length; i++) {
-    let rId = $(selectedClients[i]).attr('value');
-    $.ajax({
-      url: "/set-reminder-status",
-      method: "POST",
-      data: { data:formData, id:rId },
-      success: function(res) {
-        
-      },
-      error: function(xhr, status, error) {
-        // Handle AJAX error
-        console.log('AJAX Error while POSTING reminder form in multi submit:', error, xhr, status);
-      }
-    });
-  }
-  setStatusClose();
-  revealStatusButton();
-  location.reload()
+  // Uncheck boxes so setStatus button dissappears after submit
+  selectedClients.prop('checked', false);
+
+  $.ajax({
+    url: "set-reminder-status-multi",
+    method: "POST",
+    data: {formData:formData, reminders:values},
+    traditional: true,
+    success: function(res) {
+
+      setStatusClose();
+      reloadActiveLists();
+      revealStatusButton();
+    }
+    , error: function(xhr, status, error) {
+      console.log('AJAX Error while POSTING reminder form in multi submit:', error, xhr, status);
+    }
+  });
 }
 
 // AJAX Submit filter 
