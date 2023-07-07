@@ -34,7 +34,8 @@
 }
 
 .reminders_list_container {
-    height: 85vh;
+    height: 82vh;
+    overflow-y: auto;
 }
 
 // Display for client popup

@@ -418,10 +418,6 @@ hr {
   opacity: 50%;
 }
 
-.overflowY {
-  overflow-y: auto;
-}
-
 .list_item_divider {
   border-bottom: 1px solid lightgray;
   padding-top: 3px;
@@ -597,7 +593,8 @@ nav {
 }
 
 .reminders_list_container {
-  height: 85vh;
+  height: 82vh;
+  overflow-y: auto;
 }
 
 .clientPopup {
