@@ -77,7 +77,7 @@ function openPopup(data) {
 
   // Set popup values
   $popup.find('.popupHeader').html(data.name);
-  if (data.status == 'awaiting' || data.status == 'followUp') {
+  if (data.status == 'awaiting' || data.status == 'followUp' || data.status == 'noResponse') {
     $popup.find('.interactionsDiv').css('display', 'block');
     $popup.find('.callOutcomes').css('display', 'block');
   } else if (data.status == "completed") {                  // Hide actions section in completed list
@@ -176,7 +176,7 @@ function multiStatusSubmit() {
 // AJAX Submit filter 
 function filterSubmit(list) {
   var formData = $('#filterForm-' + list).serialize();
-  console.log(formData)
+
   $.ajax({
     url: "/filter",
     method: "GET",

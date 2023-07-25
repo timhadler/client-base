@@ -25,13 +25,16 @@
         <select id="rOrderInput" name="orderByInput">
             <option value="name"> Name </option>
             <option value="rDate" selected> Reminder date </option>
+            <% if(locals.list == "followUp") { %>
+                <option value="status" selected> Status </option>
+            <% } %>
         </select> <br />
         <!-- Filter by status for folowUp list -->
         <% if(locals.list == "followUp") { %>
             <p class="popupHeader2"> Status: </p>
-            <input id="filterFollowUps" type="checkbox" name="followUp">
+            <input id="filterFollowUps" type="checkbox" name="followUp" checked>
             <label for="filterFollowUps"> Requires follow up </label>
-            <input id="filterNoAns" type="checkbox" name="noAns">
+            <input id="filterNoAns" type="checkbox" name="noAns" checked>
             <label for="filterNoAns"> No answer </label>
             <br />
         <% } %>

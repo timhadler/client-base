@@ -11,7 +11,7 @@ global.ORDER_P = "rDate"
 global.D1_FU = "0001-01-01";
 global.D2_FU = "9999-12-31";
 global.MONTH_FU = MONTH_P;
-global.ORDER_FU = "rDate"
+global.ORDER_FU = "status"
 
 router.get("/", async (req, res) => {
     try {
@@ -50,7 +50,8 @@ router.get("/load-reminder-list", async (req, res) => {
               data = await clients.pendingList(D1_P, D2_P, req.query.limit, req.query.offset, ORDER_P);
               break;
             case "followUpList":
-              data = await clients.followUpList(D1_FU, D2_FU, req.query.limit, req.query.offset, ORDER_FU);
+              // Get the reminders with status followUp
+              data = await clients.followUpList1(D1_FU, D2_FU, req.query.limit, req.query.offset, ORDER_FU);
               break;
             case "awaitingList":
               data = await clients.awaitingList(req.query.limit, req.query.offset);
@@ -103,7 +104,13 @@ router.get("/filter", async (req, res) => {
             D2_FU = d2;
             ORDER_FU = order;
             if (m) { MONTH_FU = m; }
-            data = await clients.followUpList(d1, d2, req.query.limit, req.query.offset, order);
+            if (params.get("followUp") && params.get("noAns")) {
+                data = await clients.followUpList1(d1, d2, req.query.limit, req.query.offset, order);
+            } else if (params.get("followUp")) {
+                data = await clients.followUpList2(d1, d2, req.query.limit, req.query.offset, order);
+            } else if (params.get("noAns")) {
+                data = await clients.followUpList3(d1, d2, req.query.limit, req.query.offset, order);
+            }
         }
         res.json(JSON.stringify(data));
     } catch (error) {
