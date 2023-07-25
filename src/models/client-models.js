@@ -125,6 +125,22 @@ exports.reminder = async function(id) {
     return rows[0];
 }
 
+// Retrieves the reminders with status awaiting and their latest interaction date
+exports.awaitingReminders = async function() {
+    const sqlQuery = "SELECT reminders.id, latest_interaction.created AS latest_interaction_date FROM reminders INNER JOIN interactions AS latest_interaction ON reminders.id = latest_interaction.reminder_id AND latest_interaction.created = ( SELECT MAX(created) FROM interactions WHERE reminder_id = reminders.id ) WHERE reminders.status = 'awaiting';"
+    const rows = await db.query(sqlQuery);
+
+    return rows;
+}
+
+// Retireves the user settings for the timeframe for when a reminder status is changed form awaiting to noResponse
+exports.settingResponseTimeFrame = async function() {
+    const sqlQuery = "SELECT setting_value FROM settings WHERE setting_key='response_timeframe'";
+    const rows = await db.query(sqlQuery);
+
+    return rows[0].setting_value;
+}
+
 // Reveives a user with a given id
 exports.getUserById = async function(id) {
     const sqlQuery = "SELECT * from users WHERE id=?";

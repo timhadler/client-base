@@ -15,9 +15,27 @@ global.ORDER_FU = "rDate"
 
 router.get("/", async (req, res) => {
     try {
+        // set awaiting statuses to no response if timeframe has passed
+        const awaiting = await clients.awaitingReminders();
+        const timeframeDays = await clients.settingResponseTimeFrame();
+
+        for (let i = 0; i < awaiting.length; i++) {
+            // Convert the latest_interaction_date to a JavaScript Date object, excluding time data (HH,MM,SS)
+            let latestInteractionDate = new Date(awaiting[i].latest_interaction_date);
+            latestInteractionDate = new Date(latestInteractionDate.getFullYear(), latestInteractionDate.getMonth(), latestInteractionDate.getDate());
+
+            // Calculate the days passed since the lastInteractionDate
+            const millisecondsPassed = Date.now() - latestInteractionDate;
+            const daysPassed = Math.floor(millisecondsPassed / (1000 * 60 * 60 * 24));
+
+            // If days passed exceeds timeframe, set reminder status to noResponse, outcome is null
+            if (daysPassed >= timeframeDays) {
+                await clients.setReminderStatus("noResponse", null, awaiting[i].id);
+            }
+        }
         res.status(200).render("reminders/reminders", {month_p:MONTH_P, month_fu:MONTH_FU, d1_p:D1_P, d2_p:D2_P, d1_fu:D1_FU, d2_fu:D2_FU});
     } catch (error) {
-        res.status(500).send();
+        res.status(500).send(error.message);
     }
 });
 
@@ -43,7 +61,7 @@ router.get("/load-reminder-list", async (req, res) => {
           }
         res.json(JSON.stringify(data));
     } catch (error) {
-        res.status(500).send();
+        res.status(500).send(error.message);
     }
 });
 
@@ -89,7 +107,7 @@ router.get("/filter", async (req, res) => {
         }
         res.json(JSON.stringify(data));
     } catch (error) {
-        res.status(500).send(error).message;
+        res.status(500).send(error.message);
     }
 });
 
@@ -102,7 +120,7 @@ router.get("/load-popup-data", async (req, res) => {
 
         res.json(JSON.stringify(data));
     } catch (error) {
-        res.status(500).send();
+        res.status(500).send(error.message);
     }
 });
 
@@ -162,7 +180,7 @@ router.post("/set-reminder-status-multi", async (req, res) => {
             // }
         //}
 
-        res.status(201).json("hooray");
+        res.status(201);
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -171,7 +189,7 @@ router.post("/set-reminder-status-multi", async (req, res) => {
 /***********************************************
 Helper Functions
  ***********************************************/
-// Updates a reminder entry in db
+// Updates a reminder entry in db and creates an interaction
 async function setReminderStatus(action, outcome, note, rId) {
     let status = null;
         if (action) {
