@@ -86,35 +86,6 @@
     width: 245px;
  }
 
-// Popup class for the add and edit address, contact etc forms on the clientsDetails page
-// .popup {
-//     visibility: hidden;
-//     position: absolute;
-//     background-color: white;
-//     z-index: 5;
-//     border-radius: 2px;
-//     //border: 1px solid black;
-//     padding: 5px;
-// }
-
-/***********************************************************
- * Centered popups
- ***********************************************************/
- // Add client popup
- .centeredPopupCP {
-    visibility: hidden;
-    position: fixed;
-    background-color: white;
-    //border: 1px solid black;
-    z-index: 5;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: auto;
-    padding: 35px;
-    min-width: 300px;
- }
-
  .exportFilterForm {
     border: 1px solid black;
     border-radius: 4px;

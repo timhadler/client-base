@@ -1,5 +1,5 @@
 <!-- Add form -->
-<div id="addContactPopup" class="centeredPopupCP">
+<div id="addContactPopup" class="hidden popup">
     <form action="/clients/add-contact/<%=client_id%>" method="POST">
         <div class="flex flex-ai-c flex-jc-sb">
             <h3 class="italic"> Add Contact </h3> <br />
@@ -16,7 +16,7 @@
 <% for (let i=0; i < data.length; i++) { %>
     <li>
         <!-- Edit popup -->
-        <div id="<%= "contactEditPopup-" + data[i].id %>" class="popup">
+        <div id="<%= "contactEditPopup-" + data[i].id %>" class="hidden popup">
             <form action="/clients/edit-contact/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
                 <%- include("../../inputForms/contact", { name:data[i].name, phone:data[i].phone, email:data[i].email }) %>
                 <div>

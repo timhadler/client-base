@@ -1,5 +1,5 @@
 <!-- Add popup -->
-<div id="addCallPopup" class="popup">
+<div id="addCallPopup" class="hidden popup">
     <form class="flex flex-ai-c" action="/clients/add-reminder/<%= client_id %>" method="POST">
         <%- include("../../inputForms/call") %>
         <button type="submit" class="button_secondary margin_l_l margin_r_sm"> Submit </button>
@@ -10,7 +10,7 @@
 <% for (let i=0; i < data.length; i++) { %>
     <li>
         <!-- Edit popup -->
-        <div id="<%= "rDateEditPopup-" + data[i].id %>" class="popup">
+        <div id="<%= "rDateEditPopup-" + data[i].id %>" class="hidden popup">
             <form class="flex flex-ai-c" action="/clients/edit-reminder/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
                 <%- include("../../inputForms/call", { date:rDateToHTMLDate(data[i].rDate)}) %>
                 <button type="submit" class="button_secondary margin_l_l margin_r_sm"> Submit </button>

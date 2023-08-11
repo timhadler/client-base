@@ -16,7 +16,7 @@ ie. details.client is an object
         <div class="grid_col_2">
             <div class="margin_t_l margin_l_l">
                 <!-- Edit client popup -->
-                <div id="cliFormPopup" class="centeredPopupCP">
+                <div id="cliFormPopup" class="hidden popup">
                     <form action="/clients/<%=details.client.id%>/editClient" method="POST">
                         <div class="flex flex-ai-c flex-jc-sb">
                             <h3 class="italic"> Edit Customer </h3> <br />
@@ -104,7 +104,7 @@ ie. details.client is an object
                         <hr class="line_header">
 
                         <!-- Edit comments popup -->
-                        <div id="commentEditPopup" class="popup">
+                        <div id="commentEditPopup" class="hidden popup">
                             <form action="/clients/edit-comments/<%= details.client.id %>" method="POST">
                                 <div class="flex flex-jc-r">
                                     <span id="commentCancelPopupButton" class="close_form"></span>

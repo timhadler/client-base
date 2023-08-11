@@ -1,5 +1,5 @@
 <!-- Add popup -->
-<div id="addAddressPopup" class="centeredPopupCP">
+<div id="addAddressPopup" class="hidden popup">
     <form action="/clients/add-address-<%=client_id%>" method="POST">
         <div class="flex flex-ai-c flex-jc-sb">
             <h3 class="italic"> Add Address </h3> <br />
@@ -16,7 +16,7 @@
 <% for (let i=0; i < data.length; i++) { %>
     <li>
         <!-- Edit popup -->
-        <div id="<%= "addressEditPopup-" + data[i].id %>" class="popup">
+        <div id="<%= "addressEditPopup-" + data[i].id %>" class="hidden popup">
             <form action="/clients/edit-address/<%= data[i].id %>-<%= data[i].client_id %>" method="POST">
                 <%- include("../../inputForms/address", { street:data[i].street, suburb:data[i].suburb, city:data[i].city, pc:data[i].pc, fa:data[i].fa, ca:data[i].clientAddress}) %>
                 <div>
