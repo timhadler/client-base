@@ -22,12 +22,12 @@ function addReminder() {
 }
 
 function addReminderPopup() {
-    document.getElementById("addReminderPopup").style.visibility = "visible";
+    document.getElementById("addReminderPopup").style.display = "block";
     overlay.style.visibility = "visible";
 }
 
 function addReminderClose() {
-    document.getElementById("addReminderPopup").style.visibility = "hidden";
+    document.getElementById("addReminderPopup").style.display = "none";
     overlay.style.visibility = "hidden";
 }
 
@@ -45,11 +45,11 @@ function deleteClients() {
 
 // Filter popup
 function filterPopup() {
-    filterForm.style.visibility = "visible";
+    filterForm.style.display = "block";
     overlay.style.visibility = "visible";
 }
 
 function filterClose() {
-    filterForm.style.visibility = "hidden";
+    filterForm.style.display = "none";
     overlay.style.visibility = "hidden";
 }

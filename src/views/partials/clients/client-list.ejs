@@ -1,7 +1,7 @@
 <script type="module" src="/js/clientListScript.js"> </script>
 
 <!-- Add client popup -->
-<div id="addClientPopup" class="centeredPopupCP">
+<div id="addClientPopup" class="hidden popup" style="margin-left: 50%;">
     <div class="flex flex-ai-c flex-jc-sb">
         <h3 class="italic"> Add Customer </h3> <br />
         <span id="addClientCloseButton" class="close_form"></span>
@@ -41,7 +41,7 @@
         <hr class="line_header">
 
         <!-- list -->
-        <div class="inner_section">
+        <div class="margin_t_sm">
             <ul id="cList">
                 <% 
                 let reUrl = "/clients/?";

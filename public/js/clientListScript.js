@@ -17,11 +17,11 @@ document.getElementById("addClientPopupButton").addEventListener('click', functi
 document.getElementById("addClientCloseButton").addEventListener('click', function() { addClientPopupClose() });
 
 function addClientPopup() {
-    document.getElementById("addClientPopup").style.visibility = "visible";
+    document.getElementById("addClientPopup").style.display = "block";
     document.getElementById("overlay").style.visibility = "visible";
 }
 
 function addClientPopupClose() {
-    document.getElementById("addClientPopup").style.visibility = "hidden";
+    document.getElementById("addClientPopup").style.display = "none";
     document.getElementById("overlay").style.visibility = "hidden";
 }
