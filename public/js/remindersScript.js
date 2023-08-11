@@ -169,16 +169,18 @@ function multiStatusSubmit() {
     return $(this).val();
   }).get();
 
+  const ids = selectedClients.map(function() {
+    return $(this).data('cId');
+  }).get();
   // Uncheck boxes so setStatus button dissappears after submit
   selectedClients.prop('checked', false);
 
   $.ajax({
     url: "set-reminder-status-multi",
     method: "POST",
-    data: {formData:formData, reminders:values},
+    data: {formData:formData, reminders:values, ids:ids},
     traditional: true,
     success: function(res) {
-
       setStatusClose();
       reloadActiveLists();
       revealStatusButton();
@@ -234,6 +236,7 @@ function loadList(l, data, offset=0) {
   for (var i = 0; i < data.length; i++) {
     let reminder = data[i];
     let rId = reminder.rId;
+    let id = reminder.id;
     var li = $('<li>').attr('id', "reminder-" + rId).addClass("positionRelative");
     var $button = $(reminderPopupButtonHTML);
 
@@ -259,7 +262,7 @@ function loadList(l, data, offset=0) {
     }
     // Show the reminder checkbox in all lists but completed
     if (reminder.status != "completed") {
-      $button.find(".hidden").removeClass("hidden").attr('value', rId).on('change', function() { revealStatusButton() });
+      $button.find(".hidden").removeClass("hidden").attr('value', rId).data('cId', id).on('change', function() { revealStatusButton() });
     }
 
     li.html($button);

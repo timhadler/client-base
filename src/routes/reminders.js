@@ -163,19 +163,36 @@ router.post("/set-reminder-status", async (req, res) => {
 router.post("/set-reminder-status-multi", async (req, res) => {
     try {
         var rIds = req.body.reminders;
+        var ids = req.body.ids;
         const formData = req.body.formData;     // formData in form of query string from AJAX request
         const params = new URLSearchParams(formData);
         const note = params.get('note');
         const action = params.get('action');
         const outcome = params.get('outcome');
+        let rDate = params.get('rDate');
 
         if (typeof rIds == "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
             rIds = [rIds];
         } else if (typeof rIds == "undefined") {
             rIds = [];
         }
+        console.log(rIds)
+        if (typeof ids == "string") {
+            ids = [ids];
+        } else if (typeof ids == "undefined") {
+            ids = [];
+        }
 
         for (let i = 0; i < rIds.length; i++) {
+            if (!params.get("noReminder") && rDate.length > 0) {
+                if (action == "ignore" || outcome == "booked" || outcome == "declined") {
+                    // Create new reminder
+                    await clients.createReminder(rDate, ids[i]);
+                } else {
+                    // Update reminder
+                    await clients.editReminder(rIds[i], rDate);
+                }
+            }
             await setReminderStatus(action, outcome, note, rIds[i]);
         }
         //if (req.body.clientStatus) {
@@ -198,7 +215,7 @@ router.post("/set-reminder-status-multi", async (req, res) => {
             // }
         //}
 
-        res.status(201);
+        res.status(201).json({ message: "Update successful" });
     } catch (error) {
         res.status(500).send(error.message);
     }
