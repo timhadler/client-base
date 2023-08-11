@@ -634,10 +634,6 @@ nav {
   text-decoration: underline;
 }
 
-.revealCallOutcomes:checked ~ .callOutcomes {
-  display: block;
-}
-
 .flagCheckBoxContainer {
   margin-left: 10px;
   margin-right: 5px;

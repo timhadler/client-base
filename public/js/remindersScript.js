@@ -18,10 +18,13 @@ $(document).ready(function() {
   $('#FUCheckbox').on('change', function() { checkAll(this) });
   $('#ACheckbox').on('change', function() { checkAll(this) });
 
-  // Set status button
+  // Set status button and nextReminderFields
   $('#setStatusButton').on('click', function() { setStatusPopup() });
   $('#reminderSetStautusMultiForm').find($('button[type="button"]')).on('click', function() { multiStatusSubmit() });
   $('#setStatusCloseButton').on('click', function() { setStatusClose() });
+
+  $('#setStatusPopup').find('.revealNextReminder').on('change', function() { if (this.checked) { $('#setStatusPopup').find('.rNextReminder').css('display', 'block'); } });
+  $('#setStatusPopup').find('.hideNextReminder').on('change', function() { if (this.checked) { $('#setStatusPopup').find('.rNextReminder').css('display', 'none'); } });
 
   // List filter buttons
   $('#pendingFilterButton').on('click', function() { filterPopup("pending") });
@@ -80,12 +83,25 @@ function openPopup(data) {
   if (data.status == 'awaiting' || data.status == 'followUp' || data.status == 'noResponse') {
     $popup.find('.interactionsDiv').css('display', 'block');
     $popup.find('.callOutcomes').css('display', 'block');
+
   } else if (data.status == "completed") {                  // Hide actions section in completed list
     $popup.find('.actionsDiv').css('display', 'none');
-  } else {
+
+  } else if (data.status == "pending") {
     $popup.find('.revealCallOutcomes').on('change', function() { if (this.checked) { $(this).closest('.actionsDiv').next('.callOutcomes').css('display', 'block'); } });
     $popup.find('.hideCallOutcomes').on('change', function() { if (this.checked) { $popup.find('.callOutcomes').css('display', 'none'); } });
   }
+
+  if (data.status != "completed") {
+    $popup.find('.revealNextReminder').on('change', function() { if (this.checked) { $popup.find('.rNextReminder').css('display', 'block'); } });
+    $popup.find('.hideNextReminder').on('change', function() { if (this.checked) { $popup.find('.rNextReminder').css('display', 'none'); } });
+    
+    let date = data.rDate.slice(0, 10);
+    let y = parseInt(date.slice(0, 4)) + 1;
+    date = y + date.slice(4);
+    $popup.find('#rNewReminderInput').val(date);
+  }
+
   // Submit form
   $popup.find("#reminderPopupSubmitButton").on('click', function() { reminderSubmit(data.rId) })
 

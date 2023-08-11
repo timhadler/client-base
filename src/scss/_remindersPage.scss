@@ -77,11 +77,6 @@
     text-decoration: underline;
 }
 
-// Response section within the reminder popup
-.revealCallOutcomes:checked ~ .callOutcomes {
-    display: block;
-}
-
 .flagCheckBoxContainer {
     margin-left: 10px;
     margin-right: 5px;
