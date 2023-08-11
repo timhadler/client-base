@@ -219,9 +219,9 @@ exports.createClient = async function(name, company, comments) {
 }
 
 // Creates a contact entry
-exports.createContact = async function(name, phone, email, id) {
-    let params = [name, phone, email, id];
-    const sqlQuery = "INSERT INTO contacts (name, phone, email, client_id) VALUES(?, ?, ?, ?)";
+exports.createContact = async function(name, phone, home, email, id) {
+    let params = [name, phone, home, email, id];
+    const sqlQuery = "INSERT INTO contacts (name, phone, home, email, client_id) VALUES(?, ?, ?, ?, ?)";
     await db.query(sqlQuery, params);
 }
 

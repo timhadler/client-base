@@ -136,7 +136,9 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                 const date = clientObjs[i].ReminderDate;
                 let comments = clientObjs[i].Comments;
                 const address = clientObjs[i].Street;
-                const phone = clientObjs[i].Mobile;
+                const mobile = clientObjs[i].Mobile;
+                let home = clientObjs[i].Phone;
+                if (typeof home =='undefined') {home=null};
                 const firstName = clientObjs[i].First;
 
                 if (typeof comments == 'undefined') { comments = "" };  // Avoid reading length of undefined error
@@ -154,13 +156,13 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                     if (address != null && typeof address != 'undefined') { 
                         await clients.createAddress(address, clientObjs[i].Suburb, clientObjs[i].City, clientObjs[i].Postcode, "Unknown", 1, client_id);
                     }
-                    if (typeof phone != 'undefined' && phone != null) {
-                        if (typeof phone == 'string') {
-                            if (phone.length > 0) {
-                                await clients.createContact(firstName, phone, clientObjs[i].Email, client_id);
+                    if (typeof mobile != 'undefined' && mobile != null) {
+                        if (typeof mobile == 'string') {
+                            if (mobile.length > 0) {
+                                await clients.createContact(firstName, mobile, home, clientObjs[i].Email, client_id);
                             }
                         } else {
-                            await clients.createContact(firstName, phone, clientObjs[i].Email, client_id);
+                            await clients.createContact(firstName, mobile, home, clientObjs[i].Email, client_id);
                         }
                     }
                     await clients.createReminder(convertDate(date), client_id);
