@@ -410,6 +410,7 @@ hr {
   text-align: left;
   width: 170px;
   padding: 0;
+  margin-left: 10px;
   font-size: 14px;
   color: #0652C3;
 }
@@ -675,6 +676,7 @@ nav {
   font-size: 20px;
   font-weight: bold;
   margin-right: 5px;
+  margin-left: 10px;
 }
 
 .reminderCount {
@@ -759,22 +761,6 @@ nav {
 .clientsFile {
   display: inline-block;
   width: 245px;
-}
-
-/***********************************************************
- * Centered popups
- ***********************************************************/
-.centeredPopupCP {
-  visibility: hidden;
-  position: fixed;
-  background-color: white;
-  z-index: 5;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: auto;
-  padding: 35px;
-  min-width: 300px;
 }
 
 .exportFilterForm {

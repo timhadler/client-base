@@ -176,7 +176,6 @@ router.post("/set-reminder-status-multi", async (req, res) => {
         } else if (typeof rIds == "undefined") {
             rIds = [];
         }
-        console.log(rIds)
         if (typeof ids == "string") {
             ids = [ids];
         } else if (typeof ids == "undefined") {
@@ -195,26 +194,6 @@ router.post("/set-reminder-status-multi", async (req, res) => {
             }
             await setReminderStatus(action, outcome, note, rIds[i]);
         }
-        //if (req.body.clientStatus) {
-            // if (req.body.incrementYear == 'incrementYear') {
-            //     // Increment year for all clients
-            //     for (let i = 0; i < rIds.length; i++) {
-            //         let rDate = await clients.reminder(rIds[i]);
-            //         let nYear = 0;
-
-            //         rDate = rDate.rDate.toLocaleDateString('en-GB');
-            //         nYear = parseInt(rDate.slice(6)) + 1;
-            //         rDate = nYear.toString() + "-" + rDate.slice(3, 5) + "-" + rDate.slice(0, 2);
-
-            //         await clients.editReminder(rIds[i], rDate);
-            //     }
-            // }
-            // Set clients status
-            // for (let i = 0; i < rIds.length; i++) {
-            //     await clients.setClientStatus(req.body.clientStatus, rIds[i]);
-            // }
-        //}
-
         res.status(201).json({ message: "Update successful" });
     } catch (error) {
         res.status(500).send(error.message);
@@ -260,20 +239,6 @@ async function setReminderStatus(action, outcome, note, rId) {
         if (note.length > 0) {
             await clients.createNote(note, rId);
         }
-        // Change rDate
-        /*
-        if (req.body.rDate && (req.body.clientStatus == "confirmed" || req.body.clientStatus == "call")) {
-            await clients.editReminder(req.params.rId, req.body.rDate);
-        }
-        */
-
-        // Set flag/urgent and comments
-        /*
-        let value = 0;
-        if (req.body.flagStatus == "flagged") { value = 1; } else {value = null};
-        await clients.setReminderFlag(req.params.rId, value);
-        await clients.editComment(req.params.id, req.body.comments);
-        */
 };
 
 // Gets the date n days from the current date (output: yyyy-mm-dd)
