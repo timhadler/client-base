@@ -146,7 +146,7 @@ router.post("/set-reminder-status", async (req, res) => {
             if (action == "ignore" || outcome == "booked" || outcome == "declined") {
                 // Create new reminder
                 await clients.createReminder(params.get("rDate"), id);
-            } else {
+            } else if (outcome == "followUp") {
                 // Update reminder
                 await clients.editReminder(rId, params.get("rDate"));
             }
@@ -187,7 +187,7 @@ router.post("/set-reminder-status-multi", async (req, res) => {
                 if (action == "ignore" || outcome == "booked" || outcome == "declined") {
                     // Create new reminder
                     await clients.createReminder(rDate, ids[i]);
-                } else {
+                } else if (outcome == "followUp") {
                     // Update reminder
                     await clients.editReminder(rIds[i], rDate);
                 }
