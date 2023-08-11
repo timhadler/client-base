@@ -227,7 +227,7 @@ exports.createContact = async function(name, phone, home, email, id) {
 
 // Creates a reminder entry
 exports.createReminder = async function(rDate, id) {
-    const sqlQuery = "INSERT INTO reminders (rDate, client_id) VALUES(?, ?)";
+    const sqlQuery = "INSERT INTO reminders (rDate, client_id, status) VALUES(?, ?, 'pending')";
     await db.query(sqlQuery, [rDate, id]);
 }
 

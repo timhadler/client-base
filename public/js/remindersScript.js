@@ -96,14 +96,14 @@ function openPopup(data) {
     $popup.find('.revealNextReminder').on('change', function() { if (this.checked) { $popup.find('.rNextReminder').css('display', 'block'); } });
     $popup.find('.hideNextReminder').on('change', function() { if (this.checked) { $popup.find('.rNextReminder').css('display', 'none'); } });
     
-    let date = data.rDate.slice(0, 10);
-    let y = parseInt(date.slice(0, 4)) + 1;
-    date = y + date.slice(4);
+    let date = new Date(data.rDate).toLocaleDateString('en-GB');
+    let y = parseInt(date.slice(6)) + 1;
+    date = y + "-" + date.slice(3, 5) + "-" + date.slice(0, 2);
     $popup.find('#rNewReminderInput').val(date);
   }
 
   // Submit form
-  $popup.find("#reminderPopupSubmitButton").on('click', function() { reminderSubmit(data.rId) })
+  $popup.find("#reminderPopupSubmitButton").on('click', function() { reminderSubmit(data.id, data.rId) })
 
   // Fetch note and interaction data
   $.ajax({
@@ -142,14 +142,14 @@ function openPopup(data) {
 }
 
 // Submit the reminder popup form
-function reminderSubmit(rId) {
+function reminderSubmit(id, rId) {
   // Get the form data
   var formData = $('#reminderPopupForm').serialize();
 
   $.ajax({
     url: "/set-reminder-status",
     method: "POST",
-    data: { data:formData, id:rId },
+    data: { data:formData, id:id, rId:rId },
     success: function(res) {
       reloadActiveLists();
       closePopup();

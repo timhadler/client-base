@@ -132,16 +132,27 @@ router.get("/load-popup-data", async (req, res) => {
 });
 
 // POST set client status, AJAX
-router.post("/set-reminder-status", (req, res) => {
+router.post("/set-reminder-status", async (req, res) => {
     try {
         const formData = req.body.data;     // formData in form of query string from AJAX request
-        const rId = req.body.id;
+        const rId = req.body.rId;
+        const id = req.body.id;
         const params = new URLSearchParams(formData);
         const note = params.get('note');
         const action = params.get('action');
         const outcome = params.get('outcome');
 
-        setReminderStatus(action, outcome, note, rId);
+        if (!params.get("noReminder")) {
+            if (action == "ignore" || outcome == "booked" || outcome == "declined") {
+                // Create new reminder
+                await clients.createReminder(params.get("rDate"), id);
+            } else {
+                // Update reminder
+                await clients.editReminder(rId, params.get("rDate"));
+            }
+        }
+
+        await setReminderStatus(action, outcome, note, rId);
         res.status(201).json({ message: "Update successful" });
     } catch (error) {
         res.status(500).send(error.message);
