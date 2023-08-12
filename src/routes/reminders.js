@@ -135,7 +135,6 @@ router.get("/load-popup-data", async (req, res) => {
         const noteData = await clients.clientNotes(req.query.clientId);
         const interactionData = await clients.reminderInteractions(req.query.reminderId);
         const data = {notes:noteData, interactions:interactionData};
-
         res.json(JSON.stringify(data));
     } catch (error) {
         res.status(500).send(error.message);
@@ -163,7 +162,7 @@ router.post("/set-reminder-status", async (req, res) => {
             }
         }
 
-        await setReminderStatus(action, outcome, note, rId);
+        await setReminderStatus(action, outcome, note, id, rId);
         res.status(201).json({ message: "Update successful" });
     } catch (error) {
         res.status(500).send(error.message);
@@ -203,7 +202,7 @@ router.post("/set-reminder-status-multi", async (req, res) => {
                     await clients.editReminder(rIds[i], rDate);
                 }
             }
-            await setReminderStatus(action, outcome, note, rIds[i]);
+            await setReminderStatus(action, outcome, note, ids[i], rIds[i]);
         }
         res.status(201).json({ message: "Update successful" });
     } catch (error) {
@@ -215,7 +214,7 @@ router.post("/set-reminder-status-multi", async (req, res) => {
 Helper Functions
  ***********************************************/
 // Updates a reminder entry in db and creates an interaction
-async function setReminderStatus(action, outcome, note, rId) {
+async function setReminderStatus(action, outcome, note, id, rId) {
     let status = null;
         if (action) {
             if (action == "ignore") {
@@ -248,7 +247,7 @@ async function setReminderStatus(action, outcome, note, rId) {
 
         // Add note if one is provided
         if (note.length > 0) {
-            await clients.createNote(note, rId);
+            await clients.createNote(note, id);
         }
 };
 

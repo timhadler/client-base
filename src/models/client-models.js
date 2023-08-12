@@ -63,7 +63,7 @@ exports.awaitingList = async function (d1, d2, limit, offset, order) {
     let sqlQuery = "SELECT COUNT(*) over() as n, name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id ";
     if (order == "interaction") {
         sqlQuery += "LEFT JOIN (SELECT reminder_id, MAX(created) AS latest_created FROM interactions GROUP BY reminder_id) latest_int ON reminders.id = latest_int.reminder_id LEFT JOIN interactions ON reminders.id = interactions.reminder_id AND latest_int.latest_created = interactions.created ";
-        order = "latest_created DESC"
+        order = "latest_created"
     }
     sqlQuery += "WHERE reminders.status='awaiting' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
     const rows = await db.query(sqlQuery);
