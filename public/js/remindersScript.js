@@ -279,7 +279,7 @@ function loadList(l, data, offset=0) {
 
 // Reloads the current tabs lists
 function reloadActiveLists() {
-  var tabId = $(".remindersTabLink.active").attr('id');
+  var tabId = $(".tabLink.active").attr('id');
 
   if (tabId.includes("action")) {
     queryListData("pendingList");
@@ -295,7 +295,7 @@ function reloadActiveLists() {
 function openTab(evt, tabName) {
     // Hide tab contents nd remove active class
     $('.tabContent').hide();
-    $('.remindersTabLink').removeClass('active');
+    $('.tabLink').removeClass('active');
 
     // Load the appropriate lists
     if (tabName == "awaiting") {

@@ -354,6 +354,31 @@ hr {
 }
 
 /***********************************************************
+ * Page tabs
+ ***********************************************************/
+.tabs {
+    overflow: hidden;
+}
+
+.tabContent {
+    display: none;
+}
+  
+.tabLink {
+    float: left;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.tabLink:hover {
+    background-color: #f2f2f2;
+}
+
+.active {
+    border-bottom: 1px solid $primary;
+}
+
+/***********************************************************
  * Misc
  ***********************************************************/
 .login_container {
@@ -395,12 +420,14 @@ hr {
 }
 
 .link {
-    font-size: $font-v-small;
-    color: blue;
+    font-size: $font-small;
+    align-self: center;
+    color: $secondary;
 }
 
 .link:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .inner_section {

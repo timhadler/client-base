@@ -10,29 +10,6 @@
     grid-template-rows: auto;
 }
 
-// Page tabs
-.tabs {
-    overflow: hidden;
-}
-  
-.remindersTabLink {
-    float: left;
-    border-radius: 0;
-    cursor: pointer;
-}
-
-.remindersTabLink:hover {
-    background-color: #f2f2f2;
-}
-  
-.tabContent {
-    display: none;
-}
-
-.active {
-    border-bottom: 1px solid $primary;
-}
-
 .reminders_list_container {
     height: 82vh;
     overflow-y: auto;

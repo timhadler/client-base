@@ -465,6 +465,31 @@ hr {
 }
 
 /***********************************************************
+ * Page tabs
+ ***********************************************************/
+.tabs {
+  overflow: hidden;
+}
+
+.tabContent {
+  display: none;
+}
+
+.tabLink {
+  float: left;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.tabLink:hover {
+  background-color: #f2f2f2;
+}
+
+.active {
+  border-bottom: 1px solid #009AAF;
+}
+
+/***********************************************************
  * Misc
  ***********************************************************/
 .login_container {
@@ -506,12 +531,14 @@ hr {
 }
 
 .link {
-  font-size: 14px;
-  color: blue;
+  font-size: 16px;
+  align-self: center;
+  color: #0652C3;
 }
 
 .link:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .inner_section {
@@ -573,28 +600,6 @@ nav {
   display: grid;
   grid-template-columns: 100px 1fr 1fr 100px;
   grid-template-rows: auto;
-}
-
-.tabs {
-  overflow: hidden;
-}
-
-.remindersTabLink {
-  float: left;
-  border-radius: 0;
-  cursor: pointer;
-}
-
-.remindersTabLink:hover {
-  background-color: #f2f2f2;
-}
-
-.tabContent {
-  display: none;
-}
-
-.active {
-  border-bottom: 1px solid #009AAF;
 }
 
 .reminders_list_container {
@@ -766,6 +771,12 @@ nav {
 .exportFilterForm {
   border: 1px solid black;
   border-radius: 4px;
+}
+
+.clientDetailsDiv {
+  display: none;
+  padding-top: 10px;
+  padding-left: 12px;
 }
 
 /*# sourceMappingURL=styles.css.map */
