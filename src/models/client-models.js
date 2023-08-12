@@ -58,9 +58,14 @@ exports.followUpList3 = async function (d1, d2, limit, offset, order) {
     return rows;
 };
 
-// Fetches the client details associated with remidners that have status "awaitingResponse"
+// Fetches the client details associated with reminders that have status "awaitingResponse"
 exports.awaitingList = async function (d1, d2, limit, offset, order) {
-    const sqlQuery = "SELECT COUNT(*) over() as n, name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='awaiting' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
+    let sqlQuery = "SELECT COUNT(*) over() as n, name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id ";
+    if (order == "interaction") {
+        sqlQuery += "LEFT JOIN (SELECT reminder_id, MAX(created) AS latest_created FROM interactions GROUP BY reminder_id) latest_int ON reminders.id = latest_int.reminder_id LEFT JOIN interactions ON reminders.id = interactions.reminder_id AND latest_int.latest_created = interactions.created ";
+        order = "latest_created DESC"
+    }
+    sqlQuery += "WHERE reminders.status='awaiting' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
     const rows = await db.query(sqlQuery);
 
     return rows;

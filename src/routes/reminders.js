@@ -16,7 +16,7 @@ global.ORDER_FU = "status"
 global.D1_A = "0001-01-01";
 global.D2_A = "9999-12-31";
 global.MONTH_A = MONTH_P;
-global.ORDER_A = "name"
+global.ORDER_A = "rDate"
 
 router.get("/", async (req, res) => {
     try {
