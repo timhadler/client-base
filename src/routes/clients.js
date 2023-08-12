@@ -10,16 +10,6 @@ const upload = multer({ dest: "uploads/" });
 // Client Index
 router.get("/", async (req, res) => {
     try {
-        //let details = null;
-
-        // if (typeof req.query.clientID != 'undefined') {
-        //     details = await clients.clientDetails(req.query.clientID);
-            
-        //     // Convert dates to a nicer format to display
-        //     for (let i = 0; i < details.calls.length; i++) {
-        //         details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString('en-GB');
-        //     }
-        // }
         res.status(200).render("clients/clients", {search:req.query.search});
     } catch (error) {
         // Check if error resulted from search query, single qoutes cause sql syntax error

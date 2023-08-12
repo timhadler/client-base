@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
             list = await clients.getClientsNoRDate();
         } else {
             // Get all clients
-            list = await clients.clientList(null);
+            list = await clients.clientList(50, 0);
         };
 
         if (typeof req.query.search != 'undefined') {

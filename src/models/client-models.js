@@ -15,12 +15,7 @@ exports.clientNumber = async function() {
 // Fetches the first x clients alphabetically from database
 // If x is null, returns all clients in alphabetical order
 exports.clientList = async function(limit, offset) {
-    var sqlQuery = "";
-    if (offset == null) {
-        sqlQuery = "SELECT name, id FROM clients ORDER BY NAME";
-    } else {
-        sqlQuery = "SELECT name, id FROM clients ORDER BY NAME LIMIT " + limit + " OFFSET " + offset;
-    }
+    const sqlQuery = "SELECT name, id FROM clients ORDER BY NAME LIMIT " + limit + " OFFSET " + offset;
     const rows = await db.query(sqlQuery);
 
     return rows;
@@ -103,68 +98,38 @@ exports.searchList = async function(search) {
     return rows;
 }
 
-// Fetches all entries from all tables associated with a given client id
-// as an object -- {client, addresses, callDates, contacts, comments, services}
+// Fetches client details with a given id
 exports.clientDetails = async function(id) {
-    // const cli = await customerDetails(id);
-    // const add = await addressDetails(id);
-    // const call = await callDetails(id);
-    // const cont = await contactDetails(id);
-
-    // return {client: cli, addresses: add, calls:call, contacts:cont};
-
     const sqlQuery = "SELECT * FROM clients WHERE clients.id=" + id;
     rows = await db.query(sqlQuery);
     return rows[0];
 }
 
-// Retrieves address with given id
-exports.address = async function(id) {
-    const sqlQuery = "SELECT * FROM addresses WHERE id=?";
-    const rows = await db.query(sqlQuery, id);
-
-    if (rows.length > 1) {
-        console.log("Somethings gone wrong, fetched multiple addresses with same address id");
-    }
-
-    return rows[0];
-}
-
-// Retrieves contact with given id
-exports.contact = async function(id) {
-    const sqlQuery = "SELECT * FROM contacts WHERE id=?";
-    const rows = await db.query(sqlQuery, id);
-
-    if (rows.length > 1) {
-        console.log("Somethings gone wrong, fetched multiple contacts with same contact id");
-    }
-
-    return rows[0];
-}
-
+// Dont think im using this
 // Retrieves a reminder with a given id
-exports.reminder = async function(id) {
-    const sqlQuery = "SELECT * from reminders WHERE id=?";
-    const rows = await db.query(sqlQuery, id);
+// exports.reminder = async function(id) {
+//     const sqlQuery = "SELECT * from reminders WHERE id=?";
+//     const rows = await db.query(sqlQuery, id);
 
-    return rows[0];
-}
+//     return rows[0];
+// }
 
-// Retrieves the reminders with status awaiting and their latest interaction date
-exports.awaitingReminders = async function() {
-    const sqlQuery = "SELECT reminders.id, latest_interaction.created AS latest_interaction_date FROM reminders INNER JOIN interactions AS latest_interaction ON reminders.id = latest_interaction.reminder_id AND latest_interaction.created = ( SELECT MAX(created) FROM interactions WHERE reminder_id = reminders.id ) WHERE reminders.status = 'awaiting';"
-    const rows = await db.query(sqlQuery);
+// For automatically moving clients out of awaiting list into followUp list, not unsing currently
+// // Retrieves the reminders with status awaiting and their latest interaction date
+// exports.awaitingReminders = async function() {
+//     const sqlQuery = "SELECT reminders.id, latest_interaction.created AS latest_interaction_date FROM reminders INNER JOIN interactions AS latest_interaction ON reminders.id = latest_interaction.reminder_id AND latest_interaction.created = ( SELECT MAX(created) FROM interactions WHERE reminder_id = reminders.id ) WHERE reminders.status = 'awaiting';"
+//     const rows = await db.query(sqlQuery);
 
-    return rows;
-}
+//     return rows;
+// }
+//
+// // Retireves the user settings for the timeframe for when a reminder status is changed form awaiting to noResponse
+// exports.settingResponseTimeFrame = async function() {
+//     const sqlQuery = "SELECT setting_value FROM settings WHERE setting_key='response_timeframe'";
+//     const rows = await db.query(sqlQuery);
 
-// Retireves the user settings for the timeframe for when a reminder status is changed form awaiting to noResponse
-exports.settingResponseTimeFrame = async function() {
-    const sqlQuery = "SELECT setting_value FROM settings WHERE setting_key='response_timeframe'";
-    const rows = await db.query(sqlQuery);
-
-    return rows[0].setting_value;
-}
+//     return rows[0].setting_value;
+// }
 
 // Reveives a user with a given id
 exports.getUserById = async function(id) {
@@ -207,7 +172,7 @@ exports.getClientsNoRDate = async function() {
 /***********************************************************
  * Creation
  ***********************************************************/
-// Creates a client entry
+// Creates a client entry NEEDS UPDATE
 // Returns the id of the created client
 exports.createClient = async function(name, company, comments) {
     let sqlQuery;
@@ -224,29 +189,12 @@ exports.createClient = async function(name, company, comments) {
     await db.query(sqlQuery, params);
     const rows = await db.query("SELECT MAX(id) AS lastID FROM clients");
     return rows[0].lastID;
-    //return await getClientId(name);
-}
-
-// Creates a contact entry
-exports.createContact = async function(name, phone, home, email, id) {
-    let params = [name, phone, home, email, id];
-    const sqlQuery = "INSERT INTO contacts (name, phone, home, email, client_id) VALUES(?, ?, ?, ?, ?)";
-    await db.query(sqlQuery, params);
 }
 
 // Creates a reminder entry
 exports.createReminder = async function(rDate, id) {
     const sqlQuery = "INSERT INTO reminders (rDate, client_id, status) VALUES(?, ?, 'pending')";
     await db.query(sqlQuery, [rDate, id]);
-}
-
-// Creates an address entry
-exports.createAddress = async function(street, suburb, city, pc, fa, clientAddress, id) {
-    if (street.length > 0) {
-        const params = processParameters([street, suburb, city, pc, fa, clientAddress, id]);
-        const sqlQuery = "INSERT INTO addresses (street, suburb, city, pc, fa, clientAddress, client_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
-        await db.query(sqlQuery, params);
-    }
 }
 
 // Create an interaction entry
@@ -270,7 +218,7 @@ exports.creatUser = async function(username, password) {
  * Edit
  ***********************************************************/
 
-// Edits a client entry
+// Edits a client entry NEEDS UPDATE
 exports.editClient = async function(id, name, company, comments) {
     // Comments are null if textarea length == 1
     if (comments.length <= 1) {
@@ -280,33 +228,20 @@ exports.editClient = async function(id, name, company, comments) {
     await db.query(sqlQuery, [name, company, comments, id]);
 }
 
-// Edits an address entry
-exports.editAddress = async function(id, street, suburb, city, pc, fa, clientAddress) {
-    const params = [street, suburb, city, pc, fa, clientAddress, id];
-    const sqlQuery = "UPDATE addresses SET street=?, suburb=?, city=?, pc=?, fa=?, clientAddress=? WHERE id=?";
-    await db.query(sqlQuery, params);
-}
-
-// Edits a contact entry
-exports.editContact = async function(id, name, phone, email) {
-    const sqlQuery = "UPDATE contacts SET name=?, phone=?, email=? WHERE id=?";
-    await db.query(sqlQuery, [name, phone, email, id]);
-}
-
 // Edits a reminder entry
 exports.editReminder = async function(id, date) {
     const sqlQuery = "UPDATE reminders SET rDate=? WHERE id=?";
     await db.query(sqlQuery, [date, id]);
 }
 
-// Edits a comment entry
-exports.editComment = async function(id, text) {
-    if (text.length < 1) {
-        text = null;
-    }
-    const sqlQuery = "UPDATE clients SET comments=? WHERE id=?";
-    await db.query(sqlQuery, [text, id]);
-}
+// // Edits a comment entry
+// exports.editComment = async function(id, text) {
+//     if (text.length < 1) {
+//         text = null;
+//     }
+//     const sqlQuery = "UPDATE clients SET comments=? WHERE id=?";
+//     await db.query(sqlQuery, [text, id]);
+// }
 
 // Sets a reminder status
 exports.setReminderStatus = async function(status, outcome, id) {
@@ -322,6 +257,7 @@ exports.setReminderFlag = async function(id, value) {
 /***********************************************************
  * Delete
  ***********************************************************/
+// NEEDS UPDATE
 exports.deleteClientData = async function(id) {
     var sqlQuery = "DELETE FROM addresses WHERE client_id=" + id;
     await db.query(sqlQuery);
@@ -336,18 +272,8 @@ exports.deleteClientData = async function(id) {
     await db.query(sqlQuery);
 }
 
-exports.deleteAddress = async function(id) {
-    const sqlQuery = "DELETE FROM addresses WHERE id=?";
-    await db.query(sqlQuery, id);
-}
-
 exports.deleteReminder = async function(id) {
     const sqlQuery = "DELETE FROM reminders WHERE id=?";
-    await db.query(sqlQuery, id);
-}
-
-exports.deleteContact = async function(id) {
-    const sqlQuery = "DELETE FROM contacts WHERE id=?";
     await db.query(sqlQuery, id);
 }
 
@@ -359,55 +285,13 @@ exports.deleteUser = async function(id) {
 /***********************************************************
  * Helper functions - DATABASE
  ***********************************************************/
-// Returns the id of a given client name
-// async function getClientId(name) {
-//     const sqlQuery = "SELECT LAST_INSERT_ID();";
-//     const rows = await db.query(sqlQuery);
-//     console.log(rows);
-//     console.log(rows[0])
-
-//     return rows;
-// };
-
-// Fetches the address details of a given client_id
-async function addressDetails(id) {
-    const sqlQuery = "SELECT * from addresses WHERE client_id=" + id;
-    const rows = await db.query(sqlQuery);
-
-    return rows;
-}
-
-// Fetches the call dates of a given client_id
-async function callDetails(id) {
-    const sqlQuery = "SELECT * from reminders WHERE client_id=" + id;
-    const rows = await db.query(sqlQuery);
-
-    return rows;
-}
-
-// Fetches all the contacts of a given client_id
-async function contactDetails(id) {
-        const sqlQuery = "SELECT * FROM contacts WHERE contacts.client_id=" + id;
-        rows = await db.query(sqlQuery);
-
-        return rows;
-}
-
-// Fetches all the client details of a given client_id
-// async function clientDetails(id) {
-//     const sqlQuery = "SELECT * FROM clients WHERE clients.id=" + id;
-//     rows = await db.query(sqlQuery);
-//     return rows[0];
+// // Turns parameters in a list to null if their length is 0
+// function processParameters(list) {
+//     var result = list;
+//     for (let i = 0; i < result.length; i++) {
+//         if (result[i].length <= 0) {
+//             result[i] = null;
+//         }
+//     }
+//     return result;
 // }
-
-// OTHER
-// Turns parameters in a list to null if their length is 0
-function processParameters(list) {
-    var result = list;
-    for (let i = 0; i < result.length; i++) {
-        if (result[i].length <= 0) {
-            result[i] = null;
-        }
-    }
-    return result;
-}
