@@ -10,11 +10,11 @@ const upload = multer({ dest: "uploads/" });
 // Client Index
 router.get("/", async (req, res) => {
     try {
-        res.status(200).render("clients/clients", {search:req.query.search});
+        res.status(200).render("clients/clients");
     } catch (error) {
         // Check if error resulted from search query, single qoutes cause sql syntax error
         if (error.message.includes("You have an error in your SQL syntax") && error.message.includes("WHERE name LIKE")) {
-            res.status(400).render("clients/clients", {clients:[], error:"Error in search, single qoutes (') are not allowed: " + req.query.search});
+            res.status(400).render("clients/clients", {error:"Error in search, single qoutes (') are not allowed: " + req.query.search});
         } else {
             res.status(500).send(error.message);
         }
@@ -25,17 +25,23 @@ router.get("/", async (req, res) => {
 router.get("/load-client-list", async (req, res) => {
     try {
         const search = req.query.search;
-        const n = await clients.clientNumber();
+        var n = 0;
         var clientList = [];
 
+        // If a search is provided, search list, client list if not
         if (typeof search != 'undefined') {
             if (search.length > 0) {
                 clientList = await clients.searchList(search);
+                if (clientList.length > 0) {
+                    n = clientList[0].n;
+                }
             } else {
                 clientList = await clients.clientList(req.query.limit, req.query.offset);
+                n = await clients.clientNumber();
             }
         } else {
             clientList = await clients.clientList(req.query.limit, req.query.offset);
+            n = await clients.clientNumber();
         }
 
         res.json(JSON.stringify({clientList:clientList, nClients:n}));

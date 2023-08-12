@@ -30,16 +30,7 @@
 
         <!-- list header -->
         <div class="flex flex-ai-c flex-jc-sb">
-            <p class="size_small"> 
-                <% if(typeof locals.search != 'undefined' && locals.search.length > 0) { %> 
-                    <div class="flex flex-ai-c flex-jc-sb">
-                        Search: <%= locals.search %> 
-                        <a href="/clients/"><span class="close-button">&times</span></span></a>
-                    </div>
-                <% } else { %>
-                    Client List 
-                <% } %>
-            </p>
+            <p id="clientListHeader" class="size_small"></p>
             <span id="nClients" class="listCount"> </span>
         </div>
         <hr class="line_header">

@@ -3,21 +3,29 @@ var reminderPopupButtonHTML;
 const LIMIT = 25;
 
 // Search bar
-document.getElementById("searchBar").addEventListener("keyup", function(event) {
-    if (event.code === "Enter") {
-        event.preventDefault();
-        document.getElementById("searchForm").submit();
-    }
-});
+// document.getElementById("searchBar").addEventListener("keyup", function(event) {
+//     if (event.code === "Enter") {
+//         event.preventDefault();
+//         document.getElementById("searchForm").submit();
+//     }
+// });
 
 $(document).ready(function() {
+    // Search bar
+    $("#searchBar").on("keyup", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            loadClientList($(this).val());
+        }
+    });
+
     // Tab buttons event listeners
     $('#cdSummaryTab').on('click', function(evt) { openTab(evt, "summary") });
     $('#cdApptTab').on('click', function(evt) { openTab(evt, "appts") });
     $('#cdReminderTab').on('click', function(evt) { openTab(evt, "reminders") });
 
     // Load more button
-    $('#clientsLoadMore').on('click', function() { loadMore("") });
+    $('#clientsLoadMore').on('click', function() { loadMore() });
 
     // Get the client ID from URL parameters which is set by reminder popup client details link
     const urlParams = new URLSearchParams(window.location.search);
@@ -39,9 +47,6 @@ cList.addEventListener('scroll', function() { sessionStorage.setItem('lastScroll
 document.getElementById("addClientPopupButton").addEventListener('click', function() { addClientPopup() });
 document.getElementById("addClientCloseButton").addEventListener('click', function() { addClientPopupClose() });
 
-/***********************************************************
- * Helper Functions
- **********************************************************/
 // Loads the left pane client list
 function loadClientList(search, offset=0) {
     // Load html files into variables
@@ -57,8 +62,17 @@ function loadClientList(search, offset=0) {
           const data = JSON.parse(res);
           const clients = data.clientList;
           const n = data.nClients;
-
           var list = $("#cList");
+
+          // If search term is empty, loading client list
+          if (search) {
+            $("#clientListHeader").html("Search: " + search);
+            $('#clientsLoadMore').hide();
+            $(".clientDetailsDiv").hide();
+          } else {
+            $("#clientListHeader").html("Client List");
+            $('#clientsLoadMore').show();
+          }
           $("#nClients").html("(" + n + ")");
 
           if (offset === 0) {
@@ -77,19 +91,16 @@ function loadClientList(search, offset=0) {
             li.html($button);
             list.append(li);
           }
+          // Hide load more button
+          if (list.find('li').length == n) {
+              $('#clientsLoadMore').hide();
+          }
         },
         error: function(xhr, status, error) {
           // Handle AJAX error
           console.log('AJAX Error while fetching client list:', error, xhr, status);
         }
     });
-}
-
-// Load another batch of clients for the client list
-function loadMore(s) {
-    let list = $('#cList');
-    let offset = list.find('li').length;
-    loadClientList(s, offset);
 }
 
 // Loads the client details of a given id after being clicked on in client list
@@ -145,6 +156,16 @@ function openTab(evt, tabName) {
   
     // Mark the tab link as active
     evt.currentTarget.classList.add('active');
+}
+
+/***********************************************************
+ * Helper Functions
+ **********************************************************/
+// Load another batch of clients for the client list
+function loadMore() {
+    let list = $('#cList');
+    let offset = list.find('li').length;
+    loadClientList("", offset);
 }
 
 function addClientPopup() {

@@ -92,7 +92,7 @@ exports.clientNotes = async function(id) {
 
 // Fetches clients resulting from a search query
 exports.searchList = async function(search) {
-    const sqlQuery = "SELECT name, id FROM clients WHERE name LIKE '%" + search + "%'";
+    const sqlQuery = "SELECT COUNT(*) over() as n, name, id FROM clients WHERE name LIKE '%" + search + "%'";
     const rows = await db.query(sqlQuery, search);
 
     return rows;
