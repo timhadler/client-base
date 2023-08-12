@@ -60,6 +60,8 @@
 
     <!-- Awaiting response -->
     <div id="awaiting" class="grid_col_1 tabContent">
+        <!-- Filter popup -->
+        <%- include("../partials/reminders/filterPopup", {list:"awaiting", month:month_a, d1:d1_a, d2:d2_a}) %>
         <div style="flex:1;">
             <!-- Header and filter button -->
             <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
@@ -68,7 +70,7 @@
                     <span class="RListHeader"> Awaiting response </span>
                     <span id="awaitingCount" class="reminderCount"></span>
                 </div>
-                <button id="FollowUpFilterButton" style="margin-right: 2%;" class="button_filter"> Filter </button>
+                <button id="awaitingFilterButton" style="margin-right: 2%;" class="button_filter"> Filter </button>
             </div>
             <hr />
             <div class="inner_section reminders_list_container">

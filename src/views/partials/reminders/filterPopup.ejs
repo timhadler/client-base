@@ -8,11 +8,11 @@
         <div class="flex flex-ai-c">
             <!-- Maybe use class names instead of ids to grab in js, instead of adding list name to id dynamically -->
             <select name="dateRangeInput" class="margin_r_sm rDateRangeFilter" value="month">
-                <option value="all" <% if (locals.list == "followUp") { %>selected<% } %>>All</option>
+                <option value="all" <% if (locals.list == "followUp" || locals.list == "awaiting") { %>selected<% } %>>All</option>
                 <option value="month" <% if (locals.list == "pending") { %>selected<% } %>>Month</option>
                 <option value="custom">Custom</option>
             </select>
-            <input class="rMonthInput <% if (locals.list == "followUp") { %>hidden<% } %>" type="month" name="rMonth" value="<%= locals.month %>">
+            <input class="rMonthInput <% if (locals.list == "followUp" || locals.list == "awaiting") { %>hidden<% } %>" type="month" name="rMonth" value="<%= locals.month %>">
             <div class="hidden rCustomInput">
                 <input id="start" type="date" name="d1" value="<%= locals.d1 %>">
                 <span class="size_v_small"> to </span>

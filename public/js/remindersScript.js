@@ -29,10 +29,13 @@ $(document).ready(function() {
   // List filter buttons
   $('#pendingFilterButton').on('click', function() { filterPopup("pending") });
   $('#followUpFilterButton').on('click', function() { filterPopup("followUp") });
+  $('#awaitingFilterButton').on('click', function() { filterPopup("awaiting") });
   $('#filterPopupClose-followUp').on('click', function() { filterPopupClose("followUp") });
   $('#filterPopupClose-pending').on('click', function() { filterPopupClose("pending") });
+  $('#filterPopupClose-awaiting').on('click', function() { filterPopupClose("awaiting") });
   $('#filterButton-pending').on('click', function() { filterSubmit('pending') });
   $('#filterButton-followUp').on('click', function() { filterSubmit('followUp') });
+  $('#filterButton-awaiting').on('click', function() { filterSubmit('awaiting') });
   $('.rDateRangeFilter').on('change', function() { dateRangeFilter(this) });
 
   // Load html files into variables

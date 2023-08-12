@@ -59,8 +59,8 @@ exports.followUpList3 = async function (d1, d2, limit, offset, order) {
 };
 
 // Fetches the client details associated with remidners that have status "awaitingResponse"
-exports.awaitingList = async function (limit, offset) {
-    const sqlQuery = "SELECT COUNT(*) over() as n, name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='awaiting' ORDER BY name LIMIT " + limit + " OFFSET " + offset;
+exports.awaitingList = async function (d1, d2, limit, offset, order) {
+    const sqlQuery = "SELECT COUNT(*) over() as n, name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='awaiting' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
     const rows = await db.query(sqlQuery);
 
     return rows;

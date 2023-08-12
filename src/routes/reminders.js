@@ -12,6 +12,11 @@ global.D1_FU = "0001-01-01";
 global.D2_FU = "9999-12-31";
 global.MONTH_FU = MONTH_P;
 global.ORDER_FU = "status"
+// Awaiting list
+global.D1_A = "0001-01-01";
+global.D2_A = "9999-12-31";
+global.MONTH_A = MONTH_P;
+global.ORDER_A = "name"
 
 router.get("/", async (req, res) => {
     try {
@@ -33,7 +38,7 @@ router.get("/", async (req, res) => {
                 await clients.setReminderStatus("noResponse", null, awaiting[i].id);
             }
         }
-        res.status(200).render("reminders/reminders", {month_p:MONTH_P, month_fu:MONTH_FU, d1_p:D1_P, d2_p:D2_P, d1_fu:D1_FU, d2_fu:D2_FU});
+        res.status(200).render("reminders/reminders", {month_p:MONTH_P, month_fu:MONTH_FU, month_a:MONTH_A, d1_p:D1_P, d2_p:D2_P, d1_fu:D1_FU, d2_fu:D2_FU, d1_a:D1_A, d2_a:D2_A});
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -111,6 +116,12 @@ router.get("/filter", async (req, res) => {
             } else if (params.get("noAns")) {
                 data = await clients.followUpList3(d1, d2, req.query.limit, req.query.offset, order);
             }
+        } else if (list == "awaiting") {
+            D1_A = d1;
+            D2_A = d2;
+            ORDER_A = order;
+            if (m) { MONTH_A = m; }
+            data = await clients.awaitingList(d1, d2, req.query.limit, req.query.offset, order);
         }
         res.json(JSON.stringify(data));
     } catch (error) {
