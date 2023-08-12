@@ -27,6 +27,9 @@
             <% if(locals.list == "followUp") { %>
                 <option value="status" selected> Status </option>
             <% } %>
+            <% if(locals.list == "followUp" || locals.list == "awaiting") { %>
+                <option value="interaction"> Last interaction </option>
+            <% } %>
         </select> <br />
         <!-- Filter by status for folowUp list -->
         <% if(locals.list == "followUp") { %>

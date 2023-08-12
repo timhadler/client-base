@@ -59,7 +59,7 @@ router.get("/load-reminder-list", async (req, res) => {
               data = await clients.followUpList1(D1_FU, D2_FU, req.query.limit, req.query.offset, ORDER_FU);
               break;
             case "awaitingList":
-              data = await clients.awaitingList(req.query.limit, req.query.offset);
+              data = await clients.awaitingList(D1_A, D2_A, req.query.limit, req.query.offset, ORDER_A);
               break;
             case "completedList":
               data = await clients.completedList();
