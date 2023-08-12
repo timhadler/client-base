@@ -21,23 +21,24 @@ global.ORDER_A = "rDate"
 router.get("/", async (req, res) => {
     try {
         // set awaiting statuses to no response if timeframe has passed
-        const awaiting = await clients.awaitingReminders();
-        const timeframeDays = await clients.settingResponseTimeFrame();
+        // Commenting out as i will prolly leave awaitin reminders in awaiting list, user can order based on latest interaction in this list
+        // const awaiting = await clients.awaitingReminders();
+        // const timeframeDays = await clients.settingResponseTimeFrame();
 
-        for (let i = 0; i < awaiting.length; i++) {
-            // Convert the latest_interaction_date to a JavaScript Date object, excluding time data (HH,MM,SS)
-            let latestInteractionDate = new Date(awaiting[i].latest_interaction_date);
-            latestInteractionDate = new Date(latestInteractionDate.getFullYear(), latestInteractionDate.getMonth(), latestInteractionDate.getDate());
+        // for (let i = 0; i < awaiting.length; i++) {
+        //     // Convert the latest_interaction_date to a JavaScript Date object, excluding time data (HH,MM,SS)
+        //     let latestInteractionDate = new Date(awaiting[i].latest_interaction_date);
+        //     latestInteractionDate = new Date(latestInteractionDate.getFullYear(), latestInteractionDate.getMonth(), latestInteractionDate.getDate());
 
-            // Calculate the days passed since the lastInteractionDate
-            const millisecondsPassed = Date.now() - latestInteractionDate;
-            const daysPassed = Math.floor(millisecondsPassed / (1000 * 60 * 60 * 24));
+        //     // Calculate the days passed since the lastInteractionDate
+        //     const millisecondsPassed = Date.now() - latestInteractionDate;
+        //     const daysPassed = Math.floor(millisecondsPassed / (1000 * 60 * 60 * 24));
 
-            // If days passed exceeds timeframe, set reminder status to noResponse, outcome is null
-            if (daysPassed >= timeframeDays) {
-                await clients.setReminderStatus("noResponse", null, awaiting[i].id);
-            }
-        }
+        //     // If days passed exceeds timeframe, set reminder status to noResponse, outcome is null
+        //     if (daysPassed >= timeframeDays) {
+        //         await clients.setReminderStatus("noResponse", null, awaiting[i].id);
+        //     }
+        // }
         res.status(200).render("reminders/reminders", {month_p:MONTH_P, month_fu:MONTH_FU, month_a:MONTH_A, d1_p:D1_P, d2_p:D2_P, d1_fu:D1_FU, d2_fu:D2_FU, d1_a:D1_A, d2_a:D2_A});
     } catch (error) {
         res.status(500).send(error.message);
