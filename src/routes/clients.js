@@ -60,6 +60,11 @@ router.get("/load-client-data", async (req, res) => {
         const id = req.query.id;
         data = await clients.clientDetails(id);
 
+        // Convert sql dates to nicer date to local date time
+        const fetchedTimestamp = data.created;
+        const date = new Date(fetchedTimestamp);
+        data.created = date.toLocaleDateString('en-GB');
+
         res.json(JSON.stringify(data));
     } catch (error) {
         res.status(500).send(error.message);
