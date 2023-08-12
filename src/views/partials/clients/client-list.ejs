@@ -28,11 +28,11 @@
         <p class="error_message size_small"> <%= locals.error %> </p>
 
         <!-- list header -->
-        <p class="size_small margin_t_sm"> 
+        <p class="size_small"> 
             <% if(typeof locals.search != 'undefined' && locals.search.length > 0) { %> 
                 <div class="flex flex-ai-c flex-jc-sb">
                     Search: <%= locals.search %> 
-                    <a href="/clients/"><span class="close_form"></span></a>
+                    <a href="/clients/"><span class="close-button">&times</span></span></a>
                 </div>
             <% } else { %>
                 Client List
