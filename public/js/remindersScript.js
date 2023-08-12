@@ -79,7 +79,7 @@ function openPopup(data) {
   // Close button event listener
   $popup.find('.close-button').on('click', function() { closePopup() });
   // Client details link
-  $popup.find('#reminderPopupDetailsLink').attr('href', '/clients/?clientID=' + data.id);
+  $popup.find('#reminderPopupDetailsLink').attr('href', '/clients?clientId=' + data.id);
 
   // Set popup values
   $popup.find('.popupHeader').html(data.name);

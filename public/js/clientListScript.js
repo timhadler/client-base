@@ -11,8 +11,20 @@ document.getElementById("searchBar").addEventListener("keyup", function(event) {
 });
 
 $(document).ready(function() {
+    // Tab buttons event listeners
+    $('#cdSummaryTab').on('click', function(evt) { openTab(evt, "summary") });
+    $('#cdApptTab').on('click', function(evt) { openTab(evt, "appts") });
+    $('#cdReminderTab').on('click', function(evt) { openTab(evt, "reminders") });
+
     // Load more button
     $('#clientsLoadMore').on('click', function() { loadMore("") });
+
+    // Get the client ID from URL parameters which is set by reminder popup client details link
+    const urlParams = new URLSearchParams(window.location.search);
+    const clientId = urlParams.get('clientId');
+    if(clientId) {
+        loadClientDetails(parseInt(clientId));
+    }
 
     // Load inital client list
     loadClientList("");
@@ -56,11 +68,11 @@ function loadClientList(search, offset=0) {
           for (let i = 0; i < clients.length; i++) {
             let client = clients[i];
             let id = client.id;
-            var li = $('<li>').attr('id', "client-" + id).addClass("positionRelative");
+            var li = $('<li>').addClass("positionRelative");
             var $button = $(reminderPopupButtonHTML);
         
             // Button
-            $button.find(".nameButton").text(client.name).on('click', function() { console.log(client.name) });
+            $button.find(".nameButton").text(client.name).on('click', function() { loadClientDetails(id) });
 
             li.html($button);
             list.append(li);
@@ -78,7 +90,62 @@ function loadMore(s) {
     let list = $('#cList');
     let offset = list.find('li').length;
     loadClientList(s, offset);
-}  
+}
+
+// Loads the client details of a given id after being clicked on in client list
+function loadClientDetails(id) {
+    $.ajax({
+        url: "clients/load-client-data",
+        method: "GET",
+        data: { id:id },
+        success: function(res) {
+            const data = JSON.parse(res);
+
+            // Display details div
+            $(".clientDetailsDiv").css("display", "block");
+
+            // Fill details data
+            $("#cdName").html(data.name);
+            $("#cdCompany").html(data.company);
+            $("#cdTelephone").html(data.home);
+            $("#cdMobile").html(data.mobile);
+            $("#cdEmail").html(data.email);
+            $("#cdCreated").html(data.created);
+            $("#cdStreet").html(data.street);
+            $("#cdSuburb").html(data.suburb);
+            $("#cdCity").html(data.city);
+            $("#cdPostcode").html(data.postcode); 
+
+            // Open summary tabs on load
+            $('#cdSummaryDiv').css('display', 'block');
+            $('#cdSummaryTab').addClass('active');
+        },
+        error: function(xhr, status, error) {
+            // Handle AJAX error
+            console.log('AJAX Error while fetching client list:', error, xhr, status);
+        }
+    });
+}
+
+// Open details tab
+function openTab(evt, tabName) {
+    // Hide tab contents nd remove active class
+    $('.tabContent').hide();
+    $('.tabLink').removeClass('active');
+
+    // display the appropriate tab content
+    if (tabName == "summary") {
+        $("#cdSummaryDiv").show();
+    } else if (tabName =="appts") {
+        $("#cdApptsDiv").show();
+    }
+    else if (tabName =="reminders") {
+        $("#cdRemindersDiv").show();
+    }
+  
+    // Mark the tab link as active
+    evt.currentTarget.classList.add('active');
+}
 
 function addClientPopup() {
     document.getElementById("addClientPopup").style.display = "block";

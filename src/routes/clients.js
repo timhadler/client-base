@@ -10,17 +10,17 @@ const upload = multer({ dest: "uploads/" });
 // Client Index
 router.get("/", async (req, res) => {
     try {
-        let details = null;
+        //let details = null;
 
-        if (typeof req.query.clientID != 'undefined') {
-            details = await clients.clientDetails(req.query.clientID);
+        // if (typeof req.query.clientID != 'undefined') {
+        //     details = await clients.clientDetails(req.query.clientID);
             
-            // Convert dates to a nicer format to display
-            for (let i = 0; i < details.calls.length; i++) {
-                details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString('en-GB');
-            }
-        }
-        res.status(200).render("clients/clients", {search:req.query.search, details:details});
+        //     // Convert dates to a nicer format to display
+        //     for (let i = 0; i < details.calls.length; i++) {
+        //         details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString('en-GB');
+        //     }
+        // }
+        res.status(200).render("clients/clients", {search:req.query.search});
     } catch (error) {
         // Check if error resulted from search query, single qoutes cause sql syntax error
         if (error.message.includes("You have an error in your SQL syntax") && error.message.includes("WHERE name LIKE")) {
@@ -49,6 +49,18 @@ router.get("/load-client-list", async (req, res) => {
         }
 
         res.json(JSON.stringify({clientList:clientList, nClients:n}));
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// Load client data for display
+router.get("/load-client-data", async (req, res) => {
+    try {
+        const id = req.query.id;
+        data = await clients.clientDetails(id);
+
+        res.json(JSON.stringify(data));
     } catch (error) {
         res.status(500).send(error.message);
     }

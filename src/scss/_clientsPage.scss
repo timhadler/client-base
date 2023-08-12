@@ -56,6 +56,49 @@
     border-bottom: 1px solid grey;
 }
 
+// Client details section
+.cdSection {
+    border: none;
+    width: 100%;
+    border-top: 1px solid grey;
+    margin-bottom: 20px;
+}
+
+.cdSectionItem {
+    min-width: 140px;
+}
+
+.cdSectionValue {
+    color: gray;
+    flex: 1;
+}
+
+.cdSectionRow {
+    display: flex;
+    margin: 15px;
+    margin-bottom: 0;
+    padding-bottom: 15px;
+    width: 33%;
+    border-bottom: 1px solid lightgray;
+}
+
+// Add icon
+.add-icon {
+    width: 30px;
+    height: 30px;
+    color: $primary;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.add-icon:hover {
+    color: #0056b3;
+  }
+
 // Search bar
 .search_bar {
     font-size: $font-small;

@@ -22,7 +22,7 @@ exports.clientList = async function(limit, offset) {
         sqlQuery = "SELECT name, id FROM clients ORDER BY NAME LIMIT " + limit + " OFFSET " + offset;
     }
     const rows = await db.query(sqlQuery);
-    
+
     return rows;
 };
 
@@ -106,12 +106,16 @@ exports.searchList = async function(search) {
 // Fetches all entries from all tables associated with a given client id
 // as an object -- {client, addresses, callDates, contacts, comments, services}
 exports.clientDetails = async function(id) {
-    const cli = await customerDetails(id);
-    const add = await addressDetails(id);
-    const call = await callDetails(id);
-    const cont = await contactDetails(id);
+    // const cli = await customerDetails(id);
+    // const add = await addressDetails(id);
+    // const call = await callDetails(id);
+    // const cont = await contactDetails(id);
 
-    return {client: cli, addresses: add, calls:call, contacts:cont};
+    // return {client: cli, addresses: add, calls:call, contacts:cont};
+
+    const sqlQuery = "SELECT * FROM clients WHERE clients.id=" + id;
+    rows = await db.query(sqlQuery);
+    return rows[0];
 }
 
 // Retrieves address with given id
@@ -390,11 +394,11 @@ async function contactDetails(id) {
 }
 
 // Fetches all the client details of a given client_id
-async function customerDetails(id) {
-    const sqlQuery = "SELECT * FROM clients WHERE clients.id=" + id;
-    rows = await db.query(sqlQuery);
-    return rows[0];
-}
+// async function clientDetails(id) {
+//     const sqlQuery = "SELECT * FROM clients WHERE clients.id=" + id;
+//     rows = await db.query(sqlQuery);
+//     return rows[0];
+// }
 
 // OTHER
 // Turns parameters in a list to null if their length is 0
