@@ -14,15 +14,15 @@ exports.clientNumber = async function() {
 
 // Fetches the first x clients alphabetically from database
 // If x is null, returns all clients in alphabetical order
-exports.clientList = async function(x) {
+exports.clientList = async function(limit, offset) {
     var sqlQuery = "";
-    if (x == null) {
+    if (offset == null) {
         sqlQuery = "SELECT name, id FROM clients ORDER BY NAME";
     } else {
-        sqlQuery = "SELECT name, id FROM clients ORDER BY NAME LIMIT " + x;
+        sqlQuery = "SELECT name, id FROM clients ORDER BY NAME LIMIT " + limit + " OFFSET " + offset;
     }
     const rows = await db.query(sqlQuery);
-
+    
     return rows;
 };
 

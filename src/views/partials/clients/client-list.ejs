@@ -1,4 +1,5 @@
 <script type="module" src="/js/clientListScript.js"> </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Add client popup -->
 <div id="addClientPopup" class="hidden popup" style="margin-left: 50%;">
@@ -42,18 +43,8 @@
 
         <!-- list -->
         <div class="margin_t_sm">
-            <ul id="cList">
-                <% 
-                let reUrl = "/clients/?";
-                if (typeof locals.search != 'undefined' && locals.search.length > 0) {
-                    reUrl = reUrl + "search=" + locals.search.replace(/ /g, "+") + "&";
-                }
-                    //let str = "/clients/?search=" + locals.search + "?clientID=" + clients[i].id 
-                %>
-                <% for (let i = 0; i < locals.clients.length; i++) { %>
-                    <li class="list_item_divider"><a href=<%=reUrl + "clientID=" + clients[i].id  %> class="nameButton"> <%= clients[i].name %> </a></li>
-                <% } %>
-            </ul>
+            <ul id="cList"></ul>
+            <button id="clientsLoadMore" data-list="clientList"> Load more... </button>
         </div>
     </div>
 </div>

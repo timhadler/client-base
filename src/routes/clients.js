@@ -7,24 +7,14 @@ xl = require("../modules/excel-JS");
 const multer = require('multer');                   // For uploading files
 const upload = multer({ dest: "uploads/" });
 
-// Constants
-const rowLimit = 50;
-
+// Client Index
 router.get("/", async (req, res) => {
     try {
         // fetch the first 50 clients
         let list = [];
         let details = null;
         const nClients = await clients.clientNumber();
-        if (typeof req.query.search != 'undefined') {
-            if (req.query.search.length > 0) {
-                list = await clients.searchList(req.query.search);
-            } else {
-                list = await clients.clientList(rowLimit);
-            }
-        } else {
-            list = await clients.clientList(rowLimit);
-        }
+
         if (typeof req.query.clientID != 'undefined') {
             details = await clients.clientDetails(req.query.clientID);
             
@@ -42,6 +32,28 @@ router.get("/", async (req, res) => {
         } else {
             res.status(500).send(error.message);
         }
+    }
+});
+
+// Load client list
+router.get("/load-client-list", async (req, res) => {
+    try {
+        const search = req.query.search;
+        var clientList = [];
+
+        if (typeof search != 'undefined') {
+            if (search.length > 0) {
+                clientList = await clients.searchList(search);
+            } else {
+                clientList = await clients.clientList(req.query.limit, req.query.offset);
+            }
+        } else {
+            clientList = await clients.clientList(req.query.limit, req.query.offset);
+        }
+
+        res.json(JSON.stringify(clientList));
+    } catch (error) {
+        res.status(500).send(error.message);
     }
 });
 
@@ -96,7 +108,7 @@ router.post("/add-client", async (req, res) => {
         // If error was caused by a duplicate name
         if (error.message.includes("Duplicate entry")) {
             const error = "Client already exists in database: " + req.body.name;
-            let clientList = await clients.clientList(rowLimit);
+            //let clientList = await clients.clientList(rowLimit);
 
             res.render("clients/clients", {clients:clientList, error:error});
         } else {
