@@ -10,10 +10,7 @@ const upload = multer({ dest: "uploads/" });
 // Client Index
 router.get("/", async (req, res) => {
     try {
-        // fetch the first 50 clients
-        let list = [];
         let details = null;
-        const nClients = await clients.clientNumber();
 
         if (typeof req.query.clientID != 'undefined') {
             details = await clients.clientDetails(req.query.clientID);
@@ -23,12 +20,11 @@ router.get("/", async (req, res) => {
                 details.calls[i].rDate = details.calls[i].rDate.toLocaleDateString('en-GB');
             }
         }
-        res.status(200).render("clients/clients", {clients:list, search:req.query.search, details:details, nClients:nClients});
+        res.status(200).render("clients/clients", {search:req.query.search, details:details});
     } catch (error) {
         // Check if error resulted from search query, single qoutes cause sql syntax error
         if (error.message.includes("You have an error in your SQL syntax") && error.message.includes("WHERE name LIKE")) {
-            const nClients = await clients.clientNumber();
-            res.status(400).render("clients/clients", {clients:[], nClients:nClients, error:"Error in search, single qoutes (') are not allowed: " + req.query.search});
+            res.status(400).render("clients/clients", {clients:[], error:"Error in search, single qoutes (') are not allowed: " + req.query.search});
         } else {
             res.status(500).send(error.message);
         }
@@ -39,6 +35,7 @@ router.get("/", async (req, res) => {
 router.get("/load-client-list", async (req, res) => {
     try {
         const search = req.query.search;
+        const n = await clients.clientNumber();
         var clientList = [];
 
         if (typeof search != 'undefined') {
@@ -51,7 +48,7 @@ router.get("/load-client-list", async (req, res) => {
             clientList = await clients.clientList(req.query.limit, req.query.offset);
         }
 
-        res.json(JSON.stringify(clientList));
+        res.json(JSON.stringify({clientList:clientList, nClients:n}));
     } catch (error) {
         res.status(500).send(error.message);
     }

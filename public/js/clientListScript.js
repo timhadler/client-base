@@ -43,14 +43,18 @@ function loadClientList(search, offset=0) {
         data: { search:search, limit:LIMIT, offset:offset },
         success: function(res) {
           const data = JSON.parse(res);
+          const clients = data.clientList;
+          const n = data.nClients;
+
           var list = $("#cList");
+          $("#nClients").html("(" + n + ")");
 
           if (offset === 0) {
             list.empty(); // Clear the list only for the initial load
           }
 
-          for (let i = 0; i < data.length; i++) {
-            let client = data[i];
+          for (let i = 0; i < clients.length; i++) {
+            let client = clients[i];
             let id = client.id;
             var li = $('<li>').attr('id', "client-" + id).addClass("positionRelative");
             var $button = $(reminderPopupButtonHTML);

@@ -519,6 +519,10 @@ hr {
   padding-top: 10px;
 }
 
+.listCount {
+  color: grey;
+}
+
 header {
   grid-column: 2/span 2;
 }
@@ -677,10 +681,6 @@ nav {
   font-weight: bold;
   margin-right: 5px;
   margin-left: 10px;
-}
-
-.reminderCount {
-  color: grey;
 }
 
 .clientListDisplay {

@@ -1,11 +1,8 @@
     <!-- Search and add/import client buttons -->
     <div class="grid_col_1_s2 clients_header_box">
-        <div class="flex flex-ai-c">
-            <form id="searchForm" action="/clients/" class="margin_r_med" method="GET">
-                <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
-            </form>
-            <span class="underline"> <%= locals.nClients + " Clients" %> </span>
-        </div>
+        <form id="searchForm" action="/clients/" class="margin_r_med" method="GET">
+            <input id="searchBar" name="search" type="text" class="search_bar" autoComplete="off" placeholder=" Search...">
+        </form>
         <div class="flex flex-ai-c">
             <button id="addClientPopupButton" type="button" class="button button_primary width-100 margin_r_med"> Add Client </button>
             <a href="/clients/import-clients" class="button button_importClients"> Import </a>
