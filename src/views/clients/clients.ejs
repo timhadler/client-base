@@ -10,102 +10,105 @@ ie. details.client is an object
     <!-- Client List (Left pane) -->
     <%- include("../partials/clients/client-list.ejs") %>
 
-    <div class="grid_col_2 clientDetailsDiv">
-        <!-- Edit client popup -->
+    <div class="grid_col_2">
+        <!-- Add/Edit client popup -->
+        <%- include("../partials/clients/clientPopup.ejs") %>
 
-        <!-- Details header -->
-        <div class="flex flex-ai-c flex-jc-sb">
-            <p id="cdName" class="size_large bold"></p>
-            <div class="flex flex-ai-c">
-                <span id="editClientButton" class="size_medium link"> Edit </span>
-                <span style="color: rgb(165, 53, 53);" class="size_medium link margin_l_sm"> Delete </span>
-            </div>
-        </div>
-        <p id="cdCompany" class="italic"></p>
-
-        <!-- Page Tabs -->
-        <div class="margin_t_med margin_b_sm flex flex-ai-c tabs">
-            <button id="cdSummaryTab" class="tabLink">Summary</button>
-            <!--<button id="cdApptTab" class="tabLink">Appointments (0)</button>
-            <button id="cdReminderTab" class="tabLink">Reminders (0)</button>-->
-        </div>
-
-        <!-- Summary tab content -->
-        <div id="cdSummaryDiv" class="tabContent">
-            <!-- Contact and address details -->
-            <div class="cdSection">
+        <div class="clientDetailsDiv">
+            <!-- Details header -->
+            <div class="flex flex-ai-c flex-jc-sb">
+                <p id="cdName" class="size_large bold"></p>
                 <div class="flex flex-ai-c">
-                    <div class="cdSectionRow"> 
-                        <span class="cdSectionItem"> Telephone </span>
-                        <span id="cdTelephone" class="cdSectionValue"></span>
+                    <span id="editClientButton" class="size_medium link"> Edit </span>
+                    <span style="color: rgb(165, 53, 53);" class="size_medium link margin_l_sm"> Delete </span>
+                </div>
+            </div>
+            <p id="cdCompany" class="italic"></p>
+
+            <!-- Page Tabs -->
+            <div class="margin_t_med margin_b_sm flex flex-ai-c tabs">
+                <button id="cdSummaryTab" class="tabLink">Summary</button>
+                <!--<button id="cdApptTab" class="tabLink">Appointments (0)</button>
+                <button id="cdReminderTab" class="tabLink">Reminders (0)</button>-->
+            </div>
+
+            <!-- Summary tab content -->
+            <div id="cdSummaryDiv" class="tabContent">
+                <!-- Contact and address details -->
+                <div class="cdSection">
+                    <div class="flex flex-ai-c">
+                        <div class="cdSectionRow"> 
+                            <span class="cdSectionItem"> Telephone </span>
+                            <span id="cdTelephone" class="cdSectionValue"></span>
+                        </div>
+                        <div class="cdSectionRow"> 
+                            <span class="cdSectionItem"> Street </span>
+                            <span id="cdStreet" class="cdSectionValue"></span>
+                        </div>
+                    </div>
+                    <div class="flex flex-ai-c">
+                        <div class="cdSectionRow"> 
+                            <span class="cdSectionItem"> Mobile </span>
+                            <span id="cdMobile" class="cdSectionValue"></span>
+                        </div>
+                        <div class="cdSectionRow"> 
+                            <span class="cdSectionItem"> Suburb </span>
+                            <span id="cdSuburb" class="cdSectionValue"></span>
+                        </div>
+                    </div>
+                    <div class="flex flex-ai-c">
+                        <div class="cdSectionRow"> 
+                            <span class="cdSectionItem"> Email </span>
+                            <span id="cdEmail" class="cdSectionValue"></span>
+                        </div>
+                        <div class="cdSectionRow"> 
+                            <span class="cdSectionItem"> City </span>
+                            <span id="cdCity" class="cdSectionValue"></span>
+                        </div>
+                    </div>
+                    <div class="flex flex-ai-c">
+                        <div class="cdSectionRow"> 
+                            <span class="cdSectionItem"> Date created </span>
+                            <span id="cdCreated" class="cdSectionValue"></span>
+                        </div>
+                        <div class="cdSectionRow"> 
+                            <span class="cdSectionItem"> Postcode </span>
+                            <span id="cdPostcode" class="cdSectionValue"></span>
+                        </div>
                     </div>
                     <div class="cdSectionRow"> 
-                        <span class="cdSectionItem"> Street </span>
-                        <span id="cdStreet" class="cdSectionValue"></span>
+                        <span class="cdSectionItem"> Next reminder </span>
+                        <span id="cdNextReminder" class="cdSectionValue"> to do </span>
                     </div>
                 </div>
+
                 <div class="flex flex-ai-c">
-                    <div class="cdSectionRow"> 
-                        <span class="cdSectionItem"> Mobile </span>
-                        <span id="cdMobile" class="cdSectionValue"></span>
-                    </div>
-                    <div class="cdSectionRow"> 
-                        <span class="cdSectionItem"> Suburb </span>
-                        <span id="cdSuburb" class="cdSectionValue"></span>
-                    </div>
+                    <span class="margin_l_sm"> Notes </span>
+                    <div id="cdAddNoteButton" class="add-icon">+</div>
                 </div>
-                <div class="flex flex-ai-c">
-                    <div class="cdSectionRow"> 
-                        <span class="cdSectionItem"> Email </span>
-                        <span id="cdEmail" class="cdSectionValue"></span>
-                    </div>
-                    <div class="cdSectionRow"> 
-                        <span class="cdSectionItem"> City </span>
-                        <span id="cdCity" class="cdSectionValue"></span>
-                    </div>
+                <!-- Notes -->
+                <div class="cdSection">
+
                 </div>
-                <div class="flex flex-ai-c">
-                    <div class="cdSectionRow"> 
-                        <span class="cdSectionItem"> Date created </span>
-                        <span id="cdCreated" class="cdSectionValue"></span>
-                    </div>
-                    <div class="cdSectionRow"> 
-                        <span class="cdSectionItem"> Postcode </span>
-                        <span id="cdPostcode" class="cdSectionValue"></span>
-                    </div>
+                
+                <!--
+                <span class="margin_l_sm"> Appointments </span>
+                !-- Appointments --
+                <div class="cdSection">
+
                 </div>
-                <div class="cdSectionRow"> 
-                    <span class="cdSectionItem"> Next reminder </span>
-                    <span id="cdNextReminder" class="cdSectionValue"> to do </span>
-                </div>
+                -->
             </div>
 
-            <div class="flex flex-ai-c">
-                <span class="margin_l_sm"> Notes </span>
-                <div id="cdAddNoteButton" class="add-icon">+</div>
-            </div>
-            <!-- Notes -->
-            <div class="cdSection">
+            <!-- Appointment tab content -->
+            <div id="cdApptsDiv" class="tabContent">
 
             </div>
-            
-            <!--
-            <span class="margin_l_sm"> Appointments </span>
-            !-- Appointments --
-            <div class="cdSection">
 
+            <!-- Reminder tab content -->
+            <div id="cdRemindersDiv" class="tabContent">
+                
             </div>
-            -->
-        </div>
-
-        <!-- Appointment tab content -->
-        <div id="cdApptsDiv" class="tabContent">
-
-        </div>
-
-        <!-- Reminder tab content -->
-        <div id="cdRemindersDiv" class="tabContent">
-            
         </div>
     </div>
 

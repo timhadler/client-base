@@ -820,4 +820,17 @@ nav {
   padding-left: 12px;
 }
 
+.clientListDisplay label {
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.clientPopup input[type=text], .clientPopup input[type=email] {
+  width: 100%;
+}
+
+.clientPopup {
+  width: 300px;
+}
+
 /*# sourceMappingURL=styles.css.map */
