@@ -190,9 +190,9 @@ exports.createReminder = async function(rDate, id) {
 }
 
 // Create an interaction entry
-exports.createInteraction = async function(action, id) {
-    const sqlQuery = "INSERT INTO interactions (reminder_id, interaction) VALUES(?, ?)";
-    await db.query(sqlQuery, [id, action]);
+exports.createInteraction = async function(action, id, rId) {
+    const sqlQuery = "INSERT INTO interactions (client_id, reminder_id, interaction) VALUES(?, ?, ?)";
+    await db.query(sqlQuery, [id, rId, action]);
 }
 
 // Creates a note entry

@@ -225,7 +225,7 @@ async function setReminderStatus(action, outcome, note, id, rId) {
             if (outcome) {
                 action += " - " + outcome;
             }
-            await clients.createInteraction(action, rId);
+            await clients.createInteraction(action, id, rId);
         }
         if (outcome) {
             if (outcome == "followUp") {
