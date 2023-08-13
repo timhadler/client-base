@@ -162,7 +162,8 @@ function addClientPopup() {
     // Clear details data
     $("#clientPopup input").val('');
 
-    // Set button text
+    // Set header and button text
+    $("#clientPopupHeader").html("New Client");
     $("#clientPopupSubmitButton").html("Add Client").data("form", "add");
 
     $("#clientPopup").show();
@@ -171,15 +172,16 @@ function addClientPopup() {
 
 function editClientPopup() {
     // Fill details data
+    $("#clientPopupHeader").html($("#cdName").html());
     $("#cName").val($("#cdName").html());
-    $("#cCompany").val($("#cdCompany").html())
-    $("#cTelephone").val($("#cdTelephone").html())
-    $("#cMobile").val($("#cdMobile").html())
-    $("#cEmail").val($("#cdEmail").html())
-    $("#cStreet").val($("#cdStreet").html())
-    $("#cSuburb").val($("#cdSuburb").html())
-    $("#cCity").val($("#cdCity").html())
-    $("#cPc").val($("#cdPostcode").html())
+    $("#cCompany").val($("#cdCompany").html());
+    $("#cTelephone").val($("#cdTelephone").html());
+    $("#cMobile").val($("#cdMobile").html());
+    $("#cEmail").val($("#cdEmail").html());
+    $("#cStreet").val($("#cdStreet").html());
+    $("#cSuburb").val($("#cdSuburb").html());
+    $("#cCity").val($("#cdCity").html());
+    $("#cPc").val($("#cdPostcode").html());
 
     // Set button text
     $("#clientPopupSubmitButton").html("Submit").data("form", "edit");
