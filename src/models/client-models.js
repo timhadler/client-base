@@ -172,22 +172,14 @@ exports.getClientsNoRDate = async function() {
 /***********************************************************
  * Creation
  ***********************************************************/
-// Creates a client entry NEEDS UPDATE
-// Returns the id of the created client
-exports.createClient = async function(name, company, comments) {
-    let sqlQuery;
-    let params = processParameters([name, company]);
+// Creates a client entry
+// Returns the id of the newly created client
+exports.createClient = async function(name, company, telephone, mobile, email, street, suburb, city, pc) {
+    const sqlQuery = "INSERT INTO clients (name, company, home, mobile, email, street, suburb, city, postcode) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    // Only enter comments if something is entered
-    // Input lenght from text area is 1 when nothing is entered
-    if (comments.length > 1) {
-        sqlQuery = "INSERT INTO clients (name, company, comments) VALUES(?, ?, ?)";
-        params.push(comments);
-    } else {
-        sqlQuery = "INSERT INTO clients (name, company) VALUES(?, ?)";
-    }
-    await db.query(sqlQuery, params);
+    await db.query(sqlQuery, [name, company, telephone, mobile, email, street, suburb, city, pc]);
     const rows = await db.query("SELECT MAX(id) AS lastID FROM clients");
+
     return rows[0].lastID;
 }
 
@@ -218,14 +210,10 @@ exports.creatUser = async function(username, password) {
  * Edit
  ***********************************************************/
 
-// Edits a client entry NEEDS UPDATE
-exports.editClient = async function(id, name, company, comments) {
-    // Comments are null if textarea length == 1
-    if (comments.length <= 1) {
-        comments = null;
-    }
-    const sqlQuery = "UPDATE clients SET name=?, company=?, comments=? WHERE id=?";
-    await db.query(sqlQuery, [name, company, comments, id]);
+// Edits a client entry
+exports.editClient = async function(id, name, company, telephone, mobile, email, street, suburb, city, pc) {
+    const sqlQuery = "UPDATE clients SET name=?, company=?, home=?, mobile=?, email=?, street=?, suburb=?, city=?, postcode=? WHERE id=?";
+    await db.query(sqlQuery, [name, company, telephone, mobile, email, street, suburb, city, pc, id]);
 }
 
 // Edits a reminder entry
@@ -281,17 +269,3 @@ exports.deleteUser = async function(id) {
     const sqlQuery = "DELETE FROM users WHERE id=?";
     await db.query(sqlQuery, id);
 }
-
-/***********************************************************
- * Helper functions - DATABASE
- ***********************************************************/
-// // Turns parameters in a list to null if their length is 0
-// function processParameters(list) {
-//     var result = list;
-//     for (let i = 0; i < result.length; i++) {
-//         if (result[i].length <= 0) {
-//             result[i] = null;
-//         }
-//     }
-//     return result;
-// }

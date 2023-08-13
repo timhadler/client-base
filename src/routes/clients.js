@@ -100,15 +100,27 @@ router.get("/exportClients", async (req, res) => {
 });
 
 /***********************************************************
- * Add client
+ * Add
  ***********************************************************/
 router.post("/add-client", async (req, res) => {
     try {
-        const body = req.body;
-        let id = await clients.createClient(body.name, body.company, body.comments);
+        const formData = req.body.data;
+        const params = new URLSearchParams(formData);
+        const name = params.get('name');
+        const company = params.get('company');
+        const telephone = params.get('telephone');
+        const mobile = params.get('mobile');
+        const email = params.get('email');
+        const street = params.get('street');
+        const suburb = params.get('suburb');
+        const city = params.get('city');
+        const pc = params.get('pc');
 
-        await clients.createReminder(body.rDate, id);
-        res.status(201).redirect("/clients/?clientID=" + id);
+        // Create new client
+        let id = await clients.createClient(name, company, telephone, mobile, email, street, suburb, city, pc);
+
+        //await clients.createReminder(body.rDate, id);
+        res.status(201).json({ id:id });
     } catch (error) {
         // If error was caused by a duplicate name
         if (error.message.includes("Duplicate entry")) {
@@ -122,6 +134,22 @@ router.post("/add-client", async (req, res) => {
     }
 });
 
+// POST add reminder
+router.post("/add-reminder/:id", async (req, res) => {
+    try {
+        const body = req.body;
+
+        await clients.createReminder(body.rDate, req.params.id)
+        res.status(201).redirect('back');
+        //res.status(201).redirect("/clients/?clientID=" + req.params.id);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}) 
+
+/***********************************************************
+ * Import clients
+ ***********************************************************/
 router.post("/import-clients", upload.single("importExcel"), async (req, res) => {
     try {
         // Verifying file
@@ -204,32 +232,30 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
 });
 
 /***********************************************************
- * Edit client tables
+ * Edit
  ***********************************************************/
 // Edit client
-router.post("/:id/editClient", async (req, res) => {
+router.post("/edit-client", async (req, res) => {
     try {
-        const body = req.body;
-        await clients.editClient(req.params.id, body.name, body.company, body.comments);
-        res.status(201).redirect('back');
-        //res.status(201).redirect("/clients/?clientID=" + req.params.id);
+        const formData = req.body.data;
+        const params = new URLSearchParams(formData);
+        const id = req.body.id;
+        const name = params.get('name');
+        const company = params.get('company');
+        const telephone = params.get('telephone');
+        const mobile = params.get('mobile');
+        const email = params.get('email');
+        const street = params.get('street');
+        const suburb = params.get('suburb');
+        const city = params.get('city');
+        const pc = params.get('pc');
+
+        await clients.editClient(id, name, company, telephone, mobile, email, street, suburb, city, pc);
+        res.status(201).end();
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
-
-// POST add reminder
-router.post("/add-reminder/:id", async (req, res) => {
-    try {
-        const body = req.body;
-
-        await clients.createReminder(body.rDate, req.params.id)
-        res.status(201).redirect('back');
-        //res.status(201).redirect("/clients/?clientID=" + req.params.id);
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-}) 
 
 // POST edit reminder (popup)
 router.post("/edit-reminder/:rId-:cId", async (req, res) => {

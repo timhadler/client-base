@@ -105,6 +105,9 @@ function loadClientDetails(id) {
             // Display details div
             $(".clientDetailsDiv").css("display", "block");
 
+            // Set edit client button data value to store id for submitting in edit form
+            $("#editClientButton").data("id", id);
+
             // Fill details data
             $("#cdName").html(data.name);
             $("#cdCompany").html(data.company);
@@ -196,5 +199,38 @@ function clientPopupClose() {
 }
 
 function clientPopupSubmit(button) {
-    console.log($(button).data("form"))
+    // Get the form data
+    var formData = $('#clientPopupForm').serialize();
+    const formType = $(button).data("form");
+    const id = $("#editClientButton").data("id");
+    var url = "";
+
+    // Change url based on formType
+    if (formType == "add") {
+        url = "clients/add-client";
+    } else if (formType == "edit") {
+        url = "clients/edit-client";
+    }
+
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: { data:formData, id:id },
+        success: function(res) {
+            clientPopupClose();
+
+            // If edit
+            if (formType == "edit") {
+                loadClientDetails(id);
+            } else if (formType == "add") {
+                // Newly created client id, update client list
+                loadClientDetails(res.id);
+                loadClientList("");
+            }
+        },
+        error: function(xhr, status, error) {
+        // Handle AJAX error
+        console.log('AJAX Error while submitting client popup form: ' + formType, error, xhr, status);
+        }
+    });
 }
