@@ -106,10 +106,6 @@
     margin-right: 10px;
 }
 
-.clientPopup input[type=text], .clientPopup input[type=email] {
+.popup-client input[type=text], .clientPopup input[type=email] {
     width: 100%;
-}
-
-.clientPopup {
-    width: 300px;
 }

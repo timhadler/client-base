@@ -418,6 +418,9 @@ hr {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   padding: 20px;
 }
+.popup-client {
+  width: 300px;
+}
 .popup-reminder {
   width: 425px;
 }
@@ -766,12 +769,8 @@ nav {
   margin-right: 10px;
 }
 
-.clientPopup input[type=text], .clientPopup input[type=email] {
+.popup-client input[type=text], .clientPopup input[type=email] {
   width: 100%;
-}
-
-.clientPopup {
-  width: 300px;
 }
 
 /*# sourceMappingURL=styles.css.map */
