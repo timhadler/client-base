@@ -1,13 +1,17 @@
 var reminderPopupButtonHTML;
 
 const LIMIT = 25;
+var SEARCH =  "";
 
 $(document).ready(function() {
     // Search bar
     $("#searchBar").on("keyup", function(event) {
         if (event.key === "Enter") {
+            const search = $(this).val();
+            SEARCH = search;
+
             event.preventDefault();
-            loadClientList($(this).val());
+            loadClientList(search);
         }
     });
 
@@ -15,8 +19,12 @@ $(document).ready(function() {
     $("#addClientPopupButton").on('click', function() { addClientPopup() });
     $("#editClientButton").on('click', function() { editClientPopup() });
     $("#clientPopupCloseButton").on('click', function() { clientPopupClose() });
-
     $("#clientPopupSubmitButton").on('click', function() { clientPopupSubmit(this) });
+
+    // Delete buttons
+    $("#deleteClientButton").on('click', function() { deleteClientPopup() });
+    $("#deleteClientSubmitButton").on('click', function() { deleteClientSubmit() });
+    $("#deleteClientCloseButton").on('click', function() { deleteClientPopupClose() });
 
     // Tab buttons event listeners
     $('#cdSummaryTab').on('click', function(evt) { openTab(evt, "summary") });
@@ -105,8 +113,9 @@ function loadClientDetails(id) {
             // Display details div
             $(".clientDetailsDiv").css("display", "block");
 
-            // Set edit client button data value to store id for submitting in edit form
+            // Set edit/delete client button data value to store id for submitting in edit and delete form
             $("#editClientButton").data("id", id);
+            $("#deleteClientButton").data("id", id);
 
             // Fill details data
             $("#cdName").html(data.name);
@@ -131,6 +140,72 @@ function loadClientDetails(id) {
     });
 }
 
+function clientPopupSubmit(button) {
+    // Get the form data
+    var formData = $('#clientPopupForm').serialize();
+    const formType = $(button).data("form");
+    const id = $("#editClientButton").data("id");
+    var url = "";
+
+    // Change url based on formType
+    if (formType == "add") {
+        url = "clients/add-client";
+    } else if (formType == "edit") {
+        url = "clients/edit-client";
+    }
+
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: { data:formData, id:id },
+        success: function(res) {
+            clientPopupClose();
+
+            // If edit
+            if (formType == "edit") {
+                loadClientDetails(id);
+            } else if (formType == "add") {
+                // Newly created client id, update client list
+                loadClientDetails(res.id);
+                loadClientList("");
+            }
+        },
+        error: function(xhr, status, error) {
+        // Handle AJAX error
+        console.log('AJAX Error while submitting client popup form: ' + formType, error, xhr, status);
+        }
+    });
+}
+
+function deleteClientSubmit() {
+    const id = $("#deleteClientButton").data("id");
+
+    $.ajax({
+        url: "clients/delete-client",
+        method: "DELETE",
+        data: { id:id },
+        success: function(res) {
+            $(".clientDetailsDiv").hide();
+            deleteClientPopupClose();
+            loadClientList(SEARCH);
+        },
+        error: function(xhr, status, error) {
+        // Handle AJAX error
+        console.log('AJAX Error while deleting client: ', error, xhr, status);
+        }
+    });
+}
+
+/***********************************************************
+ * Helper Functions
+ **********************************************************/
+// Load another batch of clients for the client list
+function loadMore() {
+    let list = $('#cList');
+    let offset = list.find('li').length;
+    loadClientList("", offset);
+}
+
 // Open details tab
 function openTab(evt, tabName) {
     // Hide tab contents nd remove active class
@@ -149,16 +224,6 @@ function openTab(evt, tabName) {
   
     // Mark the tab link as active
     evt.currentTarget.classList.add('active');
-}
-
-/***********************************************************
- * Helper Functions
- **********************************************************/
-// Load another batch of clients for the client list
-function loadMore() {
-    let list = $('#cList');
-    let offset = list.find('li').length;
-    loadClientList("", offset);
 }
 
 function addClientPopup() {
@@ -198,39 +263,12 @@ function clientPopupClose() {
     $("#overlay").css("visibility", "hidden")
 }
 
-function clientPopupSubmit(button) {
-    // Get the form data
-    var formData = $('#clientPopupForm').serialize();
-    const formType = $(button).data("form");
-    const id = $("#editClientButton").data("id");
-    var url = "";
+function deleteClientPopup() {
+    $("#deleteClientPopup").show();
+    $("#overlay").css("visibility", "visible")
+}
 
-    // Change url based on formType
-    if (formType == "add") {
-        url = "clients/add-client";
-    } else if (formType == "edit") {
-        url = "clients/edit-client";
-    }
-
-    $.ajax({
-        url: url,
-        method: "POST",
-        data: { data:formData, id:id },
-        success: function(res) {
-            clientPopupClose();
-
-            // If edit
-            if (formType == "edit") {
-                loadClientDetails(id);
-            } else if (formType == "add") {
-                // Newly created client id, update client list
-                loadClientDetails(res.id);
-                loadClientList("");
-            }
-        },
-        error: function(xhr, status, error) {
-        // Handle AJAX error
-        console.log('AJAX Error while submitting client popup form: ' + formType, error, xhr, status);
-        }
-    });
+function deleteClientPopupClose() {
+    $("#deleteClientPopup").hide();
+    $("#overlay").css("visibility", "hidden")
 }

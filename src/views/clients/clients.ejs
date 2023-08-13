@@ -11,13 +11,26 @@
         <!-- Add/Edit client popup -->
         <%- include("../partials/clients/clientPopup.ejs") %>
 
+        <!-- Delete client popup -->
+        <div id="deleteClientPopup" class="popup hidden">
+            <!-- Header -->
+            <div class="popupHeaderDiv">
+                <p class="popupHeader"> Delete this client? </p>
+                <span id="deleteClientCloseButton" class="close-button">&times</span>
+            </div>
+            <br />
+            <div style="text-align: center;">
+                <button id="deleteClientSubmitButton" type="button" class="button_primary_red"> Submit </button>
+            </div>
+        </div>
+
         <div class="clientDetailsDiv">
             <!-- Details header -->
             <div class="flex flex-ai-c flex-jc-sb">
                 <p id="cdName" class="size_large bold"></p>
                 <div class="flex flex-ai-c">
                     <span id="editClientButton" class="size_medium link"> Edit </span>
-                    <span style="color: rgb(165, 53, 53);" class="size_medium link margin_l_sm"> Delete </span>
+                    <span id="deleteClientButton" style="color: rgb(165, 53, 53);" class="size_medium link margin_l_sm"> Delete </span>
                 </div>
             </div>
             <p id="cdCompany" class="italic"></p>

@@ -246,14 +246,14 @@ exports.setReminderFlag = async function(id, value) {
  * Delete
  ***********************************************************/
 // NEEDS UPDATE
-exports.deleteClientData = async function(id) {
-    var sqlQuery = "DELETE FROM addresses WHERE client_id=" + id;
-    await db.query(sqlQuery);
-
-    sqlQuery = "DELETE FROM contacts WHERE client_id=" + id;
-    await db.query(sqlQuery);
-
+exports.deleteClient = async function(id) {
     sqlQuery = "DELETE FROM reminders WHERE client_id=" + id;
+    await db.query(sqlQuery);
+
+    sqlQuery = "DELETE FROM interactions WHERE client_id=" + id;
+    await db.query(sqlQuery);
+
+    sqlQuery = "DELETE FROM notes WHERE client_id=" + id;
     await db.query(sqlQuery);
 
     sqlQuery = "DELETE FROM clients WHERE id=" + id;
