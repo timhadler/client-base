@@ -1,27 +1,6 @@
 <script type="module" src="/js/clientListScript.js"> </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Add client popup -->
-<div id="addClientPopup" class="hidden popup" style="margin-left: 50%;">
-    <div class="flex flex-ai-c flex-jc-sb">
-        <h3 class="italic"> Add Customer </h3> <br />
-        <span id="addClientCloseButton" class="close_form"></span>
-    </div>
-    <br />
-    <form action= "/clients/add-client" method="POST">
-        <%- include("../inputForms/client") %>
-        <label> Comments: </label> <br />
-        <textarea name="comments" class="height-100 width-100" cols="21" rows="6"><%= locals.comments %></textarea> <br /> <br />
-
-        <div class="center-x">
-            <label> Call back on: </label> <br />
-            <%- include("../inputForms/call") %>
-            <br /> <br />
-            <button type="submit" class="button_primary"> Submit </button>
-        </div>
-    </form>
-</div>
-
 <!-- Left Pane -->
 <div id="leftPane" name="test" class="grid_col_1 section_divider_clientList">
     <div class="pad-t-med pad-r-sm">

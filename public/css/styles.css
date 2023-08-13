@@ -94,17 +94,6 @@ button {
   display: block;
 }
 
-/***********************************************************
- * Red x close
- ***********************************************************/
-.close_form {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  position: relative;
-  cursor: pointer;
-}
-
 .close-button {
   font-size: 24px;
   display: flex;
@@ -116,15 +105,6 @@ button {
 
 .close-button:hover {
   opacity: 0.5;
-}
-
-.close_form:after {
-  content: "";
-  height: 16px;
-  border-left: 2px solid red;
-  position: absolute;
-  transform: rotate(45deg);
-  left: 50%;
 }
 
 /***********************************************************
@@ -692,45 +672,6 @@ nav {
   display: grid;
   grid-template-columns: 100px minmax(100px, 250px) minmax(200px, 2000px) 100px;
   grid-template-rows: auto;
-}
-
-.details_grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(2, 200px);
-  column-gap: 80px;
-  row-gap: 30px;
-}
-
-.details_grid input[type=text] {
-  margin: 0;
-}
-
-.grid_a_1 {
-  grid-column-start: 1;
-  grid-row-start: 1;
-  width: 100%;
-}
-
-.grid_a_2 {
-  grid-column-start: 2;
-  grid-row-start: 1;
-}
-
-.grid_b_1 {
-  grid-column-start: 1;
-  grid-row-start: 2;
-}
-
-.grid_b_2 {
-  grid-column-start: 2;
-  grid-row-start: 2;
-}
-
-.grid_a_3_4 {
-  grid-column-start: 1;
-  grid-column-end: 3;
-  grid-row-start: 2;
 }
 
 .clients_header_box {

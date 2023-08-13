@@ -12,12 +12,7 @@ router.get("/", async (req, res) => {
     try {
         res.status(200).render("clients/clients");
     } catch (error) {
-        // Check if error resulted from search query, single qoutes cause sql syntax error
-        if (error.message.includes("You have an error in your SQL syntax") && error.message.includes("WHERE name LIKE")) {
-            res.status(400).render("clients/clients", {error:"Error in search, single qoutes (') are not allowed: " + req.query.search});
-        } else {
-            res.status(500).send(error.message);
-        }
+        res.status(500).send(error.message);
     }
 });
 
@@ -223,62 +218,6 @@ router.post("/:id/editClient", async (req, res) => {
     }
 });
 
-// POST add address
-router.post("/add-address-:id", async (req, res) => {
-    try {
-        const body = req.body;
-        let cAddress = isClientAddress(body.clientAddress);
-
-        await clients.createAddress(body.street, body.suburb, body.city, body.pc, body.freshAir, cAddress, req.params.id);
-        res.status(201).redirect('back');
-        //res.status(201).redirect("/clients/?clientID=" + req.params.id);
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-});
-
-// POST Edit address
-router.post("/edit-address/:addId-:cId", async (req, res) => {
-    try {
-        const body = req.body;
-        if (body.street != "" && typeof body.freshAir != "undefined") {
-            let cAddress = isClientAddress(body.clientAddress);
-
-            await clients.editAddress(req.params.addId, body.street, body.suburb, body.city, body.pc, body.freshAir, cAddress);
-            res.status(201).redirect('back');
-            //res.status(201).redirect("/clients/?clientID=" + req.params.cId);
-        }
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
-// POST add contact
-router.post("/add-contact/:id", async (req, res) => {
-    try {
-        const body = req.body;
-
-        await clients.createContact(body.contactName, body.number, body.email, req.params.id);
-        res.status(201).redirect('back');
-        //res.status(201).redirect("/clients/?clientID=" + req.params.id);
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
-// POST edit contact (popup)
-router.post("/edit-contact/:conId-:cId", async (req, res) => {
-    try {
-        const body = req.body;
-
-        await clients.editContact(req.params.conId, body.contactName, body.number, body.email);
-        res.status(201).redirect('back');
-        //res.status(201).redirect("/clients/?clientID=" + req.params.cId);
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
 // POST add reminder
 router.post("/add-reminder/:id", async (req, res) => {
     try {
@@ -331,17 +270,6 @@ router.delete("/:id/delete-client", async (req, res) => {
     }
 });
 
-// Delete from addresses table
-router.delete("/delete-address/:cId-:addId", async (req, res) => {
-    try {
-        await clients.deleteAddress(req.params.addId);
-        res.status(204).redirect('back');
-        //res.status(204).redirect("/clients/?clientID=" + req.params.cId);
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
 // Delete from reminders table
 router.delete("/delete-date/:cId-:dId", async (req, res) => {
     try {
@@ -353,28 +281,9 @@ router.delete("/delete-date/:cId-:dId", async (req, res) => {
     }
 });
 
-// Delete from contacts table
-router.delete("/delete-contact/:cId-:conId", async (req, res) => {
-    try {
-        await clients.deleteContact(req.params.conId);
-        res.status(204).redirect('back');
-        //res.status(204).redirect("/clients/?clientID=" + req.params.cId);
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
 /***********************************************************
  * Helper functions
  ***********************************************************/
-function isClientAddress(i) {
-    if (i == "1") {
-        return 1;
-    } else {
-        return  0;
-    }
-}
-
 // Converts a date to format suitable for inserting into database
 // Input eg: "01-Feb-2021"
 // Output: "2022-02-01"

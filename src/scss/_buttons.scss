@@ -99,17 +99,6 @@ button {
 
 .show {display:block;}
 
-/***********************************************************
- * Red x close
- ***********************************************************/
-.close_form {
-    display: inline-block;
-    width: $font-small;
-    height: $font-small;;
-    position: relative;
-    cursor: pointer;
-}
-
 .close-button {
     font-size: 24px;
     display: flex;
@@ -121,13 +110,4 @@ button {
 
 .close-button:hover {
     opacity: 0.5;
-}
-
-.close_form:after {
-    content: '';
-    height: $font-small;;
-    border-left: 2px solid red;
-    position: absolute;
-    transform: rotate(45deg);
-    left: 50%;
 }
