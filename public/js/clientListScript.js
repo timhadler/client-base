@@ -11,9 +11,12 @@ $(document).ready(function() {
         }
     });
 
-    // Add client button
+    // Client popup buttons
     $("#addClientPopupButton").on('click', function() { addClientPopup() });
-    $("#clientPopupCloseButton").on('click', function() { addClientPopupClose() });
+    $("#editClientButton").on('click', function() { editClientPopup() });
+    $("#clientPopupCloseButton").on('click', function() { clientPopupClose() });
+
+    $("#clientPopupSubmitButton").on('click', function() { clientPopupSubmit(this) });
 
     // Tab buttons event listeners
     $('#cdSummaryTab').on('click', function(evt) { openTab(evt, "summary") });
@@ -156,11 +159,40 @@ function loadMore() {
 }
 
 function addClientPopup() {
+    // Clear details data
+    $("#clientPopup input").val('');
+
+    // Set button text
+    $("#clientPopupSubmitButton").html("Add Client").data("form", "add");
+
     $("#clientPopup").show();
     $("#overlay").css("visibility", "visible")
 }
 
-function addClientPopupClose() {
+function editClientPopup() {
+    // Fill details data
+    $("#cName").val($("#cdName").html());
+    $("#cCompany").val($("#cdCompany").html())
+    $("#cTelephone").val($("#cdTelephone").html())
+    $("#cMobile").val($("#cdMobile").html())
+    $("#cEmail").val($("#cdEmail").html())
+    $("#cStreet").val($("#cdStreet").html())
+    $("#cSuburb").val($("#cdSuburb").html())
+    $("#cCity").val($("#cdCity").html())
+    $("#cPc").val($("#cdPostcode").html())
+
+    // Set button text
+    $("#clientPopupSubmitButton").html("Submit").data("form", "edit");
+
+    $("#clientPopup").show();
+    $("#overlay").css("visibility", "visible")
+}
+
+function clientPopupClose() {
     $("#clientPopup").hide();
     $("#overlay").css("visibility", "hidden")
+}
+
+function clientPopupSubmit(button) {
+    console.log($(button).data("form"))
 }
