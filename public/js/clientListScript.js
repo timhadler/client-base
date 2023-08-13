@@ -11,6 +11,10 @@ $(document).ready(function() {
         }
     });
 
+    // Add client button
+    $("#addClientPopupButton").on('click', function() { addClientPopup() });
+    $("#clientPopupCloseButton").on('click', function() { addClientPopupClose() });
+
     // Tab buttons event listeners
     $('#cdSummaryTab').on('click', function(evt) { openTab(evt, "summary") });
     $('#cdApptTab').on('click', function(evt) { openTab(evt, "appts") });
@@ -152,11 +156,11 @@ function loadMore() {
 }
 
 function addClientPopup() {
-    document.getElementById("addClientPopup").style.display = "block";
-    document.getElementById("overlay").style.visibility = "visible";
+    $("#clientPopup").show();
+    $("#overlay").css("visibility", "visible")
 }
 
 function addClientPopupClose() {
-    document.getElementById("addClientPopup").style.display = "none";
-    document.getElementById("overlay").style.visibility = "hidden";
+    $("#clientPopup").hide();
+    $("#overlay").css("visibility", "hidden")
 }
