@@ -84,7 +84,7 @@ exports.reminderInteractions = async function(id) {
 
 // Fethes all notes related to a client with a given id
 exports.clientNotes = async function(id) {
-    const sqlQuery = "SELECT note, created FROM notes WHERE client_id = " + id + " ORDER BY created DESC";
+    const sqlQuery = "SELECT id, note, created FROM notes WHERE client_id = " + id + " ORDER BY created DESC";
     const rows = await db.query(sqlQuery);
 
     return rows;
@@ -258,6 +258,11 @@ exports.deleteClient = async function(id) {
 
     sqlQuery = "DELETE FROM clients WHERE id=" + id;
     await db.query(sqlQuery);
+}
+
+exports.deleteNote = async function(id) {
+    const sqlQuery = "DELETE FROM notes WHERE id=?";
+    await db.query(sqlQuery, id);
 }
 
 exports.deleteReminder = async function(id) {

@@ -321,6 +321,16 @@ router.delete("/delete-client", async (req, res) => {
     }
 });
 
+// Delets a note from db
+router.delete("/delete-note", async (req, res) => {
+    try {
+        await clients.deleteNote(req.body.nId);
+        res.status(204).end();
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 // Delete from reminders table
 router.delete("/delete-date/:cId-:dId", async (req, res) => {
     try {

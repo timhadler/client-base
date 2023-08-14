@@ -4,6 +4,9 @@ var noteItemHTML;
 const LIMIT = 25;
 var SEARCH =  "";
 
+var clientID = 0;
+var noteID = 0;
+
 $(document).ready(function() {
     // Load html files into variables
     $.get("html/reminderPopupButton.html", function(html) {
@@ -30,7 +33,7 @@ $(document).ready(function() {
     $("#clientPopupCloseButton").on('click', function() { clientPopupClose() });
     $("#clientPopupSubmitButton").on('click', function() { clientPopupSubmit(this) });
 
-    // Delete buttons
+    // Client delete buttons
     $("#deleteClientButton").on('click', function() { deleteClientPopup() });
     $("#deleteClientSubmitButton").on('click', function() { deleteClientSubmit() });
     $("#deleteClientCloseButton").on('click', function() { deleteClientPopupClose() });
@@ -39,6 +42,11 @@ $(document).ready(function() {
     $("#cdAddNoteButton").on('click', function() { notePopup() });
     $("#addNoteCloseButton").on('click', function() { notePopupClose() });
     $("#addNoteSubmitButton").on('click', function() { noteSubmit(this) });
+
+    // Delete note buttons
+    //$(".deleteNoteButton").on('click', function() { deleteNotePopup( this) }); This must be in load client details as the buttons dont exist until client is loaded
+    $("#deleteNoteCloseButton").on('click', function() { deleteNotePopupClose() });
+    $("#deleteNoteSubmitButton").on('click', function() { deleteNoteSubmit() });
 
     // Tab buttons event listeners
     $('#cdSummaryTab').on('click', function(evt) { openTab(evt, "summary") });
@@ -127,6 +135,8 @@ function loadClientDetails(id) {
             $("#editClientButton").data("id", id);
             $("#deleteClientButton").data("id", id);
             $("#addNoteSubmitButton").data("id", id);
+            // Just use global instad
+            clientID = id;
 
             // Fill details data
             $("#cdName").html(data.name);
@@ -147,9 +157,12 @@ function loadClientDetails(id) {
                 var li = $('<li>').addClass("positionRelative");
                 var $noteItem = $(noteItemHTML);
         
-                // Button
+                // Note item
                 $noteItem.find(".note").html(notes[i].note);
                 $noteItem.find(".date").html(notes[i].created);
+
+                // Set id data for deleting and editing
+                $noteItem.find(".deleteNoteButton").on('click', function() { deleteNotePopup(notes[i].id) });
     
                 li.html($noteItem);
                 list.append(li);
@@ -233,6 +246,25 @@ function deleteClientSubmit() {
             $(".clientDetailsDiv").hide();
             deleteClientPopupClose();
             loadClientList(SEARCH);
+        },
+        error: function(xhr, status, error) {
+        // Handle AJAX error
+        console.log('AJAX Error while deleting client: ', error, xhr, status);
+        }
+    });
+}
+
+function deleteNoteSubmit() {
+    const id = clientID;
+    const nId = noteID;
+
+    $.ajax({
+        url: "clients/delete-note",
+        method: "DELETE",
+        data: { nId:nId },
+        success: function(res) {
+            deleteNotePopupClose();
+            loadClientDetails(id);
         },
         error: function(xhr, status, error) {
         // Handle AJAX error
@@ -326,5 +358,17 @@ function notePopup() {
 
 function notePopupClose() {
     $("#addNotePopup").hide();
+    $("#overlay").css("visibility", "hidden")
+}
+
+function deleteNotePopup(nId) {
+    noteID = nId;
+    $("#deleteNotePopup").show();
+    $("#overlay").css("visibility", "visible")
+}
+
+function deleteNotePopupClose() {
+    noteID = 0;
+    $("#deleteNotePopup").hide();
     $("#overlay").css("visibility", "hidden")
 }
