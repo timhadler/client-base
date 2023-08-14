@@ -1,4 +1,5 @@
 var reminderPopupButtonHTML;
+var noteItemHTML;
 
 const LIMIT = 25;
 var SEARCH =  "";
@@ -50,6 +51,9 @@ function loadClientList(search, offset=0) {
     // Load html files into variables
     $.get("html/reminderPopupButton.html", function(html) {
         reminderPopupButtonHTML = html;
+    });
+    $.get("html/noteItem.html", function(html) {
+        noteItemHTML = html;
     });
 
     $.ajax({
@@ -109,6 +113,8 @@ function loadClientDetails(id) {
         data: { id:id },
         success: function(res) {
             const data = JSON.parse(res);
+            const notes = data.notes;
+            console.log(notes);
 
             // Display details div
             $(".clientDetailsDiv").css("display", "block");
@@ -128,6 +134,20 @@ function loadClientDetails(id) {
             $("#cdSuburb").html(data.suburb);
             $("#cdCity").html(data.city);
             $("#cdPostcode").html(data.postcode); 
+
+            // Client notes
+            for (let i = 0; i < notes.length; i++) {
+                var li = $('<li>').addClass("positionRelative");
+                var list = $("#cdNotesList");
+                var $noteItem = $(noteItemHTML);
+        
+                // Button
+                $noteItem.find(".note").html(notes[i].note);
+                $noteItem.find(".date").html(notes[i].created);
+    
+                li.html($noteItem);
+                list.append(li);
+              }
 
             // Open summary tabs on load
             $('#cdSummaryDiv').css('display', 'block');

@@ -45,16 +45,25 @@ router.get("/load-client-list", async (req, res) => {
     }
 });
 
-// Load client data for display
+// Load client data for display, including notes, and reminder
 router.get("/load-client-data", async (req, res) => {
     try {
         const id = req.query.id;
-        data = await clients.clientDetails(id);
+        var data = await clients.clientDetails(id);
+        const notes = await clients.clientNotes(id);
+
+        data.notes = notes;
 
         // Convert sql dates to nicer date to local date time
-        const fetchedTimestamp = data.created;
-        const date = new Date(fetchedTimestamp);
-        data.created = date.toLocaleDateString('en-GB');
+        const clientCreated = data.created;
+        const cDate = new Date(clientCreated);
+        data.created = cDate.toLocaleDateString('en-GB');
+
+        for (let i = 0; i < notes.length; i++) {
+            const noteCreated = notes[i].created;
+            const nDate = new Date(noteCreated);
+            notes[i].created = nDate.toLocaleDateString('en-GB');
+        }
 
         res.json(JSON.stringify(data));
     } catch (error) {

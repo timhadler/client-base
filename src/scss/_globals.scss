@@ -442,3 +442,23 @@ hr {
 .listCount {
     color: grey;
 }
+
+// Note lists
+.commentsList {
+    max-height: 80px;
+    width: 375px;
+    word-wrap:break-word; 
+    overflow: auto;
+}
+
+.commentsList li {
+    background-color: rgb(235, 235, 235);
+    color: black;
+    width: 100%;
+    margin: 0;
+    padding: 4px;
+}
+
+.commentsList li:nth-child(odd) {
+    background-color: lightgrey;
+}
