@@ -143,6 +143,23 @@ router.post("/add-client", async (req, res) => {
     }
 });
 
+// POST add note
+router.post("/add-note", async (req, res) => {
+    try {
+        const data = req.body.data;
+        const params = new URLSearchParams(data);
+        const note = params.get('note');
+        const id = req.body.id;
+
+        if (note.length > 0) {
+            await clients.createNote(note, id)
+        }
+        res.status(201).end();
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 // POST add reminder
 router.post("/add-reminder/:id", async (req, res) => {
     try {
@@ -150,11 +167,10 @@ router.post("/add-reminder/:id", async (req, res) => {
 
         await clients.createReminder(body.rDate, req.params.id)
         res.status(201).redirect('back');
-        //res.status(201).redirect("/clients/?clientID=" + req.params.id);
     } catch (error) {
         res.status(500).send(error.message);
     }
-}) 
+});
 
 /***********************************************************
  * Import clients

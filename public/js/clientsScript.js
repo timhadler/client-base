@@ -5,6 +5,14 @@ const LIMIT = 25;
 var SEARCH =  "";
 
 $(document).ready(function() {
+    // Load html files into variables
+    $.get("html/reminderPopupButton.html", function(html) {
+        reminderPopupButtonHTML = html;
+    });
+    $.get("html/noteItem.html", function(html) {
+        noteItemHTML = html;
+    });
+
     // Search bar
     $("#searchBar").on("keyup", function(event) {
         if (event.key === "Enter") {
@@ -27,6 +35,11 @@ $(document).ready(function() {
     $("#deleteClientSubmitButton").on('click', function() { deleteClientSubmit() });
     $("#deleteClientCloseButton").on('click', function() { deleteClientPopupClose() });
 
+    // Add note button
+    $("#cdAddNoteButton").on('click', function() { notePopup() });
+    $("#addNoteCloseButton").on('click', function() { notePopupClose() });
+    $("#addNoteSubmitButton").on('click', function() { noteSubmit(this) });
+
     // Tab buttons event listeners
     $('#cdSummaryTab').on('click', function(evt) { openTab(evt, "summary") });
     $('#cdApptTab').on('click', function(evt) { openTab(evt, "appts") });
@@ -48,14 +61,6 @@ $(document).ready(function() {
 
 // Loads the left pane client list
 function loadClientList(search, offset=0) {
-    // Load html files into variables
-    $.get("html/reminderPopupButton.html", function(html) {
-        reminderPopupButtonHTML = html;
-    });
-    $.get("html/noteItem.html", function(html) {
-        noteItemHTML = html;
-    });
-
     $.ajax({
         url: "clients/load-client-list",
         method: "GET",
@@ -114,7 +119,6 @@ function loadClientDetails(id) {
         success: function(res) {
             const data = JSON.parse(res);
             const notes = data.notes;
-            console.log(notes);
 
             // Display details div
             $(".clientDetailsDiv").css("display", "block");
@@ -122,6 +126,7 @@ function loadClientDetails(id) {
             // Set edit/delete client button data value to store id for submitting in edit and delete form
             $("#editClientButton").data("id", id);
             $("#deleteClientButton").data("id", id);
+            $("#addNoteSubmitButton").data("id", id);
 
             // Fill details data
             $("#cdName").html(data.name);
@@ -136,9 +141,10 @@ function loadClientDetails(id) {
             $("#cdPostcode").html(data.postcode); 
 
             // Client notes
+            var list = $("#cdNotesList");
+            list.empty();
             for (let i = 0; i < notes.length; i++) {
                 var li = $('<li>').addClass("positionRelative");
-                var list = $("#cdNotesList");
                 var $noteItem = $(noteItemHTML);
         
                 // Button
@@ -193,6 +199,25 @@ function clientPopupSubmit(button) {
         error: function(xhr, status, error) {
         // Handle AJAX error
         console.log('AJAX Error while submitting client popup form: ' + formType, error, xhr, status);
+        }
+    });
+}
+
+function noteSubmit(button) {
+    const formData = $('#addNoteForm').serialize();
+    const id = $(button).data("id");
+
+    $.ajax({
+        url: "clients/add-note",
+        method: "POST",
+        data: { data:formData, id:id },
+        success: function(res) {
+            notePopupClose();
+            loadClientDetails(id);
+        },
+        error: function(xhr, status, error) {
+        // Handle AJAX error
+        console.log('AJAX Error while deleting client: ', error, xhr, status);
         }
     });
 }
@@ -290,5 +315,16 @@ function deleteClientPopup() {
 
 function deleteClientPopupClose() {
     $("#deleteClientPopup").hide();
+    $("#overlay").css("visibility", "hidden")
+}
+
+function notePopup() {
+    $("#addNotePopup").find("textarea[name='note']").val("");
+    $("#addNotePopup").show();
+    $("#overlay").css("visibility", "visible")
+}
+
+function notePopupClose() {
+    $("#addNotePopup").hide();
     $("#overlay").css("visibility", "hidden")
 }

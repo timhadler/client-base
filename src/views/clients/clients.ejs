@@ -92,11 +92,29 @@
                     </div>
                 </div>
 
+                <!-- Notes -->
                 <div class="flex flex-ai-c">
                     <span class="margin_l_sm"> Notes </span>
                     <div id="cdAddNoteButton" class="add-icon">+</div>
                 </div>
-                <!-- Notes -->
+                <!-- Add note Popup -->
+                <div id="addNotePopup" class="popup hidden">
+                    <div class="flex flex-ai-c flex-jc-sb">
+                        <span style="color: black;"> Add note: </span>
+                        <span id="addNoteCloseButton" class="close-button">&times</span>
+                    </div>
+                    <br />
+                    <div class="flex flex-jc-c">
+                        <form id="addNoteForm">
+                            <textarea name="note" style="width: 260px;" cols="27" rows="3"></textarea>
+                        </form>
+                    </div>
+                    <!-- Submit button -->
+                    <div style="text-align: center;">
+                        <button id="addNoteSubmitButton" type="button" class="button_primary"> Submit </button>
+                    </div>
+                </div>
+
                 <div class="cdSection">
                     <ul id="cdNotesList" class="commentsList"></ul>
                 </div>
