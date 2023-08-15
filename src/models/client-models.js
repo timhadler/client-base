@@ -222,14 +222,14 @@ exports.editReminder = async function(id, date) {
     await db.query(sqlQuery, [date, id]);
 }
 
-// // Edits a comment entry
-// exports.editComment = async function(id, text) {
-//     if (text.length < 1) {
-//         text = null;
-//     }
-//     const sqlQuery = "UPDATE clients SET comments=? WHERE id=?";
-//     await db.query(sqlQuery, [text, id]);
-// }
+// Edits a comment entry
+exports.editNote = async function(id, text) {
+    if (text.length < 1) {
+        text = null;
+    }
+    const sqlQuery = "UPDATE notes SET note=? WHERE id=?";
+    await db.query(sqlQuery, [text, id]);
+}
 
 // Sets a reminder status
 exports.setReminderStatus = async function(status, outcome, id) {

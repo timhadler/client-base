@@ -39,9 +39,9 @@ $(document).ready(function() {
     $("#deleteClientCloseButton").on('click', function() { deleteClientPopupClose() });
 
     // Add note button
-    $("#cdAddNoteButton").on('click', function() { notePopup() });
-    $("#addNoteCloseButton").on('click', function() { notePopupClose() });
-    $("#addNoteSubmitButton").on('click', function() { noteSubmit(this) });
+    $("#cdAddNoteButton").on('click', function() { addNotePopup() });
+    $("#noteCloseButton").on('click', function() { notePopupClose() });
+    $("#noteSubmitButton").on('click', function() { noteSubmit(this) });
 
     // Delete note buttons
     //$(".deleteNoteButton").on('click', function() { deleteNotePopup( this) }); This must be in load client details as the buttons dont exist until client is loaded
@@ -134,7 +134,6 @@ function loadClientDetails(id) {
             // Set edit/delete client button data value to store id for submitting in edit and delete form
             $("#editClientButton").data("id", id);
             $("#deleteClientButton").data("id", id);
-            $("#addNoteSubmitButton").data("id", id);
             // Just use global instad
             clientID = id;
 
@@ -163,6 +162,7 @@ function loadClientDetails(id) {
 
                 // Set id data for deleting and editing
                 $noteItem.find(".deleteNoteButton").on('click', function() { deleteNotePopup(notes[i].id) });
+                $noteItem.find(".editNoteButton").data("nId", notes[i].id).data("note", notes[i].note).on('click', function() { editNotePopup(this) });
     
                 li.html($noteItem);
                 list.append(li);
@@ -174,7 +174,7 @@ function loadClientDetails(id) {
         },
         error: function(xhr, status, error) {
             // Handle AJAX error
-            console.log('AJAX Error while fetching client list:', error, xhr, status);
+            console.log('AJAX Error while loading client details:', error, xhr, status);
         }
     });
 }
@@ -217,16 +217,27 @@ function clientPopupSubmit(button) {
 }
 
 function noteSubmit(button) {
-    const formData = $('#addNoteForm').serialize();
-    const id = $(button).data("id");
+    const formData = $('#noteForm').serialize();
+    const formType = $(button).data("form");        // Same popup used for edit and add note, data set in popup functions
+    var url;
+    var id;
 
+    // Change url based on add or edit popup
+    if (formType == "add") {
+        id = clientID;
+        url = "clients/add-note";
+    } else if (formType == "edit") {
+        id = noteID;
+        url = "clients/edit-note";
+    }
+    
     $.ajax({
-        url: "clients/add-note",
+        url: url,
         method: "POST",
         data: { data:formData, id:id },
         success: function(res) {
             notePopupClose();
-            loadClientDetails(id);
+            loadClientDetails(clientID);
         },
         error: function(xhr, status, error) {
         // Handle AJAX error
@@ -307,7 +318,7 @@ function addClientPopup() {
     // Clear details data
     $("#clientPopup input").val('');
 
-    // Set header and button text
+    // Set header and button text and form data so submit function nows its an add submit
     $("#clientPopupHeader").html("New Client");
     $("#clientPopupSubmitButton").html("Add Client").data("form", "add");
 
@@ -328,7 +339,7 @@ function editClientPopup() {
     $("#cCity").val($("#cdCity").html());
     $("#cPc").val($("#cdPostcode").html());
 
-    // Set button text
+    // Set button text and form data so submit function nows its an edit submit
     $("#clientPopupSubmitButton").html("Submit").data("form", "edit");
 
     $("#clientPopup").show();
@@ -350,14 +361,40 @@ function deleteClientPopupClose() {
     $("#overlay").css("visibility", "hidden")
 }
 
-function notePopup() {
-    $("#addNotePopup").find("textarea[name='note']").val("");
-    $("#addNotePopup").show();
+function addNotePopup() {
+    // Clear note field
+    $("#notePopup").find("textarea[name='note']").val("");
+
+    // Set header
+    $("#noteHeader").html("Add note");
+
+    // Set button text and form data so submit function nows its an edit submit
+    $("#noteSubmitButton").data("form", "add");
+
+    $("#notePopup").show();
+    $("#overlay").css("visibility", "visible")
+}
+
+function editNotePopup(button) {
+    noteID = $(button).data("nId");
+    const note = $(button).data("note");
+
+    // Fill note field
+    $("#notePopup").find("textarea[name='note']").val(note);
+
+    // Set header
+    $("#noteHeader").html("Edit note");
+
+    // Set button text and form data so submit function nows its an edit submit
+    $("#noteSubmitButton").data("form", "edit");
+
+    $("#notePopup").show();
     $("#overlay").css("visibility", "visible")
 }
 
 function notePopupClose() {
-    $("#addNotePopup").hide();
+    noteID = 0;
+    $("#notePopup").hide();
     $("#overlay").css("visibility", "hidden")
 }
 

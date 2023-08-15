@@ -282,6 +282,21 @@ router.post("/edit-client", async (req, res) => {
     }
 });
 
+// POST edit note
+router.post("/edit-note", async (req, res) => {
+    try {
+        const formData = req.body.data;
+        const params = new URLSearchParams(formData);
+        const note = params.get('note');
+        const id = req.body.id;
+
+        await clients.editNote(id, note);
+        res.status(201).end();
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 // POST edit reminder (popup)
 router.post("/edit-reminder/:rId-:cId", async (req, res) => {
     try {
