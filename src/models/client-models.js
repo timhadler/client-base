@@ -105,14 +105,18 @@ exports.clientDetails = async function(id) {
     return rows[0];
 }
 
-// Dont think im using this
-// Retrieves a reminder with a given id
-// exports.reminder = async function(id) {
-//     const sqlQuery = "SELECT * from reminders WHERE id=?";
-//     const rows = await db.query(sqlQuery, id);
+// Retrieves the reminder associated with a client id
+exports.clientReminder = async function(id) {
+    const sqlQuery = "SELECT * from reminders WHERE client_id=? AND status IN ('pending', 'awaiting', 'followUP')";
+    const rows = await db.query(sqlQuery, id);
 
-//     return rows[0];
-// }
+    // Should only be 1 active reminder
+    if (rows.length > 1) {
+        console.log("Possible bug: more than 1 active reminder for client (id=" + id + ")");
+    }
+
+    return rows[0];
+}
 
 // For automatically moving clients out of awaiting list into followUp list, not unsing currently
 // // Retrieves the reminders with status awaiting and their latest interaction date

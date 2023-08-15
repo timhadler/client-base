@@ -148,6 +148,8 @@ function loadClientDetails(id) {
             $("#cdSuburb").html(data.suburb);
             $("#cdCity").html(data.city);
             $("#cdPostcode").html(data.postcode); 
+            $("#cdReminder").html(data.reminder.rDate);
+            $("#cdReminderStatus").html(data.reminder.status);
 
             // Client notes
             var list = $("#cdNotesList");

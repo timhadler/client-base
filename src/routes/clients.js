@@ -51,6 +51,7 @@ router.get("/load-client-data", async (req, res) => {
         const id = req.query.id;
         var data = await clients.clientDetails(id);
         const notes = await clients.clientNotes(id);
+        const reminder = await clients.clientReminder(id);
 
         data.notes = notes;
 
@@ -58,6 +59,17 @@ router.get("/load-client-data", async (req, res) => {
         const clientCreated = data.created;
         const cDate = new Date(clientCreated);
         data.created = cDate.toLocaleDateString('en-GB');
+
+        if (reminder) {
+            console.log("here")
+            let rDate = reminder.rDate;
+            rDate = new Date(rDate);
+            reminder.rDate = rDate.toLocaleDateString('en-GB');
+            data.reminder =  reminder;
+        } else {
+            // Empty reminder for front end display
+            data.reminder = {rDate:"", status:""};
+        }
 
         for (let i = 0; i < notes.length; i++) {
             const noteCreated = notes[i].created;
