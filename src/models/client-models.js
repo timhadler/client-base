@@ -226,13 +226,10 @@ exports.editReminder = async function(id, date) {
     await db.query(sqlQuery, [date, id]);
 }
 
-// Edits a comment entry
-exports.editNote = async function(id, text) {
-    if (text.length < 1) {
-        text = null;
-    }
-    const sqlQuery = "UPDATE notes SET note=? WHERE id=?";
-    await db.query(sqlQuery, [text, id]);
+// Edit a reminder entry for a given client id
+exports.editClientReminder = async function(id, date, status) {
+    const sqlQuery = "UPDATE reminders SET rDate=?, status=? WHERE client_id=?";
+    await db.query(sqlQuery, [date, status, id]);
 }
 
 // Sets a reminder status
@@ -244,6 +241,15 @@ exports.setReminderStatus = async function(status, outcome, id) {
 exports.setReminderFlag = async function(id, value) {
     const sqlQuery = "UPDATE reminders SET flag=? WHERE id=?";
     await db.query(sqlQuery, [value, id]);
+}
+
+// Edits a comment entry
+exports.editNote = async function(id, text) {
+    if (text.length < 1) {
+        text = null;
+    }
+    const sqlQuery = "UPDATE notes SET note=? WHERE id=?";
+    await db.query(sqlQuery, [text, id]);
 }
 
 /***********************************************************

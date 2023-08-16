@@ -38,6 +38,15 @@ $(document).ready(function() {
     $("#deleteClientSubmitButton").on('click', function() { deleteClientSubmit() });
     $("#deleteClientCloseButton").on('click', function() { deleteClientPopupClose() });
 
+    // Reminder popup buttons
+    $("#cdEditReminderButton").on('click', function() { editReminderPopup() });
+    $("#cdAddReminderButton").on('click', function() { addReminderPopup() });
+    $("#cdReminderPopupSubmitButton").on('click', function() { reminderPopupSubmit(this) });
+    $("#cdReminderCloseButton").on('click', function() { reminderPopupClose() });
+    $("#cdDeleteReminderButton").on('click', function() { deleteReminderPopup() });
+    $("#cdDeleteReminderCloseButton").on('click', function() { deleteReminderPopupClose() });
+    $("#cdDeleteReminderSubmitButton").on('click', function() { deleteReminderSubmit() });
+
     // Add note button
     $("#cdAddNoteButton").on('click', function() { addNotePopup() });
     $("#noteCloseButton").on('click', function() { notePopupClose() });
@@ -248,6 +257,35 @@ function noteSubmit(button) {
     });
 }
 
+// Submit function for reminder popup (Add and Edit)
+function reminderPopupSubmit(button) {
+    const id = clientID;
+    const formData = $('#cdReminderPopupForm').serialize();
+    const formType = $(button).data("form");        // Same popup used for edit and add note, data set in popup functions
+    var url;
+
+    console.log(formType);
+    if (formType == "add") {
+        url = "clients/add-reminder";
+    } else if (formType == "edit") {
+        url = "clients/edit-reminder";
+    }
+
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: { data:formData, id:id },
+        success: function(res) {
+            reminderPopupClose();
+            loadClientDetails(id);
+        },
+        error: function(xhr, status, error) {
+        // Handle AJAX error
+        console.log('AJAX Error while editing client reminder: ', error, xhr, status);
+        }
+    });
+}
+
 function deleteClientSubmit() {
     const id = $("#deleteClientButton").data("id");
 
@@ -409,5 +447,42 @@ function deleteNotePopup(nId) {
 function deleteNotePopupClose() {
     noteID = 0;
     $("#deleteNotePopup").hide();
+    $("#overlay").css("visibility", "hidden")
+}
+
+// Reminder popup functions
+function addReminderPopup() {
+    $("#cdReminderPopupHeader").html("Add reminder");
+
+    $("#cdReminderPopupSubmitButton").data("form", "add");
+
+    $("#cdReminderPopup").show();
+    $("#overlay").css("visibility", "visible")
+}
+
+function editReminderPopup() {
+    let date = $("#cdReminder").html();
+    let status = $("#cdReminderStatus").html();
+
+    date = date.slice(6) + "-" + date.slice(3, 5) + "-" + date.slice(0, 2);
+    if (status == "pending") {
+        $("#cdPendingInput").prop("checked", true);
+    } else if (status == "awaiting") {
+        $("#cdAwaitingInput").prop("checked", true);
+    } else if (status == "followUp") {
+        $("#cdFUInput").prop("checked", true);
+    }
+
+    $("#cdReminderPopupHeader").html("Edit reminder");
+    $("#cdReminderInput").val(date);
+
+    $("#cdReminderPopupSubmitButton").data("form", "edit");
+
+    $("#cdReminderPopup").show();
+    $("#overlay").css("visibility", "visible")
+}
+
+function reminderPopupClose() {
+    $("#cdReminderPopup").hide();
     $("#overlay").css("visibility", "hidden")
 }

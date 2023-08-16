@@ -87,6 +87,33 @@
                         </div>
                     </div>
                     <div class="cdSectionRow"> 
+                        <!-- Reminder popup -->
+                        <div id="cdReminderPopup" class="popup hidden">
+                            <!-- Header -->
+                            <div class="popupHeaderDiv">
+                                <p id="cdReminderPopupHeader" class="popupHeader"></p>
+                                <span id="cdReminderCloseButton" class="close-button">&times</span>
+                            </div>
+                            <form id="cdReminderPopupForm">
+                                <input id="cdReminderInput" type="date" name="rDate"></input>
+                                <br /><br />
+                                <!-- Hide this for add popup -->
+                                <p class="popupHeader2"> Status </p>
+                                <input id="cdPendingInput" type="radio" name="status" value="pending">
+                                <label for="cdPendingInput"> Pending </label>
+                                <input id="cdAwaitingInput" type="radio" name="status" value="awaiting">
+                                <label for="cdAwaitingInput"> Awaiting </label>
+                                <input id="cdFUInput" type="radio" name="status" value="followUp">
+                                <label for="cdFUInput"> Follow up </label>
+                            </form>
+                            <br />
+
+                            <!-- Submit button -->
+                            <div style="text-align: center;">
+                                <button id="cdReminderPopupSubmitButton" type="button" class="button_primary"> Submit </button>
+                            </div>
+                        </div>
+                        <!-- Reminder -->
                         <span class="cdSectionItem"> Reminder </span>
                         <span id="cdReminder" class="cdSectionValue"></span>
                         <span id="cdReminderStatus" class="cdSectionValue"></span>
