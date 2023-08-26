@@ -124,13 +124,17 @@ function openPopup(data) {
         $('#popupNotesDiv').hide();
       }
       for (var i = 0; i < notes.length; i++) {
-        let li = $('<li>').html(notes[i].note)
+        let li = $('<li>').addClass("flex flex-jc-sb rPopupLI");
+        li.append($("<span>").css("word-wrap", "break-word").css("width", "70%").html(notes[i].note));
+        li.append($("<span>").addClass("italic").html(new Date(notes[i].created).toLocaleDateString('en-GB')));
         $('#reminderPopupNotes').append(li);
       }
 
       // Interactions
       for (var i = 0; i < interactions.length; i++) {
-        let li = $('<li>').html(interactions[i].interaction);
+        let li = $('<li>').addClass("flex flex-jc-sb rPopupLI");
+        li.append($("<span>").html(interactions[i].interaction));
+        li.append($("<span>").addClass("italic").html(new Date(interactions[i].created).toLocaleDateString('en-GB')));
         $('#reminderPopupInteractions').append(li);
       }
     },
@@ -253,13 +257,16 @@ function loadList(l, data, offset=0) {
         $button.find('.rProperty1 .Rproperty-name').html("Mobile: ");
         $button.find('.rProperty1 .Rproperty-value').html(reminder.mobile);
       } 
-    } else if(l == "followUpList") {
+    } else if (l == "followUpList") {
       if (reminder.status == "followUp") {
         $button.find('.rProperty2 .Rproperty-name').html("Requires follow up: ");
         $button.find('.rProperty2 .Rproperty-value').html(new Date(reminder.rDate).toLocaleDateString('en-GB'));
       } else {
         $button.find('.rProperty2 .Rproperty-value').html("No Answer");
       }
+    } else if (l == "awaitingList") {
+      $button.find('.rProperty2 .Rproperty-name').html("Last interaction: ");
+      $button.find('.rProperty2 .Rproperty-value').html(new Date(reminder.latest_created).toLocaleDateString('en-GB'));
     } else if (l == "completedList") {
       $button.find('.rProperty2 .Rproperty-name').html(reminder.outcome);
     }

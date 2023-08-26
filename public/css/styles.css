@@ -671,6 +671,10 @@ nav {
   margin-left: 10px;
 }
 
+.rPopupLI {
+  border-radius: 2px;
+}
+
 .clientListDisplay {
   display: grid;
   grid-template-columns: 100px minmax(100px, 250px) minmax(200px, 2000px) 100px;

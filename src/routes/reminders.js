@@ -16,7 +16,7 @@ global.ORDER_FU = "status"
 global.D1_A = "0001-01-01";
 global.D2_A = "9999-12-31";
 global.MONTH_A = MONTH_P;
-global.ORDER_A = "rDate"
+global.ORDER_A = "latest_created"
 
 router.get("/", async (req, res) => {
     try {
@@ -156,7 +156,7 @@ router.post("/set-reminder-status", async (req, res) => {
         if (!params.get("noReminder")) {
             if (action == "ignore" || outcome == "booked" || outcome == "declined") {
                 // Create new reminder
-                await clients.createReminder(params.get("rDate"), id);
+                await clients.createReminder(params.get("rDate"), "pending", id);
             } else if (outcome == "followUp") {
                 // Update reminder
                 await clients.editReminder(rId, params.get("rDate"));
@@ -197,7 +197,7 @@ router.post("/set-reminder-status-multi", async (req, res) => {
             if (!params.get("noReminder") && rDate.length > 0) {
                 if (action == "ignore" || outcome == "booked" || outcome == "declined") {
                     // Create new reminder
-                    await clients.createReminder(rDate, ids[i]);
+                    await clients.createReminder(rDate, "pending", ids[i]);
                 } else if (outcome == "followUp") {
                     // Update reminder
                     await clients.editReminder(rIds[i], rDate);
