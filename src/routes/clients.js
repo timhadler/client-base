@@ -139,7 +139,7 @@ router.post("/add-client", async (req, res) => {
         // Create new client
         let id = await clients.createClient(name, company, telephone, mobile, email, street, suburb, city, pc);
 
-        //await clients.createReminder(body.rDate, id);
+        //await clients.createReminder(body.rDate, status, id);
         res.status(201).json({ id:id });
     } catch (error) {
         // If error was caused by a duplicate name
@@ -172,12 +172,18 @@ router.post("/add-note", async (req, res) => {
 });
 
 // POST add reminder
-router.post("/add-reminder/:id", async (req, res) => {
+router.post("/add-reminder/", async (req, res) => {
     try {
-        const body = req.body;
+        const formData = req.body.data;
+        const params = new URLSearchParams(formData);
+        const rDate = params.get('rDate');
+        const status = params.get('status');
+        const id = req.body.id;
 
-        await clients.createReminder(body.rDate, req.params.id)
-        res.status(201).redirect('back');
+        if (rDate) {
+            await clients.createReminder(rDate, status, id)
+        }
+        res.status(201).end();
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -186,6 +192,7 @@ router.post("/add-reminder/:id", async (req, res) => {
 /***********************************************************
  * Import clients
  ***********************************************************/
+//WILL NEED REDOING
 router.post("/import-clients", upload.single("importExcel"), async (req, res) => {
     try {
         // Verifying file

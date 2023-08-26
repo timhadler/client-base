@@ -161,8 +161,14 @@ function loadClientDetails(id) {
             $("#cdReminderStatus").html(data.reminder.status);
 
             // Hide reminder section if no reminder
-            if (!data.reminder.rDate) {$("#cdReminderDiv").hide();}
-            else {$("#cdReminderDiv").show();};
+            if (!data.reminder.rDate) {
+                $("#cdReminderDiv").hide();
+                $("#cdAddReminderButton").show();
+        }
+            else {
+                $("#cdReminderDiv").show();
+                $("#cdAddReminderButton").hide();
+            };
 
             // Client notes
             var list = $("#cdNotesList");
@@ -268,7 +274,6 @@ function reminderPopupSubmit(button) {
     const formType = $(button).data("form");        // Same popup used for edit and add note, data set in popup functions
     var url;
 
-    console.log(formType);
     if (formType == "add") {
         url = "clients/add-reminder";
     } else if (formType == "edit") {
@@ -476,7 +481,10 @@ function deleteNotePopupClose() {
 function addReminderPopup() {
     $("#cdReminderPopupHeader").html("Add reminder");
 
+    $("#cdReminderInput").val("");
+
     $("#cdReminderPopupSubmitButton").data("form", "add");
+    $("#cdPendingInput").prop('checked', true);
 
     $("#cdReminderPopup").show();
     $("#overlay").css("visibility", "visible")

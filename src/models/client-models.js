@@ -188,9 +188,9 @@ exports.createClient = async function(name, company, telephone, mobile, email, s
 }
 
 // Creates a reminder entry
-exports.createReminder = async function(rDate, id) {
-    const sqlQuery = "INSERT INTO reminders (rDate, client_id, status) VALUES(?, ?, 'pending')";
-    await db.query(sqlQuery, [rDate, id]);
+exports.createReminder = async function(rDate, status, id) {
+    const sqlQuery = "INSERT INTO reminders (rDate, client_id, status) VALUES(?, ?, ?)";
+    await db.query(sqlQuery, [rDate, id, status]);
 }
 
 // Create an interaction entry
