@@ -113,11 +113,26 @@
                                 <button id="cdReminderPopupSubmitButton" type="button" class="button_primary"> Submit </button>
                             </div>
                         </div>
+                        <!-- Delete reminder popup -->
+                        <div id="deleteReminderPopup" class="popup hidden">
+                            <!-- Header -->
+                            <div class="popupHeaderDiv">
+                                <p class="popupHeader"> Delete this reminder? </p>
+                                <span id="cdDeleteReminderCloseButton" class="close-button">&times</span>
+                            </div>
+                            <br />
+                            <div style="text-align: center;">
+                                <button id="cdDeleteReminderSubmitButton" type="button" class="button_primary_red"> Submit </button>
+                            </div>
+                        </div>
                         <!-- Reminder -->
                         <span class="cdSectionItem"> Reminder </span>
-                        <span id="cdReminder" class="cdSectionValue"></span>
-                        <span id="cdReminderStatus" class="cdSectionValue"></span>
-                        <span id="cdEditReminderButton" class="link pad-l-sm">Edit</span>
+                        <div id="cdReminderDiv">
+                            <span id="cdReminder" class="cdSectionValue"></span>
+                            <span id="cdReminderStatus" class="cdSectionValue"></span>
+                            <span id="cdEditReminderButton" class="link pad-l-sm">Edit</span>
+                            <span id="cdDeleteReminderButton" class="close-button">&times</span>
+                        </div>
                     </div>
                 </div>
 

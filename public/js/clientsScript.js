@@ -160,6 +160,10 @@ function loadClientDetails(id) {
             $("#cdReminder").html(data.reminder.rDate);
             $("#cdReminderStatus").html(data.reminder.status);
 
+            // Hide reminder section if no reminder
+            if (!data.reminder.rDate) {$("#cdReminderDiv").hide();}
+            else {$("#cdReminderDiv").show();};
+
             // Client notes
             var list = $("#cdNotesList");
             list.empty();
@@ -315,6 +319,24 @@ function deleteNoteSubmit() {
         data: { nId:nId },
         success: function(res) {
             deleteNotePopupClose();
+            loadClientDetails(id);
+        },
+        error: function(xhr, status, error) {
+        // Handle AJAX error
+        console.log('AJAX Error while deleting client: ', error, xhr, status);
+        }
+    });
+}
+
+function deleteReminderSubmit() {
+    const id = clientID;
+
+    $.ajax({
+        url: "clients/delete-reminder",
+        method: "DELETE",
+        data: { id:id },
+        success: function(res) {
+            deleteReminderPopupClose();
             loadClientDetails(id);
         },
         error: function(xhr, status, error) {
@@ -484,5 +506,15 @@ function editReminderPopup() {
 
 function reminderPopupClose() {
     $("#cdReminderPopup").hide();
+    $("#overlay").css("visibility", "hidden")
+}
+
+function deleteReminderPopup() {
+    $("#deleteReminderPopup").show();
+    $("#overlay").css("visibility", "visible")
+}
+
+function deleteReminderPopupClose() {
+    $("#deleteReminderPopup").hide();
     $("#overlay").css("visibility", "hidden")
 }

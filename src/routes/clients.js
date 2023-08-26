@@ -317,8 +317,6 @@ router.post("/edit-reminder", async (req, res) => {
         const status = params.get('status');
         const id = req.body.id;
 
-        console.log(id, rDate, status)
-
         await clients.editClientReminder(id, rDate, status)
         res.status(201).end();
     } catch (error) {
@@ -350,11 +348,10 @@ router.delete("/delete-note", async (req, res) => {
 });
 
 // Delete from reminders table
-router.delete("/delete-date/:cId-:dId", async (req, res) => {
+router.delete("/delete-reminder", async (req, res) => {
     try {
-        await clients.deleteReminder(req.params.dId);
-        res.status(204).redirect('back');
-        //res.status(204).redirect("/clients/?clientID=" + req.params.cId);
+        await clients.deleteClientReminder(req.body.id);
+        res.status(204).end();
     } catch (error) {
         res.status(500).send(error.message);
     }

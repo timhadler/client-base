@@ -255,7 +255,6 @@ exports.editNote = async function(id, text) {
 /***********************************************************
  * Delete
  ***********************************************************/
-// NEEDS UPDATE
 exports.deleteClient = async function(id) {
     sqlQuery = "DELETE FROM reminders WHERE client_id=" + id;
     await db.query(sqlQuery);
@@ -275,8 +274,8 @@ exports.deleteNote = async function(id) {
     await db.query(sqlQuery, id);
 }
 
-exports.deleteReminder = async function(id) {
-    const sqlQuery = "DELETE FROM reminders WHERE id=?";
+exports.deleteClientReminder = async function(id) {
+    const sqlQuery = "DELETE FROM reminders WHERE client_id=?";
     await db.query(sqlQuery, id);
 }
 
