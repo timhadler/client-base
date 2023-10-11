@@ -69,20 +69,24 @@ exports.followUpList3 = async function (d1, d2, limit, offset, order) {
 
 // Fetches the client details associated with reminders that have status "awaitingResponse"
 exports.awaitingList = async function (d1, d2, limit, offset, order) {
-    let sqlQuery = "SELECT COUNT(*) over() as n, name, clients.id, rDate, flag, reminders.id AS rId, reminders.status, latest_created FROM clients INNER JOIN reminders ON clients.id = reminders.client_id ";
-    if (1) {
-        sqlQuery += "LEFT JOIN (SELECT reminder_id, MAX(created) AS latest_created FROM interactions GROUP BY reminder_id) latest_int ON reminders.id = latest_int.reminder_id LEFT JOIN interactions ON reminders.id = interactions.reminder_id AND latest_int.latest_created = interactions.created ";
-        //order = "latest_created"
-    }
+    let sqlQuery = "SELECT name, clients.id, rDate, flag, reminders.id AS rId, reminders.status, latest_created FROM clients INNER JOIN reminders ON clients.id = reminders.client_id ";
+    sqlQuery += "LEFT JOIN (SELECT reminder_id, MAX(created) AS latest_created FROM interactions GROUP BY reminder_id) latest_int ON reminders.id = latest_int.reminder_id LEFT JOIN interactions ON reminders.id = interactions.reminder_id AND latest_int.latest_created = interactions.created ";
     sqlQuery += "WHERE reminders.status='awaiting' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
     let rows = await db.query(sqlQuery);
+
+    sqlQuery = "SELECT COUNT(DISTINCT clients.id) AS n FROM clients JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status = 'awaiting' AND reminders.rDate BETWEEN '" + d1 + "' AND '" + d2 + "';"
+    const count = await db.query(sqlQuery);
+
+    if (rows.length > 0) {
+        rows[0].n = count[0].n;
+    }
 
     return rows;
 };
 
-// Fetches all clients with reminders statuses "completed"
+// Fetches all clients with reminders statuses "completed", limited by 50
 exports.completedList = async function () {
-    const sqlQuery = "SELECT name, clients.id, rDate, reminders.id AS rId, reminders.status, outcome FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='completed' ORDER BY name";
+    const sqlQuery = "SELECT name, clients.id, rDate, reminders.id AS rId, reminders.status, outcome FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='completed' ORDER BY name LIMIT 50";
     const rows = await db.query(sqlQuery);
 
     return rows;

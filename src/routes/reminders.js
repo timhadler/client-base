@@ -111,6 +111,7 @@ router.get("/filter", async (req, res) => {
             ORDER_FU = order;
             if (m) { MONTH_FU = m; }
             if (params.get("followUp") && params.get("noAns")) {
+                // REMOVE ADDITIONAL LIST QUERIES, ONLY FOLLOWUP STATUS NO NOANS ANYMORE, REMOVE FROM UI TOO
                 data = await clients.followUpList1(d1, d2, req.query.limit, req.query.offset, order);
             } else if (params.get("followUp")) {
                 data = await clients.followUpList2(d1, d2, req.query.limit, req.query.offset, order);
