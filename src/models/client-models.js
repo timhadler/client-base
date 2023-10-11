@@ -12,8 +12,7 @@ exports.clientNumber = async function() {
     return rows[0].n;
 };
 
-// Fetches the first x clients alphabetically from database
-// If x is null, returns all clients in alphabetical order
+// Fetches clients from the database, ordered by name
 exports.clientList = async function(limit, offset) {
     const sqlQuery = "SELECT name, id FROM clients ORDER BY NAME LIMIT " + limit + " OFFSET " + offset;
     const rows = await db.query(sqlQuery);
