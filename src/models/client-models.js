@@ -22,16 +22,31 @@ exports.clientList = async function(limit, offset) {
 
 // Fetches the client details associated with the reminder dates between d1 and d2 and have status of "pending"
 exports.pendingList = async function (d1, d2, limit, offset, order) {
-    const sqlQuery = "SELECT COUNT(*) over() as n, clients.id, name, mobile, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='pending' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
-    const rows = await db.query(sqlQuery);
+    let sqlQuery = "SELECT clients.id, name, mobile, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='pending' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
+    let rows = await db.query(sqlQuery);
+
+    sqlQuery = "SELECT COUNT(DISTINCT clients.id) AS n FROM clients JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status = 'pending' AND reminders.rDate BETWEEN '" + d1 + "' AND '" + d2 + "';"
+    let count = await db.query(sqlQuery);
+
+    if (rows.length > 0) {
+        rows[0].n = count[0].n;
+    }
 
     return rows;
 };
 
+// NO LONGER USING NOANS STATUS, CAN REMOVE EXTRA FUNCTIONS AS THERE WILLL ONLY BE FOLLOWuP STATUS
 // Fetches the client details associated with the reminder dates between d1 and d2 and have status "noResponse" or "followUp"
 exports.followUpList1 = async function (d1, d2, limit, offset, order) {
-    const sqlQuery = "SELECT COUNT(*) over() as n, name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE status IN ('followUp', 'noResponse') AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
+    let sqlQuery = "SELECT name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE status='followUp' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
     const rows = await db.query(sqlQuery);
+
+    sqlQuery = "SELECT COUNT(DISTINCT clients.id) AS n FROM clients JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status = 'followUp' AND reminders.rDate BETWEEN '" + d1 + "' AND '" + d2 + "';"
+    let count = await db.query(sqlQuery);
+
+    if (rows.length > 0) {
+        rows[0].n = count[0].n;
+    }
 
     return rows;
 };
@@ -91,8 +106,15 @@ exports.clientNotes = async function(id) {
 
 // Fetches clients resulting from a search query
 exports.searchList = async function(search) {
-    const sqlQuery = "SELECT COUNT(*) over() as n, name, id FROM clients WHERE name LIKE '%" + search + "%'";
-    const rows = await db.query(sqlQuery, search);
+    let sqlQuery = "SELECT name, id FROM clients WHERE name LIKE '%" + search + "%'";
+    const rows = await db.query(sqlQuery);
+
+    sqlQuery = "SELECT COUNT(DISTINCT clients.id) AS n FROM clients where name LIKE '%" + search + "%'";
+    const count = await db.query(sqlQuery);
+
+    if (rows.length > 0) {
+        rows[0].n = count[0].n;
+    }
 
     return rows;
 }
