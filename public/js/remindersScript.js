@@ -259,7 +259,7 @@ function loadList(l, data, offset=0) {
       } 
     } else if (l == "followUpList") {
       if (reminder.status == "followUp") {
-        $button.find('.rProperty2 .Rproperty-name').html("Requires follow up: ");
+        $button.find('.rProperty2 .Rproperty-name').html("Reminder: ");
         $button.find('.rProperty2 .Rproperty-value').html(new Date(reminder.rDate).toLocaleDateString('en-GB'));
       } else {
         $button.find('.rProperty2 .Rproperty-value').html("No Answer");

@@ -55,14 +55,10 @@
 
 // Reminder list properties
 .rProperty1 {
-    width: 185px;
+    max-width: 185px;
     align-items: center;
     padding-right: 30px;
     margin-left: auto;
-}
-
-.rProperty1 {
-    align-items: center;
 }
 
 .Rproperty-name {
