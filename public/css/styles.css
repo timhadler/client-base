@@ -454,10 +454,6 @@ hr {
   overflow: hidden;
 }
 
-.tabContent {
-  display: none;
-}
-
 .tabLink {
   float: left;
   border-radius: 0;
@@ -671,6 +667,10 @@ nav {
   border-radius: 2px;
 }
 
+.tabContent {
+  display: none;
+}
+
 .clientListDisplay {
   display: grid;
   grid-template-columns: 100px minmax(100px, 250px) minmax(200px, 2000px) 100px;
@@ -707,7 +707,7 @@ nav {
   margin: 15px;
   margin-bottom: 0;
   padding-bottom: 15px;
-  width: 33%;
+  width: 43%;
   border-bottom: 1px solid lightgray;
 }
 
@@ -741,7 +741,7 @@ nav {
 }
 
 .section_divider_clientList {
-  height: 85vh;
+  height: 75vh;
   border: none;
   width: 100%;
   border-right: 1px solid grey;
@@ -771,6 +771,10 @@ nav {
 
 .popup-client input[type=text], .clientPopup input[type=email] {
   width: 100%;
+}
+
+.cdTabContent {
+  display: none;
 }
 
 /*# sourceMappingURL=styles.css.map */

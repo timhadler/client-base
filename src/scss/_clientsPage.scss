@@ -38,7 +38,7 @@
     margin: 15px;
     margin-bottom: 0;
     padding-bottom: 15px;
-    width: 33%;
+    width: 43%;
     border-bottom: 1px solid lightgray;
 }
 
@@ -76,7 +76,7 @@
 
 // Section divider
 .section_divider_clientList {
-    height: 85vh;
+    height: 75vh;
     border: none;
     width:100%;
     border-right: 1px solid grey;
@@ -108,4 +108,8 @@
 
 .popup-client input[type=text], .clientPopup input[type=email] {
     width: 100%;
+}
+
+.cdTabContent {
+    display: none;
 }
