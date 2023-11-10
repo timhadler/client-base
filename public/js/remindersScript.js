@@ -63,7 +63,7 @@ function queryListData(l, offset=0) {
     data: { list:l, limit:LIMIT, offset:offset },
     success: function(res) {
       const data = JSON.parse(res);
-      loadList(l, data, offset);
+      loadList(l, data.listCount, data.listData, offset);
     },
     error: function(xhr, status, error) {
       // Handle AJAX error
@@ -222,13 +222,8 @@ function filterSubmit(list) {
  * Functions
  ****************************************************************/
 // Loads data into html list
-function loadList(l, data, offset=0) {
+function loadList(l, n, clients, offset=0) {
   var list = $('#' + l);
-  // Reminder count
-  let n = 0;
-  if (data.length > 0) {
-    n = data[0].n;
-  }
   if (l == "pendingList") {
     $('#pendingCount').html('(' + n + ')');
   } else if (l == "followUpList") {
@@ -240,8 +235,8 @@ function loadList(l, data, offset=0) {
   if (offset === 0) {
     list.empty(); // Clear the list only for the initial load
   }
-  for (var i = 0; i < data.length; i++) {
-    let reminder = data[i];
+  for (var i = 0; i < clients.length; i++) {
+    let reminder = clients[i];
     let rId = reminder.rId;
     let id = reminder.id;
     var li = $('<li>').attr('id', "reminder-" + rId).addClass("positionRelative");

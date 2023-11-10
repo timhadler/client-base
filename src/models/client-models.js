@@ -20,48 +20,26 @@ exports.clientList = async function(limit, offset) {
     return rows;
 };
 
+// Fetches the number of clients in a given list (pending, awaiting, followUp) with user parameters
+exports.getListCount = async function(list, d1, d2) {
+    const sqlQuery = "SELECT COUNT(clients.id) as n FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status = ? AND reminders.rDate BETWEEN '" + d1 + "' AND '" + d2 + "';";
+    const rows = await db.query(sqlQuery, list);
+
+    return rows[0].n;
+};
+
 // Fetches the client details associated with the reminder dates between d1 and d2 and have status of "pending"
 exports.pendingList = async function (d1, d2, limit, offset, order) {
     let sqlQuery = "SELECT clients.id, name, mobile, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='pending' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
-    let rows = await db.query(sqlQuery);
-
-    sqlQuery = "SELECT COUNT(DISTINCT clients.id) AS n FROM clients JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status = 'pending' AND reminders.rDate BETWEEN '" + d1 + "' AND '" + d2 + "';"
-    let count = await db.query(sqlQuery);
-
-    if (rows.length > 0) {
-        rows[0].n = count[0].n;
-    }
+    const rows = await db.query(sqlQuery);
 
     return rows;
 };
 
 // NO LONGER USING NOANS STATUS, CAN REMOVE EXTRA FUNCTIONS AS THERE WILLL ONLY BE FOLLOWuP STATUS
 // Fetches the client details associated with the reminder dates between d1 and d2 and have status "noResponse" or "followUp"
-exports.followUpList1 = async function (d1, d2, limit, offset, order) {
+exports.followUpList = async function (d1, d2, limit, offset, order) {
     let sqlQuery = "SELECT name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE status='followUp' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
-    const rows = await db.query(sqlQuery);
-
-    sqlQuery = "SELECT COUNT(DISTINCT clients.id) AS n FROM clients JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status = 'followUp' AND reminders.rDate BETWEEN '" + d1 + "' AND '" + d2 + "';"
-    let count = await db.query(sqlQuery);
-
-    if (rows.length > 0) {
-        rows[0].n = count[0].n;
-    }
-
-    return rows;
-};
-
-// Fetches the client details associated with the reminder dates between d1 and d2 and have status "followUp"
-exports.followUpList2 = async function (d1, d2, limit, offset, order) {
-    const sqlQuery = "SELECT COUNT(*) over() as n, name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE status='followUp' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
-    const rows = await db.query(sqlQuery);
-
-    return rows;
-};
-
-// Fetches the client details associated with the reminder dates between d1 and d2 and have status "noResponse"
-exports.followUpList3 = async function (d1, d2, limit, offset, order) {
-    const sqlQuery = "SELECT COUNT(*) over() as n, name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE status='noResponse' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
     const rows = await db.query(sqlQuery);
 
     return rows;
@@ -72,14 +50,7 @@ exports.awaitingList = async function (d1, d2, limit, offset, order) {
     let sqlQuery = "SELECT name, clients.id, rDate, flag, reminders.id AS rId, reminders.status, latest_created FROM clients INNER JOIN reminders ON clients.id = reminders.client_id ";
     sqlQuery += "LEFT JOIN (SELECT reminder_id, MAX(created) AS latest_created FROM interactions GROUP BY reminder_id) latest_int ON reminders.id = latest_int.reminder_id LEFT JOIN interactions ON reminders.id = interactions.reminder_id AND latest_int.latest_created = interactions.created ";
     sqlQuery += "WHERE reminders.status='awaiting' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
-    let rows = await db.query(sqlQuery);
-
-    sqlQuery = "SELECT COUNT(DISTINCT clients.id) AS n FROM clients JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status = 'awaiting' AND reminders.rDate BETWEEN '" + d1 + "' AND '" + d2 + "';"
-    const count = await db.query(sqlQuery);
-
-    if (rows.length > 0) {
-        rows[0].n = count[0].n;
-    }
+    const rows = await db.query(sqlQuery);
 
     return rows;
 };

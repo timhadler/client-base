@@ -49,23 +49,28 @@ router.get("/", async (req, res) => {
 router.get("/load-reminder-list", async (req, res) => {
     try {
         var list = req.query.list;
-        var data = [];
+        var listData = [];
+        var listCount = [];
 
         switch (list) {
             case "pendingList":
-              data = await clients.pendingList(D1_P, D2_P, req.query.limit, req.query.offset, ORDER_P);
+              listData = await clients.pendingList(D1_P, D2_P, req.query.limit, req.query.offset, ORDER_P);
+              listCount = await clients.getListCount("pending", D1_P, D2_P);
               break;
             case "followUpList":
               // Get the reminders with status followUp
-              data = await clients.followUpList1(D1_FU, D2_FU, req.query.limit, req.query.offset, ORDER_FU);
+              listData = await clients.followUpList(D1_FU, D2_FU, req.query.limit, req.query.offset, ORDER_FU);
+              listCount = await clients.getListCount("followUp", D1_FU, D2_FU);
               break;
             case "awaitingList":
-              data = await clients.awaitingList(D1_A, D2_A, req.query.limit, req.query.offset, ORDER_A);
+              listData = await clients.awaitingList(D1_A, D2_A, req.query.limit, req.query.offset, ORDER_A);
+              listCount = await clients.getListCount("awaiting", D1_A, D2_A);
               break;
             case "completedList":
-              data = await clients.completedList();
+              listData = await clients.completedList();
               break;
-          }
+        }
+        const data = {listCount:listCount, listData:listData};
         res.json(JSON.stringify(data));
     } catch (error) {
         res.status(500).send(error.message);
