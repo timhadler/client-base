@@ -50,7 +50,7 @@ router.get("/load-reminder-list", async (req, res) => {
     try {
         var list = req.query.list;
         var listData = [];
-        var listCount = [];
+        var listCount = 0;
 
         switch (list) {
             case "pendingList":
@@ -70,6 +70,9 @@ router.get("/load-reminder-list", async (req, res) => {
               listData = await clients.completedList();
               break;
         }
+        if (typeof listData == 'undefined') {
+            listData = [];
+        }
         const data = {listCount:listCount, listData:listData};
         res.json(JSON.stringify(data));
     } catch (error) {
@@ -83,7 +86,8 @@ router.get("/filter", async (req, res) => {
         const formData = req.query.data;     // formData in form of query string from AJAX request
         const list = req.query.list;
         const params = new URLSearchParams(formData);
-        var data = [];
+        var listData = [];
+        var listCount = 0;
         const order = params.get("orderByInput");
         const dateRange = params.get("dateRangeInput");
         const month = params.get("rMonth");
@@ -109,27 +113,27 @@ router.get("/filter", async (req, res) => {
             D2_P = d2;
             ORDER_P = order;
             if (m) { MONTH_P = m; }
-            data = await clients.pendingList(d1, d2, req.query.limit, req.query.offset, order);
+            listData = await clients.pendingList(d1, d2, req.query.limit, req.query.offset, order);
+            listCount = await clients.getListCount("pending", d1, d2);
         } else if (list == "followUp") {
             D1_FU = d1;
             D2_FU = d2;
             ORDER_FU = order;
             if (m) { MONTH_FU = m; }
-            if (params.get("followUp") && params.get("noAns")) {
-                // REMOVE ADDITIONAL LIST QUERIES, ONLY FOLLOWUP STATUS NO NOANS ANYMORE, REMOVE FROM UI TOO
-                data = await clients.followUpList1(d1, d2, req.query.limit, req.query.offset, order);
-            } else if (params.get("followUp")) {
-                data = await clients.followUpList2(d1, d2, req.query.limit, req.query.offset, order);
-            } else if (params.get("noAns")) {
-                data = await clients.followUpList3(d1, d2, req.query.limit, req.query.offset, order);
-            }
+            listData = await clients.followUpList(d1, d2, req.query.limit, req.query.offset, order);
+            listCount = await clients.getListCount("followUp", d1, d2);
         } else if (list == "awaiting") {
             D1_A = d1;
             D2_A = d2;
             ORDER_A = order;
             if (m) { MONTH_A = m; }
-            data = await clients.awaitingList(d1, d2, req.query.limit, req.query.offset, order);
+            listData = await clients.awaitingList(d1, d2, req.query.limit, req.query.offset, order);
+            listCount = await clients.getListCount("awaiting", d1, d2);
         }
+        if (typeof listData == 'undefined') {
+            listData = [];
+        }
+        const data = {listCount:listCount, listData:listData};
         res.json(JSON.stringify(data));
     } catch (error) {
         res.status(500).send(error.message);

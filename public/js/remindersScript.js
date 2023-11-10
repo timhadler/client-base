@@ -208,7 +208,7 @@ function filterSubmit(list) {
     data: { data:formData, list:list, limit:LIMIT, offset:0},
     success: function(res) {
       const data = JSON.parse(res);
-      loadList(list + "List", data);
+      loadList(list + "List", data.listCount, data.listData);
     },
     error: function(xhr, status, error) {
       // Handle AJAX error

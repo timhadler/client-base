@@ -4,7 +4,7 @@
 <div class="remindersDisplay">
     <!-- Page Tabs -->
     <div class="grid_col_1 margin_t_med margin_b_sm flex flex-ai-c tabs">
-        <button id="actionsTabLink" class="tabLink">Actions</button>
+        <button id="actionsTabLink" class="tabLink">Pending</button>
         <button id="awaitingTabLink" class="tabLink">Awaiting Response</button>
         <button id="completedTabLink" class="tabLink">Recently Completed</button>
     </div>
@@ -17,9 +17,8 @@
     </div>
 
     <!-- Actions tab content -->
-    <div id="actions" class="grid_col_1_s2 tabContent">
+    <div id="actions" class="grid_col_1 tabContent">
         <%- include("../partials/reminders/filterPopup", {list:"pending", month:month_p, d1:d1_p, d2:d2_p}) %>
-        <%- include("../partials/reminders/filterPopup", {list:"followUp", month:month_fu, d1:d1_fu, d2:d2_fu}) %>
         <!-- Pending list -->
         <div style="flex:1;">
             <!-- Header -->
@@ -38,6 +37,30 @@
                 <button class="load-more" data-list="pendingList"> Load more... </button>
             </div>
         </div>
+    </div>
+
+    <!-- Awaiting response -->
+    <div id="awaiting" class="grid_col_1_s2 tabContent">
+        <!-- Filter popups -->
+        <%- include("../partials/reminders/filterPopup", {list:"awaiting", month:month_a, d1:d1_a, d2:d2_a}) %>
+        <%- include("../partials/reminders/filterPopup", {list:"followUp", month:month_fu, d1:d1_fu, d2:d2_fu}) %>
+
+        <div style="flex:1;">
+            <!-- Header and filter button -->
+            <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
+                <div>
+                    <input id="ACheckbox" type="checkbox">
+                    <span class="RListHeader"> Awaiting response </span>
+                    <span id="awaitingCount" class="listCount"></span>
+                </div>
+                <button id="awaitingFilterButton" style="margin-right: 2%;" class="button_filter"> Filter </button>
+            </div>
+            <hr />
+            <div class="inner_section reminders_list_container">
+                <ul id="awaitingList"></ul>
+                <button class="load-more" data-list="awaitingList"> Load more... </button>
+            </div>
+        </div>
 
         <!-- Follow ups-->
         <div style="flex:1;">
@@ -54,28 +77,6 @@
             <div class="inner_section reminders_list_container">
                 <ul id="followUpList"></ul>
                 <button class="load-more" data-list="followUpList"> Load more... </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Awaiting response -->
-    <div id="awaiting" class="grid_col_1 tabContent">
-        <!-- Filter popup -->
-        <%- include("../partials/reminders/filterPopup", {list:"awaiting", month:month_a, d1:d1_a, d2:d2_a}) %>
-        <div style="flex:1;">
-            <!-- Header and filter button -->
-            <div class="flex flex-ai-c flex-jc-sb margin_l_sm">
-                <div>
-                    <input id="ACheckbox" type="checkbox">
-                    <span class="RListHeader"> Awaiting response </span>
-                    <span id="awaitingCount" class="listCount"></span>
-                </div>
-                <button id="awaitingFilterButton" style="margin-right: 2%;" class="button_filter"> Filter </button>
-            </div>
-            <hr />
-            <div class="inner_section reminders_list_container">
-                <ul id="awaitingList"></ul>
-                <button class="load-more" data-list="awaitingList"> Load more... </button>
             </div>
         </div>
     </div>

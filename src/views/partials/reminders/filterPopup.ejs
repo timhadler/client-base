@@ -4,7 +4,7 @@
         <span id="filterPopupClose-<%= locals.list %>" class="close-button">&times</span>
     </div>
     <form id="filterForm-<%= locals.list %>">
-        <p class="popupHeader2"> Date range: </p>
+        <p class="popupHeader2"> Reminder date range: </p>
         <div class="flex flex-ai-c">
             <!-- Maybe use class names instead of ids to grab in js, instead of adding list name to id dynamically -->
             <select name="dateRangeInput" class="margin_r_sm rDateRangeFilter" value="month">
@@ -25,23 +25,11 @@
             <option value="name"> Name </option>
             <option value="rDate asc" selected> Reminder date (ascending) </option>
             <option value="rDate desc"> Reminder date (descending) </option>
-            <% if(locals.list == "followUp") { %>
-                <option value="status" selected> Status </option>
-            <% } %>
             <% if(locals.list == "awaiting") { %>
                 <option value="latest_created asc" selected> Latest interaction (ascending) </option>
                 <option value="latest_created desc"> Latest interaction (descending) </option>
             <% } %>
         </select> <br />
-        <!-- Filter by status for folowUp list -->
-        <% if(locals.list == "followUp") { %>
-            <p class="popupHeader2"> Status: </p>
-            <input id="filterFollowUps" type="checkbox" name="followUp" checked>
-            <label for="filterFollowUps"> Requires follow up </label>
-            <input id="filterNoAns" type="checkbox" name="noAns" checked>
-            <label for="filterNoAns"> No answer </label>
-            <br />
-        <% } %>
     </form>
     <!-- Submit button -->
     <div style="justify-content: center;" class="flex flex-jc-sb margin_t_sm">
