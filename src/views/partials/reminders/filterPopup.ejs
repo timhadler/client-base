@@ -23,12 +23,14 @@
         <p class="popupHeader2"> Order by: </p>
         <select id="rOrderInput" name="orderByInput">
             <option value="name"> Name </option>
-            <option value="rDate" selected> Reminder date </option>
+            <option value="rDate asc" selected> Reminder date (ascending) </option>
+            <option value="rDate desc"> Reminder date (descending) </option>
             <% if(locals.list == "followUp") { %>
                 <option value="status" selected> Status </option>
             <% } %>
             <% if(locals.list == "awaiting") { %>
-                <option value="latest_created" selected> Latest interaction </option>
+                <option value="latest_created asc" selected> Latest interaction (ascending) </option>
+                <option value="latest_created desc"> Latest interaction (descending) </option>
             <% } %>
         </select> <br />
         <!-- Filter by status for folowUp list -->
