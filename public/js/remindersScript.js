@@ -385,8 +385,8 @@ function checkAll(cb) {
 
   // Find which parent checkbox has been checked
   if (cb.id == "PCheckbox") { list = "pendingList" }
-  else if (cb.id = "FUCheckbox") { list = "followUpList" }
-  else if (cb.id = "ACheckbox") { list = "awaitingList" }
+  else if (cb.id == "FUCheckbox") { list = "followUpList" }
+  else if (cb.id == "ACheckbox") { list = "awaitingList" };
 
   // Has it been checked or unchecked?
   if (cb.checked) {
