@@ -252,18 +252,6 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                     if (dups.length > 1 && !duplicates.includes(name)) {
                         duplicates.push(name);
                     }
-                    if (street != null && typeof street != 'undefined') { 
-                        //await clients.createAddress(street, clientObjs[i].Suburb, clientObjs[i].City, clientObjs[i].Postcode, "Unknown", 1, client_id);
-                    }
-                    if (typeof mobile != 'undefined' && mobile != null) {
-                        if (typeof mobile == 'string') {
-                            if (mobile.length > 0) {
-                                //await clients.createContact(firstName, mobile, home, clientObjs[i].Email, client_id);
-                            }
-                        } else {
-                            //await clients.createContact(firstName, mobile, home, clientObjs[i].Email, client_id);
-                        }
-                    }
                     await clients.createReminder(convertDate(rDate), "pending", client_id);
                 } catch (error) {
                     if (error.message.includes("Incorrect date value") || error.message.includes("Column 'rDate' cannot be null")) {
