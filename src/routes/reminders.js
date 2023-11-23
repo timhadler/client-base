@@ -202,6 +202,28 @@ router.post("/set-reminder-status-multi", async (req, res) => {
     }
 });
 
+// DELETE multi clients
+router.delete("/multi-delete", async (req, res) => {
+    try {
+        var ids = req.body.ids;
+
+        // If only one selected, ids will be a string, put in list for the for loop
+        if (typeof ids == "string") {
+            ids = [ids];
+        } else if (typeof ids == "undefined") {
+            ids = [];
+        }
+
+        for (let i = 0; i < ids.length; i++) {
+            await clients.deleteClient(ids[i]);
+        }
+
+        res.status(200).end();
+    } catch (error) {
+        res.status(404).send(error.message);
+    }
+});
+
 /***********************************************
 Helper Functions
  ***********************************************/

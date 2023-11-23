@@ -29,7 +29,7 @@ $(document).ready(function() {
   // Multi delete buttons
   $('#multiDeleteButton').on('click', function() { multiDeletePopup() });
   $('#multiDeleteCloseButton').on('click', function() { multiDeleteClose() });
-  $('#multiDeleteSubmitButton').on('click', function() { console.log("Hi") });
+  $('#multiDeleteSubmitButton').on('click', function() { multiDeleteSubmit() });
 
   // List filter buttons
   $('#pendingFilterButton').on('click', function() { filterPopup("pending") });
@@ -175,6 +175,7 @@ function reminderSubmit(id, rId) {
 
 // Submit the set multi status form
 function multiStatusSubmit() {
+  // Get the selected clients
   var formData = $('#reminderSetStautusMultiForm').serialize();
   const selectedClients = $('input[type="checkbox"][name="selectedClients"]:checked');
   const values = selectedClients.map(function() {
@@ -184,6 +185,7 @@ function multiStatusSubmit() {
   const ids = selectedClients.map(function() {
     return $(this).data('cId');
   }).get();
+
   // Uncheck boxes so setStatus button dissappears after submit
   selectedClients.prop('checked', false);
 
@@ -194,6 +196,37 @@ function multiStatusSubmit() {
     traditional: true,
     success: function(res) {
       setStatusClose();
+      reloadActiveLists();
+      revealStatusButton();
+    }
+    , error: function(xhr, status, error) {
+      console.log('AJAX Error while POSTING reminder form in multi submit:', error, xhr, status);
+    }
+  });
+}
+
+// Submit the multi delete form
+function multiDeleteSubmit() {
+  // Get the selected clients
+  const selectedClients = $('input[type="checkbox"][name="selectedClients"]:checked');
+  const values = selectedClients.map(function() {
+    return $(this).val();
+  }).get();
+
+  const ids = selectedClients.map(function() {
+    return $(this).data('cId');
+  }).get();
+  
+  // Uncheck boxes so setStatus button dissappears after submit
+  selectedClients.prop('checked', false);
+
+  $.ajax({
+    url: "multi-delete",
+    method: "DELETE",
+    data: {ids:ids},
+    traditional: true,
+    success: function(res) {
+      multiDeleteClose();
       reloadActiveLists();
       revealStatusButton();
     }
@@ -290,9 +323,9 @@ function reloadActiveLists() {
 
   if (tabId.includes("action")) {
     queryListData("pendingList");
-    queryListData("followUpList");
   } else if (tabId.includes("awaiting")) {
     queryListData("awaitingList");
+    queryListData("followUpList");
   } else if (tabId.includes("completed")) {
     queryListData("completedList");
   }
