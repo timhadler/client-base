@@ -26,6 +26,11 @@ $(document).ready(function() {
   $('#setStatusPopup').find('.revealNextReminder').on('change', function() { if (this.checked) { $('#setStatusPopup').find('.rNextReminder').css('display', 'block'); } });
   $('#setStatusPopup').find('.hideNextReminder').on('change', function() { if (this.checked) { $('#setStatusPopup').find('.rNextReminder').css('display', 'none'); } });
 
+  // Multi delete buttons
+  $('#multiDeleteButton').on('click', function() { multiDeletePopup() });
+  $('#multiDeleteCloseButton').on('click', function() { multiDeleteClose() });
+  $('#multiDeleteSubmitButton').on('click', function() { console.log("Hi") });
+
   // List filter buttons
   $('#pendingFilterButton').on('click', function() { filterPopup("pending") });
   $('#followUpFilterButton').on('click', function() { filterPopup("followUp") });
@@ -333,6 +338,17 @@ function setStatusPopup() {
 
 function setStatusClose() {
   $('#setStatusPopup').css('display', 'none');
+  $('#overlay').css('visibility', 'hidden');
+}
+
+// Multi delete popup
+function multiDeletePopup() {
+  $('#multiDeletePopup').css('display', 'block');
+  $('#overlay').css('visibility', 'visible');
+}
+
+function multiDeleteClose() {
+  $('#multiDeletePopup').css('display', 'none');
   $('#overlay').css('visibility', 'hidden');
 }
 

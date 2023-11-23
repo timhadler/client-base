@@ -12,8 +12,20 @@
     <!-- Multi operation buttons and border -->
     <div id="setStatusDiv" class="grid_col_1 hidden"> 
         <button id="setStatusButton" type="button" style="justify-self: left;" class="color_secondary"> Set status </button>
-        <!-- Popup -->
+        <button id="multiDeleteButton" type="button" style="color: red;"> Delete </button>
+        <!-- Popups -->
         <%- include("../partials/reminders/setStatusPopup") %>
+        <div id="multiDeletePopup" class="popup hidden">
+            <!-- Header -->
+            <div class="popupHeaderDiv">
+                <p class="popupHeader"> Delete these clients? </p>
+                <span id="multiDeleteCloseButton" class="close-button">&times</span>
+            </div>
+            <br />
+            <div style="text-align: center;">
+                <button id="multiDeleteSubmitButton" type="button" class="button_primary_red"> Submit </button>
+            </div>
+        </div>
     </div>
 
     <!-- Actions tab content -->
