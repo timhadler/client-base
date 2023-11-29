@@ -257,7 +257,7 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                         noReminderDate.push(name);
                         continue;
                     } else if (error.message.includes("date.slice is not a function") || error.message.includes("date.split is not a function")) {
-                        incorrectReminders.push(clientObjs[i].First + " " + clientObjs[i].Last);
+                        incorrectReminders.push(name);
                         continue;
                     } else {
                         fails.push({name:name, message:error.message});
