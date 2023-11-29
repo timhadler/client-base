@@ -192,7 +192,6 @@ router.post("/add-reminder/", async (req, res) => {
 /***********************************************************
  * Import clients
  ***********************************************************/
-//WILL NEED REDOING
 router.post("/import-clients", upload.single("importExcel"), async (req, res) => {
     try {
         // Verifying file
