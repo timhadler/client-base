@@ -21,24 +21,24 @@ passport.use(new LocalStrategy(
                 return done(null, false, {message: "No user with that username"});
             }
             if (await bcrypt.compare(password, user.password)) {
-                //passport.serializeUser();
                 return done(null, user.id);
             } else {
                 return done(null, false, {message: "Incorrect password"});
             }
         } catch (error) {
-            console.log(error);
+            console.log("Error serializing user", error);
         }
     }
 ));
 
-passport.serializeUser((user, done) => {
-    done(null, user);
+passport.serializeUser((userId, done) => {
+    done(null, userId);
 });
 
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async (userId, done) => {
     try {
-        const user = await clients.getUserById(id);
+        const user = await clients.getUserById(userId);
+        //console.log(user, userId)
         done(null, user);
     } catch (error) {
         console.log("Error deserializing user: ", error)
