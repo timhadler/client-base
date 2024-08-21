@@ -8,24 +8,15 @@ const pool = db.createPool({
 });
 
 // Connect to database and check for errors
-pool.getConnection((err, connection) => {
-    if (err) {
-        if (err.code === "PROTOCOL_CONNECTION_LOST") {
-            console.error("Database connection lost");
-        } else if(err.code === "ER_CON_COUNT_ERROR") {
-            console.error("Database connection limit exceeded");
-        } else if (err.code === "ECONREFUSED") {
-            console.error("Database connection refused");
-        } else {
-            console.log(err.message);
-        }
+async function getConnection(){
+    try {
+        const connection = await pool.getConnection();
+        //console.log("Successfully connected to MariaDB");
+        return connection;
+    } catch (err) {
+        console.error("Error connecting to database: ", err);
+        throw error;
     }
-    if (connection) {
-        console.log("Connected to database");
-        connection.release();
-    }
+};
 
-    return;
-});
-
-module.exports = pool;
+module.exports = { getConnection };

@@ -121,7 +121,7 @@ async function getUserById(id) {
     try {
         return await clients.getUserById(id);
     } catch (error) {
-        res.status(500).send(error.message);
+        console.error("Error fetching user by ID: ", error);
     }
 };
 
@@ -129,7 +129,7 @@ async function getUserByName(username) {
     try {
         return await clients.getUserByUsername(username);
     } catch (error) {
-        res.status(500).send(error.message);
+        console.error("Error fetching user by username: ", error);
     }
 };
 
