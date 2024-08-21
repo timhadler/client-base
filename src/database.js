@@ -10,8 +10,9 @@ const pool = db.createPool({
 // Connect to database and check for errors
 async function getConnection(){
     try {
+        console.log(process.env.DB_USER);
         const connection = await pool.getConnection();
-        //console.log("Successfully connected to MariaDB");
+        console.log("Successfully connected to MariaDB");
         return connection;
     } catch (err) {
         console.error("Error connecting to database: ", err);
