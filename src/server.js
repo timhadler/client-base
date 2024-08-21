@@ -12,12 +12,39 @@ const flash = require("express-flash");
 const session = require("express-session");
 const MemoryStore = require('memorystore')(session);
 
-const initializePassport = require("./passport-config");
-initializePassport(
-    passport,
-    getUserByName,
-    getUserById
-);
+const LocalStrategy = require("passport-local").Strategy;
+passport.use(new LocalStrategy(
+    async (username, password, done) => {
+        try {
+            const user = await clients.getUserByUsername(username);
+            if (!user) {
+                return done(null, false, {message: "No user with that username"});
+            }
+            if (await bcrypt.compare(password, user.password)) {
+                //passport.serializeUser();
+                return done(null, user.id);
+            } else {
+                return done(null, false, {message: "Incorrect password"});
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+));
+
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await clients.getUserById(id);
+        done(null, user);
+    } catch (error) {
+        console.log("Error deserializing user: ", error)
+        done(error, null);
+    }
+});
 
 const clients = require("./models/client-models");
 const indexRouter = require("./routes/reminders");
@@ -44,8 +71,8 @@ app.use(session({
         checkPeriod: 86400000 // prune expired entries every 24h
       })
  }));
- app.use(passport.initialize());
- app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -115,22 +142,6 @@ function checkNotAuthenticated(req, res, next) {
     }
 
     next();
-};
-
-async function getUserById(id) {
-    try {
-        return await clients.getUserById(id);
-    } catch (error) {
-        console.error("Error fetching user by ID: ", error);
-    }
-};
-
-async function getUserByName(username) {
-    try {
-        return await clients.getUserByUsername(username);
-    } catch (error) {
-        console.error("Error fetching user by username: ", error);
-    }
 };
 
 /**
