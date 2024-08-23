@@ -11,12 +11,13 @@ const passport  = require("passport");
 const flash = require("express-flash");
 const session = require("express-session");
 const MemoryStore = require('memorystore')(session);
+const db = require("./database");
 
 const LocalStrategy = require("passport-local").Strategy;
 passport.use(new LocalStrategy(
     async (username, password, done) => {
         try {
-            const user = await clients.getUserByUsername(username);
+            const user = await clients.getUserByUsername(db.authPool, username);
             if (!user) {
                 return done(null, false, {message: "No user with that username"});
             }
@@ -37,9 +38,10 @@ passport.serializeUser((userId, done) => {
 
 passport.deserializeUser(async (userId, done) => {
     try {
-        const user = await clients.getUserById(userId);
-        const obj = { id: user.id, username: user.username, pool: "Something funny goes here" }
-        done(null, obj);
+        let user = await clients.getUserById(db.authPool, userId);
+        user.pool = db.authPool;
+        //const obj = { id: user.id, username: user.username, pool: db.authPool }
+        done(null, user);
     } catch (error) {
         console.log("Error deserializing user: ", error)
         done(error, null);
@@ -66,7 +68,11 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {maxAge:86400000}, // one day
+    cookie: {maxAge:86400000, 
+        secure: false, // Use true if running over HTTPS
+        httpOnly: true,
+        sameSite: 'lax' // Adjust according to your needs
+    }, // one day
     store: new MemoryStore({
         checkPeriod: 86400000 // prune expired entries every 24h
       })
@@ -89,15 +95,15 @@ app.get("/register", checkNotAuthenticated, (req, res) => {
 app.post("/register", async (req, res) => {
     try {
         const body = req.body;
-        const register = await clients.getUserByUsername(body.registerCode);
+        const register = await clients.getUserByUsername(db.authPool, body.registerCode);
 
         if (register == null) {
             const error = "Incorrect register code";
             res.render("login/register", { error:error });
         } else {
             const hashedPassword = await bcrypt.hash(body.password, 10);
-            await clients.creatUser(body.username, hashedPassword);
-            await clients.deleteUser(register.id);
+            await clients.creatUser(db.authPool, body.username, hashedPassword);
+            await clients.deleteUser(db.authPool, register.id);
             res.redirect("/login");
         }
     } catch (error) {

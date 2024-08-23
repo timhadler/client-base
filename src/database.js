@@ -19,4 +19,4 @@ async function getConnection(){
     }
 };
 
-module.exports = { getConnection };
+module.exports = { getConnection, authPool:pool};
