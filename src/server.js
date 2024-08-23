@@ -38,10 +38,11 @@ passport.serializeUser((userId, done) => {
 
 passport.deserializeUser(async (userId, done) => {
     try {
-        let user = await clients.getUserById(db.authPool, userId);
-        user.pool = db.authPool;
-        //const obj = { id: user.id, username: user.username, pool: db.authPool }
-        done(null, user);
+        const user = await clients.getUserById(db.authPool, userId);
+        //user.pool = db.authPool;
+        const obj = { id: user.id, username: user.username, pool: await db.getUserPool(user.username) }
+        //console.log(obj.pool);
+        done(null, obj);
     } catch (error) {
         console.log("Error deserializing user: ", error)
         done(error, null);
@@ -68,11 +69,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {maxAge:86400000, 
-        secure: false, // Use true if running over HTTPS
-        httpOnly: true,
-        sameSite: 'lax' // Adjust according to your needs
-    }, // one day
+    cookie: {maxAge:86400000}, // one day
     store: new MemoryStore({
         checkPeriod: 86400000 // prune expired entries every 24h
       })
@@ -146,7 +143,6 @@ function checkNotAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return res.redirect("/");
     }
-
     next();
 };
 

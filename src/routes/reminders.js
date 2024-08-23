@@ -48,7 +48,7 @@ router.get("/load-reminder-list", async (req, res) => {
               listCount = await clients.getListCount(req.user.pool, "awaiting", D1_A, D2_A);
               break;
             case "completedList":
-              listData = await clients.completedList(req.user.pool, );
+              listData = await clients.completedList(req.user.pool);
               break;
         }
         if (typeof listData == 'undefined') {
@@ -95,14 +95,14 @@ router.get("/filter", async (req, res) => {
             ORDER_P = order;
             if (m) { MONTH_P = m; }
             listData = await clients.pendingList(req.user.pool, d1, d2, req.query.limit, req.query.offset, order);
-            listCount = await clients.getListCount("pending", d1, d2);
+            listCount = await clients.getListCount(req.user.pool, "pending", d1, d2);
         } else if (list == "followUp") {
             D1_FU = d1;
             D2_FU = d2;
             ORDER_FU = order;
             if (m) { MONTH_FU = m; }
             listData = await clients.followUpList(req.user.pool, d1, d2, req.query.limit, req.query.offset, order);
-            listCount = await clients.getListCount("followUp", d1, d2);
+            listCount = await clients.getListCount(req.user.pool, "followUp", d1, d2);
         } else if (list == "awaiting") {
             D1_A = d1;
             D2_A = d2;
