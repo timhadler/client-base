@@ -13,6 +13,15 @@ const session = require("express-session");
 const MemoryStore = require('memorystore')(session);
 const db = require("./database");
 
+// Routes
+const clients = require("./models/client-models");
+const indexRouter = require("./routes/reminders");
+const clientRouter = require("./routes/clients");
+const overviewRouter = require("./routes/clientOverview");
+const stripeRouter = require("./routes/stripe");
+const { Passport } = require("passport/lib");
+const req = require("express/lib/request");
+
 const LocalStrategy = require("passport-local").Strategy;
 passport.use(new LocalStrategy(
     async (username, password, done) => {
@@ -48,13 +57,6 @@ passport.deserializeUser(async (userId, done) => {
         done(error, null);
     }
 });
-
-const clients = require("./models/client-models");
-const indexRouter = require("./routes/reminders");
-const clientRouter = require("./routes/clients");
-const overviewRouter = require("./routes/clientOverview");
-const { Passport } = require("passport/lib");
-const req = require("express/lib/request");
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
@@ -149,10 +151,11 @@ function checkNotAuthenticated(req, res, next) {
 /**
  * Routes
  */
-app.use("/", checkAuthenticated, indexRouter);
-app.use("/clients", checkAuthenticated, clientRouter);
-app.use("/clientOverview", checkAuthenticated, overviewRouter);
+// app.use("/", checkAuthenticated, indexRouter);
+// app.use("/clients", checkAuthenticated, clientRouter);
+// app.use("/clientOverview", checkAuthenticated, overviewRouter);
 
-// app.use("/", indexRouter);
-// app.use("/clients", clientRouter);
-// app.use("/clientOverview", overviewRouter);
+app.use("/", indexRouter);
+app.use("/clients", clientRouter);
+app.use("/clientOverview", overviewRouter);
+app.use("/subscriptions", stripeRouter);
