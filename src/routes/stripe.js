@@ -7,11 +7,22 @@ const router = express.Router();
 // app.use(express.urlencoded({ extended: true }));
 // app.use(express.json());
 
-const YOUR_DOMAIN = "http://localhost:3000";
+const YOUR_DOMAIN = "http://localhost:3000/subscriptions";
 
+// Subscriptions page
 router.get("/", async (req, res) => {
     try {
         res.status(200).render("stripe/checkout")
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// Success page
+router.get("/success", async (req, res) => {
+    try {
+        //res.status(200).render("stripe/success")
+        res.status(200).send("Success!");
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -33,8 +44,8 @@ router.post('/create-checkout-session', async (req, res) => {
       },
     ],
     mode: 'subscription',
-    success_url: `${YOUR_DOMAIN}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${YOUR_DOMAIN}/subscriptions/`,
+    success_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${YOUR_DOMAIN}/`,
   });
 
   res.redirect(303, session.url);
@@ -67,7 +78,8 @@ router.post(
     // If you are testing with the CLI, find the secret by running 'stripe listen'
     // If you are using an endpoint defined with the API or dashboard, look in your webhook settings
     // at https://dashboard.stripe.com/webhooks
-    const endpointSecret = 'whsec_12345';
+    //const endpointSecret = 'whsec_12345';
+    const endpointSecret = 'whsec_bc0d50a1914efad5d0b914f4379919e0ca1aeba989910ea1c5c764ba5f4f6406';
     // Only verify the event if you have an endpoint secret defined.
     // Otherwise use the basic event deserialized with JSON.parse
     if (endpointSecret) {
@@ -92,35 +104,35 @@ router.post(
         subscription = event.data.object;
         status = subscription.status;
         console.log(`Subscription status is ${status}.`);
-        // Then define and call a method to handle the subscription trial ending.
-        // handleSubscriptionTrialEnding(subscription);
+        // Then define and call a method to handle the subscription trial ending. (Email auto payment reminder)
+        // await handleSubscriptionTrialEnding(subscription);
         break;
       case 'customer.subscription.deleted':
         subscription = event.data.object;
         status = subscription.status;
         console.log(`Subscription status is ${status}.`);
-        // Then define and call a method to handle the subscription deleted.
-        // handleSubscriptionDeleted(subscriptionDeleted);
+        // Then define and call a method to handle the subscription deleted.  Remove access to paid content
+        // await handleSubscriptionDeleted(subscriptionDeleted);
         break;
       case 'customer.subscription.created':
         subscription = event.data.object;
         status = subscription.status;
         console.log(`Subscription status is ${status}.`);
         // Then define and call a method to handle the subscription created.
-        // handleSubscriptionCreated(subscription);
+        handleSubscriptionCreated(subscription);
         break;
       case 'customer.subscription.updated':
         subscription = event.data.object;
         status = subscription.status;
         console.log(`Subscription status is ${status}.`);
         // Then define and call a method to handle the subscription update.
-        // handleSubscriptionUpdated(subscription);
+        // await handleSubscriptionUpdated(subscription);
         break;
       case 'entitlements.active_entitlement_summary.updated':
         subscription = event.data.object;
         console.log(`Active entitlement summary updated for ${subscription}.`);
         // Then define and call a method to handle active entitlement summary updated
-        // handleEntitlementUpdated(subscription);
+        // await handleEntitlementUpdated(subscription);
         break;
       default:
         // Unexpected event type
@@ -130,5 +142,11 @@ router.post(
     response.send();
   }
 );
+
+// Helper Functions
+async function handleSubscriptionCreated(subscription) {
+  // Update user subscription status in database to 'active'
+  console.log("In handler");
+};
 
 module.exports = router;

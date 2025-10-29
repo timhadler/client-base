@@ -79,7 +79,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.listen(process.env.PORT);
@@ -155,7 +154,8 @@ function checkNotAuthenticated(req, res, next) {
 // app.use("/clients", checkAuthenticated, clientRouter);
 // app.use("/clientOverview", checkAuthenticated, overviewRouter);
 
+app.use("/subscriptions", stripeRouter);
+app.use(express.json());    // Call before other routes to parse JSON bodys, call after subscriptions route as webhooks need raw body
 app.use("/", indexRouter);
 app.use("/clients", clientRouter);
 app.use("/clientOverview", overviewRouter);
-app.use("/subscriptions", stripeRouter);
