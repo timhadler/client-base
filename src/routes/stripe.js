@@ -2,12 +2,10 @@
 const stripe = require('stripe')('sk_test_51SMogu1JJ8VkV6VedNk63vYEBrZRUsR1P1sxHEQ9F92ku5GUlgPlZw9tHlpOUZM1hmWxUTwstTQHbZKFEY85gQVH00jrB4j8nU');
 const express = require('express');
 const router = express.Router();
-// const app = express();
-// app.use(express.static('public'));
-// app.use(express.urlencoded({ extended: true }));
-// app.use(express.json());
+const users = require("../models/user-models");
+const db = require("./../database");
 
-const YOUR_DOMAIN = "http://localhost:3000/subscriptions";
+const YOUR_DOMAIN = "http://localhost:3000/";
 
 // Subscriptions page
 router.get("/", async (req, res) => {
@@ -44,8 +42,8 @@ router.post('/create-checkout-session', async (req, res) => {
       },
     ],
     mode: 'subscription',
-    success_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${YOUR_DOMAIN}/`,
+    success_url: `${YOUR_DOMAIN}/subscriptions/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${YOUR_DOMAIN}/subscriptions/`,
   });
 
   res.redirect(303, session.url);
@@ -72,8 +70,8 @@ router.post('/create-portal-session', async (req, res) => {
 router.post(
   '/webhook',
   express.raw({ type: 'application/json' }),
-  (request, response) => {
-    let event = request.body;
+  (req, res) => {
+    let event = req.body;
     // Replace this endpoint secret with your endpoint's unique secret
     // If you are testing with the CLI, find the secret by running 'stripe listen'
     // If you are using an endpoint defined with the API or dashboard, look in your webhook settings
@@ -84,49 +82,41 @@ router.post(
     // Otherwise use the basic event deserialized with JSON.parse
     if (endpointSecret) {
       // Get the signature sent by Stripe
-      const signature = request.headers['stripe-signature'];
+      const signature = req.headers['stripe-signature'];
       try {
         event = stripe.webhooks.constructEvent(
-          request.body,
+          req.body,
           signature,
           endpointSecret
         );
       } catch (err) {
         console.log(`⚠️  Webhook signature verification failed.`, err.message);
-        return response.sendStatus(400);
+        return res.sendStatus(400);
       }
     }
     let subscription;
     let status;
+
     // Handle the event
     switch (event.type) {
       case 'customer.subscription.trial_will_end':
         subscription = event.data.object;
         status = subscription.status;
         console.log(`Subscription status is ${status}.`);
-        // Then define and call a method to handle the subscription trial ending. (Email auto payment reminder)
+        // Then define and call a method to handle the subscription trial ending. Email the user to remind them that their trial is ending soon.
         // await handleSubscriptionTrialEnding(subscription);
         break;
       case 'customer.subscription.deleted':
         subscription = event.data.object;
-        status = subscription.status;
-        console.log(`Subscription status is ${status}.`);
-        // Then define and call a method to handle the subscription deleted.  Remove access to paid content
-        // await handleSubscriptionDeleted(subscriptionDeleted);
+        handleSubscriptionDeleted(subscription);
         break;
       case 'customer.subscription.created':
         subscription = event.data.object;
-        status = subscription.status;
-        console.log(`Subscription status is ${status}.`);
-        // Then define and call a method to handle the subscription created.
-        handleSubscriptionCreated(subscription);
+        handleSubscriptionUpdate(subscription);
         break;
       case 'customer.subscription.updated':
         subscription = event.data.object;
-        status = subscription.status;
-        console.log(`Subscription status is ${status}.`);
-        // Then define and call a method to handle the subscription update.
-        // await handleSubscriptionUpdated(subscription);
+        handleSubscriptionUpdate(subscription);
         break;
       case 'entitlements.active_entitlement_summary.updated':
         subscription = event.data.object;
@@ -139,14 +129,31 @@ router.post(
         console.log(`Unhandled event type ${event.type}.`);
     }
     // Return a 200 response to acknowledge receipt of the event
-    response.send();
+    res.send();
   }
 );
 
 // Helper Functions
-async function handleSubscriptionCreated(subscription) {
-  // Update user subscription status in database to 'active'
-  console.log("In handler");
+async function handleSubscriptionUpdate(subscription) {
+  console.log("Creating subscription in db");
+  const customerId = subscription.customer;
+  //const customerId = "test";
+  const subId = subscription.id;
+  const startDate = new Date(subscription.items.data[0].current_period_start * 1000);
+  const endDate = new Date(subscription.items.data[0].current_period_end * 1000);
+  const nextBillingDate = endDate;
+  const productId = subscription.items.data[0].price.product;
+  const product = await stripe.products.retrieve(productId);
+  const status = subscription.status;
+
+  await users.createSubscription(db.authPool, customerId, subId, product.name, startDate, endDate, nextBillingDate, status);
 };
 
+async function handleSubscriptionDeleted(subscription) {
+  console.log("Deleting subscription in db");
+  const customerId = subscription.customer;
+  const status = subscription.status;
+
+  await users.deleteSubscription(db.authPool, customerId, status);
+};
 module.exports = router;
