@@ -1,14 +1,13 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
-const db = require("./database");
-const clients = require("./models/client-models");
+const users = require("./models/user-models");
 
 
 passport.use(new LocalStrategy(
     async (username, password, done) => {
         try {
-            const user = await clients.getUserByUsername(db.authPool, username);
+            const user = await users.getUserByUsername(username);
             if (!user) {
                 return done(null, false, {message: "No user with that username"});
             }
@@ -29,10 +28,7 @@ passport.serializeUser((userId, done) => {
 
 passport.deserializeUser(async (userId, done) => {
     try {
-        const user = await clients.getUserById(db.authPool, userId);
-        //user.pool = db.authPool;
-        const obj = { id: user.id, username: user.username, pool: await db.getUserPool(user.username) }
-        //console.log(obj.pool);
+        const obj = { id: userId }
         done(null, obj);
     } catch (error) {
         console.log("Error deserializing user: ", error)
