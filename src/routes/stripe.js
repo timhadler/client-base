@@ -95,28 +95,50 @@ router.post(
       }
     }
     let subscription;
-    let status;
+    let invoice;
 
     // Handle the event
     switch (event.type) {
+      // Customer created
+      case 'customer.created':
+        crossOriginIsolated.log("Customer created");
+        handleCustomerCreated(event.data.object.customer);
+        break;
+      // Customer subscriptione nding soon
       case 'customer.subscription.trial_will_end':
         subscription = event.data.object;
-        status = subscription.status;
-        console.log(`Subscription status is ${status}.`);
-        // Then define and call a method to handle the subscription trial ending. Email the user to remind them that their trial is ending soon.
-        // await handleSubscriptionTrialEnding(subscription);
+        console.log("Customer subscription trial will end soon for ", subscription.customer);
+        handleSubscriptionTrialEnding(subscription);
         break;
+      // Customer subscription ended
       case 'customer.subscription.deleted':
         subscription = event.data.object;
+        console.log("Subscription deleted for", subscription.customer);
         handleSubscriptionDeleted(subscription);
         break;
+      // Customer subsctiption created
       case 'customer.subscription.created':
         subscription = event.data.object;
+        console.log("Subscription created for", subscription.customer);
         handleSubscriptionUpdate(subscription);
         break;
+      // Customer subsctiption updated
       case 'customer.subscription.updated':
         subscription = event.data.object;
+        console.log("Subscription updated for", subscription.customer);
         handleSubscriptionUpdate(subscription);
+        break;
+      // Invoice payment succedded
+      case 'invoice.payment_succeeded':
+        invoice = event.data.object;
+        console.log("Invoice payment succeeded for", invoice.customer);
+        handleSuccessfulPayment(invoice);
+        break;
+      // Invoice payment failed
+      case 'invoice.payment_failed':
+        invoice = event.data.object;
+        console.log("Invoice payment failed for", invoice.customer);
+        handleFailedPayment(invoice);
         break;
       case 'entitlements.active_entitlement_summary.updated':
         subscription = event.data.object;
@@ -134,26 +156,51 @@ router.post(
 );
 
 // Helper Functions
+// Sends a welcome email to new customer. New user db record is created via ClientBase signup process. 
+async function handleCustomerCreated(customerId) {
+  // Send welcome email
+};
+
+// Updates user records when subscription is created or updated
 async function handleSubscriptionUpdate(subscription) {
-  console.log("Creating subscription in db");
+  // Subscription details
   const customerId = subscription.customer;
   //const customerId = "test";
   const subId = subscription.id;
   const startDate = new Date(subscription.items.data[0].current_period_start * 1000);
   const endDate = new Date(subscription.items.data[0].current_period_end * 1000);
   const nextBillingDate = endDate;
+  const status = subscription.status;
+
+  // Product details
   const productId = subscription.items.data[0].price.product;
   const product = await stripe.products.retrieve(productId);
-  const status = subscription.status;
 
   await users.createSubscription(db.authPool, customerId, subId, product.name, startDate, endDate, nextBillingDate, status);
 };
 
+// Updates user records when subscription has ended. 
+// Send deletion email to user
 async function handleSubscriptionDeleted(subscription) {
-  console.log("Deleting subscription in db");
   const customerId = subscription.customer;
   const status = subscription.status;
 
   await users.deleteSubscription(db.authPool, customerId, status);
+  // Send deletion email
 };
+
+// Updates user records for successful payment
+// Send succeessful payment email
+async function handleSuccessfulPayment(invoice) {
+  // Send email
+  await users.setSuccessfulPayment(db.authPool, invoice.customer);
+};
+
+// Updates user records for failed payment
+// Send failed payment email
+async function handleFailedPayment(invoice) {
+  // Send email
+  await users.setFailedPayment(db.authPool, "test");
+}
+
 module.exports = router;
