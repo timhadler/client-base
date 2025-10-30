@@ -6,7 +6,7 @@
             <div class="flex flex-ai-c">
                 <a href="/" class="logo"> ClientBase </a>
                 <div id="navCallList" class="navItemBox">
-                    <a href="/"> Reminders </a>
+                    <a href="/reminders"> Reminders </a>
                 </div>
                 <div id="navClients" class="navItemBox">
                     <a href="/clients"> Clients </a>
@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <form action="/logout?_method=DELETE" method="POST" class="user flex flex-ai-c"> 
+            <form action="/auth/logout?_method=DELETE" method="POST" class="user flex flex-ai-c"> 
                 <img src=/images/user-icon.png alt="user-icon" width=32px height=32px />
                 <button type="submit" class="button_secondary"> Logout </button>
             </form>
