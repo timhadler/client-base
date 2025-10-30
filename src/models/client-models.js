@@ -140,7 +140,7 @@ exports.clientReminder = async function(user, id) {
 
 // Reveives a user with a given id
 exports.getUserById = async function(user, id) {
-    const sqlQuery = "SELECT * from users WHERE id=?";
+    const sqlQuery = "SELECT public_id as id, email as username from users WHERE public_id=?";
     const db = await user.getConnection();
     const rows = await db.query(sqlQuery, id);
 
@@ -154,7 +154,7 @@ exports.getUserById = async function(user, id) {
 
 // Reveives a user with a given username
 exports.getUserByUsername = async function(user, username) {
-    const sqlQuery = "SELECT * from users WHERE username=?";
+    const sqlQuery = "SELECT public_id as id, email, password_hash as password from users WHERE email=?";
     const db = await user.getConnection();
     const rows = await db.query(sqlQuery, username);
 
@@ -225,10 +225,10 @@ exports.createNote = async function(user, note, id) {
     db.release();
 }
 
-exports.creatUser = async function(user, username, password) {
-    const sqlQuery = "INSERT INTO users (username, password) VALUES(?, ?)";
+exports.creatUser = async function(user, email, password) {
+    const sqlQuery = "INSERT INTO users (email, password_hash) VALUES(?, ?)";
     const db = await user.getConnection();
-    await db.query(sqlQuery, [username, password]);
+    await db.query(sqlQuery, [email, password]);
     db.release();
 }
 
