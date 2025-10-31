@@ -6,17 +6,16 @@ const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
 const override = require("method-override");
 const bodyParser = require("body-parser");
-const bcrypt = require("bcrypt");
 const flash = require("express-flash");
 const session = require("express-session");
 const MemoryStore = require('memorystore')(session);
+const helmet = require('helmet');
 
 // Modules
 const passport  = require("./passport-config");
 
 // Routes
-const clients = require("./models/client-models");
-const indexRouter = require("./routes/reminders");
+const reminderRouter = require("./routes/reminders");
 const clientRouter = require("./routes/clients");
 const overviewRouter = require("./routes/clientOverview");
 const stripeRouter = require("./routes/stripe");
@@ -45,6 +44,9 @@ app.use(session({
       })
  }));
 
+// Helmet security headers
+app.use(helmet());
+
  // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
@@ -72,14 +74,14 @@ function checkNotAuthenticated(req, res, next) {
  */
 app.use("/subscriptions", stripeRouter);
 app.use(express.json());    // Call before routes to parse JSON bodys, call after subscriptions route as webhooks need raw body
-app.use("/auth", authRouter);
 
 // For Development purposes, disable authentication
-//app.use("/", indexRouter);
-//app.use("/clients", clientRouter);
-//app.use("/clientOverview", overviewRouter);
+app.use("/auth", authRouter);
+app.use("/reminders", reminderRouter);
+app.use("/clients", clientRouter);
+app.use("/clientOverview", overviewRouter);
 
-app.use("/", checkAuthenticated, indexRouter);
-app.use("/auth", checkNotAuthenticated, authRouter);
-app.use("/clients", checkAuthenticated, clientRouter);
-app.use("/clientOverview", checkAuthenticated, overviewRouter);
+// app.use("/auth", checkNotAuthenticated, authRouter);
+// app.use("/reminders", checkAuthenticated, reminderRouter);
+// app.use("/clients", checkAuthenticated, clientRouter);
+// app.use("/clientOverview", checkAuthenticated, overviewRouter);
