@@ -89,7 +89,7 @@ router.post(
           endpointSecret
         );
       } catch (err) {
-        console.log(`⚠️  Webhook signature verification failed.`, err.message);
+        console.error(`⚠️  Webhook signature verification failed.`, err.message);
         return res.sendStatus(400);
       }
     }
@@ -100,7 +100,7 @@ router.post(
     switch (event.type) {
       // Customer created
       case 'customer.created':
-        crossOriginIsolated.log("Customer created");
+        console.log("Customer created");
         handleCustomerCreated(event.data.object.customer);
         break;
       // Customer subscriptione nding soon
@@ -155,6 +155,21 @@ router.post(
 );
 
 // Helper Functions
+// Creates a new stripe customer. Retunrs customer ID. 
+// Called from within auth sign up process. 
+async function createCustomer(email) {
+  try {
+    const customer = await stripe.customers.create({
+      email: email
+    });
+
+    return customer.id
+  } catch (error) {
+      console.log(`Stripe customer creation failure:`, error.message);
+      throw error;
+  }
+};
+
 // Sends a welcome email to new customer. New user db record is created via ClientBase signup process. 
 async function handleCustomerCreated(customerId) {
   // Send welcome email
@@ -202,4 +217,7 @@ async function handleFailedPayment(invoice) {
   await users.setFailedPayment("test");
 }
 
-module.exports = router;
+module.exports = {
+  router,
+  createCustomer
+};

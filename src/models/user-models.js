@@ -1,9 +1,9 @@
 const db = require("../database");
 
 // Create new user record
-exports.createUser = async function(email, password) {
-    const sqlQuery = "INSERT INTO users (email, password_hash) VALUES(?, ?)";
-    await db.query(sqlQuery, [email, password]);
+exports.createUser = async function(email, password, stripeID) {
+    const sqlQuery = "INSERT INTO users (email, password_hash, stripe_customer_id) VALUES(?, ?, ?)";
+    await db.query(sqlQuery, [email, password, stripeID]);
 }
 
 // Update user record with subscription details
