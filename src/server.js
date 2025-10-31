@@ -55,6 +55,7 @@ app.listen(process.env.PORT);
 console.log("Listening on port: " + process.env.PORT);
 
 // Custom Middleware
+// Authentication
 function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
@@ -64,7 +65,24 @@ function checkAuthenticated(req, res, next) {
 
 function checkNotAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
-        return res.redirect("/");
+        return res.redirect("/reminders");
+    }
+    next();
+};
+
+// Authorization
+function checkTrialorActive(req, res, next) {
+    if (!req.user) { return res.redirect("/auth/login"); }
+    if (req.user.subscription_status === "trialing" || req.user.subscription_status === "active") {
+        return next();
+    }
+    return res.redirect("/subscriptions"); // portal page
+};
+
+function checkActivePaid(req, res, next) {
+    if (!req.user) { return res.redirect("/auth/login"); }
+    if (req.user.subscription_status !== "active") {
+        return res.redirect("/subscriptions"); // portal page
     }
     next();
 };
@@ -82,6 +100,6 @@ app.use(express.json());    // Call before routes to parse JSON bodies, call aft
 //app.use("/clientOverview", overviewRouter);
 
 app.use("/auth", checkNotAuthenticated, authRouter);
-app.use("/reminders", checkAuthenticated, reminderRouter);
-app.use("/clients", checkAuthenticated, clientRouter);
-app.use("/clientOverview", checkAuthenticated, overviewRouter);
+app.use("/reminders", checkAuthenticated, checkTrialorActive, reminderRouter);
+app.use("/clients", checkAuthenticated, checkTrialorActive, clientRouter);
+app.use("/clientOverview", checkAuthenticated, checkTrialorActive, overviewRouter);
