@@ -1,6 +1,6 @@
 const express = require("express");
-const req = require("express/lib/request");
-const res = require("express/lib/response");
+// const req = require("express/lib/request");
+// const res = require("express/lib/response");
 const router = express.Router();
 const clients = require("../models/client-models");
 xl = require("../modules/excel-JS");
@@ -26,17 +26,17 @@ router.get("/load-client-list", async (req, res) => {
         // If a search is provided, search list, client list if not
         if (typeof search != 'undefined') {
             if (search.length > 0) {
-                clientList = await clients.searchList(req.user.pool, search);
+                clientList = await clients.searchList(search);
                 if (clientList.length > 0) {
                     n = clientList[0].n;
                 }
             } else {
-                clientList = await clients.clientList(req.user.pool, req.query.limit, req.query.offset);
+                clientList = await clients.clientList(req.query.limit, req.query.offset);
                 n = await clients.clientNumber(req.user.pool);
             }
         } else {
-            clientList = await clients.clientList(req.user.pool, req.query.limit, req.query.offset);
-            n = await clients.clientNumber(req.user.pool);
+            clientList = await clients.clientList(req.query.limit, req.query.offset);
+            n = await clients.clientNumber();
         }
 
         res.json(JSON.stringify({clientList:clientList, nClients:n}));
@@ -49,9 +49,9 @@ router.get("/load-client-list", async (req, res) => {
 router.get("/load-client-data", async (req, res) => {
     try {
         const id = req.query.id;
-        var data = await clients.clientDetails(req.user.pool, id);
-        const notes = await clients.clientNotes(req.user.pool, id);
-        const reminder = await clients.clientReminder(req.user.pool, id);
+        var data = await clients.clientDetails(id);
+        const notes = await clients.clientNotes(id);
+        const reminder = await clients.clientReminder(id);
 
         data.notes = notes;
 
@@ -137,7 +137,7 @@ router.post("/add-client", async (req, res) => {
         const pc = params.get('pc');
 
         // Create new client
-        let id = await clients.createClient(req.user.pool, name, company, telephone, mobile, email, street, suburb, city, pc);
+        let id = await clients.createClient(name, company, telephone, mobile, email, street, suburb, city, pc);
 
         //await clients.createReminder(body.rDate, status, id);
         res.status(201).json({ id:id });
@@ -163,7 +163,7 @@ router.post("/add-note", async (req, res) => {
         const id = req.body.id;
 
         if (note.length > 0) {
-            await clients.createNote(req.user.pool, note, id)
+            await clients.createNote(note, id)
         }
         res.status(201).end();
     } catch (error) {
@@ -181,7 +181,7 @@ router.post("/add-reminder/", async (req, res) => {
         const id = req.body.id;
 
         if (rDate) {
-            await clients.createReminder(req.user.pool, rDate, status, id)
+            await clients.createReminder(rDate, status, id)
         }
         res.status(201).end();
     } catch (error) {
@@ -244,14 +244,14 @@ router.post("/import-clients", upload.single("importExcel"), async (req, res) =>
                 //console.log(name, company, rDate, street, suburb, city, postcode, mobile, home)
 
                 try {
-                    const client_id = await clients.createClient(req.user.pool, name, company, home, mobile, email, street, suburb, city, postcode);
+                    const client_id = await clients.createClient(name, company, home, mobile, email, street, suburb, city, postcode);
                     n++;
                     // Check for duplicates
-                    const dups = await clients.getClientsByName(req.user.pool, name);
+                    const dups = await clients.getClientsByName(name);
                     if (dups.length > 1 && !duplicates.includes(name)) {
                         duplicates.push(name);
                     }
-                    await clients.createReminder(req.user.pool, convertDate(rDate), "pending", client_id);
+                    await clients.createReminder(convertDate(rDate), "pending", client_id);
                 } catch (error) {
                     if (error.message.includes("Incorrect date value") || error.message.includes("Column 'rDate' cannot be null")) {
                         noReminderDate.push(name);
@@ -291,7 +291,7 @@ router.post("/edit-client", async (req, res) => {
         const city = params.get('city');
         const pc = params.get('pc');
 
-        await clients.editClient(req.user.pool, id, name, company, telephone, mobile, email, street, suburb, city, pc);
+        await clients.editClient(id, name, company, telephone, mobile, email, street, suburb, city, pc);
         res.status(201).end();
     } catch (error) {
         res.status(500).send(error.message);
@@ -306,7 +306,7 @@ router.post("/edit-note", async (req, res) => {
         const note = params.get('note');
         const id = req.body.id;
 
-        await clients.editNote(req.user.pool, id, note);
+        await clients.editNote(id, note);
         res.status(201).end();
     } catch (error) {
         res.status(500).send(error.message);
@@ -322,7 +322,7 @@ router.post("/edit-reminder", async (req, res) => {
         const status = params.get('status');
         const id = req.body.id;
 
-        await clients.editClientReminder(req.user.pool, id, rDate, status)
+        await clients.editClientReminder(id, rDate, status)
         res.status(201).end();
     } catch (error) {
         res.status(500).send(error.message);
@@ -335,7 +335,7 @@ router.post("/edit-reminder", async (req, res) => {
 // Delete client and all associated data
 router.delete("/delete-client", async (req, res) => {
     try {
-        await clients.deleteClient(req.user.pool, req.body.id);
+        await clients.deleteClient(req.body.id);
         res.status(204).end();
     } catch (error) {
         res.status(500).send(error.message);
@@ -345,7 +345,7 @@ router.delete("/delete-client", async (req, res) => {
 // Delets a note from db
 router.delete("/delete-note", async (req, res) => {
     try {
-        await clients.deleteNote(req.user.pool, req.body.nId);
+        await clients.deleteNote(req.body.nId);
         res.status(204).end();
     } catch (error) {
         res.status(500).send(error.message);
@@ -355,7 +355,7 @@ router.delete("/delete-note", async (req, res) => {
 // Delete from reminders table
 router.delete("/delete-reminder", async (req, res) => {
     try {
-        await clients.deleteClientReminder(req.user.pool, req.body.id);
+        await clients.deleteClientReminder(req.body.id);
         res.status(204).end();
     } catch (error) {
         res.status(500).send(error.message);

@@ -3,7 +3,6 @@ const stripe = require('stripe')('sk_test_51SMogu1JJ8VkV6VedNk63vYEBrZRUsR1P1sxH
 const express = require('express');
 const router = express.Router();
 const users = require("../models/user-models");
-const db = require("./../database");
 
 const YOUR_DOMAIN = "http://localhost:3000/";
 
@@ -176,7 +175,7 @@ async function handleSubscriptionUpdate(subscription) {
   const productId = subscription.items.data[0].price.product;
   const product = await stripe.products.retrieve(productId);
 
-  await users.createSubscription(db.authPool, customerId, subId, product.name, startDate, endDate, nextBillingDate, status);
+  await users.createSubscription(customerId, subId, product.name, startDate, endDate, nextBillingDate, status);
 };
 
 // Updates user records when subscription has ended. 
@@ -185,7 +184,7 @@ async function handleSubscriptionDeleted(subscription) {
   const customerId = subscription.customer;
   const status = subscription.status;
 
-  await users.deleteSubscription(db.authPool, customerId, status);
+  await users.deleteSubscription(customerId, status);
   // Send deletion email
 };
 
@@ -193,14 +192,14 @@ async function handleSubscriptionDeleted(subscription) {
 // Send succeessful payment email
 async function handleSuccessfulPayment(invoice) {
   // Send email
-  await users.setSuccessfulPayment(db.authPool, invoice.customer);
+  await users.setSuccessfulPayment(invoice.customer);
 };
 
 // Updates user records for failed payment
 // Send failed payment email
 async function handleFailedPayment(invoice) {
   // Send email
-  await users.setFailedPayment(db.authPool, "test");
+  await users.setFailedPayment("test");
 }
 
 module.exports = router;

@@ -35,20 +35,20 @@ router.get("/load-reminder-list", async (req, res) => {
 
         switch (list) {
             case "pendingList":
-              listData = await clients.pendingList(req.user.pool, D1_P, D2_P, req.query.limit, req.query.offset, ORDER_P);
-              listCount = await clients.getListCount(req.user.pool, "pending", D1_P, D2_P);
+              listData = await clients.pendingList(D1_P, D2_P, req.query.limit, req.query.offset, ORDER_P);
+              listCount = await clients.getListCount("pending", D1_P, D2_P);
               break;
             case "followUpList":
               // Get the reminders with status followUp
-              listData = await clients.followUpList(req.user.pool, D1_FU, D2_FU, req.query.limit, req.query.offset, ORDER_FU);
-              listCount = await clients.getListCount(req.user.pool, "followUp", D1_FU, D2_FU);
+              listData = await clients.followUpList(D1_FU, D2_FU, req.query.limit, req.query.offset, ORDER_FU);
+              listCount = await clients.getListCount("followUp", D1_FU, D2_FU);
               break;
             case "awaitingList":
-              listData = await clients.awaitingList(req.user.pool, D1_A, D2_A, req.query.limit, req.query.offset, ORDER_A);
-              listCount = await clients.getListCount(req.user.pool, "awaiting", D1_A, D2_A);
+              listData = await clients.awaitingList(D1_A, D2_A, req.query.limit, req.query.offset, ORDER_A);
+              listCount = await clients.getListCount("awaiting", D1_A, D2_A);
               break;
             case "completedList":
-              listData = await clients.completedList(req.user.pool);
+              listData = await clients.completedList();
               break;
         }
         if (typeof listData == 'undefined') {
@@ -94,22 +94,22 @@ router.get("/filter", async (req, res) => {
             D2_P = d2;
             ORDER_P = order;
             if (m) { MONTH_P = m; }
-            listData = await clients.pendingList(req.user.pool, d1, d2, req.query.limit, req.query.offset, order);
-            listCount = await clients.getListCount(req.user.pool, "pending", d1, d2);
+            listData = await clients.pendingList(d1, d2, req.query.limit, req.query.offset, order);
+            listCount = await clients.getListCount("pending", d1, d2);
         } else if (list == "followUp") {
             D1_FU = d1;
             D2_FU = d2;
             ORDER_FU = order;
             if (m) { MONTH_FU = m; }
-            listData = await clients.followUpList(req.user.pool, d1, d2, req.query.limit, req.query.offset, order);
-            listCount = await clients.getListCount(req.user.pool, "followUp", d1, d2);
+            listData = await clients.followUpList(d1, d2, req.query.limit, req.query.offset, order);
+            listCount = await clients.getListCount("followUp", d1, d2);
         } else if (list == "awaiting") {
             D1_A = d1;
             D2_A = d2;
             ORDER_A = order;
             if (m) { MONTH_A = m; }
-            listData = await clients.awaitingList(req.user.pool, d1, d2, req.query.limit, req.query.offset, order);
-            listCount = await clients.getListCount(req.user.pool, "awaiting", d1, d2);
+            listData = await clients.awaitingList(d1, d2, req.query.limit, req.query.offset, order);
+            listCount = await clients.getListCount("awaiting", d1, d2);
         }
         if (typeof listData == 'undefined') {
             listData = [];
@@ -124,8 +124,8 @@ router.get("/filter", async (req, res) => {
 // Fetch the notes for given client
 router.get("/load-popup-data", async (req, res) => {
     try {
-        const noteData = await clients.clientNotes(req.user.pool, req.query.clientId);
-        const interactionData = await clients.reminderInteractions(req.user.pool, req.query.reminderId);
+        const noteData = await clients.clientNotes(req.query.clientId);
+        const interactionData = await clients.reminderInteractions(req.query.reminderId);
         const data = {notes:noteData, interactions:interactionData};
         res.json(JSON.stringify(data));
     } catch (error) {
@@ -147,14 +147,14 @@ router.post("/set-reminder-status", async (req, res) => {
         if (!params.get("noReminder")) {
             if (action == "ignore" || outcome == "booked" || outcome == "declined") {
                 // Create new reminder
-                await clients.createReminder(req.user.pool, params.get("rDate"), "pending", id);
+                await clients.createReminder(params.get("rDate"), "pending", id);
             } else if (outcome == "followUp") {
                 // Update reminder
-                await clients.editReminder(req.user.pool, rId, params.get("rDate"));
+                await clients.editReminder(rId, params.get("rDate"));
             }
         }
 
-        await setReminderStatus(req.user.pool, action, outcome, note, id, rId);
+        await setReminderStatus(action, outcome, note, id, rId);
         res.status(201).json({ message: "Update successful" });
     } catch (error) {
         res.status(500).send(error.message);
@@ -188,13 +188,13 @@ router.post("/set-reminder-status-multi", async (req, res) => {
             if (!params.get("noReminder") && rDate.length > 0) {
                 if (action == "ignore" || outcome == "booked" || outcome == "declined") {
                     // Create new reminder
-                    await clients.createReminder(req.user.pool, rDate, "pending", ids[i]);
+                    await clients.createReminder(rDate, "pending", ids[i]);
                 } else if (outcome == "followUp") {
                     // Update reminder
-                    await clients.editReminder(req.user.pool, rIds[i], rDate);
+                    await clients.editReminder(rIds[i], rDate);
                 }
             }
-            await setReminderStatus(req.user.pool, action, outcome, note, ids[i], rIds[i]);
+            await setReminderStatus(action, outcome, note, ids[i], rIds[i]);
         }
         res.status(201).json({ message: "Update successful" });
     } catch (error) {
@@ -215,7 +215,7 @@ router.delete("/multi-delete", async (req, res) => {
         }
 
         for (let i = 0; i < ids.length; i++) {
-            await clients.deleteClient(req.user.pool, ids[i]);
+            await clients.deleteClient(ids[i]);
         }
 
         res.status(200).end();
@@ -228,7 +228,7 @@ router.delete("/multi-delete", async (req, res) => {
 Helper Functions
  ***********************************************/
 // Updates a reminder entry in db and creates an interaction
-async function setReminderStatus(pool, action, outcome, note, id, rId) {
+async function setReminderStatus(action, outcome, note, id, rId) {
     let status = null;
         if (action) {
             if (action == "ignore") {
@@ -238,7 +238,7 @@ async function setReminderStatus(pool, action, outcome, note, id, rId) {
             if (outcome) {
                 action += " - " + outcome;
             }
-            await clients.createInteraction(pool, action, id, rId);
+            await clients.createInteraction(action, id, rId);
         }
         if (outcome) {
             if (outcome == "followUp") {
@@ -256,12 +256,12 @@ async function setReminderStatus(pool, action, outcome, note, id, rId) {
         }
         if (!outcome) {outcome = null};
         if (status) {
-            await clients.setReminderStatus(pool, status, outcome, rId);
+            await clients.setReminderStatus(status, outcome, rId);
         }
 
         // Add note if one is provided
         if (note.length > 0) {
-            await clients.createNote(pool, note, id);
+            await clients.createNote(note, id);
         }
 };
 

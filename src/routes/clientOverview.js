@@ -1,6 +1,6 @@
 const express = require("express");
-const req = require("express/lib/request");
-const res = require("express/lib/response");
+// const req = require("express/lib/request");
+// const res = require("express/lib/response");
 const router = express.Router();
 const clients = require("../models/client-models");
 xl = require("../modules/excel-JS");
@@ -10,14 +10,14 @@ const upload = multer({ dest: "uploads/" });
 // Filter parameters are passed as queries
 router.get("/", async (req, res) => {
     try {
-        const nClients = await clients.clientNumber(req.user.pool, );
+        const nClients = await clients.clientNumber();
         var list = [];
 
         if (typeof req.query.noRDate != "undefined") {
-            list = await clients.getClientsNoRDate(req.user.pool, );
+            list = await clients.getClientsNoRDate();
         } else {
             // Get all clients
-            list = await clients.clientList(req.user.pool, 50, 0);
+            list = await clients.clientList(50, 0);
         };
 
         if (typeof req.query.search != 'undefined') {
@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
                     }
                     list = nList;
                 } else {
-                    list = await clients.searchList(req.user.pool, req.query.search);
+                    list = await clients.searchList(req.query.search);
                 }
             }
         }
@@ -53,11 +53,11 @@ router.post("/addReminderDate", async (req, res) => {
         if (typeof ids != "undefined" && req.body.rDate.length > 0) {
             if (typeof ids != "string") {       // If only one client has been selected, ids will be a string, object list if more than one
                 for (let i in ids) {
-                    await clients.createReminder(req.user.pool, req.body.rDate, parseInt(ids[i]));
+                    await clients.createReminder(req.body.rDate, parseInt(ids[i]));
                     message = "Succesfully added reminder date for " + ids.length + " clients";
                 }
             } else {
-                await clients.createReminder(req.user.pool, req.body.rDate, parseInt(ids));
+                await clients.createReminder(req.body.rDate, parseInt(ids));
                 message = "Succesfully added reminder date for 1 client"
             }
         } else {
@@ -79,11 +79,11 @@ router.delete("/delete", async (req, res) => {
         if (typeof ids != "undefined") {
             if (typeof ids != "string") {       // If only one client has been selected, ids will be a string, object list if more than one
                 for (let i = 0; i < ids.length; i++) {
-                    await clients.deleteClientData(req.user.pool, ids[i]);
+                    await clients.deleteClientData(ids[i]);
                     message = "Succesfully deleted " + ids.length + " clients";
                 }
             } else {
-                await clients.deleteClientData(req.user.pool, sids);
+                await clients.deleteClientData(sids);
                 message = "Succesfully deleted 1 client";
             }
         }

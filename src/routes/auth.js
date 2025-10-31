@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport  = require("../passport-config");
 const bcrypt = require("bcrypt");
-const db = require("../database");
-const clients = require("../models/client-models");
+const users = require("../models/user-models");
 
 // GET
 router.get("/register", (req, res) => {
@@ -31,7 +30,7 @@ router.post("/register", async (req, res) => {
         } 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await clients.creatUser(db.authPool, body.email, hashedPassword);
+        await users.createUser(body.email, hashedPassword);
         res.redirect("/auth/login");
     } catch (error) {
         // If error was caused by a duplicate email
