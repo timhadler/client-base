@@ -54,7 +54,7 @@ app.use(passport.session());
 app.listen(process.env.PORT);
 console.log("Listening on port: " + process.env.PORT);
 
-// Helpers
+// Custom Middleware
 function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
@@ -73,15 +73,15 @@ function checkNotAuthenticated(req, res, next) {
  * Routes
  */
 app.use("/subscriptions", stripeRouter);
-app.use(express.json());    // Call before routes to parse JSON bodys, call after subscriptions route as webhooks need raw body
+app.use(express.json());    // Call before routes to parse JSON bodies, call after subscriptions route as webhooks need raw body
 
 // For Development purposes, disable authentication
-app.use("/auth", authRouter);
-app.use("/reminders", reminderRouter);
-app.use("/clients", clientRouter);
-app.use("/clientOverview", overviewRouter);
+//app.use("/auth", authRouter);
+//app.use("/reminders", reminderRouter);
+//app.use("/clients", clientRouter);
+//app.use("/clientOverview", overviewRouter);
 
-// app.use("/auth", checkNotAuthenticated, authRouter);
-// app.use("/reminders", checkAuthenticated, reminderRouter);
-// app.use("/clients", checkAuthenticated, clientRouter);
-// app.use("/clientOverview", checkAuthenticated, overviewRouter);
+app.use("/auth", checkNotAuthenticated, authRouter);
+app.use("/reminders", checkAuthenticated, reminderRouter);
+app.use("/clients", checkAuthenticated, clientRouter);
+app.use("/clientOverview", checkAuthenticated, overviewRouter);

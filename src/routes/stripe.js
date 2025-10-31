@@ -98,6 +98,7 @@ router.post(
 
     // Handle the event
     switch (event.type) {
+      // COULD add payment method added event handler
       // Customer created
       case 'customer.created':
         console.log("Customer created");
@@ -229,7 +230,8 @@ async function handleSubscriptionDeleted(subscription) {
 // Updates user records for successful payment
 // Send succeessful payment email
 async function handleSuccessfulPayment(invoice) {
-  // Send email
+  // Send email (stripe may do this automatically)
+  // UPDATE to also set sub status to active
   await users.setSuccessfulPayment(invoice.customer);
 };
 
@@ -238,6 +240,7 @@ async function handleSuccessfulPayment(invoice) {
 async function handleFailedPayment(invoice) {
   // Send email
   await users.setFailedPayment("test");
+  // UDPATE to also set sub sattus to past_due
 }
 
 module.exports = {
