@@ -33,8 +33,9 @@ router.post("/register", async (req, res) => {
         } 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create stripe customer
+        // Create stripe customer and start a free subscription trial
         const stripeID = await stripeModule.createCustomer(email)
+        const subscriptionID = await stripeModule.createTrialSubscription(stripeID);    // Stripe webhook will handle updating subscription details in db
 
         // Create user in db
         if (stripeID) {
@@ -47,14 +48,13 @@ router.post("/register", async (req, res) => {
     } catch (error) {
         // If error was caused by a duplicate email
         if (error.message.includes("Duplicate entry")) {
-            const error = "User already exists";
-            res.render("login/register", {error:error});
+            res.render("login/register", {error:"User already exists"});
         } else if (error.message.includes("Invalid email address")) {
             res.render("login/register", {error:"Invalid email address"});
         } else if (error.message.includes("Password must") || error.message.includes("Error creating user")) {
             res.render("login/register", {error:error.message});
         } else {
-            res.status(400).send(error.message);
+            res.status(400).render("login/register", {error:"An unexpected error occured. Please try again later."});
         }
     }
 });

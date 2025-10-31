@@ -103,7 +103,7 @@ router.post(
         console.log("Customer created");
         handleCustomerCreated(event.data.object.customer);
         break;
-      // Customer subscriptione nding soon
+      // Customer subscription nding soon
       case 'customer.subscription.trial_will_end':
         subscription = event.data.object;
         console.log("Customer subscription trial will end soon for ", subscription.customer);
@@ -115,13 +115,13 @@ router.post(
         console.log("Subscription deleted for", subscription.customer);
         handleSubscriptionDeleted(subscription);
         break;
-      // Customer subsctiption created
+      // Customer subscription created
       case 'customer.subscription.created':
         subscription = event.data.object;
         console.log("Subscription created for", subscription.customer);
         handleSubscriptionUpdate(subscription);
         break;
-      // Customer subsctiption updated
+      // Customer subscription updated
       case 'customer.subscription.updated':
         subscription = event.data.object;
         console.log("Subscription updated for", subscription.customer);
@@ -155,7 +155,7 @@ router.post(
 );
 
 // Helper Functions
-// Creates a new stripe customer. Retunrs customer ID. 
+// Creates a new stripe customer. Returns customer ID. 
 // Called from within auth sign up process. 
 async function createCustomer(email) {
   try {
@@ -170,6 +170,30 @@ async function createCustomer(email) {
   }
 };
 
+// Creates a trial subscription for a stripe customer.
+// Uses hard coded price ID for now. If offering more than one subscription tier, modify to accept price ID as parameter.
+// Returns subscription ID. 
+async function createTrialSubscription(customerID) {
+  try {
+    const subscription = await stripe.subscriptions.create({
+      customer: customerID,
+      items: [{ price: process.env.STRIPE_PRICE_ID }], // hardcoded price
+      trial_period_days: 7 // 7-day free trial
+      //expand: ["latest_invoice.payment_intent"], // optional to get the full intent object
+      });
+    return subscription.id;
+  } catch (error) {
+    console.log(`Stripe subscription trial creation failure:`, error.message);
+    throw error;
+  }
+}
+
+// Handles subcription trial ending soon event
+async function handleSubscriptionTrialEnding(subscription) {
+  // Make sure email is verified
+  // Send reminder email with link to customer portal to add payment method
+};
+
 // Sends a welcome email to new customer. New user db record is created via ClientBase signup process. 
 async function handleCustomerCreated(customerId) {
   // Send welcome email
@@ -179,7 +203,6 @@ async function handleCustomerCreated(customerId) {
 async function handleSubscriptionUpdate(subscription) {
   // Subscription details
   const customerId = subscription.customer;
-  //const customerId = "test";
   const subId = subscription.id;
   const startDate = new Date(subscription.items.data[0].current_period_start * 1000);
   const endDate = new Date(subscription.items.data[0].current_period_end * 1000);
@@ -219,5 +242,6 @@ async function handleFailedPayment(invoice) {
 
 module.exports = {
   router,
-  createCustomer
+  createCustomer, 
+  createTrialSubscription
 };
