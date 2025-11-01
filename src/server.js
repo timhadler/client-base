@@ -38,7 +38,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {maxAge:86400000}, // one day
+    //cookie: {maxAge:86400000}, // one day
     store: new MemoryStore({
         checkPeriod: 86400000 // prune expired entries every 24h
       })
@@ -100,6 +100,6 @@ app.use(express.json());    // Call before routes to parse JSON bodies, call aft
 //app.use("/clientOverview", overviewRouter);
 
 app.use("/auth", checkNotAuthenticated, authRouter);
-app.use("/reminders", checkAuthenticated, checkTrialorActive, reminderRouter);
-app.use("/clients", checkAuthenticated, checkTrialorActive, clientRouter);
-app.use("/clientOverview", checkAuthenticated, checkTrialorActive, overviewRouter);
+app.use("/reminders", checkAuthenticated, reminderRouter);
+app.use("/clients", checkAuthenticated, clientRouter);
+app.use("/clientOverview", checkAuthenticated, overviewRouter);

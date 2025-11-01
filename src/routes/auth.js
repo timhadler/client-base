@@ -59,11 +59,27 @@ router.post("/register", async (req, res) => {
     }
 });
 
-router.post("/login", passport.authenticate("local", {
+// router.post("/login", passport.authenticate("local", {
+//     successRedirect: "/reminders",
+//     failureRedirect: "/auth/login",
+//     failureFlash: true
+// }));
+
+router.post("/login", (req, res, next) => {
+  // If "Remember me" is checked, make session last longer (e.g. 30 days)
+  if (req.body.remember) {
+    req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
+  } else {
+    req.session.cookie.expires = false; // session cookie (expires on browser close)
+  }
+
+  passport.authenticate("local", {
     successRedirect: "/reminders",
     failureRedirect: "/auth/login",
     failureFlash: true
-}));
+  })(req, res, next);
+});
+
 
 // DELETE
 router.delete("/logout", (req, res, next) => {
