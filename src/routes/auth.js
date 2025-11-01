@@ -8,11 +8,11 @@ const stripeModule = require("./stripe");
 
 // GET
 router.get("/register", (req, res) => {
-    res.render("login/register");
+    res.render("login/register", { bodyClass: "authPage", showNavBar: false });
 });
 
 router.get("/login", (req, res) => {
-    res.render("login/login");
+    res.render("login/login", { bodyClass: "authPage", showNavBar: false });
 });
 
 // POST

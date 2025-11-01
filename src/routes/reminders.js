@@ -20,7 +20,7 @@ global.ORDER_A = "latest_created"
 
 router.get("/", async (req, res) => {
     try {
-        res.status(200).render("reminders/reminders", {month_p:MONTH_P, month_fu:MONTH_FU, month_a:MONTH_A, d1_p:D1_P, d2_p:D2_P, d1_fu:D1_FU, d2_fu:D2_FU, d1_a:D1_A, d2_a:D2_A});
+        res.status(200).render("reminders/reminders", {bodyClass:"remindersPage", showNavBar:true, month_p:MONTH_P, month_fu:MONTH_FU, month_a:MONTH_A, d1_p:D1_P, d2_p:D2_P, d1_fu:D1_FU, d2_fu:D2_FU, d1_a:D1_A, d2_a:D2_A});
     } catch (error) {
         res.status(500).send(error.message);
     }
