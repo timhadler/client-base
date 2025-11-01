@@ -8,6 +8,32 @@
         <link rel="stylesheet" href="/css/styles.css">
     </head>
     <body class="<%= bodyClass %>">
+        <!-- Navigation -->
+        <% if (showNavBar) { %>
+            <nav class="navbar">
+                <div class="nav-container">
+                    <a href="/dashboard" class="nav-brand">
+                        <div class="nav-logo">CB</div>
+                        <span class="nav-brand-text">ClientBase</span>
+                    </a>
+                    
+                    <ul class="nav-links">
+                        <li><a href="/dashboard">Dashboard</a></li>
+                        <li><a href="/clients">Clients</a></li>
+                        <li><a href="/reminders" class="active">Reminders</a></li>
+                    </ul>
+                    
+                    <div class="nav-user">
+                        <div class="nav-user-info">
+                            <div class="nav-user-name">John Smith</div>
+                            <div class="nav-user-role">Administrator</div>
+                        </div>
+                        <div class="nav-avatar">JS</div>
+                    </div>
+                </div>
+            </nav>
+        <% } %>
+
         <%- body %>
     </body>
 </html>
