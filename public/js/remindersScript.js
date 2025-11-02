@@ -67,27 +67,19 @@ let testClients = [
     }
 ];
 
+/*****************************************************************
+ * Document Ready
+ ****************************************************************/
 $(document).ready(function() {
-    // ** Tab filtering **
-    // REVIST
-    document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            
-            const filter = this.dataset.filter;
-            const rows = document.querySelectorAll('tbody tr');
-            
-            rows.forEach(row => {
-                if (filter === 'all' || row.dataset.status === filter) {
-                    row.style.display = '';
-                } else {
-                    //row.style.display = 'none';
-                }
-            });
-        });
+    $(".tab").on('click', function() { 
+        $('.tab').removeClass('active');
+        this.classList.add('active');
+
+        // Load reminder table
+        queryListData($(this).data("filter")) 
     });
 
+    // REVISIT
     // Mark as complete
     document.querySelectorAll('.btn-icon.complete').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -125,11 +117,33 @@ $(document).ready(function() {
             closeClientPanel();
         }
     });
-    loadList(0, testClients);
+    //loadList(0, testClients);
+    queryListData("all"); 
 });
 
+/*****************************************************************
+ * AJAX Functions
+ ****************************************************************/
+const LIMIT = 10;
+// AJAX Load a reminder list
+function queryListData(filter, offset=0) {
+    $.ajax({
+        url: "reminders/load-reminder-list",
+        method: "GET",
+        data: { list:"pendingList", limit:LIMIT, offset:offset },   // TESTING
+        success: function(res) {
+            const data = JSON.parse(res);
+            loadList(data.listCount, data.listData, offset);
+        },
+        error: function(xhr, status, error) {
+            // Handle AJAX error
+            console.log('AJAX Error while fetching list with filter: ' +  filter +  ' reminder list:', error, xhr, status);
+        }
+  });
+}
 
 // Loads data into reminders table
+// MODIFY: Probably retirve all list counts from ajax req
 function loadList(n, clients, offset=0) {
     let $table = $('#tableBody');
 
@@ -141,9 +155,17 @@ function loadList(n, clients, offset=0) {
     //     $('#awaitingCount').html('(' + n + ')');
     // }
 
-    // if (offset === 0) {
-    //     list.empty(); // Clear the list only for the initial load
-    // }
+    // Add list counts if > 0
+    let overdueCount = 0;   // Retrieve from db
+    let todayCount = n;     // testing
+    let upcomingCount = 1;
+    overdueCount ? $("#overdueCount").text('(' + overdueCount + ')') : '';
+    todayCount ? $("#todayCount").text('(' + todayCount + ')') : '';
+    upcomingCount ? $("#upcomingCount").text('(' + upcomingCount + ')') : '';
+
+    if (offset === 0) {
+        $table.empty(); // Clear the list only for the initial load
+    }
 
     //Data reminders[x]: clients.id, name, mobile, rDate, flag, reminders.id AS rId, reminders.status
     $.get("html/reminderTableRow.html", function(template) {
@@ -177,11 +199,14 @@ function loadList(n, clients, offset=0) {
     });
 }
 
-// ** Client Panel **
+/*****************************************************************
+ * Client Panel (reminders page)
+ ****************************************************************/
 // Client data for the panel
 let currentClientData = {};
 
 function openClientPanel(data) {
+    // LOAD large data (client notes, interaction history) on panel open
     // Update panel content
     document.getElementById('panelClientName').textContent = data.name;
     document.getElementById('panelClientCompany').textContent = data.company;
@@ -202,9 +227,11 @@ function openClientPanel(data) {
     // Update badges
     const badgesHtml = `
         <span class="status-badge ${data.status.toLowerCase()}"> ${data.status.charAt(0).toUpperCase() + data.status.slice(1).toLowerCase()} </span>
-        <span class="priority-badge ${data.priority.toLowerCase()}"> ${getPriorityIcon(data.priority)} ${data.priority.charAt(0).toUpperCase() + data.priority.slice(1).toLowerCase()} Priority </span>
-
+        ${data.priority ? `
+            <span class="priority-badge ${data.priority.toLowerCase()}"> ${getPriorityIcon(data.priority)} ${data.priority.charAt(0).toUpperCase() + data.priority.slice(1).toLowerCase()} Priority </span>
+        ` : ''}
     `;
+
     document.getElementById('panelBadges').innerHTML = badgesHtml;
     
     // Show panel and overlay
