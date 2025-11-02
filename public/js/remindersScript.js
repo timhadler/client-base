@@ -1,43 +1,3 @@
-// ------------------
-// Tab filtering
-document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', function() {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        
-        const filter = this.dataset.filter;
-        const rows = document.querySelectorAll('tbody tr');
-        
-        rows.forEach(row => {
-            if (filter === 'all' || row.dataset.status === filter) {
-                row.style.display = '';
-            } else {
-                //row.style.display = 'none';
-            }
-        });
-    });
-});
-
-// Mark as complete
-document.querySelectorAll('.btn-icon.complete').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const row = this.closest('tr');
-        const badge = row.querySelector('.status-badge');
-        badge.className = 'status-badge completed';
-        badge.textContent = 'Completed';
-        row.dataset.status = 'completed';
-    });
-});
-
-// Delete confirmation
-document.querySelectorAll('.btn-icon.delete').forEach(btn => {
-    btn.addEventListener('click', function() {
-        if (confirm('Are you sure you want to delete this reminder?')) {
-            this.closest('tr').remove();
-        }
-    });
-});
-// -----------------------
 // Test clients
 let testClients = [
     {
@@ -108,9 +68,63 @@ let testClients = [
 ];
 
 $(document).ready(function() {
+    // ** Tab filtering **
+    // REVIST
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.dataset.filter;
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                if (filter === 'all' || row.dataset.status === filter) {
+                    row.style.display = '';
+                } else {
+                    //row.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Mark as complete
+    document.querySelectorAll('.btn-icon.complete').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const badge = row.querySelector('.status-badge');
+            badge.className = 'status-badge completed';
+            badge.textContent = 'Completed';
+            row.dataset.status = 'completed';
+        });
+    });
+
+    // Delete confirmation
+    document.querySelectorAll('.btn-icon.delete').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete this reminder?')) {
+                this.closest('tr').remove();
+            }
+        });
+    });
+
+    // ** Panel **
     // Copy to clipboard buttons
     $("#copyEmailBtn").on('click', function(event) { copyToClipboard(event, "email") }),
     $("#copyPhoneBtn").on('click', function(event) { copyToClipboard(event, "phone") }),
+
+    // Close panel events
+    $("#panelClose").on("click", closeClientPanel);
+    $("#panelOverlay").on("click", closeClientPanel);
+    //document.getElementById('panelClose').addEventListener('click', closeClientPanel);
+    //document.getElementById('panelOverlay').addEventListener('click', closeClientPanel);
+
+    // Escape key to close
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeClientPanel();
+        }
+    });
     loadList(0, testClients);
 });
 
@@ -161,14 +175,9 @@ function loadList(n, clients, offset=0) {
             $table.append($row);
         });
     });
-
-    // Hide load more button
-    // if (list.find('li').length == n) {
-    //     $('.load-more[data-list="' + l + '"]').hide();
-    // }
 }
 
-// PANEL STUFF
+// ** Client Panel **
 // Client data for the panel
 let currentClientData = {};
 
@@ -218,17 +227,6 @@ function getPriorityIcon(priority) {
     };
     return icons[priority] || '';
 }
-
-// Close panel events
-document.getElementById('panelClose').addEventListener('click', closeClientPanel);
-document.getElementById('panelOverlay').addEventListener('click', closeClientPanel);
-
-// Escape key to close
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeClientPanel();
-    }
-});
 
 // Copy to clipboard function
 function copyToClipboard(event, type) {
