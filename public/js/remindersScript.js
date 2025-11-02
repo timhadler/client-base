@@ -70,6 +70,9 @@ let testClients = [
 /*****************************************************************
  * Document Ready
  ****************************************************************/
+// Selected client data for the panel and interaction modal
+let currentClientData = {};
+
 $(document).ready(function() {
     $(".tab").on('click', function() { 
         $('.tab').removeClass('active');
@@ -100,23 +103,10 @@ $(document).ready(function() {
         });
     });
 
-    // ** Panel **
-    // Copy to clipboard buttons
-    $("#copyEmailBtn").on('click', function(event) { copyToClipboard(event, "email") }),
-    $("#copyPhoneBtn").on('click', function(event) { copyToClipboard(event, "phone") }),
+    // Initialize features
+    initClientPanel();
+    initInteractionModal();
 
-    // Close panel events
-    $("#panelClose").on("click", closeClientPanel);
-    $("#panelOverlay").on("click", closeClientPanel);
-    //document.getElementById('panelClose').addEventListener('click', closeClientPanel);
-    //document.getElementById('panelOverlay').addEventListener('click', closeClientPanel);
-
-    // Escape key to close
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeClientPanel();
-        }
-    });
     //loadList(0, testClients);
     queryListData("all"); 
 });
@@ -125,15 +115,15 @@ $(document).ready(function() {
  * AJAX Functions
  ****************************************************************/
 const LIMIT = 10;
-// AJAX Load a reminder list
+// AJAX Retrieve data for selected reminder list
 function queryListData(filter, offset=0) {
     $.ajax({
         url: "reminders/load-reminder-list",
         method: "GET",
-        data: { list:"pendingList", limit:LIMIT, offset:offset },   // TESTING
+        data: { list:"pendingList", limit:LIMIT, offset:offset },
         success: function(res) {
             const data = JSON.parse(res);
-            loadList(data.listCount, data.listData, offset);
+            loadList(data.listCounts, data.listData, offset);
         },
         error: function(xhr, status, error) {
             // Handle AJAX error
@@ -143,22 +133,14 @@ function queryListData(filter, offset=0) {
 }
 
 // Loads data into reminders table
-// MODIFY: Probably retirve all list counts from ajax req
-function loadList(n, clients, offset=0) {
+// MODIFY: Probably retirve all list counts from ajax req: counts.overdue etc
+function loadList(counts, clients, offset=0) {
     let $table = $('#tableBody');
 
-    // if (l == "pendingList") {
-    //     $('#pendingCount').html('(' + n + ')');
-    // } else if (l == "followUpList") {
-    //     $('#followUpCount').html('(' + n + ')');
-    // } else if (l == "awaitingList") {
-    //     $('#awaitingCount').html('(' + n + ')');
-    // }
-
     // Add list counts if > 0
-    let overdueCount = 0;   // Retrieve from db
-    let todayCount = n;     // testing
-    let upcomingCount = 1;
+    let overdueCount = counts;
+    let todayCount = counts;
+    let upcomingCount = counts;
     overdueCount ? $("#overdueCount").text('(' + overdueCount + ')') : '';
     todayCount ? $("#todayCount").text('(' + todayCount + ')') : '';
     upcomingCount ? $("#upcomingCount").text('(' + upcomingCount + ')') : '';
@@ -200,10 +182,24 @@ function loadList(n, clients, offset=0) {
 }
 
 /*****************************************************************
- * Client Panel (reminders page)
+ * Client Panel
  ****************************************************************/
-// Client data for the panel
-let currentClientData = {};
+function initClientPanel() {
+    // Copy to clipboard buttons
+    $("#copyEmailBtn").on('click', function(event) { copyToClipboard(event, "email") }),
+    $("#copyPhoneBtn").on('click', function(event) { copyToClipboard(event, "phone") }),
+
+    // Close panel events
+    $("#panelClose").on("click", closeClientPanel);
+    $("#panelOverlay").on("click", closeClientPanel);
+
+    // Escape key to close
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeClientPanel();
+        }
+    });
+};
 
 function openClientPanel(data) {
     // LOAD large data (client notes, interaction history) on panel open
@@ -278,16 +274,187 @@ function copyToClipboard(event, type) {
 }
 
 // Mark complete button in panel
-document.getElementById('markCompleteBtn').addEventListener('click', function() {
-    if (confirm('Mark this reminder as complete?')) {
-        // Find the active row and mark it complete
-        const activeRow = document.querySelector(`[data-client-id="${currentClientData.id}"]`);
-        if (activeRow) {
-            const badge = activeRow.querySelector('.status-badge');
-            badge.className = 'status-badge completed';
-            badge.textContent = 'Completed';
-            activeRow.dataset.status = 'completed';
+// document.getElementById('markCompleteBtn').addEventListener('click', function() {
+//     if (confirm('Mark this reminder as complete?')) {
+//         // Find the active row and mark it complete
+//         const activeRow = document.querySelector(`[data-client-id="${currentClientData.id}"]`);
+//         if (activeRow) {
+//             const badge = activeRow.querySelector('.status-badge');
+//             badge.className = 'status-badge completed';
+//             badge.textContent = 'Completed';
+//             activeRow.dataset.status = 'completed';
+//         }
+//         closeClientPanel();
+//     }
+// });
+
+/*****************************************************************
+ * Interaction modal
+ ****************************************************************/
+function initInteractionModal() {
+    let selectedMethod = null;
+    let selectedOutcome = null;
+
+    // --- Open Modal ---
+    $('#markCompleteBtn').on('click', function() {
+        $('#interactionReminderId').val(currentClientData.id);
+        resetInteractionForm();
+        $('#interactionModal').addClass('show');
+    });
+
+    // --- Close Modal ---
+    $('#closeInteractionModal, #cancelInteraction').on('click', closeModal);
+
+    // --- Contact Method Selection ---
+    $('.option-btn[data-method]').on('click', function() {
+        $('.option-btn[data-method]').removeClass('selected');
+        $(this).addClass('selected');
+
+        selectedMethod = $(this).data('method');
+        $('#contactMethod').val(selectedMethod);
+
+        // Reset outcome
+        selectedOutcome = null;
+        $('#outcome').val('');
+        $('.option-btn[data-outcome]').removeClass('selected');
+
+        if (selectedMethod === 'call') {
+            $('#outcomeGroup').show();
+            $('#summaryGroup, #newReminderGroup, #newReminderFields').hide();
+            $('#submitInteraction').prop('disabled', true);
+        } else {
+            $('#outcomeGroup').hide();
+            generateSummary();
+            $('#summaryGroup').show();
+            $('#newReminderGroup, #newReminderFields').hide();
+            $('#submitInteraction').prop('disabled', false);
         }
-        closeClientPanel();
+    });
+
+    // --- Outcome Selection ---
+    $('.option-btn[data-outcome]').on('click', function() {
+        $('.option-btn[data-outcome]').removeClass('selected');
+        $(this).addClass('selected');
+
+        selectedOutcome = $(this).data('outcome');
+        $('#outcome').val(selectedOutcome);
+
+        generateSummary();
+        setDefaultReminderNote();
+        $('#summaryGroup').show();
+
+        if (['booked', 'followup', 'declined', 'noanswer'].includes(selectedOutcome)) {
+            $('#newReminderGroup').show();
+            if (selectedOutcome === 'followup') {
+                $('#createNewReminder').prop('checked', true);
+                showNewReminder(true);
+            }
+        } else {
+            $('#newReminderGroup, #newReminderFields').hide();
+            $('#createNewReminder').prop('checked', false);
+        }
+
+        $('#submitInteraction').prop('disabled', false);
+    });
+
+    // --- New Reminder Toggle ---
+    $('#createNewReminder').on('change', function() {
+        showNewReminder(this.checked);
+    });
+
+    // --- Form Submission ---
+    $('#interactionForm').on('submit', function(e) {
+        e.preventDefault();
+
+        const formData = {
+            reminderId: $('#interactionReminderId').val(),
+            clientName: currentClientName,
+            contactMethod: selectedMethod,
+            outcome: selectedOutcome,
+            interactionSummary: $('#interactionSummary').text(),
+            createNewReminder: $('#createNewReminder').prop('checked'),
+            newReminderDate: $('#newReminderDate').val(),
+            newReminderNote: $('#newReminderNote').val()
+        };
+
+        console.log('Interaction recorded:', formData);
+        alert(
+            'Interaction saved!\n\nClient: ' + currentClientName +
+            '\nMethod: ' + selectedMethod +
+            '\nOutcome: ' + (selectedOutcome || 'N/A') +
+            '\n\nCheck console for full data.'
+        );
+
+        closeModal();
+        closePanel();
+    });
+
+    // --- Helper Functions (scoped inside for access to selected variables) ---
+
+    function showNewReminder(show) {
+        const $fields = $('#newReminderFields');
+        const $dateInput = $('#newReminderDate');
+
+        if (show) {
+            $fields.show();
+
+            // Default to tomorrow 9AM
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(9, 0, 0, 0);
+            const dateTimeStr = tomorrow.toISOString().slice(0, 16);
+            $dateInput.val(dateTimeStr);
+        } else {
+            $fields.hide();
+        }
     }
-});
+
+    function generateSummary() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric'
+        });
+
+        let summary = '';
+
+        if (selectedMethod === 'call') {
+            if (selectedOutcome === 'booked') summary = `Called client on ${dateStr} - Appointment booked`;
+            else if (selectedOutcome === 'followup') summary = `Called client on ${dateStr} - Requested a follow-up`;
+            else if (selectedOutcome === 'noanswer') summary = `Called client on ${dateStr} - No answer`;
+            else if (selectedOutcome === 'declined') summary = `Called client on ${dateStr} - Declined service`;
+        } else if (selectedMethod === 'text') {
+            summary = `Texted client on ${dateStr}`;
+        } else if (selectedMethod === 'email') {
+            summary = `Emailed client on ${dateStr}`;
+        } else if (selectedMethod === 'ignore') {
+            summary = `Reminder ignored on ${dateStr}`;
+        }
+
+        $('#interactionSummary').text(summary);
+    }
+
+    function setDefaultReminderNote() {
+        let defaultNote = '';
+
+        if (selectedOutcome === 'booked') defaultNote = 'Requested appointment reminder';
+        else if (selectedOutcome === 'followup') defaultNote = 'Requested a follow-up';
+        else if (selectedOutcome === 'declined') defaultNote = 'Follow up after decline';
+        else if (selectedOutcome === 'noanswer') defaultNote = 'Follow up after missed call';
+
+        $('#newReminderNote').val(defaultNote);
+    }
+
+    function closeModal() {
+        $('#interactionModal').removeClass('show');
+        setTimeout(() => resetInteractionForm(), 300);
+    }
+
+    function resetInteractionForm() {
+        selectedMethod = null;
+        selectedOutcome = null;
+        $('#interactionForm')[0].reset();
+        $('.option-btn').removeClass('selected');
+        $('#outcomeGroup, #summaryGroup, #newReminderGroup, #newReminderFields').hide();
+        $('#submitInteraction').prop('disabled', true);
+    }
+}
