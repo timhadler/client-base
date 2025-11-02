@@ -1,6 +1,104 @@
 <script src="/js/jquery.min.js"></script>
 <script type="module" src="/js/remindersScript.js"> </script>
 
+<!-- Overlay -->
+<div class="panel-overlay" id="panelOverlay"></div>
+
+<!-- Client Detail Panel -->
+<div class="client-panel" id="clientPanel">
+    <div class="panel-header">
+        <button class="panel-close" id="panelClose">×</button>
+        <div class="panel-client-name" id="panelClientName">Sarah Johnson</div>
+        <div class="panel-client-company" id="panelClientCompany">TechCorp Solutions</div>
+    </div>
+    
+    <div class="panel-body">
+        <!-- Quick Actions -->
+        <div class="panel-section">
+            <div class="panel-section-title">Quick Actions</div>
+            <div class="quick-action-btns">
+                <a href="#" class="quick-action-btn primary" id="callBtn">
+                    <span>📞</span> Call Now
+                </a>
+                <a href="#" class="quick-action-btn primary" id="emailBtn">
+                    <span>✉️</span> Send Email
+                </a>
+                <a href="#" class="quick-action-btn secondary" id="viewFullBtn">
+                    <span>👁️</span> Full Profile
+                </a>
+                <button class="quick-action-btn secondary" id="markCompleteBtn">
+                    <span>✓</span> Complete
+                </button>
+            </div>
+        </div>
+        
+        <!-- Contact Information -->
+        <div class="panel-section">
+            <div class="panel-section-title">Contact Information</div>
+            
+            <div class="contact-item">
+                <div class="contact-icon">✉️</div>
+                <div class="contact-info">
+                    <div class="contact-label">Email</div>
+                    <div class="contact-value">
+                        <a href="#" id="panelEmail"></a>
+                    </div>
+                </div>
+                <button id="copyEmailBtn" class="copy-btn">Copy</button>
+            </div>
+            
+            <div class="contact-item">
+                <div class="contact-icon">📱</div>
+                <div class="contact-info">
+                    <div class="contact-label">Phone</div>
+                    <div class="contact-value">
+                        <a href="#" id="panelPhone"></a>
+                    </div>
+                </div>
+                <button id="copyPhoneBtn" class="copy-btn">Copy</button>
+            </div>
+            
+            <div class="contact-item">
+                <div class="contact-icon">💼</div>
+                <div class="contact-info">
+                    <div class="contact-label">Position</div>
+                    <div class="contact-value" id="panelPosition"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Status & Priority -->
+        <div class="panel-section">
+            <div class="panel-section-title">Status & Priority</div>
+            <div class="panel-badges" id="panelBadges">
+                <span class="status-badge active"></span>
+                <span class="priority-badge high"></span>
+            </div>
+        </div>
+        
+        <!-- Notes -->
+        <div class="panel-section">
+            <div class="panel-section-title">Notes</div>
+            <div class="panel-notes" id="panelNotes"></div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="panel-section">
+            <div class="panel-section-title">Engagement Stats</div>
+            <div class="panel-stats">
+                <div class="panel-stat">
+                    <div class="panel-stat-value" id="panelTotalReminders"></div>
+                    <div class="panel-stat-label">Total Reminders</div>
+                </div>
+                <div class="panel-stat">
+                    <div class="panel-stat-value" id="panelLastContact"></div>
+                    <div class="panel-stat-label">Last Contact</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Main Content -->
 <main class="main-content">
     <!-- Page Header -->

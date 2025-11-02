@@ -495,6 +495,290 @@ td {
     }
 }
 
+/* Additional styles for slide-out panel */
+.client-panel {
+    position: fixed;
+    top: 0;
+    right: -450px;
+    width: 450px;
+    height: 100vh;
+    background: white;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.client-panel.open {
+    right: 0;
+}
+
+.panel-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.panel-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.panel-header {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+    padding: 24px;
+    color: white;
+    z-index: 10;
+}
+
+.panel-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.panel-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.panel-client-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.panel-client-company {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.panel-body {
+    padding: 24px;
+}
+
+.panel-section {
+    margin-bottom: 32px;
+}
+
+.panel-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: var(--gray-50);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+}
+
+.contact-item:hover {
+    background: var(--gray-100);
+}
+
+.contact-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.contact-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.contact-label {
+    font-size: 12px;
+    color: var(--gray-500);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.contact-value {
+    font-size: 15px;
+    color: var(--gray-900);
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.contact-value a {
+    color: var(--gray-900);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.contact-value a:hover {
+    color: var(--primary-blue);
+}
+
+.copy-btn {
+    padding: 6px 12px;
+    background: white;
+    border: 2px solid var(--gray-200);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+}
+
+.copy-btn.copied {
+    background: var(--accent-green);
+    color: white;
+    border-color: var(--accent-green);
+}
+
+.panel-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.panel-notes {
+    background: var(--gray-50);
+    border-radius: 8px;
+    padding: 16px;
+    color: var(--gray-700);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.panel-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.panel-stat {
+    background: var(--gray-50);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+}
+
+.panel-stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 4px;
+}
+
+.panel-stat-label {
+    font-size: 12px;
+    color: var(--gray-600);
+    font-weight: 600;
+}
+
+.quick-action-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.quick-action-btn {
+    padding: 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.quick-action-btn.primary {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+    color: white;
+}
+
+.quick-action-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.quick-action-btn.secondary {
+    background: var(--gray-100);
+    color: var(--gray-700);
+}
+
+.quick-action-btn.secondary:hover {
+    background: var(--gray-200);
+}
+
+.reminder-item {
+    cursor: pointer;
+    position: relative;
+}
+
+.reminder-item::after {
+    content: '›';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    color: var(--gray-400);
+    transition: all 0.2s ease;
+}
+
+.reminder-item:hover::after {
+    color: var(--primary-blue);
+    right: 12px;
+}
+
+@media (max-width: 768px) {
+    .client-panel {
+        width: 100%;
+        right: -100%;
+    }
+}
+
 /******** NAV BAR ********/
 .navbar {
     background: white;
