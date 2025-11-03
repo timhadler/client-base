@@ -193,7 +193,6 @@ function queryListData(filter, offset=0) {
 }
 
 // Loads data into reminders table
-// MODIFY: Probably retirve all list counts from ajax req: counts.overdue etc
 function loadList(counts, clients, offset=0) {
     let $table = $('#tableBody');
 
@@ -486,6 +485,17 @@ function initInteractionModal() {
             generateSummary();
             $('#summaryGroup').show();
             $('#newReminderGroup, #newReminderFields').hide();
+            if (['text', 'email', 'ignored'].includes(selectedMethod)) {
+                $('#newReminderGroup').show();
+                if (selectedMethod !== 'ignored') {
+                    $('#createNewReminder').prop('checked', true);
+                    setDefaultReminderNote(selectedMethod);
+                    showNewReminder(true);
+                }
+            } else {
+                $('#newReminderGroup, #newReminderFields').hide();
+                $('#createNewReminder').prop('checked', false);
+            }
             $('#submitInteraction').prop('disabled', false);
         }
     });
@@ -499,7 +509,7 @@ function initInteractionModal() {
         $('#outcome').val(selectedOutcome);
 
         generateSummary();
-        setDefaultReminderNote();
+        setDefaultReminderNote(selectedOutcome);
         $('#summaryGroup').show();
 
         if (['booked', 'followup', 'declined', 'noanswer'].includes(selectedOutcome)) {
@@ -592,13 +602,34 @@ function initInteractionModal() {
         $('#interactionSummary').text(summary);
     }
 
-    function setDefaultReminderNote() {
-        let defaultNote = '';
+    function setDefaultReminderNote(reason) {
+        let defaultNote;
 
-        if (selectedOutcome === 'booked') defaultNote = 'Requested appointment reminder';
-        else if (selectedOutcome === 'followup') defaultNote = 'Requested a follow-up';
-        else if (selectedOutcome === 'declined') defaultNote = 'Follow up after decline';
-        else if (selectedOutcome === 'noanswer') defaultNote = 'Follow up after missed call';
+        switch (reason) {
+            // From selected outcome
+            case 'booked':
+                defaultNote = 'Requested appointment reminder';
+                break;
+            case 'followup': 
+                defaultNote = 'Requested a follow-up';
+                break;
+            case 'declined': 
+                defaultNote = 'Follow up after decline';
+                break;
+            case 'noanswer':
+                defaultNote = 'Follow up after missed call';
+                break
+            
+            // From selected method
+            case 'text':
+                defaultNote = 'Follow up after text';
+                break;
+            case 'email':
+                defaultNote = 'Follow up after email';
+                break;
+            default:
+                defaultNote = '';
+        }
 
         $('#newReminderNote').val(defaultNote);
     }
