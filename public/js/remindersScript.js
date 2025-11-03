@@ -4,10 +4,10 @@ let testClients = [
         id: 1,
         name: "Alice Johnson",
         phone: "021 154 2211",
-        email: "mrfake@doesntexist.com",
+        email: "alice.johnson@acme.com",
         position: "Manager",
         priority: "high",
-        notes: "",
+        notes: "Is a complete legend.",
         totalReminders: "5",
         lastContact: "Oct 10, 2025",
         day: "23",
@@ -16,56 +16,116 @@ let testClients = [
         fullDate: "Oct 23, 2025",
         status: "Pending",
         company: "Acme Corp",
-        note: "Follow up about new contract" // need to add client note for panel
+        note: "Follow up about new contract",
+        interactions: [
+            { date: "Oct 1, 2025", type: "call", notes: "Requested follow-up next week", outcome: "followup" },
+            { date: "Oct 3, 2025", type: "email", notes: "Sent contract for review", outcome: "booked" },
+            { date: "Oct 5, 2025", type: "text", notes: "Left voicemail", outcome: null },
+            { date: "Oct 7, 2025", type: "call", notes: "Confirmed meeting", outcome: "no_answer" },
+            { date: "Oct 8, 2025", type: "email", notes: "Sent updated proposal", outcome: null }
+        ]
     },
     {
         id: 2,
         name: "Bob Smith",
-        priority: "high",
-        day: "10",
-        month: "Nov",
-        fullDate: "Nov 10, 2025",
-        status: "Completed",
-        company: "Beta LLC",
-        note: "Send invoice and confirm payment"
+        phone: "022 334 5566",
+        email: "bob.smith@globex.com",
+        position: "Director",
+        priority: "medium",
+        notes: "Prefers email contact.",
+        totalReminders: "3",
+        lastContact: "Oct 15, 2025",
+        day: "24",
+        month: "Oct",
+        dateTime: "11:00 AM",
+        fullDate: "Oct 24, 2025",
+        status: "Pending",
+        company: "Globex Corp",
+        note: "Send proposal follow-up",
+        interactions: [
+            { date: "Oct 2, 2025", type: "call", notes: "Initial discussion", outcome: "declined" },
+            { date: "Oct 4, 2025", type: "email", notes: "Sent proposal", outcome: "followup" },
+            { date: "Oct 6, 2025", type: "text", notes: "Left message about proposal", outcome: null }
+        ]
     },
     {
         id: 3,
         name: "Charlie Davis",
-        day: "01",
-        email: "mrfake@doesntexist.com",
-        priority: "high",
-        month: "Dec",
-        fullDate: "Dec 01, 2025",
-        status: "Overdue",
-        company: "Gamma Inc",
-        note: "Call regarding overdue service"
+        phone: "021 998 8877",
+        email: "charlie.davis@initech.com",
+        position: "Team Lead",
+        priority: "low",
+        notes: "Prefers phone calls in morning.",
+        totalReminders: "2",
+        lastContact: "Oct 12, 2025",
+        day: "25",
+        month: "Oct",
+        dateTime: "9:30 AM",
+        fullDate: "Oct 25, 2025",
+        status: "Pending",
+        company: "Initech",
+        note: "Check project updates",
+        interactions: [
+            { date: "Oct 1, 2025", type: "email", notes: "Sent project plan", outcome: "booked" },
+            { date: "Oct 2, 2025", type: "call", notes: "Client requested clarification", outcome: "followup" },
+            { date: "Oct 3, 2025", type: "text", notes: "Left reminder about deadline", outcome: null },
+            { date: "Oct 5, 2025", type: "call", notes: "Confirmed changes", outcome: "booked" }
+        ]
     },
     {
         id: 4,
-        name: "Diana Lee",
-        day: "15",
+        name: "Diana Evans",
+        phone: "027 445 3322",
+        email: "diana.evans@umbrella.com",
+        position: "CEO",
         priority: "high",
-        email: null,
-        month: "Jan",
-        fullDate: "Jan 15, 2026",
+        notes: "Important client, high priority.",
+        totalReminders: "7",
+        lastContact: "Oct 8, 2025",
+        day: "26",
+        month: "Oct",
+        dateTime: "2:00 PM",
+        fullDate: "Oct 26, 2025",
         status: "Pending",
-        company: "Delta Co",
-        note: "Schedule demo for new product"
+        company: "Umbrella Corp",
+        note: "Schedule strategy meeting",
+        interactions: [
+            { date: "Oct 1, 2025", type: "call", notes: "Initial discussion", outcome: "followup" },
+            { date: "Oct 2, 2025", type: "email", notes: "Sent strategy document", outcome: "booked" },
+            { date: "Oct 3, 2025", type: "text", notes: "Follow-up on approval", outcome: "followup" },
+            { date: "Oct 4, 2025", type: "call", notes: "Confirmed meeting", outcome: "booked" },
+            { date: "Oct 5, 2025", type: "email", notes: "Sent meeting agenda", outcome: "followup" },
+            { date: "Oct 6, 2025", type: "text", notes: "Reminder about meeting", outcome: null },
+            { date: "Oct 7, 2025", type: "call", notes: "Final confirmation", outcome: "booked" }
+        ]
     },
     {
         id: 5,
         name: "Ethan Brown",
-        day: "20",
-        priority: "high",
-        email: "",
-        month: "Feb",
-        fullDate: "Feb 20, 2026",
-        status: "Completed",
-        company: "Epsilon Ltd",
-        note: "Confirm meeting follow-up"
+        phone: "029 776 5544",
+        email: "ethan.brown@stark.com",
+        position: "Engineer",
+        priority: "medium",
+        notes: "Loves tech updates.",
+        totalReminders: "4",
+        lastContact: "Oct 20, 2025",
+        day: "27",
+        month: "Oct",
+        dateTime: "3:00 PM",
+        fullDate: "Oct 27, 2025",
+        status: "Pending",
+        company: "Stark Industries",
+        note: "Follow up on new specs",
+        interactions: [
+            { date: "Oct 10, 2025", type: "ignored", notes: "Sent new specs", outcome: null },
+            { date: "Oct 11, 2025", type: "call", notes: "Discussed adjustments", outcome: "followup" },
+            { date: "Oct 12, 2025", type: "text", notes: "Left voicemail", outcome: null },
+            { date: "Oct 13, 2025", type: "call", notes: "Followed up on issues", outcome: "declined" },
+            { date: "Oct 14, 2025", type: "email", notes: "Sent updated specs", outcome: "booked" }
+        ]
     }
 ];
+
 
 /*****************************************************************
  * Document Ready
@@ -107,8 +167,8 @@ $(document).ready(function() {
     initClientPanel();
     initInteractionModal();
 
-    //loadList(0, testClients);
-    queryListData("all"); 
+    loadList(0, testClients);
+    //queryListData("all"); 
 });
 
 /*****************************************************************
@@ -212,13 +272,33 @@ function openClientPanel(data) {
     document.getElementById('panelPhone').href = `tel:${data.phone}`;
     document.getElementById('panelPosition').textContent = data.position;
     document.getElementById('panelNotes').textContent = data.notes;
-    document.getElementById('panelTotalReminders').textContent = data.totalReminders;
-    document.getElementById('panelLastContact').textContent = data.lastContact;
     
     // Update quick action links
     document.getElementById('callBtn').href = `tel:${data.phone}`;
     document.getElementById('emailBtn').href = `mailto:${data.email}`;
     document.getElementById('viewFullBtn').href = `/clients/${data.id}`;
+
+    // Interaction history HTML
+    const interactionHistoryHtml = data.interactions.map(interaction => {
+        const iconClass = getInteractionIconClass(interaction.type);
+        const outcomeClass = getOutcomeClass(interaction.outcome);
+        const outcomeIcon = getOutcomeIcon(interaction.type, interaction.outcome);
+        
+        return `
+            <div class="interaction-item">
+                <div class="interaction-icon ${iconClass}">${getInteractionEmoji(interaction.type)}</div>
+                <div class="interaction-content">
+                    <div class="interaction-header">
+                        <span class="interaction-type">${capitalizeFirst(interaction.type)}</span>
+                        <span class="interaction-date">${interaction.date}</span>
+                    </div>
+                    <div class="interaction-outcome ${outcomeClass}">${outcomeIcon} ${getInteractionNote(interaction)}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+            
+    document.getElementById('panelInteractionHistory').innerHTML = interactionHistoryHtml || '<p style="color: var(--gray-500); font-size: 14px; text-align: center; padding: 20px;">No interaction history yet</p>';
     
     // Update badges
     const badgesHtml = `
@@ -271,6 +351,85 @@ function copyToClipboard(event, type) {
             button.classList.remove('copied');
         }, 2000);
     });
+}
+
+function getInteractionIconClass(type) {
+    const classes = {
+        'call': 'call',
+        'email': 'email',
+        'text': 'text',
+        'ignored': 'ignored'
+    };
+    return classes[type] || 'call';
+}
+
+function getInteractionEmoji(type) {
+    const emojis = {
+        'call': '📞',
+        'email': '✉️',
+        'text': '💬',
+        'ignored': '⊘'
+    };
+    return emojis[type] || '📞';
+}
+
+function getOutcomeClass(outcome) {
+    if (outcome === 'booked') return 'success';
+    if (outcome === 'followup') return 'followup';
+    if (outcome === 'no_answer' || !outcome) return 'missed';
+    if (outcome === 'declined') return 'declined';
+    return 'success';
+}
+
+function getOutcomeIcon(type, outcome) {
+    if (outcome === 'booked') return '✓';
+    if (outcome === 'followup') return '↻';
+    if (type === "ignored") return '⊘';
+    if (outcome === 'no_answer' || !outcome) return '○';
+    if (outcome === 'declined') return '✕';
+    return '✓';
+}
+
+function getInteractionNote(interaction) {
+    const type = interaction.type;
+    const outcome = interaction.outcome;
+    
+    // Handle ignore type
+    if (type === 'ignored') {
+        return 'Ignored reminder';
+    }
+    
+    // Handle call type
+    if (type === 'call') {
+        if (outcome === 'booked') {
+            return 'Appointment booked';
+        } else if (outcome === 'followup') {
+            return 'Requested followup';
+        } else if (outcome === 'no_answer') {
+            return 'No answer';
+        } else if (outcome === 'declined') {
+            return 'Declined appointment';
+        }
+    }
+    
+    // Handle text or email type
+    if (type === 'text' || type === 'email') {
+        if (!outcome) {
+            return 'Sent, awaiting response';
+        } else if (outcome === 'booked') {
+            return 'Replied - Appointment booked';
+        } else if (outcome === 'declined') {
+            return 'Replied - Declined appointment';
+        } else if (outcome === 'followup') {
+            return 'Replied - Requested followup';
+        }
+    }
+    
+    return interaction.notes || 'No details';
+}
+
+function capitalizeFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 // Mark complete button in panel

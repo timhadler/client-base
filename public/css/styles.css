@@ -439,6 +439,130 @@ td {
     background: #fecaca;
 }
 
+/* Interaction History */
+.interaction-history {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.interaction-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px;
+    background: var(--gray-50);
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.interaction-item:hover {
+    background: var(--gray-100);
+}
+
+.interaction-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.interaction-icon.call {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+}
+
+.interaction-icon.email {
+    background: linear-gradient(135deg, var(--accent-teal) 0%, #0d9488 100%);
+}
+
+.interaction-icon.text {
+    background: linear-gradient(135deg, var(--accent-orange) 0%, #d97706 100%);
+}
+
+.interaction-icon.ignored {
+    background: linear-gradient(135deg, var(--gray-400) 0%, var(--gray-500) 100%);
+}
+
+.interaction-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.interaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.interaction-type {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+.interaction-date {
+    font-size: 12px;
+    color: var(--gray-500);
+    font-weight: 500;
+}
+
+.interaction-outcome {
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.interaction-outcome.followup {
+    background: #dbeafe;
+    color: var(--primary-blue);
+}
+
+.interaction-outcome.declined {
+    background: #fee2e2;
+    color: var(--accent-red);
+}
+
+.interaction-outcome.success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.interaction-outcome.missed {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.interaction-outcome.ignored {
+    background: var(--gray-200);
+    color: var(--gray-600);
+}
+
+/* Scrollbar styling for interaction history */
+.interaction-history::-webkit-scrollbar {
+    width: 6px;
+}
+
+.interaction-history::-webkit-scrollbar-track {
+    background: var(--gray-100);
+    border-radius: 3px;
+}
+
+.interaction-history::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 3px;
+}
+
+.interaction-history::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-400);
+}
+
 /* Interaction modal */
 .button-group {
     display: grid;
