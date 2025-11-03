@@ -1,16 +1,16 @@
-const url = window.location.href;
+// Call this function on each page
+function setActiveNav() {
+    const path = window.location.pathname;
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        // Remove any existing 'active' class
+        link.classList.remove('active');
 
-// Adds a higlight class to the nave abr elements to indicate current page
-if (url.includes(".com/clients") || url.includes("3000/clients")) {
-    document.getElementById("navCallList").classList.remove("highlightNav");
-    document.getElementById("navReports").classList.remove("highlightNav");
-    document.getElementById("navClients").classList.add("highlightNav");
-} else if (url.includes(".com/clientOverview") || url.includes("3000/clientOverview")) {
-    document.getElementById("navCallList").classList.remove("highlightNav");
-    document.getElementById("navClients").classList.remove("highlightNav");
-    document.getElementById("navReports").classList.add("highlightNav");
-} else if ((url.includes(".com/") || url.includes("3000/")) && !url.includes("login")) {
-    document.getElementById("navClients").classList.remove("highlightNav");
-    document.getElementById("navReports").classList.remove("highlightNav");
-    document.getElementById("navCallList").classList.add("highlightNav");
-};
+        // Add 'active' class if href matches the current path
+        if (link.getAttribute('href') === path) {
+            link.classList.add('active');
+        }
+    });
+}
+
+// Run automatically when the DOM is ready
+document.addEventListener('DOMContentLoaded', setActiveNav);
