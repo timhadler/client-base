@@ -300,12 +300,15 @@ function openClientPanel(data) {
     document.getElementById('panelInteractionHistory').innerHTML = interactionHistoryHtml || '<p style="color: var(--gray-500); font-size: 14px; text-align: center; padding: 20px;">No interaction history yet</p>';
     
     // Update badges
-    const badgesHtml = `
-        <span class="status-badge ${data.status.toLowerCase()}"> ${data.status.charAt(0).toUpperCase() + data.status.slice(1).toLowerCase()} </span>
-        ${data.priority ? `
-            <span class="priority-badge ${data.priority.toLowerCase()}"> ${getPriorityIcon(data.priority)} ${data.priority.charAt(0).toUpperCase() + data.priority.slice(1).toLowerCase()} Priority </span>
-        ` : ''}
-    `;
+    let badgesHtml = ``;
+    if (data.clientStatus & data.priority) {
+        badgesHtml = `
+            <span class="status-badge ${data.clientStatus.toLowerCase()}"> ${data.clientStatus.charAt(0).toUpperCase() + data.clientStatus.slice(1).toLowerCase()} </span>
+            ${data.priority ? `
+                <span class="priority-badge ${data.priority.toLowerCase()}"> ${getPriorityIcon(data.priority)} ${data.priority.charAt(0).toUpperCase() + data.priority.slice(1).toLowerCase()} Priority </span>
+            ` : ''}
+        `;
+    }
 
     document.getElementById('panelBadges').innerHTML = badgesHtml;
     
