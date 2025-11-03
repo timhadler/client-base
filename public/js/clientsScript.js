@@ -1,528 +1,295 @@
-var reminderPopupButtonHTML;
-var noteItemHTML;
+/*****************************************************************
+ * Clients Page JavaScript
+ * Uses jQuery and AJAX to fetch and display client data
+ ****************************************************************/
 
-const LIMIT = 25;
-var SEARCH =  "";
+const LIMIT = 10; // Clients per page
+let currentPage = 1;
+let totalClients = 0;
+let currentFilters = {
+    search: '',
+    status: '',
+    priority: ''
+};
 
-var clientID = 0;
-var noteID = 0;
-
+/*****************************************************************
+ * Document Ready
+ ****************************************************************/
 $(document).ready(function() {
-    // Load html files into variables
-    $.get("html/reminderPopupButton.html", function(html) {
-        reminderPopupButtonHTML = html;
+    // Initialize page
+    loadClients();
+    
+    // Search functionality with debounce
+    let searchTimeout;
+    $('#searchInput').on('input', function() {
+        clearTimeout(searchTimeout);
+        const searchTerm = $(this).val();
+        
+        searchTimeout = setTimeout(() => {
+            currentFilters.search = searchTerm;
+            currentPage = 1;
+            loadClients();
+        }, 300);
     });
-    $.get("html/noteItem.html", function(html) {
-        noteItemHTML = html;
+    
+    // Filter functionality
+    $('#statusFilter').on('change', function() {
+        currentFilters.status = $(this).val();
+        currentPage = 1;
+        loadClients();
     });
-
-    // Search bar
-    $("#searchBar").on("keyup", function(event) {
-        if (event.key === "Enter") {
-            const search = $(this).val();
-            SEARCH = search;
-
-            event.preventDefault();
-            loadClientList(search);
-        }
+    
+    $('#priorityFilter').on('change', function() {
+        currentFilters.priority = $(this).val();
+        currentPage = 1;
+        loadClients();
     });
-
-    // Client popup buttons
-    $("#addClientPopupButton").on('click', function() { addClientPopup() });
-    $("#editClientButton").on('click', function() { editClientPopup() });
-    $("#clientPopupCloseButton").on('click', function() { clientPopupClose() });
-    $("#clientPopupSubmitButton").on('click', function() { clientPopupSubmit(this) });
-
-    // Client delete buttons
-    $("#deleteClientButton").on('click', function() { deleteClientPopup() });
-    $("#deleteClientSubmitButton").on('click', function() { deleteClientSubmit() });
-    $("#deleteClientCloseButton").on('click', function() { deleteClientPopupClose() });
-
-    // Reminder popup buttons
-    $("#cdEditReminderButton").on('click', function() { editReminderPopup() });
-    $("#cdAddReminderButton").on('click', function() { addReminderPopup() });
-    $("#cdReminderPopupSubmitButton").on('click', function() { reminderPopupSubmit(this) });
-    $("#cdReminderCloseButton").on('click', function() { reminderPopupClose() });
-    $("#cdDeleteReminderButton").on('click', function() { deleteReminderPopup() });
-    $("#cdDeleteReminderCloseButton").on('click', function() { deleteReminderPopupClose() });
-    $("#cdDeleteReminderSubmitButton").on('click', function() { deleteReminderSubmit() });
-
-    // Add note button
-    $("#cdAddNoteButton").on('click', function() { addNotePopup() });
-    $("#noteCloseButton").on('click', function() { notePopupClose() });
-    $("#noteSubmitButton").on('click', function() { noteSubmit(this) });
-
-    // Delete note buttons
-    //$(".deleteNoteButton").on('click', function() { deleteNotePopup( this) }); This must be in load client details as the buttons dont exist until client is loaded
-    $("#deleteNoteCloseButton").on('click', function() { deleteNotePopupClose() });
-    $("#deleteNoteSubmitButton").on('click', function() { deleteNoteSubmit() });
-
-    // Tab buttons event listeners
-    $('#cdSummaryTab').on('click', function(evt) { openTab(evt, "summary") });
-    $('#cdApptTab').on('click', function(evt) { openTab(evt, "appts") });
-    $('#cdReminderTab').on('click', function(evt) { openTab(evt, "reminders") });
-
-    // Load more button
-    $('#clientsLoadMore').on('click', function() { loadMore() });
-
-    // Get the client ID from URL parameters which is set by reminder popup client details link
-    const urlParams = new URLSearchParams(window.location.search);
-    const clientId = urlParams.get('clientId');
-    if(clientId) {
-        loadClientDetails(parseInt(clientId));
-    }
-
-    // Load inital client list
-    loadClientList("");
+    
+    // Delete button event delegation
+    $(document).on('click', '.btn-icon.delete', function(e) {
+        e.preventDefault();
+        handleDeleteClient($(this));
+    });
 });
 
-// Loads the left pane client list
-function loadClientList(search, offset=0) {
+/*****************************************************************
+ * AJAX Function to Load Clients
+ ****************************************************************/
+function loadClients() {
+    const offset = (currentPage - 1) * LIMIT;
+    
     $.ajax({
-        url: "clients/load-client-list",
-        method: "GET",
-        data: { search:search, limit:LIMIT, offset:offset },
-        success: function(res) {
-          const data = JSON.parse(res);
-          const clients = data.clientList;
-          const n = data.nClients;
-          var list = $("#cList");
-
-          // If search term is empty, loading client list
-          if (search) {
-            $("#clientListHeader").html("Search: " + search);
-            $('#clientsLoadMore').hide();
-            $(".clientDetailsDiv").hide();
-          } else {
-            $("#clientListHeader").html("Client List");
-            $('#clientsLoadMore').show();
-          }
-          $("#nClients").html("(" + n + ")");
-
-          if (offset === 0) {
-            list.empty(); // Clear the list only for the initial load
-          }
-
-          for (let i = 0; i < clients.length; i++) {
-            let client = clients[i];
-            let id = client.id;
-            var li = $('<li>').addClass("positionRelative");
-            var $button = $(reminderPopupButtonHTML);
-        
-            // Button
-            $button.find(".nameButton").text(client.name).on('click', function() { loadClientDetails(id) });
-
-            li.html($button);
-            list.append(li);
-          }
-          // Hide load more button
-          if (list.find('li').length == n) {
-              $('#clientsLoadMore').hide();
-          }
+        url: '/clients/load-client-list',
+        method: 'GET',
+        data: {
+            limit: LIMIT,
+            offset: offset,
+            search: currentFilters.search,
+            status: currentFilters.status,
+            priority: currentFilters.priority
         },
-        error: function(xhr, status, error) {
-          // Handle AJAX error
-          console.log('AJAX Error while fetching client list:', error, xhr, status);
-        }
-    });
-}
-
-// Loads the client details of a given id after being clicked on in client list
-function loadClientDetails(id) {
-    $.ajax({
-        url: "clients/load-client-data",
-        method: "GET",
-        data: { id:id },
+        beforeSend: function() {
+            // Show loading state
+            $('#clientsTableBody').html(`
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                        Loading clients...
+                    </td>
+                </tr>
+            `);
+        },
         success: function(res) {
+            // Parse response if it's a string
+            //const data = typeof response === 'string' ? JSON.parse(response) : response;
             const data = JSON.parse(res);
-            const notes = data.notes;
-
-            // Display details div
-            $(".clientDetailsDiv").css("display", "block");
-
-            // Set edit/delete client button data value to store id for submitting in edit and delete form
-            $("#editClientButton").data("id", id);
-            $("#deleteClientButton").data("id", id);
-            // Just use global instad
-            clientID = id;
-
-            // Fill details data
-            $("#cdName").html(data.name);
-            $("#cdCompany").html(data.company);
-            $("#cdTelephone").html(data.home);
-            $("#cdMobile").html(data.mobile);
-            $("#cdEmail").html(data.email);
-            $("#cdCreated").html(data.created);
-            $("#cdStreet").html(data.street);
-            $("#cdSuburb").html(data.suburb);
-            $("#cdCity").html(data.city);
-            $("#cdPostcode").html(data.postcode); 
-            $("#cdReminder").html(data.reminder.rDate);
-            $("#cdReminderStatus").html(data.reminder.status);
-
-            // Hide reminder section if no reminder
-            if (!data.reminder.rDate) {
-                $("#cdReminderDiv").hide();
-                $("#cdAddReminderButton").show();
+            
+            totalClients = data.nClients || 0;
+            renderClientsTable(data.clientList || []);
+            renderPagination();
+        },
+        error: function(xhr, status, error) {
+            console.error('Error loading clients:', error);
+            $('#clientsTableBody').html(`
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 40px; color: var(--accent-red);">
+                        Error loading clients. Please try again.
+                    </td>
+                </tr>
+            `);
         }
-            else {
-                $("#cdReminderDiv").show();
-                $("#cdAddReminderButton").hide();
-            };
+    });
+}
 
-            // Client notes
-            var list = $("#cdNotesList");
-            list.empty();
-            for (let i = 0; i < notes.length; i++) {
-                var li = $('<li>').addClass("positionRelative");
-                var $noteItem = $(noteItemHTML);
-        
-                // Note item
-                $noteItem.find(".note").html(notes[i].note);
-                $noteItem.find(".date").html(notes[i].created);
-
-                // Set id data for deleting and editing
-                $noteItem.find(".deleteNoteButton").on('click', function() { deleteNotePopup(notes[i].id) });
-                $noteItem.find(".editNoteButton").data("nId", notes[i].id).data("note", notes[i].note).on('click', function() { editNotePopup(this) });
+/*****************************************************************
+ * Render Clients Table
+ ****************************************************************/
+function renderClientsTable(clients) {
+    const $tbody = $('#clientsTableBody');
+    $tbody.empty();
     
-                li.html($noteItem);
-                list.append(li);
-              }
-
-            // Open summary tabs on load
-            $('#cdSummaryDiv').css('display', 'block');
-            $('#cdSummaryTab').addClass('active');
-        },
-        error: function(xhr, status, error) {
-            // Handle AJAX error
-            console.log('AJAX Error while loading client details:', error, xhr, status);
-        }
-    });
-}
-
-function clientPopupSubmit(button) {
-    // Get the form data
-    var formData = $('#clientPopupForm').serialize();
-    const formType = $(button).data("form");
-    const id = $("#editClientButton").data("id");
-    var url = "";
-
-    // Change url based on formType
-    if (formType == "add") {
-        url = "clients/add-client";
-    } else if (formType == "edit") {
-        url = "clients/edit-client";
-    }
-
-    $.ajax({
-        url: url,
-        method: "POST",
-        data: { data:formData, id:id },
-        success: function(res) {
-            clientPopupClose();
-
-            // If edit
-            if (formType == "edit") {
-                loadClientDetails(id);
-            } else if (formType == "add") {
-                // Newly created client id, update client list
-                loadClientDetails(res.id);
-                loadClientList("");
-            }
-        },
-        error: function(xhr, status, error) {
-        // Handle AJAX error
-        console.log('AJAX Error while submitting client popup form: ' + formType, error, xhr, status);
-        }
-    });
-}
-
-function noteSubmit(button) {
-    const formData = $('#noteForm').serialize();
-    const formType = $(button).data("form");        // Same popup used for edit and add note, data set in popup functions
-    var url;
-    var id;
-
-    // Change url based on add or edit popup
-    if (formType == "add") {
-        id = clientID;
-        url = "clients/add-note";
-    } else if (formType == "edit") {
-        id = noteID;
-        url = "clients/edit-note";
+    if (clients.length === 0) {
+        $tbody.html(`
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 40px;">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👥</div>
+                        <h3>No clients found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </div>
+                </td>
+            </tr>
+        `);
+        return;
     }
     
-    $.ajax({
-        url: url,
-        method: "POST",
-        data: { data:formData, id:id },
-        success: function(res) {
-            notePopupClose();
-            loadClientDetails(clientID);
-        },
-        error: function(xhr, status, error) {
-        // Handle AJAX error
-        console.log('AJAX Error while deleting client: ', error, xhr, status);
-        }
+    clients.forEach(function(client) {
+        const row = createClientRow(client);
+        $tbody.append(row);
     });
 }
 
-// Submit function for reminder popup (Add and Edit)
-function reminderPopupSubmit(button) {
-    const id = clientID;
-    const formData = $('#cdReminderPopupForm').serialize();
-    const formType = $(button).data("form");        // Same popup used for edit and add note, data set in popup functions
-    var url;
+/*****************************************************************
+ * Create Client Row HTML
+ ****************************************************************/
+function createClientRow(client) {
+    const statusClass = client.status ? client.status.toLowerCase() : '';
+    const priorityClass = client.priority ? client.priority.toLowerCase() : '';
+    const priorityIcon = getPriorityIcon(priorityClass);
+    
+    return `
+        <tr data-client-id="${client.id}">
+            <td>
+                <div class="client-name">${escapeHtml(client.name)}</div>
+                <div class="client-email">${escapeHtml(client.email)}</div>
+            </td>
+            <td>${escapeHtml(client.company || '-')}</td>
+            <td>
+                <span class="status-badge ${statusClass}">
+                    ${capitalizeFirst(client.status || '-')}
+                </span>
+            </td>
+            <td>
+                <span class="priority-badge ${priorityClass}">
+                    ${priorityIcon} ${capitalizeFirst(client.priority || '-')}
+                </span>
+            </td>
+            <td>${formatDate(client.lastContact)}</td>
+            <td>${formatDate(client.nextFollowUp)}</td>
+            <td>
+                <div class="action-buttons">
+                    <a href="/clients/${client.id}" class="btn-icon view" title="View">👁️</a>
+                    <a href="/clients/${client.id}/edit" class="btn-icon edit" title="Edit">✏️</a>
+                    <button class="btn-icon delete" data-client-id="${client.id}" title="Delete">🗑️</button>
+                </div>
+            </td>
+        </tr>
+    `;
+}
 
-    if (formType == "add") {
-        url = "clients/add-reminder";
-    } else if (formType == "edit") {
-        url = "clients/edit-reminder";
+/*****************************************************************
+ * Render Pagination
+ ****************************************************************/
+function renderPagination() {
+    const totalPages = Math.ceil(totalClients / LIMIT);
+    const start = totalClients === 0 ? 0 : (currentPage - 1) * LIMIT + 1;
+    const end = Math.min(currentPage * LIMIT, totalClients);
+    
+    // Update info text
+    $('#paginationInfo').text(`Showing ${start} to ${end} of ${totalClients} clients`);
+    
+    // Generate pagination buttons
+    const $buttons = $('#paginationButtons');
+    $buttons.empty();
+    
+    // Previous button
+    const prevDisabled = currentPage === 1 ? 'disabled' : '';
+    $buttons.append(`
+        <button class="pagination-btn" ${prevDisabled} data-page="${currentPage - 1}">
+            Previous
+        </button>
+    `);
+    
+    // Page number buttons
+    const maxButtons = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+    
+    // Adjust start if we're near the end
+    if (endPage - startPage < maxButtons - 1) {
+        startPage = Math.max(1, endPage - maxButtons + 1);
     }
-
-    $.ajax({
-        url: url,
-        method: "POST",
-        data: { data:formData, id:id },
-        success: function(res) {
-            reminderPopupClose();
-            loadClientDetails(id);
-        },
-        error: function(xhr, status, error) {
-        // Handle AJAX error
-        console.log('AJAX Error while editing client reminder: ', error, xhr, status);
+    
+    for (let i = startPage; i <= endPage; i++) {
+        const activeClass = i === currentPage ? 'active' : '';
+        $buttons.append(`
+            <button class="pagination-btn ${activeClass}" data-page="${i}">
+                ${i}
+            </button>
+        `);
+    }
+    
+    // Next button
+    const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
+    $buttons.append(`
+        <button class="pagination-btn" ${nextDisabled} data-page="${currentPage + 1}">
+            Next
+        </button>
+    `);
+    
+    // Add click handlers
+    $('.pagination-btn:not(:disabled)').on('click', function() {
+        const page = parseInt($(this).data('page'));
+        if (page !== currentPage && page > 0 && page <= totalPages) {
+            currentPage = page;
+            loadClients();
         }
     });
 }
 
-function deleteClientSubmit() {
-    const id = $("#deleteClientButton").data("id");
-
+/*****************************************************************
+ * Delete Client Handler
+ ****************************************************************/
+function handleDeleteClient($button) {
+    const clientId = $button.data('client-id');
+    const $row = $button.closest('tr');
+    const clientName = $row.find('.client-name').text();
+    
+    if (!confirm(`Are you sure you want to delete ${clientName}?`)) {
+        return;
+    }
+    
     $.ajax({
-        url: "clients/delete-client",
-        method: "DELETE",
-        data: { id:id },
-        success: function(res) {
-            $(".clientDetailsDiv").hide();
-            deleteClientPopupClose();
-            loadClientList(SEARCH);
+        url: `/clients/${clientId}/delete`,
+        method: 'POST',
+        success: function(response) {
+            // Show success message (you can implement a toast notification)
+            console.log('Client deleted successfully');
+            
+            // Reload the current page
+            loadClients();
         },
         error: function(xhr, status, error) {
-        // Handle AJAX error
-        console.log('AJAX Error while deleting client: ', error, xhr, status);
+            console.error('Error deleting client:', error);
+            alert('Failed to delete client. Please try again.');
         }
     });
 }
 
-function deleteNoteSubmit() {
-    const id = clientID;
-    const nId = noteID;
-
-    $.ajax({
-        url: "clients/delete-note",
-        method: "DELETE",
-        data: { nId:nId },
-        success: function(res) {
-            deleteNotePopupClose();
-            loadClientDetails(id);
-        },
-        error: function(xhr, status, error) {
-        // Handle AJAX error
-        console.log('AJAX Error while deleting client: ', error, xhr, status);
-        }
-    });
-}
-
-function deleteReminderSubmit() {
-    const id = clientID;
-
-    $.ajax({
-        url: "clients/delete-reminder",
-        method: "DELETE",
-        data: { id:id },
-        success: function(res) {
-            deleteReminderPopupClose();
-            loadClientDetails(id);
-        },
-        error: function(xhr, status, error) {
-        // Handle AJAX error
-        console.log('AJAX Error while deleting client: ', error, xhr, status);
-        }
-    });
-}
-
-/***********************************************************
+/*****************************************************************
  * Helper Functions
- **********************************************************/
-// Load another batch of clients for the client list
-function loadMore() {
-    let list = $('#cList');
-    let offset = list.find('li').length;
-    loadClientList("", offset);
+ ****************************************************************/
+function getPriorityIcon(priority) {
+    const icons = {
+        high: '🔴',
+        medium: '🟡',
+        low: '🟢'
+    };
+    return icons[priority] || '';
 }
 
-// Open details tab
-function openTab(evt, tabName) {
-    // Hide tab contents nd remove active class
-    $('.tabContent').hide();
-    $('.tabLink').removeClass('active');
-
-    // display the appropriate tab content
-    if (tabName == "summary") {
-        $("#cdSummaryDiv").show();
-    } else if (tabName =="appts") {
-        $("#cdApptsDiv").show();
-    }
-    else if (tabName =="reminders") {
-        $("#cdRemindersDiv").show();
-    }
-  
-    // Mark the tab link as active
-    evt.currentTarget.classList.add('active');
+function capitalizeFirst(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-function addClientPopup() {
-    // Clear details data
-    $("#clientPopup input").val('');
-
-    // Set header and button text and form data so submit function nows its an add submit
-    $("#clientPopupHeader").html("New Client");
-    $("#clientPopupSubmitButton").html("Add Client").data("form", "add");
-
-    $("#clientPopup").show();
-    $("#overlay").css("visibility", "visible")
+function formatDate(dateStr) {
+    if (!dateStr || dateStr === '-') return '-';
+    
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '-';
+    
+    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
 }
 
-function editClientPopup() {
-    // Fill details data
-    $("#clientPopupHeader").html($("#cdName").html());
-    $("#cName").val($("#cdName").html());
-    $("#cCompany").val($("#cdCompany").html());
-    $("#cTelephone").val($("#cdTelephone").html());
-    $("#cMobile").val($("#cdMobile").html());
-    $("#cEmail").val($("#cdEmail").html());
-    $("#cStreet").val($("#cdStreet").html());
-    $("#cSuburb").val($("#cdSuburb").html());
-    $("#cCity").val($("#cdCity").html());
-    $("#cPc").val($("#cdPostcode").html());
-
-    // Set button text and form data so submit function nows its an edit submit
-    $("#clientPopupSubmitButton").html("Submit").data("form", "edit");
-
-    $("#clientPopup").show();
-    $("#overlay").css("visibility", "visible")
-}
-
-function clientPopupClose() {
-    $("#clientPopup").hide();
-    $("#overlay").css("visibility", "hidden")
-}
-
-function deleteClientPopup() {
-    $("#deleteClientPopup").show();
-    $("#overlay").css("visibility", "visible")
-}
-
-function deleteClientPopupClose() {
-    $("#deleteClientPopup").hide();
-    $("#overlay").css("visibility", "hidden")
-}
-
-function addNotePopup() {
-    // Clear note field
-    $("#notePopup").find("textarea[name='note']").val("");
-
-    // Set header
-    $("#noteHeader").html("Add note");
-
-    // Set button text and form data so submit function nows its an edit submit
-    $("#noteSubmitButton").data("form", "add");
-
-    $("#notePopup").show();
-    $("#overlay").css("visibility", "visible")
-}
-
-function editNotePopup(button) {
-    noteID = $(button).data("nId");
-    const note = $(button).data("note");
-
-    // Fill note field
-    $("#notePopup").find("textarea[name='note']").val(note);
-
-    // Set header
-    $("#noteHeader").html("Edit note");
-
-    // Set button text and form data so submit function nows its an edit submit
-    $("#noteSubmitButton").data("form", "edit");
-
-    $("#notePopup").show();
-    $("#overlay").css("visibility", "visible")
-}
-
-function notePopupClose() {
-    noteID = 0;
-    $("#notePopup").hide();
-    $("#overlay").css("visibility", "hidden")
-}
-
-function deleteNotePopup(nId) {
-    noteID = nId;
-    $("#deleteNotePopup").show();
-    $("#overlay").css("visibility", "visible")
-}
-
-function deleteNotePopupClose() {
-    noteID = 0;
-    $("#deleteNotePopup").hide();
-    $("#overlay").css("visibility", "hidden")
-}
-
-// Reminder popup functions
-function addReminderPopup() {
-    $("#cdReminderPopupHeader").html("Add reminder");
-
-    $("#cdReminderInput").val("");
-
-    $("#cdReminderPopupSubmitButton").data("form", "add");
-    $("#cdPendingInput").prop('checked', true);
-
-    $("#cdReminderPopup").show();
-    $("#overlay").css("visibility", "visible")
-}
-
-function editReminderPopup() {
-    let date = $("#cdReminder").html();
-    let status = $("#cdReminderStatus").html();
-
-    date = date.slice(6) + "-" + date.slice(3, 5) + "-" + date.slice(0, 2);
-    if (status == "pending") {
-        $("#cdPendingInput").prop("checked", true);
-    } else if (status == "awaiting") {
-        $("#cdAwaitingInput").prop("checked", true);
-    } else if (status == "followUp") {
-        $("#cdFUInput").prop("checked", true);
-    }
-
-    $("#cdReminderPopupHeader").html("Edit reminder");
-    $("#cdReminderInput").val(date);
-
-    $("#cdReminderPopupSubmitButton").data("form", "edit");
-
-    $("#cdReminderPopup").show();
-    $("#overlay").css("visibility", "visible")
-}
-
-function reminderPopupClose() {
-    $("#cdReminderPopup").hide();
-    $("#overlay").css("visibility", "hidden")
-}
-
-function deleteReminderPopup() {
-    $("#deleteReminderPopup").show();
-    $("#overlay").css("visibility", "visible")
-}
-
-function deleteReminderPopupClose() {
-    $("#deleteReminderPopup").hide();
-    $("#overlay").css("visibility", "hidden")
+function escapeHtml(text) {
+    if (!text) return '';
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
 }

@@ -10,7 +10,7 @@ const upload = multer({ dest: "uploads/" });
 // Client Index
 router.get("/", async (req, res) => {
     try {
-        res.status(200).render("clients/clients");
+        res.status(200).render("clients/clients", { bodyClass: "clientsPage", showNavBar: true });
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -32,7 +32,7 @@ router.get("/load-client-list", async (req, res) => {
                 }
             } else {
                 clientList = await clients.clientList(req.query.limit, req.query.offset);
-                n = await clients.clientNumber(req.user.pool);
+                n = await clients.clientNumber();
             }
         } else {
             clientList = await clients.clientList(req.query.limit, req.query.offset);

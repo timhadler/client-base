@@ -1,197 +1,70 @@
-<script type="module" src="/js/clientsScript.js"> </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/clientsScript.js"></script>
 
-<div class="clientListDisplay">
-    <!-- Clients Header -->
-    <%- include("../partials/clients/clientsHeader") %>
-    <!-- Client List (Left pane) -->
-    <%- include("../partials/clients/client-list.ejs") %>
-
-    <div class="grid_col_2">
-        <!-- Add/Edit client popup -->
-        <%- include("../partials/clients/clientPopup.ejs") %>
-
-        <!-- Delete client popup -->
-        <div id="deleteClientPopup" class="popup hidden">
-            <!-- Header -->
-            <div class="popupHeaderDiv">
-                <p class="popupHeader"> Delete this client? </p>
-                <span id="deleteClientCloseButton" class="close-button">&times</span>
-            </div>
-            <br />
-            <div style="text-align: center;">
-                <button id="deleteClientSubmitButton" type="button" class="button_primary_red"> Submit </button>
-            </div>
+<!-- Main Content -->
+<main class="main-content">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-title-section">
+            <h1>Clients</h1>
+            <p>Manage and track all your client relationships</p>
         </div>
-
-        <div class="clientDetailsDiv">
-            <!-- Details header -->
-            <div class="flex flex-ai-c flex-jc-sb">
-                <p id="cdName" class="size_large bold"></p>
-                <div class="flex flex-ai-c">
-                    <span id="editClientButton" class="size_medium link"> Edit </span>
-                    <span id="deleteClientButton" style="color: red;" class="size_medium link margin_l_sm"> Delete </span>
-                </div>
+        <a href="/clients/new" class="btn btn-primary">
+            <span>➕</span> Add New Client
+        </a>
+    </div>
+    
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search clients by name, email, or company..." id="searchInput">
+        </div>
+        <div class="filter-group">
+            <select class="filter-select" id="statusFilter">
+                <option value="">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="pending">Pending</option>
+                <option value="inactive">Inactive</option>
+            </select>
+            <select class="filter-select" id="priorityFilter">
+                <option value="">All Priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+        </div>
+    </div>
+    
+    <!-- Table Card -->
+    <div class="table-card">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Client Name</th>
+                        <th>Company</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Last Contact</th>
+                        <th>Next Follow-up</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="clientsTableBody">
+                    <!-- Table rows will be populated via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination">
+            <div class="pagination-info" id="paginationInfo">
+                Showing 0 to 0 of 0 clients
             </div>
-            <p id="cdCompany" class="italic"></p>
-
-            <!-- Page Tabs -->
-            <div class="margin_t_med margin_b_sm flex flex-ai-c tabs">
-                <button id="cdSummaryTab" class="tabLink">Summary</button>
-                <!--<button id="cdApptTab" class="tabLink">Appointments (0)</button>
-                <button id="cdReminderTab" class="tabLink">Reminders (0)</button>-->
-            </div>
-
-            <!-- Summary tab content -->
-            <div id="cdSummaryDiv" class="tabContent">
-                <!-- Contact and address details -->
-                <div class="cdSection">
-                    <div class="flex flex-ai-c">
-                        <div class="cdSectionRow"> 
-                            <span class="cdSectionItem"> Telephone </span>
-                            <span id="cdTelephone" class="cdSectionValue"></span>
-                        </div>
-                        <div class="cdSectionRow"> 
-                            <span class="cdSectionItem"> Street </span>
-                            <span id="cdStreet" class="cdSectionValue"></span>
-                        </div>
-                    </div>
-                    <div class="flex flex-ai-c">
-                        <div class="cdSectionRow"> 
-                            <span class="cdSectionItem"> Mobile </span>
-                            <span id="cdMobile" class="cdSectionValue"></span>
-                        </div>
-                        <div class="cdSectionRow"> 
-                            <span class="cdSectionItem"> Suburb </span>
-                            <span id="cdSuburb" class="cdSectionValue"></span>
-                        </div>
-                    </div>
-                    <div class="flex flex-ai-c">
-                        <div class="cdSectionRow"> 
-                            <span class="cdSectionItem"> Email </span>
-                            <span id="cdEmail" class="cdSectionValue"></span>
-                        </div>
-                        <div class="cdSectionRow"> 
-                            <span class="cdSectionItem"> City </span>
-                            <span id="cdCity" class="cdSectionValue"></span>
-                        </div>
-                    </div>
-                    <div class="flex flex-ai-c">
-                        <div class="cdSectionRow"> 
-                            <span class="cdSectionItem"> Date created </span>
-                            <span id="cdCreated" class="cdSectionValue"></span>
-                        </div>
-                        <div class="cdSectionRow"> 
-                            <span class="cdSectionItem"> Postcode </span>
-                            <span id="cdPostcode" class="cdSectionValue"></span>
-                        </div>
-                    </div>
-                    <div class="cdSectionRow"> 
-                        <!-- Reminder popup -->
-                        <div id="cdReminderPopup" class="popup hidden">
-                            <!-- Header -->
-                            <div class="popupHeaderDiv">
-                                <p id="cdReminderPopupHeader" class="popupHeader"></p>
-                                <span id="cdReminderCloseButton" class="close-button">&times</span>
-                            </div>
-                            <form id="cdReminderPopupForm">
-                                <input id="cdReminderInput" type="date" name="rDate"></input>
-                                <br /><br />
-                                <p class="popupHeader2"> Status </p>
-                                <input id="cdPendingInput" type="radio" name="status" value="pending">
-                                <label for="cdPendingInput"> Pending </label>
-                                <input id="cdAwaitingInput" type="radio" name="status" value="awaiting">
-                                <label for="cdAwaitingInput"> Awaiting </label>
-                                <input id="cdFUInput" type="radio" name="status" value="followUp">
-                                <label for="cdFUInput"> Follow up </label>
-                            </form>
-                            <br />
-
-                            <!-- Submit button -->
-                            <div style="text-align: center;">
-                                <button id="cdReminderPopupSubmitButton" type="button" class="button_primary"> Submit </button>
-                            </div>
-                        </div>
-                        <!-- Delete reminder popup -->
-                        <div id="deleteReminderPopup" class="popup hidden">
-                            <div class="popupHeaderDiv">
-                                <p class="popupHeader"> Delete this reminder? </p>
-                                <span id="cdDeleteReminderCloseButton" class="close-button">&times</span>
-                            </div>
-                            <br />
-                            <div style="text-align: center;">
-                                <button id="cdDeleteReminderSubmitButton" type="button" class="button_primary_red"> Submit </button>
-                            </div>
-                        </div>
-                        <!-- Reminder -->
-                        <span class="cdSectionItem"> Reminder </span>
-                        <div id="cdReminderDiv">
-                            <span id="cdReminder" class="cdSectionValue"></span>
-                            <span id="cdReminderStatus" class="cdSectionValue"></span>
-                            <span id="cdEditReminderButton" class="link pad-l-sm">Edit</span>
-                            <span id="cdDeleteReminderButton" class="close-button">&times</span>
-                        </div>
-                        <button id="cdAddReminderButton" class="button_secondary"> Add </button>
-                    </div>
-                </div>
-
-                <!-- Notes -->
-                <div class="flex flex-ai-c">
-                    <span class="margin_l_sm"> Notes </span>
-                    <div id="cdAddNoteButton" class="add-icon">+</div>
-                </div>
-                <!-- Note Popup -->
-                <div id="notePopup" class="popup hidden">
-                    <div class="flex flex-ai-c flex-jc-sb">
-                        <span id="noteHeader" style="color: black;"></span>
-                        <span id="noteCloseButton" class="close-button">&times</span>
-                    </div>
-                    <br />
-                    <div class="flex flex-jc-c">
-                        <form id="noteForm">
-                            <textarea name="note" style="width: 260px;" cols="27" rows="3"></textarea>
-                        </form>
-                    </div>
-                    <!-- Submit button -->
-                    <div style="text-align: center;">
-                        <button id="noteSubmitButton" type="button" class="button_primary"> Submit </button>
-                    </div>
-                </div>
-                <!-- Delete note popup -->
-                <div id="deleteNotePopup" class="popup hidden">
-                    <!-- Header -->
-                    <div class="popupHeaderDiv">
-                        <p class="popupHeader"> Delete this note? </p>
-                        <span id="deleteNoteCloseButton" class="close-button">&times</span>
-                    </div>
-                    <br />
-                    <div style="text-align: center;">
-                        <button id="deleteNoteSubmitButton" type="button" class="button_primary_red"> Submit </button>
-                    </div>
-                </div>
-
-                <div class="cdSection">
-                    <ul id="cdNotesList" class="commentsList"></ul>
-                </div>
-                
-                <!--
-                <span class="margin_l_sm"> Appointments </span>
-                !-- Appointments --
-                <div class="cdSection">
-
-                </div>
-                -->
-            </div>
-
-            <!-- Appointment tab content -->
-            <div id="cdApptsDiv" class="cdTabContent">
-
-            </div>
-
-            <!-- Reminder tab content -->
-            <div id="cdRemindersDiv" class="cdTabContent">
-                
+            <div class="pagination-buttons" id="paginationButtons">
+                <!-- Pagination buttons will be generated via JavaScript -->
             </div>
         </div>
     </div>
-</div>
+</main>
