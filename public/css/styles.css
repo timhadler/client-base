@@ -1760,18 +1760,6 @@ td {
     color: var(--gray-900);
 }
 
-.cd-card-action {
-    color: var(--primary-blue);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    transition: color 0.2s ease;
-}
-
-.cd-card-action:hover {
-    color: var(--primary-blue-dark);
-}
-
 /* Reminders List with Edit Actions */
 .cd-reminder-list {
     display: flex;
