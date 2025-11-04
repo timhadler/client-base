@@ -1,6 +1,4 @@
 const express = require("express");
-// const req = require("express/lib/request");
-// const res = require("express/lib/response");
 const router = express.Router();
 const clients = require("../models/client-models");
 xl = require("../modules/excel-JS");
@@ -36,6 +34,14 @@ router.get("/load-client-list", async (req, res) => {
         const clientList = await clients.getClientList(limit, offset, search, status, priority);
 
         res.json({ clientList:clientList, nClients:nClients });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+router.get("/:id", async (req, res) => {
+    try {
+        res.status(200).render("clients/client-details", { bodyClass: "", clientId: req.params.id, showNavBar: true });
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -85,43 +91,6 @@ router.get("/:id/activity", async (req, res) => {
     }
 });
 
-// Import clients
-router.get("/import-clients", (req, res) => {
-    try {
-        res.status(200).render("clients/importClients")
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
-// Export clients
-router.get("/exportClients", async (req, res) => {
-    try {
-        // let details = [await clients.clientDetails(38)];
-        // details.push(await clients.clientDetails(974));
-        // let data = [];
-        // for (let i = 0; i < details.length; i++) {
-        //     let address = {street: "", suburb:"", city:"", pc:""};
-        //     let contact = {email:"", phone:""};
-        //     let call = "";
-
-        //     if (details[i].addresses.length > 0) { address = details[i].addresses[0] };
-        //     if (details[i].contacts.length > 0) { contact = details[i].contacts[0]; };
-        //     if (details[i].calls.length > 0) { call = details[i].calls[0].rDate.toLocaleDateString('en-GB');; };
-
-        //     data.push({Name:details[i].client.name, Company:details[i].client.company, Email:contact.email, Phone: contact.phone, 
-        //         Street:address.street, Suburb:address.suburb, City: address.city, Postcode:address.pc,
-        //         Comments:details[i].client.comments, Reminder:call});
-        // }
-        
-        // xl.writeTable(data, "exports/clientExport.xlsx");
-        // res.send(data);
-        res.status(200).render("clients/exportClients");
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
 /***********************************************************
  * Add
  ***********************************************************/
@@ -157,23 +126,6 @@ router.post("/add-client", async (req, res) => {
     }
 });
 
-// POST add note
-router.post("/add-note", async (req, res) => {
-    try {
-        const data = req.body.data;
-        const params = new URLSearchParams(data);
-        const note = params.get('note');
-        const id = req.body.id;
-
-        if (note.length > 0) {
-            await clients.createNote(note, id)
-        }
-        res.status(201).end();
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
 // POST add reminder
 router.post("/add-reminder/", async (req, res) => {
     try {
@@ -195,85 +147,85 @@ router.post("/add-reminder/", async (req, res) => {
 /***********************************************************
  * Import clients
  ***********************************************************/
-router.post("/import-clients", upload.single("importExcel"), async (req, res) => {
-    try {
-        // Verifying file
-        const mandatoryExcelHeaders = ['Full name', 'Company', 'Email address', 'Mobile', "Phone", 'Street', 'Suburb', 'City', 'Postcode', 'Reminder date'];
+// router.post("/import-clients", upload.single("importExcel"), async (req, res) => {
+//     try {
+//         // Verifying file
+//         const mandatoryExcelHeaders = ['Full name', 'Company', 'Email address', 'Mobile', "Phone", 'Street', 'Suburb', 'City', 'Postcode', 'Reminder date'];
 
-        if (req.file == null) {
-            res.redirect("/clients/import-clients");
-        } else {
-            let n = 0;              // number of succesful client uploads
-            let fails = [];         // List of clients that resulted in error and the error message, list of objects
-            let duplicates = [];    // List of clients that failed due to a duplicate name error
-            let noReminderDate = [];
-            let incorrectReminders = [];
-            let clientObjs = [];
+//         if (req.file == null) {
+//             res.redirect("/clients/import-clients");
+//         } else {
+//             let n = 0;              // number of succesful client uploads
+//             let fails = [];         // List of clients that resulted in error and the error message, list of objects
+//             let duplicates = [];    // List of clients that failed due to a duplicate name error
+//             let noReminderDate = [];
+//             let incorrectReminders = [];
+//             let clientObjs = [];
 
-            try {
-                clientObjs = xl.readData(req.file.originalname, (req.file.path), mandatoryExcelHeaders);
-            } catch (error) {
-                let message = error.message;
-                if (message.includes("no such file or directory")) {
-                    message = "No such file or directory.";
-                }
-                res.render("clients/importClients", {error:message});
-                return;
-            }
+//             try {
+//                 clientObjs = xl.readData(req.file.originalname, (req.file.path), mandatoryExcelHeaders);
+//             } catch (error) {
+//                 let message = error.message;
+//                 if (message.includes("no such file or directory")) {
+//                     message = "No such file or directory.";
+//                 }
+//                 res.render("clients/importClients", {error:message});
+//                 return;
+//             }
 
-            let clientNumber = clientObjs.length;
-            for (let i = 0; i < clientNumber; i++) {
-                const name = clientObjs[i]["Full name"];
-                let company = clientObjs[i].Company;
-                const rDate = clientObjs[i]["Reminder date"];
-                let street = clientObjs[i].Street;
-                let suburb = clientObjs[i].Suburb;
-                let city = clientObjs[i].City;
-                let postcode = clientObjs[i].Postcode;
-                let email = clientObjs[i]["Email address"];
-                let mobile = clientObjs[i].Mobile;
-                let home = clientObjs[i].Phone;
+//             let clientNumber = clientObjs.length;
+//             for (let i = 0; i < clientNumber; i++) {
+//                 const name = clientObjs[i]["Full name"];
+//                 let company = clientObjs[i].Company;
+//                 const rDate = clientObjs[i]["Reminder date"];
+//                 let street = clientObjs[i].Street;
+//                 let suburb = clientObjs[i].Suburb;
+//                 let city = clientObjs[i].City;
+//                 let postcode = clientObjs[i].Postcode;
+//                 let email = clientObjs[i]["Email address"];
+//                 let mobile = clientObjs[i].Mobile;
+//                 let home = clientObjs[i].Phone;
 
-                // Handle empty fields
-                if (name.trim().length == 0) { fails.push({name:("Client (index: " + (i + 2) + ") failed upload"), message:"No name provided"}); continue;};   // If no name was provided, push to fails list
-                if (home.length == 0) {home=null};
-                if (mobile.length == 0) {mobile=null};
-                if (city.length == 0) {city=null};
-                if (email.length == 0) {email=null};
-                if (postcode.length == 0) {postcode=null};
-                if (suburb.length == 0) {suburb=null};
-                if (street.length == 0) {street=null};
-                if (company.length == 0) {company=null};
-                //console.log(name, company, rDate, street, suburb, city, postcode, mobile, home)
+//                 // Handle empty fields
+//                 if (name.trim().length == 0) { fails.push({name:("Client (index: " + (i + 2) + ") failed upload"), message:"No name provided"}); continue;};   // If no name was provided, push to fails list
+//                 if (home.length == 0) {home=null};
+//                 if (mobile.length == 0) {mobile=null};
+//                 if (city.length == 0) {city=null};
+//                 if (email.length == 0) {email=null};
+//                 if (postcode.length == 0) {postcode=null};
+//                 if (suburb.length == 0) {suburb=null};
+//                 if (street.length == 0) {street=null};
+//                 if (company.length == 0) {company=null};
+//                 //console.log(name, company, rDate, street, suburb, city, postcode, mobile, home)
 
-                try {
-                    const client_id = await clients.createClient(name, company, home, mobile, email, street, suburb, city, postcode);
-                    n++;
-                    // Check for duplicates
-                    const dups = await clients.getClientsByName(name);
-                    if (dups.length > 1 && !duplicates.includes(name)) {
-                        duplicates.push(name);
-                    }
-                    await clients.createReminder(convertDate(rDate), "pending", client_id);
-                } catch (error) {
-                    if (error.message.includes("Incorrect date value") || error.message.includes("Column 'rDate' cannot be null")) {
-                        noReminderDate.push(name);
-                        continue;
-                    } else if (error.message.includes("date.slice is not a function") || error.message.includes("date.split is not a function")) {
-                        incorrectReminders.push(name);
-                        continue;
-                    } else {
-                        fails.push({name:name, message:error.message});
-                        continue;
-                    }
-                }
-            }
-            res.status(200).render("clients/importClients", {successes:n, total:clientNumber, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate, incorrectReminders:incorrectReminders});
-        }
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
+//                 try {
+//                     const client_id = await clients.createClient(name, company, home, mobile, email, street, suburb, city, postcode);
+//                     n++;
+//                     // Check for duplicates
+//                     const dups = await clients.getClientsByName(name);
+//                     if (dups.length > 1 && !duplicates.includes(name)) {
+//                         duplicates.push(name);
+//                     }
+//                     await clients.createReminder(convertDate(rDate), "pending", client_id);
+//                 } catch (error) {
+//                     if (error.message.includes("Incorrect date value") || error.message.includes("Column 'rDate' cannot be null")) {
+//                         noReminderDate.push(name);
+//                         continue;
+//                     } else if (error.message.includes("date.slice is not a function") || error.message.includes("date.split is not a function")) {
+//                         incorrectReminders.push(name);
+//                         continue;
+//                     } else {
+//                         fails.push({name:name, message:error.message});
+//                         continue;
+//                     }
+//                 }
+//             }
+//             res.status(200).render("clients/importClients", {successes:n, total:clientNumber, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate, incorrectReminders:incorrectReminders});
+//         }
+//     } catch (error) {
+//         res.status(500).send(error.message);
+//     }
+// });
 
 /***********************************************************
  * Edit
@@ -295,21 +247,6 @@ router.post("/edit-client", async (req, res) => {
         const pc = params.get('pc');
 
         await clients.editClient(id, name, company, telephone, mobile, email, street, suburb, city, pc);
-        res.status(201).end();
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
-// POST edit note
-router.post("/edit-note", async (req, res) => {
-    try {
-        const formData = req.body.data;
-        const params = new URLSearchParams(formData);
-        const note = params.get('note');
-        const id = req.body.id;
-
-        await clients.editNote(id, note);
         res.status(201).end();
     } catch (error) {
         res.status(500).send(error.message);
@@ -345,29 +282,11 @@ router.delete("/delete-client", async (req, res) => {
     }
 });
 
-// Delets a note from db
-router.delete("/delete-note", async (req, res) => {
-    try {
-        await clients.deleteNote(req.body.nId);
-        res.status(204).end();
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
 // Delete from reminders table
 router.delete("/delete-reminder", async (req, res) => {
     try {
         await clients.deleteClientReminder(req.body.id);
         res.status(204).end();
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
-router.get("/:id", async (req, res) => {
-    try {
-        res.status(200).render("clients/client-details", { bodyClass: "clientsPage", clientId: req.params.id, showNavBar: true });
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -379,74 +298,74 @@ router.get("/:id", async (req, res) => {
 // Converts a date to format suitable for inserting into database
 // Input eg: "01-Feb-2021"
 // Output: "2022-02-01"
-function convertDate(date) {
-    if (typeof date == 'undefined') {
-        return null;
-    }
+// function convertDate(date) {
+//     if (typeof date == 'undefined') {
+//         return null;
+//     }
 
-    let s = date.split('-');
-    if (s.length != 3) {
-        s = date.split('/');
-    }
-    if (s.length != 3) {
-        return null;
-    }
+//     let s = date.split('-');
+//     if (s.length != 3) {
+//         s = date.split('/');
+//     }
+//     if (s.length != 3) {
+//         return null;
+//     }
 
-    let day = s[0];
-    let month = s[1];
-    const year = s[2];
+//     let day = s[0];
+//     let month = s[1];
+//     const year = s[2];
 
-    if (day.length == 1) {
-        day = '0' + day;
-    }
-    if (month.length == 1) {
-        month = '0' + month;
-    }
+//     if (day.length == 1) {
+//         day = '0' + day;
+//     }
+//     if (month.length == 1) {
+//         month = '0' + month;
+//     }
 
-    // const day = date.slice(0, 2);
-    // let month = date.slice(3, 6);
-    // const year = date.slice(7, 11);
+//     // const day = date.slice(0, 2);
+//     // let month = date.slice(3, 6);
+//     // const year = date.slice(7, 11);
 
-    switch(month) {
-        case ("Jan"): 
-            month = "01";
-            break;
-        case ("Feb"): 
-            month = "02";
-        break;
-        case ("Mar"): 
-            month = "03";
-            break;
-        case ("Apr"): 
-            month = "04";
-            break;
-        case ("May"): 
-            month = "05";
-            break;
-        case ("Jun"): 
-            month = "06";
-            break;
-        case ("Jul"): 
-            month = "07";
-            break;
-        case ("Aug"): 
-            month = "08";
-            break;
-        case ("Sep"): 
-            month = "09";
-            break;
-        case ("Oct"): 
-            month = "10";
-            break;
-        case ("Nov"): 
-            month = "11";
-            break;
-        case ("Dec"): 
-            month = "12";
-            break;
-    }
-    const nDate = year + "-" + month + "-" + day
-    return nDate;
-}
+//     switch(month) {
+//         case ("Jan"): 
+//             month = "01";
+//             break;
+//         case ("Feb"): 
+//             month = "02";
+//         break;
+//         case ("Mar"): 
+//             month = "03";
+//             break;
+//         case ("Apr"): 
+//             month = "04";
+//             break;
+//         case ("May"): 
+//             month = "05";
+//             break;
+//         case ("Jun"): 
+//             month = "06";
+//             break;
+//         case ("Jul"): 
+//             month = "07";
+//             break;
+//         case ("Aug"): 
+//             month = "08";
+//             break;
+//         case ("Sep"): 
+//             month = "09";
+//             break;
+//         case ("Oct"): 
+//             month = "10";
+//             break;
+//         case ("Nov"): 
+//             month = "11";
+//             break;
+//         case ("Dec"): 
+//             month = "12";
+//             break;
+//     }
+//     const nDate = year + "-" + month + "-" + day
+//     return nDate;
+// }
 
 module.exports = router;

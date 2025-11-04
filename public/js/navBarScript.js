@@ -1,4 +1,3 @@
-// Call this function on each page
 function setActiveNav() {
     const path = window.location.pathname;
     document.querySelectorAll('.nav-links a').forEach(link => {
@@ -6,7 +5,7 @@ function setActiveNav() {
         link.classList.remove('active');
 
         // Add 'active' class if href matches the current path
-        if (link.getAttribute('href') === path) {
+        if (path.startsWith(link.getAttribute('href'))) {
             link.classList.add('active');
         }
     });

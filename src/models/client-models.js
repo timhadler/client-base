@@ -56,72 +56,6 @@ exports.getListCount = async function(list, d1, d2) {
     return rows[0].n;
 };
 
-// Fetches the client details associated with the reminder dates between d1 and d2 and have status of "pending"
-exports.pendingList = async function (d1, d2, limit, offset, order) {
-    let sqlQuery = "SELECT clients.id, name, mobile, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='pending' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
-    const rows = await db.query(sqlQuery);
-    
-    return rows;
-};
-
-// NO LONGER USING NOANS STATUS, CAN REMOVE EXTRA FUNCTIONS AS THERE WILLL ONLY BE FOLLOWuP STATUS
-// Fetches the client details associated with the reminder dates between d1 and d2 and have status "noResponse" or "followUp"
-exports.followUpList = async function (d1, d2, limit, offset, order) {
-    let sqlQuery = "SELECT name, clients.id, rDate, flag, reminders.id AS rId, reminders.status FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE status='followUp' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
-    const rows = await db.query(sqlQuery);
-    
-    return rows;
-};
-
-// Fetches the client details associated with reminders that have status "awaitingResponse"
-exports.awaitingList = async function (d1, d2, limit, offset, order) {
-    let sqlQuery = "SELECT name, clients.id, rDate, flag, reminders.id AS rId, reminders.status, latest_created FROM clients INNER JOIN reminders ON clients.id = reminders.client_id ";
-    sqlQuery += "LEFT JOIN (SELECT reminder_id, MAX(created) AS latest_created FROM interactions GROUP BY reminder_id) latest_int ON reminders.id = latest_int.reminder_id LEFT JOIN interactions ON reminders.id = interactions.reminder_id AND latest_int.latest_created = interactions.created ";
-    sqlQuery += "WHERE reminders.status='awaiting' AND rDate BETWEEN '" + d1 + "' AND '" + d2 + "' ORDER BY " + order + " LIMIT " + limit + " OFFSET " + offset;
-    
-    const rows = await db.query(sqlQuery);
-    return rows;
-};
-
-// Fetches all clients with reminders statuses "completed", limited by 50
-exports.completedList = async function () {
-    const sqlQuery = "SELECT name, clients.id, rDate, reminders.id AS rId, reminders.status, outcome FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status='completed' ORDER BY name LIMIT 50";
-    const rows = await db.query(sqlQuery);
-
-    return rows;
-};
-
-// Fetches all interactions associated with a given reminder
-exports.reminderInteractions = async function(id) {
-    const sqlQuery = "SELECT interaction, created FROM interactions WHERE reminder_id=" + id + " ORDER BY created DESC";
-    const rows = await db.query(sqlQuery);
-
-    return rows;
-}
-
-// Fethes all notes related to a client with a given id
-exports.clientNotes = async function(id) {
-    const sqlQuery = "SELECT id, note, created FROM notes WHERE client_id = " + id + " ORDER BY created DESC";
-    const rows = await db.query(sqlQuery);
-
-    return rows;
-}
-
-// Fetches clients resulting from a search query
-exports.searchList = async function(search) {
-    let sqlQuery = "SELECT name, public_id as id FROM clients WHERE name LIKE '%" + search + "%'";
-    const rows = await db.query(sqlQuery);
-
-    sqlQuery = "SELECT COUNT(DISTINCT clients.id) AS n FROM clients where name LIKE '%" + search + "%'";
-    const count = await db.query(sqlQuery);
-
-    if (rows.length > 0) {
-        rows[0].n = count[0].n;
-    }
-
-    return rows;
-}
-
 // Fetches client details with a given id
 exports.getClientDetails = async function(id) {
     const sqlQuery = "SELECT public_id as id, name, email, phone, company, position, status, priority, source, createdAt, lastContact, notes, street, city, state, postcode, country FROM clients WHERE public_id = ?";
@@ -146,13 +80,13 @@ exports.getClientInteractions = async function (id) {
     return rows;
 }
 
-// Returns a list of all clients in db with the provided name
-exports.getClientsByName = async function(name) {
-    const sqlQuery = "SELECT * from clients WHERE name=?";
-    const rows = await db.query(sqlQuery, name);
+// Returns a list of all clients in db with the provided name, used to check for duplicates during import
+// exports.getClientsByName = async function(name) {
+//     const sqlQuery = "SELECT * from clients WHERE name=?";
+//     const rows = await db.query(sqlQuery, name);
 
-    return rows;
-}
+//     return rows;
+// }
 
 // Retrives the client name and ids of clients with no reminder Date
 exports.getClientsNoRDate = async function() {
@@ -188,12 +122,6 @@ exports.createInteraction = async function(action, id, rId) {
     await db.query(sqlQuery, [id, rId, action]);
 }
 
-// Creates a note entry
-exports.createNote = async function(note, id) {
-    const sqlQuery = "INSERT INTO notes (note, client_id) VALUES(?, ?)";
-    await db.query(sqlQuery, [note, id]);
-}
-
 /***********************************************************
  * Edit
  ***********************************************************/
@@ -216,25 +144,9 @@ exports.editClientReminder = async function(id, date, status) {
     await db.query(sqlQuery, [date, status, id]);
 }
 
-// Sets a reminder status
-exports.setReminderStatus = async function(status, outcome, id) {
-    const sqlQuery = "UPDATE reminders SET status=?, outcome=? WHERE id=?";
-    await db.query(sqlQuery, [status, outcome, id]);
-}
-
 exports.setReminderFlag = async function(id, value) {
     const sqlQuery = "UPDATE reminders SET flag=? WHERE id=?";
     await db.query(sqlQuery, [value, id]);
-}
-
-// Edits a comment entry
-exports.editNote = async function(id, text) {
-    if (text.length < 1) {
-        text = null;
-    }
-    const sqlQuery = "UPDATE notes SET note=? WHERE id=?";
-    
-    await db.query(sqlQuery, [text, id]);
 }
 
 /***********************************************************
@@ -265,11 +177,6 @@ exports.deleteClient = async function(id) {
     } finally {
         client.release();
     }
-}
-
-exports.deleteNote = async function(id) {
-    const sqlQuery = "DELETE FROM notes WHERE id=?"
-    await db.query(sqlQuery, id);
 }
 
 exports.deleteClientReminder = async function(id) {

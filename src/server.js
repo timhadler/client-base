@@ -18,8 +18,8 @@ const passport  = require("./passport-config");
 const reminderRouter = require("./routes/reminders");
 const clientRouter = require("./routes/clients");
 const overviewRouter = require("./routes/clientOverview");
-const stripeRouter = require("./routes/stripe").router;
 const authRouter = require("./routes/auth");
+const stripeRouter = require("./routes/stripe").router;
 
 //const { Passport } = require("passport/lib");
 //const req = require("express/lib/request");
@@ -94,12 +94,14 @@ app.use("/subscriptions", stripeRouter);
 app.use(express.json());    // Call before routes to parse JSON bodies, call after subscriptions route as webhooks need raw body
 
 // For Development purposes, disable authentication
-//app.use("/auth", authRouter);
-//app.use("/reminders", reminderRouter);
-//app.use("/clients", clientRouter);
-//app.use("/clientOverview", overviewRouter);
-
-app.use("/auth", checkNotAuthenticated, authRouter);
-app.use("/reminders", checkAuthenticated, reminderRouter);
-app.use("/clients", checkAuthenticated, clientRouter);
-app.use("/clientOverview", checkAuthenticated, overviewRouter);
+if (process.env.NODE_ENV === "development") {
+    app.use("/auth", authRouter);
+    app.use("/clients", clientRouter);
+    app.use("/reminders", reminderRouter);
+    app.use("/clientOverview", overviewRouter);
+} else {
+    app.use("/auth", checkNotAuthenticated, authRouter);
+    app.use("/reminders", checkAuthenticated, checkTrialorActive, reminderRouter);
+    app.use("/clients", checkAuthenticated, checkTrialorActive, clientRouter);
+    app.use("/clientOverview", checkAuthenticated, checkTrialorActive, overviewRouter);
+}

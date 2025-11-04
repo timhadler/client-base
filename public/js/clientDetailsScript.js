@@ -3,7 +3,6 @@
  * Uses jQuery and AJAX to fetch and display all client data
  ****************************************************************/
 
-//const clientId = window.clientId;
 let clientId;
 let clientData = null;
 let reminderData = {}; // Store reminder data for editing
@@ -113,7 +112,6 @@ function renderClientHeader(client) {
     // Update action buttons
     $('#editBtn').attr('href', `/clients/${client.id}/edit`);
     $('#addReminderBtn').attr('href', `/reminders/new?client=${client.id}`);
-    $('#viewAllRemindersLink').attr('href', `/reminders?client=${client.id}`);
 }
 
 /*****************************************************************
@@ -385,7 +383,8 @@ function initEditReminderModal() {
     });
 
     // Open modal handler
-    $('#remindersList').on('click', '.cd-edit-reminder-btn', function() {
+    $('#remindersList').on('click', '.cd-edit-reminder-btn', function(e) {
+        e.preventDefault();
         const reminderId = $(this).data('id');
         editReminder(reminderId);
     });
