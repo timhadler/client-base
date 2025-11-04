@@ -369,7 +369,7 @@ function createReminderRow(reminder) {
             </div>
             <div class="cd-reminder-actions-group">
                 <div class="cd-reminder-status ${statusClass}">${statusText}</div>
-                <button class="cd-btn-icon-sm" onclick="editReminder(${reminder.id})" title="Edit">✏️</button>
+                <button data-id="${reminder.id}" class="cd-btn-icon-sm cd-edit-reminder-btn" title="Edit">✏️</button>
             </div>
         </div>
     `;
@@ -383,7 +383,13 @@ function initEditReminderModal() {
     $('#closeEditReminderModal, #cancelEditReminder').on('click', function() {
         $('#editReminderModal').removeClass('show');
     });
-    
+
+    // Open modal handler
+    $('#remindersList').on('click', '.cd-edit-reminder-btn', function() {
+        const reminderId = $(this).data('id');
+        editReminder(reminderId);
+    });
+
     // Form submission
     $('#editReminderForm').on('submit', function(e) {
         e.preventDefault();
@@ -392,22 +398,28 @@ function initEditReminderModal() {
 }
 
 // Global function for onclick
-window.editReminder = function(reminderId) {
+function editReminder(reminderId) {
     const data = reminderData[reminderId];
     if (!data) {
         alert('Reminder data not found');
         return;
     }
-    
-    // Convert date to datetime-local format
+
+    // Convert date to local date string (YYYY-MM-DD)
     const dateObj = new Date(data.date);
-    const dateTimeLocal = dateObj.toISOString().slice(0, 16);
-    
+    const pad = n => n.toString().padStart(2, '0');
+    const year = dateObj.getFullYear();
+    const month = pad(dateObj.getMonth() + 1); // months are 0-indexed
+    const day = pad(dateObj.getDate());
+    const dateLocal = `${year}-${month}-${day}`;
+
     $('#editReminderId').val(reminderId);
-    $('#editReminderDate').val(dateTimeLocal);
+    $('#editReminderDate').val(dateLocal); // make sure input type="date"
     $('#editReminderNote').val(data.note);
     $('#editReminderModal').addClass('show');
-};
+}
+
+
 
 function saveReminderEdit() {
     const reminderId = $('#editReminderId').val();
