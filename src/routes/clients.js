@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 });
 
 // Usefull error catcthing for development
-// console.error('Error in getClientDetails:', error); // Logs full error stack
+// console.error('Error:', error); // Logs full error stack
 // res.status(500).json({
 //     message: error.message,   // Shows the error message
 //     stack: error.stack        // Shows stack trace for debugging
@@ -26,27 +26,16 @@ router.get("/", async (req, res) => {
 // Load client list
 router.get("/load-client-list", async (req, res) => {
     try {
+        const limit = req.query.limit;
+        const offset = req.query.offset;
         const search = req.query.search;
-        var n = 0;
-        var clientList = [];
+        const status = req.query.status;
+        const priority = req.query.priority;
 
-        // If a search is provided, search list, client list if not
-        if (typeof search != 'undefined') {
-            if (search.length > 0) {
-                clientList = await clients.searchList(search);
-                if (clientList.length > 0) {
-                    n = clientList[0].n;
-                }
-            } else {
-                clientList = await clients.clientList(req.query.limit, req.query.offset);
-                n = await clients.clientNumber();
-            }
-        } else {
-            clientList = await clients.clientList(req.query.limit, req.query.offset);
-            n = await clients.clientNumber();
-        }
+        const nClients = await clients.nTotalClients();
+        const clientList = await clients.getClientList(limit, offset, search, status, priority);
 
-        res.json(JSON.stringify({clientList:clientList, nClients:n}));
+        res.json({ clientList:clientList, nClients:nClients });
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -92,53 +81,9 @@ router.get("/:id/activity", async (req, res) => {
 
         res.json({ interactions:interactions });
     } catch (error) {
-        //res.status(500).send(error.message);
-        console.error('Error in getClientDetails:', error); // Logs full error stack
-    res.status(500).json({
-        message: error.message,   // Shows the error message
-        stack: error.stack        // Shows stack trace for debugging
-    });
+        res.status(500).send(error.message);
     }
 });
-
-// Load client data for display, including notes, and reminder
-// REPLACING
-// router.get("/load-client-data", async (req, res) => {
-//     try {
-//         // const id = req.query.id;
-//         const id = 11673;
-//         var data = await clients.clientDetails(id);
-//         const notes = await clients.clientNotes(id);
-//         const reminder = await clients.clientReminder(id);
-
-//         data.notes = notes;
-
-//         // Convert sql dates to nicer date to local date time
-//         const clientCreated = data.created;
-//         const cDate = new Date(clientCreated);
-//         data.created = cDate.toLocaleDateString('en-GB');
-
-//         if (reminder) {
-//             let rDate = reminder.rDate;
-//             rDate = new Date(rDate);
-//             reminder.rDate = rDate.toLocaleDateString('en-GB');
-//             data.reminder =  reminder;
-//         } else {
-//             // Empty reminder for front end display
-//             data.reminder = {rDate:"", status:""};
-//         }
-
-//         for (let i = 0; i < notes.length; i++) {
-//             const noteCreated = notes[i].created;
-//             const nDate = new Date(noteCreated);
-//             notes[i].created = nDate.toLocaleDateString('en-GB');
-//         }
-
-//         res.json((data));
-//     } catch (error) {
-//         res.status(500).send(error.message);
-//     }
-// });
 
 // Import clients
 router.get("/import-clients", (req, res) => {

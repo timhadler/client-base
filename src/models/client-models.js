@@ -4,20 +4,49 @@ const db = require("../database");
  * Retrieval
  ***********************************************************/
 // Get number of clients in database
-exports.clientNumber = async function() {
+exports.nTotalClients = async function() {
     const sqlQuery = "SELECT COUNT(*) as n FROM clients";
     const rows = await db.query(sqlQuery);
 
     return rows[0].n;
 };
 
-// Fetches clients from the database, ordered by name
-exports.clientList = async function(limit, offset) {
-    const sqlQuery = "SELECT name, public_id as id FROM clients ORDER BY NAME LIMIT " + limit + " OFFSET " + offset;
-    const rows = await db.query(sqlQuery);
-    
+// Fetches client list (clients)
+exports.getClientList = async function(limit, offset, search, status, priority) {
+    const values = [];
+    let whereClauses = [];
+
+    // Search filter: name, company, or email
+    if (search) {
+        whereClauses.push(`(name LIKE ? OR company LIKE ? OR email LIKE ?)`);
+        const searchPattern = `%${search}%`;
+        values.push(searchPattern, searchPattern, searchPattern);
+    }
+
+    // Status filter
+    if (status) {
+        whereClauses.push(`status = ?`);
+        values.push(status);
+    }
+
+    // Priority filter
+    if (priority) {
+        whereClauses.push(`priority = ?`);
+        values.push(priority);
+    }
+
+    const whereSQL = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
+
+    const sql = `
+        SELECT public_id as id, name, email, company, status, priority, lastContact, nextFollowup, createdAt
+        FROM clients
+        ${whereSQL}
+        ORDER BY createdAt DESC
+        LIMIT ` + limit + ` OFFSET ` + offset 
+    ;
+    const rows = await db.query(sql, values);
     return rows;
-};
+}
 
 // Fetches the number of clients in a given list (pending, awaiting, followUp) with user parameters
 exports.getListCount = async function(list, d1, d2) {

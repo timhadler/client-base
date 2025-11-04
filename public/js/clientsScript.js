@@ -80,8 +80,7 @@ function loadClients() {
         },
         success: function(res) {
             // Parse response if it's a string
-            //const data = typeof response === 'string' ? JSON.parse(response) : response;
-            const data = JSON.parse(res);
+            const data = typeof res === 'string' ? JSON.parse(res) : res;
             
             totalClients = data.nClients || 0;
             renderClientsTable(data.clientList || []);
@@ -154,7 +153,7 @@ function createClientRow(client) {
                 </span>
             </td>
             <td>${formatDate(client.lastContact)}</td>
-            <td>${formatDate(client.nextFollowUp)}</td>
+            <td>${formatDate(client.nextFollowup)}</td>
             <td>
                 <div class="action-buttons">
                     <a href="/clients/${client.id}" class="btn-icon view" title="View">👁️</a>
