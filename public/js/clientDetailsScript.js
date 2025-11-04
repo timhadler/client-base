@@ -16,7 +16,7 @@ $(document).ready(function() {
 
     // Load all data
     loadClientData();
-    //loadReminders();
+    loadReminders();
     //loadActivityHistory();
     //loadEngagementStats();
     
@@ -29,12 +29,12 @@ $(document).ready(function() {
  ****************************************************************/
 function loadClientData() {
     $.ajax({
-        //url: `/clients/${clientId}/data`,
-        url: `/clients/load-client-data`,
+        url: `/clients/${clientId}/data`,
+        //url: `/clients/load-client-data`,
         method: 'GET',
         success: function(response) {
             const data = typeof response === 'string' ? JSON.parse(response) : response;
-            clientData = data;
+            clientData = data.client;
             renderClientHeader(clientData);
             renderClientInfo(clientData);
             renderAddress(clientData);
@@ -174,7 +174,7 @@ function renderClientInfo(client) {
         <div class="cd-info-item">
             <div class="cd-info-label">Source</div>
             <div class="cd-info-value ${client.source ? '' : 'cd-not-provided'}">
-                ${escapeHtml(client.source || 'Not provided')}
+                ${escapeHtml(capitalizeFirst(client.source) || 'Not provided')}
             </div>
         </div>
     `;
@@ -193,11 +193,17 @@ function renderClientInfo(client) {
  ****************************************************************/
 function renderAddress(client) {
     const $display = $('#addressDisplay');
+
+    const street = client.street;
+    const city = client.city;
+    const state = client.state;
+    const country = client.country;
+    const postcode = client.postcode;
     
     // Check if address exists
-    const hasAddress = client.addressStreet || client.addressCity || 
-                       client.addressState || client.addressPostcode || 
-                       client.addressCountry;
+    const hasAddress = street || city || 
+                       state || postcode || 
+                       country;
     
     if (!hasAddress) {
         $display.html('<div class="cd-no-address">No address on file</div>');
@@ -206,15 +212,15 @@ function renderAddress(client) {
     
     // Build address lines
     let addressLines = [];
-    if (client.addressStreet) addressLines.push(client.addressStreet);
-    if (client.addressCity || client.addressState || client.addressPostcode) {
+    if (street) addressLines.push(street);
+    if (city || client.addressState || postcode) {
         let line = [];
-        if (client.addressCity) line.push(client.addressCity);
-        if (client.addressState) line.push(client.addressState);
-        if (client.addressPostcode) line.push(client.addressPostcode);
+        if (city) line.push(city);
+        if (state) line.push(state);
+        if (postcode) line.push(postcode);
         addressLines.push(line.join(' '));
     }
-    if (client.addressCountry) addressLines.push(client.addressCountry);
+    if (country) addressLines.push(country);
     
     // Build Google Maps query
     const mapQuery = encodeURIComponent(addressLines.join(', '));
@@ -271,8 +277,7 @@ function loadReminders() {
         url: `/clients/${clientId}/reminders`,
         method: 'GET',
         data: {
-            limit: 5,
-            status: 'pending'
+            limit: 5
         },
         success: function(response) {
             const data = typeof response === 'string' ? JSON.parse(response) : response;
@@ -346,8 +351,11 @@ function createReminderRow(reminder) {
         const daysUntil = Math.ceil((reminderDate - today) / (1000 * 60 * 60 * 24));
         statusText = `${daysUntil} day${daysUntil !== 1 ? 's' : ''}`;
     }
-    
-    const timeStr = formatTimeString(reminder.date);
+
+    let importantText = '';
+    if (reminder.important) {
+        importantText = 'Urgent';
+    }
     
     return `
         <div class="cd-reminder-item ${statusClass}" data-reminder-id="${reminder.id}">
@@ -356,8 +364,8 @@ function createReminderRow(reminder) {
                 <div class="cd-reminder-date-month">${month}</div>
             </div>
             <div class="cd-reminder-content">
-                <div class="cd-reminder-text">${escapeHtml(reminder.note || 'Follow-up reminder')}</div>
-                <div class="cd-reminder-time">${timeStr}</div>
+                <div class="cd-reminder-text">${escapeHtml(reminder.note || 'Reminder')}</div>
+                <div class="cd-reminder-time" style="color: red;">${importantText}</div>
             </div>
             <div class="cd-reminder-actions-group">
                 <div class="cd-reminder-status ${statusClass}">${statusText}</div>
@@ -581,32 +589,6 @@ function formatLongDate(date) {
     
     const options = { month: 'long', day: 'numeric', year: 'numeric' };
     return date.toLocaleDateString('en-US', options);
-}
-
-function formatTimeString(dateStr) {
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return '';
-    
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const reminderDate = new Date(date);
-    reminderDate.setHours(0, 0, 0, 0);
-    
-    const time = date.toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
-        minute: '2-digit',
-        hour12: true 
-    });
-    
-    if (reminderDate.getTime() === today.getTime()) {
-        return `Today at ${time}`;
-    } else {
-        const dateStr = date.toLocaleDateString('en-US', { 
-            month: 'short', 
-            day: 'numeric' 
-        });
-        return `${dateStr} at ${time}`;
-    }
 }
 
 function formatActivityTime(dateStr) {

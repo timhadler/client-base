@@ -13,7 +13,7 @@ exports.clientNumber = async function() {
 
 // Fetches clients from the database, ordered by name
 exports.clientList = async function(limit, offset) {
-    const sqlQuery = "SELECT name, id FROM clients ORDER BY NAME LIMIT " + limit + " OFFSET " + offset;
+    const sqlQuery = "SELECT name, public_id as id FROM clients ORDER BY NAME LIMIT " + limit + " OFFSET " + offset;
     const rows = await db.query(sqlQuery);
     
     return rows;
@@ -80,7 +80,7 @@ exports.clientNotes = async function(id) {
 
 // Fetches clients resulting from a search query
 exports.searchList = async function(search) {
-    let sqlQuery = "SELECT name, id FROM clients WHERE name LIKE '%" + search + "%'";
+    let sqlQuery = "SELECT name, public_id as id FROM clients WHERE name LIKE '%" + search + "%'";
     const rows = await db.query(sqlQuery);
 
     sqlQuery = "SELECT COUNT(DISTINCT clients.id) AS n FROM clients where name LIKE '%" + search + "%'";
@@ -94,23 +94,19 @@ exports.searchList = async function(search) {
 }
 
 // Fetches client details with a given id
-exports.clientDetails = async function(id) {
-    const sqlQuery = "SELECT * FROM clients WHERE clients.id=" + id;
-    rows = await db.query(sqlQuery);
+exports.getClientDetails = async function(id) {
+    const sqlQuery = "SELECT public_id as id, name, email, phone, company, position, status, priority, source, createdAt, lastContact, notes, street, city, state, postcode, country FROM clients WHERE public_id = ?";
+    rows = await db.query(sqlQuery, [id]);
 
     return rows[0];
 }
 
-// Retrieves the reminder associated with a client id
-exports.clientReminder = async function(id) {
-    const sqlQuery = "SELECT * from reminders WHERE client_id=? AND status IN ('pending', 'awaiting', 'followUP')";
-    const rows = await db.query(sqlQuery, id);
+// Fetches all reminders associated with a client id
+exports.getClientReminders = async function(id,) {
+    const sqlQuery = "SELECT reminders.id, rDate as date, reminders.status, note, outcome, important FROM reminders JOIN clients on reminders.client_id = clients.id WHERE clients.public_id = ?";
+    rows = await db.query(sqlQuery, [id]);
 
-    // Should only be 1 active reminder
-    if (rows.length > 1) {
-        console.log("Possible bug: more than 1 active reminder for client (id=" + id + ")");
-    }
-    return rows[0];
+    return rows;
 }
 
 // Returns a list of all clients in db with the provided name

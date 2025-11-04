@@ -16,6 +16,13 @@ router.get("/", async (req, res) => {
     }
 });
 
+// Usefull error catcthing for development
+// console.error('Error in getClientDetails:', error); // Logs full error stack
+// res.status(500).json({
+//     message: error.message,   // Shows the error message
+//     stack: error.stack        // Shows stack trace for debugging
+// });
+
 // Load client list
 router.get("/load-client-list", async (req, res) => {
     try {
@@ -45,43 +52,77 @@ router.get("/load-client-list", async (req, res) => {
     }
 });
 
-// Load client data for display, including notes, and reminder
-router.get("/load-client-data", async (req, res) => {
+router.get("/:id/data", async (req, res) => {
     try {
-        // const id = req.query.id;
-        const id = 11673;
-        var data = await clients.clientDetails(id);
-        const notes = await clients.clientNotes(id);
-        const reminder = await clients.clientReminder(id);
+        const id = req.params.id;;
+        const client = await clients.getClientDetails(id);
 
-        data.notes = notes;
+        // Format dates
+        client.createdAt = new Date(client.createdAt).toISOString();
+        client.lastContact = client.lastContact ? new Date(client.lastContact).toISOString() : null;
 
-        // Convert sql dates to nicer date to local date time
-        const clientCreated = data.created;
-        const cDate = new Date(clientCreated);
-        data.created = cDate.toLocaleDateString('en-GB');
-
-        if (reminder) {
-            let rDate = reminder.rDate;
-            rDate = new Date(rDate);
-            reminder.rDate = rDate.toLocaleDateString('en-GB');
-            data.reminder =  reminder;
-        } else {
-            // Empty reminder for front end display
-            data.reminder = {rDate:"", status:""};
-        }
-
-        for (let i = 0; i < notes.length; i++) {
-            const noteCreated = notes[i].created;
-            const nDate = new Date(noteCreated);
-            notes[i].created = nDate.toLocaleDateString('en-GB');
-        }
-
-        res.json(JSON.stringify(data));
+        res.json({ client:client });
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
+
+router.get("/:id/reminders", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const {limit} = req.body;
+        let reminders = await clients.getClientReminders(id);
+
+        // Filter out completed reminders and format date
+        reminders = reminders.filter(reminder => reminder.status !== "complete"); 
+        reminders.forEach(reminder => {
+            reminder = new Date(reminder.date).toISOString();
+        });
+
+        res.json({ reminders:reminders });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// Load client data for display, including notes, and reminder
+// REPLACING
+// router.get("/load-client-data", async (req, res) => {
+//     try {
+//         // const id = req.query.id;
+//         const id = 11673;
+//         var data = await clients.clientDetails(id);
+//         const notes = await clients.clientNotes(id);
+//         const reminder = await clients.clientReminder(id);
+
+//         data.notes = notes;
+
+//         // Convert sql dates to nicer date to local date time
+//         const clientCreated = data.created;
+//         const cDate = new Date(clientCreated);
+//         data.created = cDate.toLocaleDateString('en-GB');
+
+//         if (reminder) {
+//             let rDate = reminder.rDate;
+//             rDate = new Date(rDate);
+//             reminder.rDate = rDate.toLocaleDateString('en-GB');
+//             data.reminder =  reminder;
+//         } else {
+//             // Empty reminder for front end display
+//             data.reminder = {rDate:"", status:""};
+//         }
+
+//         for (let i = 0; i < notes.length; i++) {
+//             const noteCreated = notes[i].created;
+//             const nDate = new Date(noteCreated);
+//             notes[i].created = nDate.toLocaleDateString('en-GB');
+//         }
+
+//         res.json((data));
+//     } catch (error) {
+//         res.status(500).send(error.message);
+//     }
+// });
 
 // Import clients
 router.get("/import-clients", (req, res) => {
