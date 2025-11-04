@@ -102,8 +102,16 @@ exports.getClientDetails = async function(id) {
 }
 
 // Fetches all reminders associated with a client id
-exports.getClientReminders = async function(id,) {
+exports.getClientReminders = async function(id) {
     const sqlQuery = "SELECT reminders.id, rDate as date, reminders.status, note, outcome, important FROM reminders JOIN clients on reminders.client_id = clients.id WHERE clients.public_id = ?";
+    rows = await db.query(sqlQuery, [id]);
+
+    return rows;
+}
+
+// Fetchs all interactions associated with a client id
+exports.getClientInteractions = async function (id) {
+    const sqlQuery = "SELECT method, outcome, i.createdAt as date FROM interactions i JOIN clients c ON i.client_id = c.id WHERE c.public_id = ?";
     rows = await db.query(sqlQuery, [id]);
 
     return rows;

@@ -17,7 +17,7 @@ $(document).ready(function() {
     // Load all data
     loadClientData();
     loadReminders();
-    //loadActivityHistory();
+    loadActivityHistory();
     //loadEngagementStats();
     
     // Modal handlers
@@ -437,7 +437,7 @@ function saveReminderEdit() {
 }
 
 /*****************************************************************
- * Load Activity History
+ * Load Activity/Interaction History
  ****************************************************************/
 function loadActivityHistory() {
     $.ajax({
@@ -448,14 +448,14 @@ function loadActivityHistory() {
         },
         success: function(response) {
             const data = typeof response === 'string' ? JSON.parse(response) : response;
-            renderActivity(data.activities || []);
+            renderInteraction(data.interactions || []);
         },
         error: function(xhr, status, error) {
-            console.error('Error loading activity:', error);
+            console.error('Error loading interaction:', error);
             $('#activityList').html(`
                 <div class="cd-empty-activity">
                     <div class="cd-empty-icon">📋</div>
-                    <div class="cd-empty-text">Unable to load activity history</div>
+                    <div class="cd-empty-text">Unable to load interaction history</div>
                 </div>
             `);
         }
@@ -463,16 +463,16 @@ function loadActivityHistory() {
 }
 
 /*****************************************************************
- * Render Activity History
+ * Render Interaction History
  ****************************************************************/
-function renderActivity(activities) {
+function renderInteraction(interactions) {
     const $list = $('#activityList');
     
-    if (activities.length === 0) {
+    if (interactions.length === 0) {
         $list.html(`
             <div class="cd-empty-activity">
                 <div class="cd-empty-icon">📋</div>
-                <div class="cd-empty-text">No activity history yet</div>
+                <div class="cd-empty-text">No interaction history yet</div>
             </div>
         `);
         return;
@@ -480,46 +480,75 @@ function renderActivity(activities) {
     
     $list.empty();
     
-    activities.forEach(function(activity) {
-        const row = createActivityRow(activity);
+    interactions.forEach(function(interaction) {
+        const row = createInteractionRow(interaction); // Replace activity row
         $list.append(row);
     });
 }
 
 /*****************************************************************
- * Create Activity Row HTML
+ * Create Interaction Row HTML (replaces activity row)
  ****************************************************************/
-function createActivityRow(activity) {
-    const { icon, color } = getActivityIconAndColor(activity.type);
-    const timestamp = formatActivityTime(activity.createdAt);
-    
+function createInteractionRow(interaction) {
+    let date = new Date(interaction.date);
+    date = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+
+    const iconClass = getInteractionIconClass(interaction.method);
+    const outcomeClass = getInteractionOutcomeClass(interaction.outcome);
+    const outcomeIcon = getInteractionOutcomeIcon(interaction.method, interaction.outcome);
+
     return `
-        <div class="cd-activity-item">
-            <div class="cd-activity-icon ${color}">${icon}</div>
-            <div class="cd-activity-content">
-                <div class="cd-activity-text">${escapeHtml(activity.description)}</div>
-                <div class="cd-activity-time">${timestamp}</div>
+        <div class="interaction-item">
+            <div class="interaction-icon ${iconClass}">${getInteractionEmoji(interaction.method)}</div>
+            <div class="interaction-content">
+                <div class="interaction-header">
+                    <span class="interaction-type">${capitalizeFirst(interaction.method)}</span>
+                    <span class="interaction-date">${date}</span>
+                </div>
+                <div class="interaction-outcome ${outcomeClass}">${outcomeIcon} ${getInteractionNote(interaction)}</div>
             </div>
         </div>
     `;
 }
 
 /*****************************************************************
+ * Create Activity Row HTML -- Keep in case i want to add activity history instead of just interaction history
+ ****************************************************************/
+// function createActivityRow(activity) {
+//     const { icon, color } = getActivityIconAndColor(activity.type);
+//     const timestamp = formatActivityTime(activity.createdAt);
+    
+//     return `
+//         <div class="cd-activity-item">
+//             <div class="cd-activity-icon ${color}">${icon}</div>
+//             <div class="cd-activity-content">
+//                 <div class="cd-activity-text">${escapeHtml(activity.description)}</div>
+//                 <div class="cd-activity-time">${timestamp}</div>
+//             </div>
+//         </div>
+//     `;
+// }
+
+/*****************************************************************
  * Get Activity Icon and Color
  ****************************************************************/
-function getActivityIconAndColor(type) {
-    const types = {
-        'reminder_completed': { icon: '✓', color: 'blue' },
-        'reminder_created': { icon: '📅', color: 'orange' },
-        'reminder_updated': { icon: '✏️', color: 'blue' },
-        'client_updated': { icon: '📝', color: 'teal' },
-        'client_created': { icon: '➕', color: 'teal' },
-        'note_added': { icon: '📝', color: 'blue' },
-        'status_changed': { icon: '🔄', color: 'teal' }
-    };
+// function getActivityIconAndColor(type) {
+//     const types = {
+//         'reminder_completed': { icon: '✓', color: 'blue' },
+//         'reminder_created': { icon: '📅', color: 'orange' },
+//         'reminder_updated': { icon: '✏️', color: 'blue' },
+//         'client_updated': { icon: '📝', color: 'teal' },
+//         'client_created': { icon: '➕', color: 'teal' },
+//         'note_added': { icon: '📝', color: 'blue' },
+//         'status_changed': { icon: '🔄', color: 'teal' }
+//     };
     
-    return types[type] || { icon: '•', color: 'blue' };
-}
+//     return types[type] || { icon: '•', color: 'blue' };
+// }
 
 /*****************************************************************
  * Load Engagement Stats

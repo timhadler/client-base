@@ -1,57 +1,57 @@
 // ***** Interaction Icons & Classes *****
-function getInteractionIconClass(type) {
+function getInteractionIconClass(method) {
     const classes = {
         'call': 'call',
         'email': 'email',
         'text': 'text',
         'ignored': 'ignored'
     };
-    return classes[type] || 'call';
+    return classes[method] || 'call';
 }
 
-function getInteractionEmoji(type) {
+function getInteractionEmoji(method) {
     const emojis = {
         'call': '📞',
         'email': '✉️',
         'text': '💬',
         'ignored': '⊘'
     };
-    return emojis[type] || '📞';
+    return emojis[method] || '📞';
 }
 
 function getInteractionOutcomeClass(outcome) {
     if (outcome === 'booked') return 'success';
     if (outcome === 'followup') return 'followup';
-    if (outcome === 'no_answer' || !outcome) return 'missed';
+    if (outcome === 'no_answer' || outcome === 'waiting') return 'missed';
     if (outcome === 'declined') return 'declined';
     return 'success';
 }
 
-function getInteractionOutcomeIcon(type, outcome) {
+function getInteractionOutcomeIcon(method, outcome) {
     if (outcome === 'booked') return '✓';
     if (outcome === 'followup') return '↻';
-    if (type === "ignored") return '⊘';
-    if (outcome === 'no_answer' || !outcome) return '○';
+    if (method === "ignored") return '⊘';
+    if (outcome === 'no_answer' || outcome === 'waiting') return '○';
     if (outcome === 'declined') return '✕';
     return '✓';
 }
 
 function getInteractionNote(interaction) {
-    const type = interaction.type;
+    const method = interaction.method;
     const outcome = interaction.outcome;
     
     // Handle ignore type
-    if (type === 'ignored') {
-        return 'Ignored reminder';
+    if (method === 'ignored') {
+        return 'Reminder ignored';
     }
     
     // Handle call type
-    if (type === 'call') {
+    if (method === 'call') {
         if (outcome === 'booked') {
             return 'Appointment booked';
         } else if (outcome === 'followup') {
             return 'Requested followup';
-        } else if (outcome === 'no_answer') {
+        } else if (outcome === 'no_answer' || outcome === 'waiting') {
             return 'No answer';
         } else if (outcome === 'declined') {
             return 'Declined appointment';
@@ -59,9 +59,9 @@ function getInteractionNote(interaction) {
     }
     
     // Handle text or email type
-    if (type === 'text' || type === 'email') {
-        if (!outcome) {
-            return 'Sent, awaiting response';
+    if (method === 'text' || method === 'email') {
+        if (outcome === 'waiting' || outcome === 'no_answer') {
+            return 'Sent - awaiting response';
         } else if (outcome === 'booked') {
             return 'Replied - Appointment booked';
         } else if (outcome === 'declined') {

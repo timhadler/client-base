@@ -71,17 +71,33 @@ router.get("/:id/reminders", async (req, res) => {
     try {
         const id = req.params.id;
         const {limit} = req.body;
+
         let reminders = await clients.getClientReminders(id);
 
-        // Filter out completed reminders and format date
+        // Filter out completed reminders
         reminders = reminders.filter(reminder => reminder.status !== "complete"); 
-        reminders.forEach(reminder => {
-            reminder = new Date(reminder.date).toISOString();
-        });
 
         res.json({ reminders:reminders });
     } catch (error) {
         res.status(500).send(error.message);
+    }
+});
+
+router.get("/:id/activity", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const {limit} = req.body;
+
+        let interactions = await clients.getClientInteractions(id);
+
+        res.json({ interactions:interactions });
+    } catch (error) {
+        //res.status(500).send(error.message);
+        console.error('Error in getClientDetails:', error); // Logs full error stack
+    res.status(500).json({
+        message: error.message,   // Shows the error message
+        stack: error.stack        // Shows stack trace for debugging
+    });
     }
 });
 

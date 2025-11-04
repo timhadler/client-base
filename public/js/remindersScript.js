@@ -279,16 +279,16 @@ function openClientPanel(data) {
 
     // Interaction history HTML
     const interactionHistoryHtml = data.interactions.map(interaction => {
-        const iconClass = getInteractionIconClass(interaction.type);
+        const iconClass = getInteractionIconClass(interaction.method);
         const outcomeClass = getInteractionOutcomeClass(interaction.outcome);
-        const outcomeIcon = getInteractionOutcomeIcon(interaction.type, interaction.outcome);
+        const outcomeIcon = getInteractionOutcomeIcon(interaction.method, interaction.outcome);
         
         return `
             <div class="interaction-item">
-                <div class="interaction-icon ${iconClass}">${getInteractionEmoji(interaction.type)}</div>
+                <div class="interaction-icon ${iconClass}">${getInteractionEmoji(interaction.method)}</div>
                 <div class="interaction-content">
                     <div class="interaction-header">
-                        <span class="interaction-type">${capitalizeFirst(interaction.type)}</span>
+                        <span class="interaction-type">${capitalizeFirst(interaction.method)}</span>
                         <span class="interaction-date">${interaction.date}</span>
                     </div>
                     <div class="interaction-outcome ${outcomeClass}">${outcomeIcon} ${getInteractionNote(interaction)}</div>
