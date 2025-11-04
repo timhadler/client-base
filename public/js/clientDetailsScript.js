@@ -21,7 +21,7 @@ $(document).ready(function() {
     //loadEngagementStats();
     
     // Modal handlers
-    //initEditReminderModal();
+    initEditReminderModal();
 });
 
 /*****************************************************************
@@ -579,11 +579,6 @@ function renderStats(stats) {
 /*****************************************************************
  * Helper Functions
  ****************************************************************/
-function capitalizeFirst(str) {
-    if (!str) return '';
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
-
 function formatLongDate(date) {
     if (!date || isNaN(date.getTime())) return 'N/A';
     
