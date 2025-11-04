@@ -1,0 +1,152 @@
+<script src="/js/jquery.min.js"></script>
+<script src="/js/clientDetailsScript.js"></script>
+
+<div id="client-data" data-client-id="<%= clientId %>"></div>
+
+<!-- Reminder Edit Modal -->
+<div class="cd-modal-overlay" id="editReminderModal">
+    <div class="cd-modal-container">
+        <div class="cd-modal-header">
+            <h2 class="cd-modal-title">Edit Reminder</h2>
+            <button class="cd-modal-close" id="closeEditReminderModal">×</button>
+        </div>
+        <div class="cd-modal-body">
+            <form id="editReminderForm">
+                <input type="hidden" id="editReminderId">
+                
+                <div class="cd-form-group">
+                    <label>Date & Time</label>
+                    <input type="datetime-local" class="cd-form-control" id="editReminderDate" required>
+                </div>
+                
+                <div class="cd-form-group">
+                    <label>Reminder Note</label>
+                    <textarea class="cd-form-control" id="editReminderNote" rows="3" required></textarea>
+                </div>
+                
+                <div class="cd-modal-actions">
+                    <button type="button" class="cd-btn-modal cd-btn-secondary" id="cancelEditReminder">Cancel</button>
+                    <button type="submit" class="cd-btn-modal cd-btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+    
+<!-- Main Content -->
+<main class="main-content">
+    <!-- Breadcrumb -->
+    <div class="cd-breadcrumb">
+        <a href="/clients">Clients</a>
+        <span>›</span>
+        <span style="color: var(--gray-900); font-weight: 600;" id="breadcrumbName">Loading...</span>
+    </div>
+    
+    <!-- Client Header Card -->
+    <div class="cd-header-card">
+        <div class="cd-header-content">
+            <div class="cd-main-info">
+                <div class="cd-avatar-large" id="clientAvatar">
+                    <!-- Avatar will be set via JS -->
+                </div>
+                <h1 class="cd-client-name" id="clientName">Loading...</h1>
+                <div class="cd-client-company" id="clientCompany">-</div>
+                
+                <div class="cd-meta" id="clientMeta">
+                    <!-- Meta items will be loaded via JS -->
+                </div>
+                
+                <div class="cd-badges" id="clientBadges">
+                    <!-- Badges will be loaded via JS -->
+                </div>
+            </div>
+            
+            <div class="cd-actions">
+                <a href="#" class="cd-btn cd-btn-secondary" id="editBtn">
+                    ✏️ Edit
+                </a>
+                <a href="#" class="cd-btn cd-btn-primary" id="addReminderBtn">
+                    📅 Add Reminder
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Content Grid -->
+    <div class="cd-content-grid">
+        <!-- Left Column -->
+        <div>
+            <!-- Reminders -->
+            <div class="cd-content-card" style="margin-bottom: 24px;">
+                <div class="cd-card-header">
+                    <h2 class="cd-card-title">Upcoming Reminders</h2>
+                    <a href="#" class="cd-card-action" id="viewAllRemindersLink">View All →</a>
+                </div>
+                
+                <div class="cd-reminder-list" id="remindersList">
+                    <div style="text-align: center; padding: 40px; color: var(--gray-500);">
+                        Loading reminders...
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Activity History -->
+            <div class="cd-content-card">
+                <div class="cd-card-header">
+                    <h2 class="cd-card-title">Activity History</h2>
+                </div>
+                
+                <div class="cd-activity-list" id="activityList">
+                    <div style="text-align: center; padding: 40px; color: var(--gray-500);">
+                        Loading activity...
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column -->
+        <div>
+            <!-- Client Information -->
+            <div class="cd-content-card" style="margin-bottom: 24px;">
+                <div class="cd-card-header">
+                    <h2 class="cd-card-title">Client Information</h2>
+                </div>
+                
+                <div class="cd-info-grid" id="clientInfo">
+                    <div style="text-align: center; padding: 40px; color: var(--gray-500);">
+                        Loading client information...
+                    </div>
+                </div>
+                
+                <!-- Address Section -->
+                <div class="cd-address-card" id="addressCard">
+                    <div class="cd-address-title">
+                        <span>📍</span> Address
+                    </div>
+                    <div id="addressDisplay">
+                        <div style="color: var(--gray-500); font-size: 14px;">Loading...</div>
+                    </div>
+                </div>
+                
+                <!-- Notes Section -->
+                <div class="cd-notes-section" id="notesSection" style="display: none;">
+                    <div class="cd-notes-title">Notes</div>
+                    <div class="cd-notes-text" id="notesText"></div>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="cd-content-card">
+                <div class="cd-card-header">
+                    <h2 class="cd-card-title">Engagement Stats</h2>
+                </div>
+                
+                <div class="cd-info-grid" id="statsGrid">
+                    <div style="text-align: center; padding: 40px; color: var(--gray-500);">
+                        Loading stats...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

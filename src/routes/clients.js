@@ -48,7 +48,8 @@ router.get("/load-client-list", async (req, res) => {
 // Load client data for display, including notes, and reminder
 router.get("/load-client-data", async (req, res) => {
     try {
-        const id = req.query.id;
+        // const id = req.query.id;
+        const id = 11673;
         var data = await clients.clientDetails(id);
         const notes = await clients.clientNotes(id);
         const reminder = await clients.clientReminder(id);
@@ -357,6 +358,14 @@ router.delete("/delete-reminder", async (req, res) => {
     try {
         await clients.deleteClientReminder(req.body.id);
         res.status(204).end();
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+router.get("/:id", async (req, res) => {
+    try {
+        res.status(200).render("clients/client-details", { bodyClass: "clientsPage", clientId: req.params.id, showNavBar: true });
     } catch (error) {
         res.status(500).send(error.message);
     }
