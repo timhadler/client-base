@@ -33,6 +33,62 @@
         </div>
     </div>
 </div>
+
+<!-- Record Response Modal -->
+<div class="cd-modal-overlay" id="recordResponseModal">
+    <div class="cd-modal-container">
+        <div class="cd-modal-header">
+            <h2 class="cd-modal-title">Record Client Response</h2>
+            <button class="cd-modal-close" id="closeResponseModal">×</button>
+        </div>
+        <div class="cd-modal-body">
+            <div class="cd-interaction-summary">
+                <div class="cd-interaction-summary-icon" id="responseModalIcon">✉️</div>
+                <div class="cd-interaction-summary-content">
+                    <div class="cd-interaction-summary-type" id="responseModalType">Email</div>
+                    <div class="cd-interaction-summary-desc" id="responseModalDesc">Sent project proposal</div>
+                    <div class="cd-interaction-summary-date" id="responseModalDate">Nov 1, 2025</div>
+                </div>
+            </div>
+            
+            <div class="cd-form-divider"></div>
+            
+            <form id="recordResponseForm">
+                <div class="cd-form-group">
+                    <label>How did the client respond?</label>
+                    <div class="cd-outcome-buttons">
+                        <button type="button" class="cd-outcome-btn" data-outcome="booked">
+                            <span class="cd-outcome-icon">✓</span>
+                            <span class="cd-outcome-label">Booked</span>
+                        </button>
+                        <button type="button" class="cd-outcome-btn" data-outcome="followup">
+                            <span class="cd-outcome-icon">↻</span>
+                            <span class="cd-outcome-label">Follow-up</span>
+                        </button>
+                        <button type="button" class="cd-outcome-btn" data-outcome="declined">
+                            <span class="cd-outcome-icon">✕</span>
+                            <span class="cd-outcome-label">Declined</span>
+                        </button>
+                        <button type="button" class="cd-outcome-btn" data-outcome="no-response">
+                            <span class="cd-outcome-icon">○</span>
+                            <span class="cd-outcome-label">No Response</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="cd-form-group" id="responseNotesGroup" style="display: none;">
+                    <label>Additional Notes (Optional)</label>
+                    <textarea class="cd-form-control" id="responseNotes" rows="2" placeholder="Any additional details about the response..."></textarea>
+                </div>
+                
+                <div class="cd-modal-actions">
+                    <button type="button" class="cd-btn-modal cd-btn-secondary" id="cancelRecordResponse">Cancel</button>
+                    <button type="submit" class="cd-btn-modal cd-btn-primary" id="saveResponseBtn" disabled>Save Response</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
     
 <!-- Main Content -->
 <main class="main-content">

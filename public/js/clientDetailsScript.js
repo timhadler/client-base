@@ -7,6 +7,10 @@ let clientId;
 let clientData = null;
 let reminderData = {}; // Store reminder data for editing
 
+// Recording interaction responses
+let selectedOutcome = null;
+let currentInteractionId = null;
+
 /*****************************************************************
  * Document Ready
  ****************************************************************/
@@ -21,6 +25,7 @@ $(document).ready(function() {
     
     // Modal handlers
     initEditReminderModal();
+    initRecordResponseModal();
 });
 
 /*****************************************************************
@@ -418,8 +423,6 @@ function editReminder(reminderId) {
     $('#editReminderModal').addClass('show');
 }
 
-
-
 function saveReminderEdit() {
     const reminderId = $('#editReminderId').val();
     const date = $('#editReminderDate').val();
@@ -443,6 +446,125 @@ function saveReminderEdit() {
         error: function(xhr, status, error) {
             console.error('Error updating reminder:', error);
             alert('Failed to update reminder. Please try again.');
+        }
+    });
+}
+
+/*****************************************************************
+ * Initialize Record Response Modal
+ ****************************************************************/
+function initRecordResponseModal() {
+    // Close modal handlers
+    $('#closeResponseModal, #cancelRecordResponse').on('click', function() {
+        closeResponseModal();
+    });
+
+    // Open modal handler - delegated event for dynamically added buttons
+    $('#activityList').on('click', '.cd-record-response-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const $item = $(this).closest('.interaction-item');
+        const interactionId = $item.data('interaction-id');
+        const method = $item.find('.interaction-type').text().trim().toLowerCase();
+        const desc = $item.find('.interaction-content > div:last-child').text().trim();
+        const date = $item.find('.interaction-date').text().trim();
+        
+        openResponseModal(interactionId, method, desc, date);
+    });
+
+    // Outcome button selection
+    $('#responseModal').on('click', '.cd-outcome-btn', function() {
+        selectOutcome(this);
+    });
+
+    // Form submission
+    $('#recordResponseForm').on('submit', function(e) {
+        e.preventDefault();
+        saveInteractionResponse();
+    });
+}
+
+/*****************************************************************
+ * Open Response Modal
+ ****************************************************************/
+function openResponseModal(interactionId, method, description, date) {
+    currentInteractionId = interactionId;
+    
+    const icons = { 
+        email: '✉️', 
+        text: '💬', 
+        call: '📞' 
+    };
+    
+    const icon = icons[method] || '📋';
+    const methodCapitalized = capitalizeFirst(method);
+    
+    $('#responseModalIcon').text(icon);
+    $('#responseModalIcon').removeClass('call email text').addClass(method);
+    $('#responseModalType').text(methodCapitalized);
+    $('#responseModalDesc').text(description);
+    $('#responseModalDate').text(date);
+    
+    $('#recordResponseModal').addClass('show');
+}
+
+/*****************************************************************
+ * Close Response Modal
+ ****************************************************************/
+function closeResponseModal() {
+    $('#recordResponseModal').removeClass('show');
+    
+    setTimeout(() => {
+        // Reset form
+        $('.cd-outcome-btn').removeClass('cd-selected');
+        $('#responseNotesGroup').hide();
+        $('#responseNotes').val('');
+        $('#saveResponseBtn').prop('disabled', true);
+        selectedOutcome = null;
+        currentInteractionId = null;
+    }, 300);
+}
+
+// Select Outcome
+function selectOutcome(btn) {
+    $('.cd-outcome-btn').removeClass('cd-selected');
+    $(btn).addClass('cd-selected');
+    selectedOutcome = $(btn).data('outcome');
+    
+    $('#responseNotesGroup').show();
+    $('#saveResponseBtn').prop('disabled', false);
+}
+
+/*****************************************************************
+ * Save Interaction Response
+ ****************************************************************/
+function saveInteractionResponse() {
+    if (!currentInteractionId || !selectedOutcome) {
+        alert('Please select an outcome');
+        return;
+    }
+    
+    const notes = $('#responseNotes').val().trim();
+    
+    $.ajax({
+        url: `/interactions/${currentInteractionId}/record-response`,
+        method: 'POST',
+        data: JSON.stringify({
+            outcome: selectedOutcome,
+            notes: notes
+        }),
+        contentType: 'application/json',
+        success: function(response) {
+            console.log('Response recorded successfully');
+            closeResponseModal();
+            
+            // Reload activity history to show updated interaction
+            loadActivityHistory();
+        },
+        error: function(xhr, status, error) {
+            console.error('Error recording response:', error);
+            alert('Failed to record response. Please try again.');
         }
     });
 }
@@ -511,17 +633,42 @@ function createInteractionRow(interaction) {
     const iconClass = getInteractionIconClass(interaction.method);
     const outcomeClass = getInteractionOutcomeClass(interaction.outcome);
     const outcomeIcon = getInteractionOutcomeIcon(interaction.method, interaction.outcome);
+    
+    // Determine if this interaction is pending a response
+    const isPending = interaction.outcome === 'waiting' || interaction.outcome === 'no_answer';
+    const pendingClass = isPending && (interaction.method == "text" || interaction.method == "email") ? 'cd-pending-response' : '';
+    
+    // Get description/note for the interaction
+    const interactionDesc = getInteractionNote(interaction);
+    
+    // Build the record response button (only show for email/text that are pending)
+    let recordButton = '';
+    if (isPending && (interaction.method == "text" || interaction.method == "email")) {
+        recordButton = `
+            <button class="cd-record-response-btn" data-interaction-id="${interaction.id}">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Record Response
+            </button>
+        `;
+    }
 
     return `
-        <div class="interaction-item">
+        <div class="interaction-item ${pendingClass}" data-interaction-id="${interaction.id}">
             <div class="interaction-icon ${iconClass}">${getInteractionEmoji(interaction.method)}</div>
             <div class="interaction-content">
                 <div class="interaction-header">
                     <span class="interaction-type">${capitalizeFirst(interaction.method)}</span>
                     <span class="interaction-date">${date}</span>
                 </div>
-                <div class="interaction-outcome ${outcomeClass}">${outcomeIcon} ${getInteractionNote(interaction)}</div>
+                ${interaction.outcome ? 
+                    `<div class="interaction-outcome ${outcomeClass}">${outcomeIcon} ${interactionDesc}</div>` :
+                    `<div style="font-size: 13px; color: var(--gray-600);">${interactionDesc}</div>`
+                }
             </div>
+            ${recordButton}
         </div>
     `;
 }
