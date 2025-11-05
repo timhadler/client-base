@@ -167,8 +167,8 @@ $(document).ready(function() {
     initClientPanel();
     initInteractionModal();
 
-    loadList(0, testClients);
-    //queryListData("all"); 
+    //loadList(0, testClients);
+    queryListData("all"); 
 });
 
 /*****************************************************************
@@ -180,7 +180,7 @@ function queryListData(filter, offset=0) {
     $.ajax({
         url: "reminders/load-reminder-list",
         method: "GET",
-        data: { list:"pendingList", limit:LIMIT, offset:offset },
+        data: { filter:filter, limit:LIMIT, offset:offset },
         success: function(res) {
             const data = JSON.parse(res);
             loadList(data.listCounts, data.listData, offset);
@@ -197,12 +197,11 @@ function loadList(counts, clients, offset=0) {
     let $table = $('#tableBody');
 
     // Add list counts if > 0
-    let overdueCount = counts;
-    let todayCount = counts;
-    let upcomingCount = counts;
+    let overdueCount = counts.overdue;
+    let todayCount = counts.today;
+    
     overdueCount ? $("#overdueCount").text('(' + overdueCount + ')') : '';
     todayCount ? $("#todayCount").text('(' + todayCount + ')') : '';
-    upcomingCount ? $("#upcomingCount").text('(' + upcomingCount + ')') : '';
 
     if (offset === 0) {
         $table.empty(); // Clear the list only for the initial load
@@ -214,11 +213,22 @@ function loadList(counts, clients, offset=0) {
             // Create jQuery object from the template string
             let $row = $(template);
 
+            // Convert date to local time
+            const localDate = new Date(client.date);
+
+            // --- Create formatted parts ---
+            const day = localDate.getDate(); // e.g., 23
+            const month = localDate.toLocaleString('en-US', { month: 'short' }); // e.g., "Oct"
+            const fullDate = localDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            }); // e.g., "Oct 23, 2025"
+
             // Fill in the data
-            $row.find('.date-day').text(client.day);   //23
-            $row.find('.date-month').text(client.month); //Oct
-            $row.find('.date-full').text(client.fullDate); //Oct 23, 2025
-            $row.find('.date-time').text(client.dateTime); //10:00 AM
+            $row.find('.date-day').text(day);   //23
+            $row.find('.date-month').text(month); //Oct
+            $row.find('.date-full').text(fullDate); //Oct 23, 2025
             $row.find('.status-badge').text(client.status);
 
             $row.find('.client-name').text(client.name);
@@ -278,7 +288,8 @@ function openClientPanel(data) {
     document.getElementById('viewFullBtn').href = `/clients/${data.id}`;
 
     // Interaction history HTML
-    const interactionHistoryHtml = data.interactions.map(interaction => {
+    const interactions = Array.isArray(data.interactions) ? data.interactions : [];
+    const interactionHistoryHtml = interactions.map(interaction => {
         const iconClass = getInteractionIconClass(interaction.method);
         const outcomeClass = getInteractionOutcomeClass(interaction.outcome);
         const outcomeIcon = getInteractionOutcomeIcon(interaction.method, interaction.outcome);

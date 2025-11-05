@@ -11,6 +11,24 @@ exports.nTotalClients = async function() {
     return rows[0].n;
 };
 
+// Returns the number of reminders with a given filter for the reminders list
+exports.nReminderListCount = async function(filter) {
+    let condition = "NOT reminders.status = 'complete'";
+    switch (filter) {
+        case 'overdue':
+            condition += " AND DATE(rDate) < CURDATE()";
+            break;
+        case 'today':
+            condition += " AND DATE(rDate) = CURDATE()";
+            break;
+        // Add 'waiting' here 
+    }
+    const sqlQuery = "SELECT COUNT(*) as n FROM reminders WHERE " + condition;
+    const rows = await db.query(sqlQuery);
+
+    return rows[0].n;
+}
+
 // Fetches client list (clients)
 exports.getClientList = async function(limit, offset, search, status, priority) {
     const values = [];
@@ -76,6 +94,27 @@ exports.getClientReminders = async function(id) {
 exports.getClientInteractions = async function (id) {
     const sqlQuery = "SELECT method, outcome, i.createdAt as date FROM interactions i JOIN clients c ON i.client_id = c.id WHERE c.public_id = ?";
     rows = await db.query(sqlQuery, [id]);
+
+    return rows;
+}
+
+// Fetches filtered reminder list
+exports.getReminderList = async function(filter, limit, offset) {
+    let condition = "NOT reminders.status = 'complete'";
+    switch (filter) {
+        case 'overdue':
+            condition += " AND DATE(rDate) < CURDATE()";
+            break;
+        case 'today':
+            condition += " AND DATE(rDate) = CURDATE()";
+            break;
+        case 'completed':
+            condition = "reminders.status = 'complete'";
+            break;
+        // Add 'waiting' here 
+    }
+    const sqlQuery = `SELECT reminders.id, rDate as date, reminders.status, reminders.important, outcome, reminders.note, name FROM reminders INNER JOIN clients on reminders.client_id = clients.id WHERE ${condition} LIMIT ` + limit + ` OFFSET ` + offset;
+    rows = await db.query(sqlQuery);
 
     return rows;
 }

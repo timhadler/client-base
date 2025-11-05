@@ -28,17 +28,19 @@ router.get("/", async (req, res) => {
 
 // Get a given reminder list from database
 // Modify: retrive all low data (name, priority, status) initially. Load heavy data (client notes etc) on panel open
-// listCounts = {today, upcoming, overdue}
-// Add interaction history to client pull out panel
+// listCounts = {today, overdue}
 // dates for interaction history: order by reverse chronological date then format
-// Replace awaiting col with waiting for response (reminder.status = waiting, reminder will have from_interaction field)
+// Replace upcoming col with waiting for response (reminder.status = waiting, reminder will have from_interaction field)
 router.get("/load-reminder-list", async (req, res) => {
     try {
-        var list = req.query.list;
-        var listData = [];
-        var listCount = 0;
+        const filter = req.query.filter;
+        let reminders = [];
 
-        const data = {listCount:0, listData:[]};
+        const overdueCount = await clients.nReminderListCount('overdue');
+        const todayCount = await clients.nReminderListCount('today');
+        reminders = await clients.getReminderList(filter, req.query.limit, req.query.offset);
+
+        const data = {listCounts:{today:todayCount, overdue:overdueCount}, listData:reminders};
         res.json(JSON.stringify(data));
     } catch (error) {
         res.status(500).send(error.message);
