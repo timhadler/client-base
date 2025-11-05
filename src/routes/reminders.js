@@ -40,6 +40,10 @@ router.get("/load-reminder-list", async (req, res) => {
         const todayCount = await clients.nReminderListCount('today');
         reminders = await clients.getReminderList(filter, req.query.limit, req.query.offset);
 
+        reminders.forEach(reminder => {
+            reminder.date = new Date(reminder.date).toISOString();
+        })
+
         const data = {listCounts:{today:todayCount, overdue:overdueCount}, listData:reminders};
         res.json(JSON.stringify(data));
     } catch (error) {

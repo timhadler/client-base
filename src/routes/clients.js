@@ -53,8 +53,10 @@ router.get("/:id/data", async (req, res) => {
         const client = await clients.getClientDetails(id);
 
         // Format dates
-        client.createdAt = new Date(client.createdAt).toISOString();
-        client.lastContact = client.lastContact ? new Date(client.lastContact).toISOString() : null;
+        if(client) {
+            client.createdAt = new Date(client.createdAt).toISOString();
+            client.lastContact = client.lastContact ? new Date(client.lastContact).toISOString() : null;
+        }
 
         res.json({ client:client });
     } catch (error) {
@@ -69,8 +71,11 @@ router.get("/:id/reminders", async (req, res) => {
 
         let reminders = await clients.getClientReminders(id);
 
-        // Filter out completed reminders
+        // Filter out completed reminders and enforce UTC timestamp
         reminders = reminders.filter(reminder => reminder.status !== "complete"); 
+        reminders.forEach(reminder => {
+            reminder.date = new Date(reminder.date).toISOString();
+        });
 
         res.json({ reminders:reminders });
     } catch (error) {
@@ -84,6 +89,9 @@ router.get("/:id/activity", async (req, res) => {
         const {limit} = req.body;
 
         let interactions = await clients.getClientInteractions(id);
+        interactions.forEach(interaction => {
+            interaction.date = new Date(interaction.date).toISOString();
+        });
 
         res.json({ interactions:interactions });
     } catch (error) {
