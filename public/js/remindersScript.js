@@ -165,6 +165,7 @@ $(document).ready(function() {
 
     // Initialize features
     initClientPanel();
+    initEditReminderModal('#tableBody');
     initInteractionModal();
 
     //loadList(0, testClients);
@@ -272,13 +273,15 @@ function loadList(counts, reminders, offset=0) {
             $row.find('.client-company').text(reminder.company);
             $row.find('.reminder-note').text(reminder.note); 
 
-            // Attach client ID
-            $row.attr('data-client-id', reminder.id);
+            // Attach reminder
+            $row.find('.cd-edit-reminder-btn').data('id', reminder.id).data('note', reminder.note).data('date', reminder.date);
 
             // Attach click listener
-            $row.on('click', function() {
-                currentReminderId = reminder.id;
-                openClientPanel(reminder.clientId);
+            $row.on('click', function(e) {
+                if (!$(e.target).closest('.cd-edit-reminder-btn').length) {     // Avoid edit reminder button
+                    currentReminderId = reminder.id;
+                    openClientPanel(reminder.clientId);
+                }
             });
 
             // Append to the table

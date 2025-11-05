@@ -5,7 +5,6 @@
 
 let clientId;
 let clientData = null;
-let reminderData = {}; // Store reminder data for editing
 
 // Recording interaction responses
 let selectedOutcome = null;
@@ -24,7 +23,7 @@ $(document).ready(function() {
     //loadEngagementStats();
     
     // Modal handlers
-    initEditReminderModal();
+    initEditReminderModal('#remindersList');
     initRecordResponseModal();
 });
 
@@ -34,7 +33,6 @@ $(document).ready(function() {
 function loadClientData() {
     $.ajax({
         url: `/clients/${clientId}/data`,
-        //url: `/clients/load-client-data`,
         method: 'GET',
         success: function(response) {
             const data = typeof response === 'string' ? JSON.parse(response) : response;
@@ -251,9 +249,7 @@ function renderAddress(client) {
     $('#copyAddressBtn').on('click', copyAddress);
 }
 
-/*****************************************************************
- * Copy Address to Clipboard
- ****************************************************************/
+// Copy Address to Clipboard
 function copyAddress() {
     const addressText = $('#addressContent').text().trim();
     
@@ -316,13 +312,7 @@ function renderReminders(reminders) {
     
     $list.empty();
     
-    reminders.forEach(function(reminder) {
-        // Store reminder data for editing
-        reminderData[reminder.id] = {
-            date: reminder.date,
-            note: reminder.note
-        };
-        
+    reminders.forEach(function(reminder) {    
         const row = createReminderRow(reminder);
         $list.append(row);
     });
@@ -372,82 +362,10 @@ function createReminderRow(reminder) {
             </div>
             <div class="cd-reminder-actions-group">
                 <div class="cd-reminder-status ${statusClass}">${statusText}</div>
-                <button data-id="${reminder.id}" class="cd-btn-icon-sm cd-edit-reminder-btn" title="Edit">✏️</button>
+                <button data-id="${reminder.id}" data-date="${reminder.date}" data-note="${reminder.note}" class="cd-btn-icon-sm cd-edit-reminder-btn" title="Edit">✏️</button>
             </div>
         </div>
     `;
-}
-
-/*****************************************************************
- * Edit Reminder Modal Functions
- ****************************************************************/
-function initEditReminderModal() {
-    // Close modal handlers
-    $('#closeEditReminderModal, #cancelEditReminder').on('click', function() {
-        $('#editReminderModal').removeClass('show');
-    });
-
-    // Open modal handler
-    $('#remindersList').on('click', '.cd-edit-reminder-btn', function(e) {
-        e.preventDefault();
-        const reminderId = $(this).data('id');
-        editReminder(reminderId);
-    });
-
-    // Form submission
-    $('#editReminderForm').on('submit', function(e) {
-        e.preventDefault();
-        saveReminderEdit();
-    });
-}
-
-// Global function for onclick
-function editReminder(reminderId) {
-    const data = reminderData[reminderId];
-    if (!data) {
-        alert('Reminder data not found');
-        return;
-    }
-
-    // Convert date to local date string (YYYY-MM-DD)
-    const dateObj = new Date(data.date);
-    const pad = n => n.toString().padStart(2, '0');
-    const year = dateObj.getFullYear();
-    const month = pad(dateObj.getMonth() + 1); // months are 0-indexed
-    const day = pad(dateObj.getDate());
-    const dateLocal = `${year}-${month}-${day}`;
-
-    $('#editReminderId').val(reminderId);
-    $('#editReminderDate').val(dateLocal); // make sure input type="date"
-    $('#editReminderNote').val(data.note);
-    $('#editReminderModal').addClass('show');
-}
-
-function saveReminderEdit() {
-    const reminderId = $('#editReminderId').val();
-    const date = $('#editReminderDate').val();
-    const note = $('#editReminderNote').val();
-    
-    $.ajax({
-        url: `/reminders/${reminderId}/update`,
-        method: 'POST',
-        data: JSON.stringify({
-            date: new Date(date).toISOString(),
-            note: note
-        }),
-        contentType: 'application/json',
-        success: function(response) {
-            console.log('Reminder updated successfully');
-            $('#editReminderModal').removeClass('show');
-            
-            // Reload reminders to show updated data
-            loadReminders();
-        },
-        error: function(xhr, status, error) {
-            console.error('Error updating reminder:', error);
-            alert('Failed to update reminder. Please try again.');
-        }
-    });
 }
 
 /*****************************************************************
