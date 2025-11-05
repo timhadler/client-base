@@ -113,7 +113,7 @@ exports.getReminderList = async function(filter, limit, offset) {
             break;
         // Add 'waiting' here 
     }
-    const sqlQuery = `SELECT reminders.id, rDate as date, reminders.status, reminders.important, outcome, reminders.note, name FROM reminders INNER JOIN clients on reminders.client_id = clients.id WHERE ${condition} LIMIT ` + limit + ` OFFSET ` + offset;
+    const sqlQuery = `SELECT clients.public_id as clientId, reminders.id, rDate as date, reminders.status, reminders.important, outcome, reminders.note, name, company FROM reminders INNER JOIN clients on reminders.client_id = clients.id WHERE ${condition} LIMIT ` + limit + ` OFFSET ` + offset;
     rows = await db.query(sqlQuery);
 
     return rows;

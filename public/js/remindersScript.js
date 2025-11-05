@@ -130,8 +130,8 @@ let testClients = [
 /*****************************************************************
  * Document Ready
  ****************************************************************/
-// Selected client data for the panel and interaction modal
-let currentClientData = {};
+let currentClientCopyData = {email:"", phone:""};     // Selected client email/phone data for the copy feature
+let currentReminderId = 0;                            // For interaction modal
 
 $(document).ready(function() {
     $(".tab").on('click', function() { 
@@ -192,14 +192,54 @@ function queryListData(filter, offset=0) {
   });
 }
 
+// Loads full client details
+async function fetchClientDetails(id) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `clients/${id}/data`,
+            method: "GET",
+            data: { limit:10 },
+            success: function(res) {
+                const data = typeof res === 'string' ? JSON.parse(res) : res;
+                resolve(data.client);
+            },
+            error: function(xhr, status, error) {
+                // Handle AJAX error
+                console.log('AJAX Error while client details for client ' +  id, error, xhr, status);
+                reject(error);
+            }
+        });
+    });
+}
+
+// Loads client interactions details
+async function fetchClientInteractions(id) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `clients/${id}/activity`,
+            method: "GET",
+            data: { limit:10 },
+            success: function(res) {
+                const data = typeof res === 'string' ? JSON.parse(res) : res;
+                resolve(data.interactions || []);
+            },
+            error: function(xhr, status, error) {
+                // Handle AJAX error
+                console.log('AJAX Error while client interactions for client ' +  id, error, xhr, status);
+                reject(error);
+            }
+        });
+    })
+}
+
 // Loads data into reminders table
-function loadList(counts, clients, offset=0) {
+function loadList(counts, reminders, offset=0) {
     let $table = $('#tableBody');
 
     // Add list counts if > 0
     let overdueCount = counts.overdue;
     let todayCount = counts.today;
-    
+
     overdueCount ? $("#overdueCount").text('(' + overdueCount + ')') : '';
     todayCount ? $("#todayCount").text('(' + todayCount + ')') : '';
 
@@ -207,41 +247,38 @@ function loadList(counts, clients, offset=0) {
         $table.empty(); // Clear the list only for the initial load
     }
 
-    //Data reminders[x]: clients.id, name, mobile, rDate, flag, reminders.id AS rId, reminders.status
     $.get("html/reminderTableRow.html", function(template) {
-        clients.forEach(function(client) {
+        reminders.forEach(function(reminder) {
             // Create jQuery object from the template string
             let $row = $(template);
 
-            // Convert date to local time
-            const localDate = new Date(client.date);
-
-            // --- Create formatted parts ---
+            // Format dates
+            const localDate = new Date(reminder.date);
             const day = localDate.getDate(); // e.g., 23
             const month = localDate.toLocaleString('en-US', { month: 'short' }); // e.g., "Oct"
             const fullDate = localDate.toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric'
-            }); // e.g., "Oct 23, 2025"
+            }); // "Oct 23, 2025"
 
             // Fill in the data
-            $row.find('.date-day').text(day);   //23
-            $row.find('.date-month').text(month); //Oct
-            $row.find('.date-full').text(fullDate); //Oct 23, 2025
-            $row.find('.status-badge').text(client.status);
+            $row.find('.date-day').text(day);           //23
+            $row.find('.date-month').text(month);       //Oct
+            $row.find('.date-full').text(fullDate);     //Oct 23, 2025
+            $row.find('.status-badge').text(reminder.status);
 
-            $row.find('.client-name').text(client.name);
-            $row.find('.client-company').text(client.company);
-            $row.find('.reminder-note').text(client.note);  // Keep this, reason for the reminder
+            $row.find('.client-name').text(reminder.name);
+            $row.find('.client-company').text(reminder.company);
+            $row.find('.reminder-note').text(reminder.note); 
 
             // Attach client ID
-            $row.attr('data-client-id', client.id);
+            $row.attr('data-client-id', reminder.id);
 
             // Attach click listener
             $row.on('click', function() {
-                currentClientData = client;
-                openClientPanel(currentClientData);
+                currentReminderId = reminder.id;
+                openClientPanel(reminder.clientId);
             });
 
             // Append to the table
@@ -270,29 +307,44 @@ function initClientPanel() {
     });
 };
 
-function openClientPanel(data) {
-    // LOAD large data (client notes, interaction history) on panel open
+// Opens client panel when reminder is clicked
+// Lads large client details on panel open
+async function openClientPanel(clientId) {
+    const client = await fetchClientDetails(clientId);
+    const interactions = await fetchClientInteractions(clientId);
+    
+    // Update data for email/number copy feature
+    currentClientCopyData = {email:client.email, phone:client.phone};
+
     // Update panel content
-    document.getElementById('panelClientName').textContent = data.name;
-    document.getElementById('panelClientCompany').textContent = data.company;
-    document.getElementById('panelEmail').textContent = data.email;
-    document.getElementById('panelEmail').href = `mailto:${data.email}`;
-    document.getElementById('panelPhone').textContent = data.phone;
-    document.getElementById('panelPhone').href = `tel:${data.phone}`;
-    document.getElementById('panelPosition').textContent = data.position;
-    document.getElementById('panelNotes').textContent = data.notes;
+    //const client = data.client;
+    document.getElementById('panelClientName').textContent = client.name;
+    document.getElementById('panelClientCompany').textContent = client.company;
+    document.getElementById('panelEmail').textContent = client.email;
+    document.getElementById('panelEmail').href = `mailto:${client.email}`;
+    document.getElementById('panelPhone').textContent = client.phone;
+    document.getElementById('panelPhone').href = `tel:${client.phone}`;
+    document.getElementById('panelPosition').textContent = client.position;
+    document.getElementById('panelNotes').textContent = client.notes;
     
     // Update quick action links
-    document.getElementById('callBtn').href = `tel:${data.phone}`;
-    document.getElementById('emailBtn').href = `mailto:${data.email}`;
-    document.getElementById('viewFullBtn').href = `/clients/${data.id}`;
+    document.getElementById('callBtn').href = `tel:${client.phone}`;
+    document.getElementById('emailBtn').href = `mailto:${client.email}`;
+    document.getElementById('viewFullBtn').href = `/clients/${client.id}`;
 
     // Interaction history HTML
-    const interactions = Array.isArray(data.interactions) ? data.interactions : [];
     const interactionHistoryHtml = interactions.map(interaction => {
         const iconClass = getInteractionIconClass(interaction.method);
         const outcomeClass = getInteractionOutcomeClass(interaction.outcome);
         const outcomeIcon = getInteractionOutcomeIcon(interaction.method, interaction.outcome);
+
+        // Format date
+        let date = new Date(interaction.date);
+        date = date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
         
         return `
             <div class="interaction-item">
@@ -300,7 +352,7 @@ function openClientPanel(data) {
                 <div class="interaction-content">
                     <div class="interaction-header">
                         <span class="interaction-type">${capitalizeFirst(interaction.method)}</span>
-                        <span class="interaction-date">${interaction.date}</span>
+                        <span class="interaction-date">${date}</span>
                     </div>
                     <div class="interaction-outcome ${outcomeClass}">${outcomeIcon} ${getInteractionNote(interaction)}</div>
                 </div>
@@ -309,14 +361,14 @@ function openClientPanel(data) {
     }).join('');
             
     document.getElementById('panelInteractionHistory').innerHTML = interactionHistoryHtml || '<p style="color: var(--gray-500); font-size: 14px; text-align: center; padding: 20px;">No interaction history yet</p>';
-    
+
     // Update badges
     let badgesHtml = ``;
-    if (data.clientStatus & data.priority) {
+    if (client.status && client.priority) {
         badgesHtml = `
-            <span class="status-badge ${data.clientStatus.toLowerCase()}"> ${data.clientStatus.charAt(0).toUpperCase() + data.clientStatus.slice(1).toLowerCase()} </span>
-            ${data.priority ? `
-                <span class="priority-badge ${data.priority.toLowerCase()}"> ${getPriorityIcon(data.priority)} ${data.priority.charAt(0).toUpperCase() + data.priority.slice(1).toLowerCase()} Priority </span>
+            <span class="status-badge ${client.status.toLowerCase()}"> ${client.status.charAt(0).toUpperCase() + client.status.slice(1).toLowerCase()} </span>
+            ${client.priority ? `
+                <span class="priority-badge ${client.priority.toLowerCase()}"> ${getPriorityIcon(client.priority)} ${client.priority.charAt(0).toUpperCase() + client.priority.slice(1).toLowerCase()} Priority </span>
             ` : ''}
         `;
     }
@@ -350,9 +402,9 @@ function copyToClipboard(event, type) {
     let button = event.target;
     
     if (type === 'email') {
-        text = currentClientData.email;
+        text = currentClientCopyData.email;
     } else if (type === 'phone') {
-        text = currentClientData.phone;
+        text = currentClientCopyData.phone;
     }
     
     navigator.clipboard.writeText(text).then(() => {
@@ -370,7 +422,7 @@ function copyToClipboard(event, type) {
 // document.getElementById('markCompleteBtn').addEventListener('click', function() {
 //     if (confirm('Mark this reminder as complete?')) {
 //         // Find the active row and mark it complete
-//         const activeRow = document.querySelector(`[data-client-id="${currentClientData.id}"]`);
+//         const activeRow = document.querySelector(`[data-client-id="${currentClientData.id}"]`); // changed how client data is retrived
 //         if (activeRow) {
 //             const badge = activeRow.querySelector('.status-badge');
 //             badge.className = 'status-badge completed';
@@ -390,7 +442,7 @@ function initInteractionModal() {
 
     // --- Open Modal ---
     $('#markCompleteBtn').on('click', function() {
-        $('#interactionReminderId').val(currentClientData.id);
+        $('#interactionReminderId').val(currentReminderId);
         resetInteractionForm();
         $('#interactionModal').addClass('show');
     });
