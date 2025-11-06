@@ -13,12 +13,6 @@ function initEditReminderModal(listSelector) {
         const reminderData = { id:$(this).data('id'), note: $(this).data('note'), date: $(this).data('date')};
         editReminder(reminderData);
     });
-
-    // Form submission
-    $('#editReminderForm').on('submit', function(e) {
-        e.preventDefault();
-        saveReminderEdit();
-    });
 }
 
 // Global function for onclick
@@ -38,33 +32,31 @@ function editReminder(data) {
     $('#editReminderId').val(data.id);
     $('#editReminderDate').val(dateLocal);
     $('#editReminderNote').val(data.note);
+    $('#editReminderImportant').val(data.important);
     $('#editReminderModal').addClass('show');
 }
 
-function saveReminderEdit() {
+function saveReminderEdit(onSuccess, onError) {
     const reminderId = $('#editReminderId').val();
     const date = $('#editReminderDate').val();
     const note = $('#editReminderNote').val();
-    
+    const important = $('#editReminderImportant').is(":checked");
+
     $.ajax({
-        url: `/reminders/${reminderId}/update`,
+        url: `/reminders/${reminderId}/edit`,
         method: 'POST',
         data: JSON.stringify({
-            date: new Date(date).toISOString(),
-            note: note
+            date: date,
+            note: note, 
+            important: important
         }),
         contentType: 'application/json',
-        success: function(response) {
-            console.log('Reminder updated successfully');
-            $('#editReminderModal').removeClass('show');
-            
-            // Reload reminders to show updated data
-            loadReminders();
+        success: function(res) {
+            if (onSuccess) onSuccess(res); // call the page-specific callback
         },
-        error: function(xhr, status, error) {
-            console.error('Error updating reminder:', error);
-            alert('Failed to update reminder. Please try again.');
-        }
+        error: function(err) {
+            if (onError) onError(err);
+        },
     });
 }
 

@@ -21,6 +21,18 @@ $(document).ready(function() {
     loadReminders();
     loadActivityHistory();
     //loadEngagementStats();
+
+    // Edit reminder form submit
+    $('#editReminderForm').on('submit', function(e) {
+        e.preventDefault();
+        saveReminderEdit(function(res) {
+            $('#editReminderModal').removeClass('show');
+            loadReminders(); // reload the list on this page
+        }, function(err) {
+            console.error('Error updating reminder');
+            alert('Failed to save reminder');
+        });
+    });
     
     // Modal handlers
     initEditReminderModal('#remindersList');
@@ -42,7 +54,7 @@ function loadClientData() {
             renderAddress(clientData);
         },
         error: function(xhr, status, error) {
-            console.error('Error loading client data:', error);
+            console.error('Error loading client data');
             $('#clientName').text('Error loading client');
             alert('Failed to load client data. Please refresh the page.');
         }
@@ -348,7 +360,8 @@ function createReminderRow(reminder) {
     }
 
     let importantText = '';
-    if (reminder.important) {
+    //console.log(reminder.important) //????
+    if (reminder.important[0]) {
         importantText = 'Urgent';
     }
     
@@ -483,7 +496,7 @@ function saveInteractionResponse() {
             loadActivityHistory();
         },
         error: function(xhr, status, error) {
-            console.error('Error recording response:', error);
+            console.error('Error recording response');
             alert('Failed to record response. Please try again.');
         }
     });
@@ -504,7 +517,7 @@ function loadActivityHistory() {
             renderInteraction(data.interactions || []);
         },
         error: function(xhr, status, error) {
-            console.error('Error loading interaction:', error);
+            console.error('Error loading interaction');
             $('#activityList').html(`
                 <div class="cd-empty-activity">
                     <div class="cd-empty-icon">📋</div>
@@ -640,7 +653,7 @@ function loadEngagementStats() {
             renderStats(data.stats || {});
         },
         error: function(xhr, status, error) {
-            console.error('Error loading stats:', error);
+            console.error('Error loading stats');
             renderStats({});
         }
     });
