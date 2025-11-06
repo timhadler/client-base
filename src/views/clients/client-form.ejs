@@ -1,0 +1,226 @@
+<script src="/js/jquery.min.js"></script>
+<script src="/js/client-form.js"></script>
+
+<!-- Main Content -->
+<main class="main-content">
+    <!-- Page Header -->
+    <div class="cf-page-header">
+        <div class="breadcrumb">
+            <a href="/clients">Clients</a>
+            <span>›</span>
+            <span style="color: var(--gray-900); font-weight: 600;"><%= isEdit ? 'Edit' : 'Add' %> Client</span>
+        </div>
+        <h1 class="cf-page-title"><%= isEdit ? 'Edit' : 'Add New' %> Client</h1>
+        <p class="cf-page-subtitle">
+            <%= isEdit ? 'Update the client information below' : 'Enter the client information to begin tracking their engagement' %>
+        </p>
+    </div>
+    
+    <!-- Form Card -->
+    <form id="clientForm" action="<%= isEdit ? `/clients/${client._id}?_method=PUT` : '/clients' %>" method="POST">
+        <div class="cf-form-card">
+            <!-- Basic Information -->
+            <div class="cf-form-section">
+                <h2 class="cf-section-title">Basic Information</h2>
+                <div class="cf-form-grid">
+                    <div class="cf-form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" 
+                                placeholder="<%= isEdit ? '' : 'John' %>" 
+                                value="<%= isEdit ? client.firstName : '' %>" 
+                                required>
+                    </div>
+                    
+                    <div class="cf-form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" 
+                                placeholder="<%= isEdit ? '' : 'Smith' %>" 
+                                value="<%= isEdit ? client.lastName : '' %>" 
+                                required>
+                    </div>
+                    
+                    <div class="cf-form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" 
+                                placeholder="john.smith@company.com" 
+                                value="<%= isEdit ? client.email : '' %>" 
+                                required>
+                    </div>
+                    
+                    <div class="cf-form-group">
+                        <label for="phone">Phone Number <span class="cf-label-optional">(optional)</span></label>
+                        <input type="tel" id="phone" name="phone" 
+                                placeholder="+61 400 000 000"
+                                value="<%= isEdit ? (client.phone || '') : '' %>">
+                    </div>
+                    
+                    <div class="cf-form-group">
+                        <label for="company">Company Name</label>
+                        <input type="text" id="company" name="company" 
+                                placeholder="Acme Corporation" 
+                                value="<%= isEdit ? client.company : '' %>" 
+                                required>
+                    </div>
+                    
+                    <div class="cf-form-group">
+                        <label for="position">Position <span class="cf-label-optional">(optional)</span></label>
+                        <input type="text" id="position" name="position" 
+                                placeholder="Chief Executive Officer"
+                                value="<%= isEdit ? (client.position || '') : '' %>">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Address Information -->
+            <div class="cf-form-section">
+                <h2 class="cf-section-title">Address Information</h2>
+                
+                <div class="cf-checkbox-group" id="addressCheckboxWrapper">
+                    <input type="checkbox" id="hasAddress" name="hasAddress" 
+                            <%= (isEdit && client.street) ? 'checked="checked"' : '' %>>
+                    <label for="hasAddress">This client has a physical address</label>
+                </div>
+                
+                <div class="cf-address-fields <%= isEdit && client.street ? 'show' : '' %>" id="addressFields">
+                    <div class="cf-form-grid">
+                        <div class="cf-form-group cf-full-width">
+                            <label for="addressLine1">Address Line 1</label>
+                            <input type="text" id="addressLine1" name="address[line1]" 
+                                    placeholder="Street address, P.O. box"
+                                    value="<%= isEdit && client.street ? (client.street || '') : '' %>">
+                        </div>
+                        
+                        <div class="cf-form-group cf-full-width">
+                            <label for="addressLine2">Address Line 2 <span class="cf-label-optional">(optional)</span></label>
+                            <input type="text" id="addressLine2" name="address[line2]" 
+                                    placeholder="Apartment, suite, unit, building, floor, etc."
+                                    value="<%= isEdit && client.line2 ? (client.line2 || '') : '' %>">
+                        </div>
+                        
+                        <div class="cf-form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="address[city]" 
+                                    placeholder="Melbourne"
+                                    value="<%= isEdit && client.city ? (client.city || '') : '' %>">
+                        </div>
+                        
+                        <div class="cf-form-group">
+                            <label for="state">State/Province</label>
+                            <input type="text" id="state" name="address[state]" 
+                                    placeholder="VIC"
+                                    value="<%= isEdit && client.state ? (client.state || '') : '' %>">
+                        </div>
+                        
+                        <div class="cf-form-group">
+                            <label for="postcode">Postcode</label>
+                            <input type="text" id="postcode" name="address[postcode]" 
+                                    placeholder="3000"
+                                    value="<%= isEdit && client.postcode ? (client.postcode || '') : '' %>">
+                        </div>
+                        
+                        <div class="cf-form-group">
+                            <label for="country">Country <span class="cf-label-optional">(optional)</span></label>
+                            <select id="country" name="address[country]">
+                                <option value="">Select country</option>
+                                <option value="Australia" <%= isEdit && client.country&& client.country === 'Australia' ? 'selected' : '' %>>Australia</option>
+                                <option value="New Zealand" <%= isEdit && client.country&& client.country === 'New Zealand' ? 'selected' : '' %>>New Zealand</option>
+                                <option value="United States" <%= isEdit && client.country&& client.country === 'United States' ? 'selected' : '' %>>United States</option>
+                                <option value="United Kingdom" <%= isEdit && client.country&& client.country === 'United Kingdom' ? 'selected' : '' %>>United Kingdom</option>
+                                <option value="Canada" <%= isEdit && client.country&& client.country === 'Canada' ? 'selected' : '' %>>Canada</option>
+                                <option value="Singapore" <%= isEdit && client.country&& client.country === 'Singapore' ? 'selected' : '' %>>Singapore</option>
+                                <option value="Other" <%= isEdit && client.country&& client.country === 'Other' ? 'selected' : '' %>>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Client Status -->
+            <div class="cf-form-section">
+                <h2 class="cf-section-title">Client Status & Priority</h2>
+                <div class="cf-form-grid">
+                    <div class="cf-form-group">
+                        <label for="status">Status</label>
+                        <select id="status" name="status" required>
+                            <option value="">Select status</option>
+                            <option value="active" <%= isEdit && client.status === 'active' ? 'selected' : '' %>>Active</option>
+                            <option value="pending" <%= isEdit && client.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                            <option value="inactive" <%= isEdit && client.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+                        </select>
+                        <div class="cf-form-hint">Current relationship status with this client</div>
+                    </div>
+                    
+                    <div class="cf-form-group">
+                        <label for="priority">Priority Level</label>
+                        <select id="priority" name="priority" required>
+                            <option value="">Select priority</option>
+                            <option value="high" <%= isEdit && client.priority === 'high' ? 'selected' : '' %>>High Priority</option>
+                            <option value="medium" <%= isEdit && client.priority === 'medium' ? 'selected' : '' %>>Medium Priority</option>
+                            <option value="low" <%= isEdit && client.priority === 'low' ? 'selected' : '' %>>Low Priority</option>
+                        </select>
+                        <div class="cf-form-hint">How important is this client relationship</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Details -->
+            <div class="cf-form-section">
+                <h2 class="cf-section-title">Additional Details</h2>
+                <div class="cf-form-grid cf-single">
+                    <div class="cf-form-group">
+                        <label for="notes">Notes <span class="cf-label-optional">(optional)</span></label>
+                        <textarea id="notes" name="notes" 
+                                    placeholder="Add any relevant notes about this client, their preferences, or important details..."><%= isEdit ? (client.notes || '') : '' %></textarea>
+                        <div class="cf-form-hint">Internal notes that will help you manage this client relationship</div>
+                    </div>
+                    
+                    <div class="cf-form-group">
+                        <label for="source">How did you acquire this client? <span class="cf-label-optional">(optional)</span></label>
+                        <select id="source" name="source">
+                            <option value="">Select source</option>
+                            <option value="referral" <%= isEdit && client.source === 'referral' ? 'selected' : '' %>>Referral</option>
+                            <option value="website" <%= isEdit && client.source === 'website' ? 'selected' : '' %>>Website</option>
+                            <option value="advertisement" <%= isEdit && client.source === 'advertisement' ? 'selected' : '' %>>Advertisement</option>
+                            <option value="walk_in" <%= isEdit && client.source === 'walk-in' ? 'selected' : '' %>>Walk-in</option>
+                            <option value="social_media" <%= isEdit && client.source === 'social media' ? 'selected' : '' %>>Social Media</option>
+                            <option value="networking" <%= isEdit && client.source === 'networking event' ? 'selected' : '' %>>Networking Event</option>
+                            <option value="cold_outreach" <%= isEdit && client.source === 'cold outreach' ? 'selected' : '' %>>Cold Outreach</option>
+                            <option value="other" <%= isEdit && client.source === 'other' ? 'selected' : '' %>>Other</option>
+                        </select>
+                    </div>
+                    
+                    <% if (!isEdit) { %>
+                    <div class="cf-form-group">
+                        <label>Set Initial Reminder? <span class="cf-label-optional">(optional)</span></label>
+                        <div class="cf-radio-group">
+                            <div class="cf-radio-option">
+                                <input type="radio" id="reminderYes" name="setReminder" value="yes">
+                                <label for="reminderYes">Yes</label>
+                            </div>
+                            <div class="cf-radio-option">
+                                <input type="radio" id="reminderNo" name="setReminder" value="no" checked>
+                                <label for="reminderNo">No</label>
+                            </div>
+                        </div>
+                        <div class="cf-form-hint">You can add reminders later from the client detail page</div>
+                    </div>
+                    
+                    <div class="cf-form-group" id="reminderDateGroup" style="display: none;">
+                        <label for="reminderDate">First Follow-up Date</label>
+                        <input type="date" id="reminderDate" name="reminderDate">
+                        <div class="cf-form-hint">When should we remind you to follow up?</div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="cf-form-actions">
+                <a href="<%= isEdit ? `/clients/${client._id}` : '/clients' %>" class="cf-btn cf-btn-secondary">Cancel</a>
+                <button type="submit" class="cf-btn cf-btn-primary" id="submitBtn">
+                    <span>✓</span> <%= isEdit ? 'Update' : 'Save' %> Client
+                </button>
+            </div>
+        </div>
+    </form>
+</main>

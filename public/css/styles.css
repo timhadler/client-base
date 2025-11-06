@@ -1552,7 +1552,7 @@ td {
 /******** CLIENT DETAIL PAGE  ********/
 
 /* Breadcrumb */
-.cd-breadcrumb {
+.breadcrumb {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1560,17 +1560,17 @@ td {
     font-size: 14px;
 }
 
-.cd-breadcrumb a {
+.breadcrumb a {
     color: var(--gray-600);
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
-.cd-breadcrumb a:hover {
+.breadcrumb a:hover {
     color: var(--primary-blue);
 }
 
-.cd-breadcrumb span {
+.breadcrumb span {
     color: var(--gray-400);
 }
 
@@ -1877,6 +1877,10 @@ td {
     background: var(--primary-blue);
     color: white;
     transform: scale(1.1);
+}
+
+.cd-edit-reminder-btn {
+    background: #dbeafe;
 }
 
 /* Activity Timeline */
@@ -2500,4 +2504,319 @@ td {
     .cd-outcome-buttons { 
         grid-template-columns: 1fr; 
     }
+}
+
+/******** CLIENT FORM STYLES ********/
+/* Form Card */
+.cf-form-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.cf-form-section {
+    padding: 32px;
+    border-bottom: 2px solid var(--gray-100);
+}
+
+.cf-form-section:last-child {
+    border-bottom: none;
+}
+
+.cf-section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 20px;
+}
+
+.cf-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.cf-form-grid.cf-single {
+    grid-template-columns: 1fr;
+}
+
+.cf-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.cf-form-group.cf-full-width {
+    grid-column: 1 / -1;
+}
+
+.cf-form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 8px;
+}
+
+.cf-label-optional {
+    color: var(--gray-500);
+    font-weight: 400;
+    font-size: 13px;
+}
+
+.cf-form-group input[type="text"],
+.cf-form-group input[type="email"],
+.cf-form-group input[type="tel"],
+.cf-form-group input[type="date"],
+.cf-form-group textarea,
+.cf-form-group select {
+    padding: 12px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--gray-900);
+    transition: all 0.2s ease;
+    font-family: var(--font-base);
+}
+
+.cf-form-group input:focus,
+.cf-form-group textarea:focus,
+.cf-form-group select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.cf-form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.cf-form-group select {
+    cursor: pointer;
+    background: white;
+}
+
+.cf-form-hint {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-top: 6px;
+}
+
+/* Input Error State */
+.cf-input-error {
+    border-color: var(--accent-red) !important;
+}
+
+.cf-field-error {
+    font-size: 13px;
+    color: var(--accent-red);
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.cf-field-error::before {
+    content: '⚠';
+}
+
+/* Radio Group */
+.cf-radio-group {
+    display: flex;
+    gap: 20px;
+    margin-top: 8px;
+}
+
+.cf-radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cf-radio-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.cf-radio-option label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* Checkbox */
+.cf-checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    padding: 14px;
+    background: var(--gray-50);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.cf-checkbox-group:hover {
+    background: var(--gray-100);
+}
+
+.cf-checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.cf-checkbox-group label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--gray-700);
+}
+
+/* Address fields collapsible section */
+.cf-address-fields {
+    display: none;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid var(--gray-100);
+}
+
+.cf-address-fields.show {
+    display: block;
+}
+
+/* Form Actions */
+.cf-form-actions {
+    padding: 24px 32px;
+    background: var(--gray-50);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.cf-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-base);
+}
+
+.cf-btn-primary {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.cf-btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.cf-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.cf-btn-secondary {
+    background: white;
+    color: var(--gray-700);
+    border: 2px solid var(--gray-200);
+}
+
+.cf-btn-secondary:hover {
+    background: var(--gray-50);
+    border-color: var(--gray-300);
+}
+
+/* Notification Toast */
+.cf-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+    z-index: 9999;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+}
+
+.cf-notification.show {
+    transform: translateX(0);
+}
+
+.cf-notification-success {
+    background: var(--accent-green);
+    color: white;
+}
+
+.cf-notification-error {
+    background: var(--accent-red);
+    color: white;
+}
+
+.cf-notification-warning {
+    background: var(--accent-orange);
+    color: white;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .cf-form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cf-form-section {
+        padding: 24px;
+    }
+    
+    .cf-form-actions {
+        flex-direction: column-reverse;
+        padding: 20px;
+    }
+    
+    .cf-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .cf-notification {
+        left: 20px;
+        right: 20px;
+        transform: translateY(-100px);
+    }
+    
+    .cf-notification.show {
+        transform: translateY(0);
+    }
+}
+
+.cf-page-header {
+    margin-bottom: 32px;
+}
+
+.cf-page-subtitle {
+    font-size: 15px;
+    color: var(--gray-600);
+}
+
+.cf-page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 8px;
 }

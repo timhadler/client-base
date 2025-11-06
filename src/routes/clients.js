@@ -14,6 +14,56 @@ router.get("/", async (req, res) => {
     }
 });
 
+// GET - Show add client form
+router.get('/new', (req, res) => {
+    try {
+        res.render('clients/client-form', {
+            bodyClass: "",
+            showNavBar: true,
+            isEdit: false,
+            client: {},
+            user: req.user // Assuming you have user authentication
+        });
+    } catch {
+        //res.status(500).send(error.message);
+    console.error('Error:', error); // Logs full error stack
+    res.status(500).json({
+    message: error.message,   // Shows the error message
+    stack: error.stack        // Shows stack trace for debugging
+});
+    }
+});
+
+// GET - Show edit client form
+router.get('/:id/edit', async (req, res) => {
+    try {
+        const client = await clients.getClientDetails(req.params.id);
+
+        if (!client) {
+            req.flash('error', 'Client not found');
+            return res.redirect('/clients');
+        }
+
+        res.render('clients/client-form', {
+            bodyClass: "",
+            showNavBar: true,
+            isEdit: true,
+            client: client,
+            user: req.user
+        });
+
+    } catch (error) {
+        // console.error('Error loading client:', error);
+        // req.flash('error', 'Failed to load client');
+        // res.redirect('/clients');
+    console.error('Error:', error); // Logs full error stack
+    res.status(500).json({
+    message: error.message,   // Shows the error message
+    stack: error.stack        // Shows stack trace for debugging
+});
+    }
+});
+
 // Usefull error catcthing for development
 // console.error('Error:', error); // Logs full error stack
 // res.status(500).json({
