@@ -76,7 +76,7 @@ exports.getListCount = async function(list, d1, d2) {
 
 // Fetches client details with a given id
 exports.getClientDetails = async function(id) {
-    const sqlQuery = "SELECT public_id as id, name, email, phone, company, position, status, priority, source, createdAt, lastContact, notes, street, city, state, postcode, country FROM clients WHERE public_id = ?";
+    const sqlQuery = "SELECT public_id as id, name, first_name, last_name, email, phone, company, position, status, priority, source, createdAt, lastContact, notes, addressLine1 as line1, addressLine2 as line2, city, state, postcode, country FROM clients WHERE public_id = ?";
     rows = await db.query(sqlQuery, [id]);
 
     return rows[0];

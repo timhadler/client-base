@@ -195,14 +195,15 @@ function renderClientInfo(client) {
 function renderAddress(client) {
     const $display = $('#addressDisplay');
 
-    const street = client.street;
+    const line1 = client.line1;
+    const line2 = client.line2;
     const city = client.city;
     const state = client.state;
     const country = client.country;
     const postcode = client.postcode;
     
     // Check if address exists
-    const hasAddress = street || city || 
+    const hasAddress = line1 || city || 
                        state || postcode || 
                        country;
     
@@ -210,11 +211,12 @@ function renderAddress(client) {
         $display.html('<div class="cd-no-address">No address on file</div>');
         return;
     }
-    
+
     // Build address lines
     let addressLines = [];
-    if (street) addressLines.push(street);
-    if (city || client.addressState || postcode) {
+    if (line1) addressLines.push(line1);
+    if (line2) addressLines.push(line2);
+    if (city || client.state || postcode) {
         let line = [];
         if (city) line.push(city);
         if (state) line.push(state);

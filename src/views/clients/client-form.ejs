@@ -17,7 +17,7 @@
     </div>
     
     <!-- Form Card -->
-    <form id="clientForm" action="<%= isEdit ? `/clients/${client._id}?_method=PUT` : '/clients' %>" method="POST">
+    <form id="clientForm" action="<%= isEdit ? `/clients/${client.id}?_method=PUT` : '/clients' %>" method="POST">
         <div class="cf-form-card">
             <!-- Basic Information -->
             <div class="cf-form-section">
@@ -27,7 +27,7 @@
                         <label for="firstName">First Name</label>
                         <input type="text" id="firstName" name="firstName" 
                                 placeholder="<%= isEdit ? '' : 'John' %>" 
-                                value="<%= isEdit ? client.firstName : '' %>" 
+                                value="<%= isEdit ? client.first_name : '' %>" 
                                 required>
                     </div>
                     
@@ -35,7 +35,7 @@
                         <label for="lastName">Last Name</label>
                         <input type="text" id="lastName" name="lastName" 
                                 placeholder="<%= isEdit ? '' : 'Smith' %>" 
-                                value="<%= isEdit ? client.lastName : '' %>" 
+                                value="<%= isEdit ? client.last_name : '' %>" 
                                 required>
                     </div>
                     
@@ -74,20 +74,19 @@
             <!-- Address Information -->
             <div class="cf-form-section">
                 <h2 class="cf-section-title">Address Information</h2>
-                
                 <div class="cf-checkbox-group" id="addressCheckboxWrapper">
                     <input type="checkbox" id="hasAddress" name="hasAddress" 
-                            <%= (isEdit && client.street) ? 'checked="checked"' : '' %>>
+                            <%= (isEdit && (client.line1 || client.line2 || client.state || client.city || client.country || client.postcode)) ? 'checked="checked"' : '' %>>
                     <label for="hasAddress">This client has a physical address</label>
                 </div>
                 
-                <div class="cf-address-fields <%= isEdit && client.street ? 'show' : '' %>" id="addressFields">
+                <div class="cf-address-fields <%= isEdit && (client.line1 || client.line2 || client.state || client.city || client.country || client.postcode) ? 'show' : '' %>" id="addressFields">
                     <div class="cf-form-grid">
                         <div class="cf-form-group cf-full-width">
                             <label for="addressLine1">Address Line 1</label>
                             <input type="text" id="addressLine1" name="address[line1]" 
                                     placeholder="Street address, P.O. box"
-                                    value="<%= isEdit && client.street ? (client.street || '') : '' %>">
+                                    value="<%= isEdit && client.line1 ? (client.line1 || '') : '' %>">
                         </div>
                         
                         <div class="cf-form-group cf-full-width">
@@ -216,7 +215,7 @@
             
             <!-- Form Actions -->
             <div class="cf-form-actions">
-                <a href="<%= isEdit ? `/clients/${client._id}` : '/clients' %>" class="cf-btn cf-btn-secondary">Cancel</a>
+                <a href="<%= isEdit ? `/clients/${client.id}` : '/clients' %>" class="cf-btn cf-btn-secondary">Cancel</a>
                 <button type="submit" class="cf-btn cf-btn-primary" id="submitBtn">
                     <span>✓</span> <%= isEdit ? 'Update' : 'Save' %> Client
                 </button>
