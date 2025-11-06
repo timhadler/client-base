@@ -18,6 +18,9 @@ global.D2_A = "9999-12-31";
 global.MONTH_A = MONTH_P;
 global.ORDER_A = "latest_created"
 
+/***********************************************************
+ * Get
+ ***********************************************************/
 router.get("/", async (req, res) => {
     try {
         res.status(200).render("reminders/reminders", {bodyClass:"remindersPage", showNavBar:true, month_p:MONTH_P, month_fu:MONTH_FU, month_a:MONTH_A, d1_p:D1_P, d2_p:D2_P, d1_fu:D1_FU, d2_fu:D2_FU, d1_a:D1_A, d2_a:D2_A});
@@ -26,10 +29,8 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Get a given reminder list from database
-// Modify: retrive all low data (name, priority, status) initially. Load heavy data (client notes etc) on panel open
-// listCounts = {today, overdue}
-// dates for interaction history: order by reverse chronological date then format
+// Get the filtered reminder list
+// Also returns list counts for overdue and due today for tab headers
 // Replace upcoming col with waiting for response (reminder.status = waiting, reminder will have from_interaction field)
 router.get("/load-reminder-list", async (req, res) => {
     try {
@@ -40,14 +41,27 @@ router.get("/load-reminder-list", async (req, res) => {
         const todayCount = await clients.nReminderListCount('today');
         reminders = await clients.getReminderList(filter, req.query.limit, req.query.offset);
 
-        reminders.forEach(reminder => {
-            reminder.date = new Date(reminder.date).toISOString();
-        })
+        // reminders.forEach(reminder => {
+        //     reminder.date = new Date(reminder.date).toISOString();
+        // })
 
         const data = {listCounts:{today:todayCount, overdue:overdueCount}, listData:reminders};
         res.json(JSON.stringify(data));
     } catch (error) {
         res.status(500).send(error.message);
+    }
+});
+
+/***********************************************************
+ * Post
+ ***********************************************************/
+// Add a reminder
+router.post("/add", async (req, res) => {
+    try {
+        await clients.createReminder(req.query.date, req.query.important, req.query.note, req.query.clientId);
+    } catch (error) {
+        //res.status(500).send(error.message);
+        console.error('Error:', error); // Logs full error stack    // REMOVE FOR PRODUCTION
     }
 });
 
@@ -92,6 +106,24 @@ router.post("/set-reminder-status-multi", async (req, res) => {
     }
 });
 
+/***********************************************************
+ * Put
+ ***********************************************************/
+// Edit a reminder
+router.post("/:id/edit", async (req, res) => {
+    try {
+        console.log("Creatinf reminder, date: ", req.body.important)
+        await clients.editReminder(req.params.id, req.body.date, req.body.important, req.body.note);
+        res.status(201).json({ message: "Update successful" });
+    } catch (error) {
+        res.status(500).send(error.message);
+        // /console.error('Error:', error); // Logs full error stack    // REMOVE FOR PRODUCTION
+    }
+});
+
+/***********************************************************
+ * Delete
+ ***********************************************************/
 // DELETE multi clients
 router.delete("/multi-delete", async (req, res) => {
     try {

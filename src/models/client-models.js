@@ -66,14 +66,6 @@ exports.getClientList = async function(limit, offset, search, status, priority) 
     return rows;
 }
 
-// Fetches the number of clients in a given list (pending, awaiting, followUp) with user parameters
-exports.getListCount = async function(list, d1, d2) {
-    const sqlQuery = "SELECT COUNT(clients.id) as n FROM clients INNER JOIN reminders ON clients.id = reminders.client_id WHERE reminders.status = ? AND reminders.rDate BETWEEN '" + d1 + "' AND '" + d2 + "';";
-    const rows = await db.query(sqlQuery, list);
-    
-    return rows[0].n;
-};
-
 // Fetches client details with a given id
 exports.getClientDetails = async function(id) {
     const sqlQuery = "SELECT public_id as id, name, first_name, last_name, email, phone, company, position, status, priority, source, createdAt, lastContact, notes, addressLine1 as line1, addressLine2 as line2, city, state, postcode, country FROM clients WHERE public_id = ?";
@@ -92,7 +84,7 @@ exports.getClientReminders = async function(id) {
 
 // Fetchs all interactions associated with a client id
 exports.getClientInteractions = async function (id) {
-    const sqlQuery = "SELECT method, outcome, i.createdAt as date FROM interactions i JOIN clients c ON i.client_id = c.id WHERE c.public_id = ?";
+    const sqlQuery = "SELECT i.id, method, outcome, i.createdAt as date FROM interactions i JOIN clients c ON i.client_id = c.id WHERE c.public_id = ? ORDER BY i.createdAt DESC";
     rows = await db.query(sqlQuery, [id]);
 
     return rows;
@@ -119,17 +111,9 @@ exports.getReminderList = async function(filter, limit, offset) {
     return rows;
 }
 
-// Returns a list of all clients in db with the provided name, used to check for duplicates during import
-// exports.getClientsByName = async function(name) {
-//     const sqlQuery = "SELECT * from clients WHERE name=?";
-//     const rows = await db.query(sqlQuery, name);
-
-//     return rows;
-// }
-
 // Retrives the client name and ids of clients with no reminder Date
 exports.getClientsNoRDate = async function() {
-    const sqlQuery = "SELECT clients.id, name FROM clients LEFT JOIN reminders ON clients.id = reminders.client_id WHERE reminders.id IS NULL";
+    const sqlQuery = "SELECt public_id as id, name FROM clients LEFT JOIN reminders ON clients.id = reminders.client_id WHERE reminders.id IS NULL";
     const rows = await db.query(sqlQuery);
 
     return rows;
@@ -140,26 +124,31 @@ exports.getClientsNoRDate = async function() {
  ***********************************************************/
 // Creates a client entry
 // Returns the id of the newly created client
-exports.createClient = async function(name, company, telephone, mobile, email, street, suburb, city, pc) {
-    const sqlQuery = "INSERT INTO clients (name, company, home, mobile, email, street, suburb, city, postcode) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+// exports.createClient = async function(name, company, telephone, mobile, email, street, suburb, city, pc) {
+//     const sqlQuery = "INSERT INTO clients (name, company, home, mobile, email, street, suburb, city, postcode) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    await db.query(sqlQuery, [name, company, telephone, mobile, email, street, suburb, city, pc]);
-    const rows = await db.query("SELECT MAX(id) AS lastID FROM clients");
+//     await db.query(sqlQuery, [name, company, telephone, mobile, email, street, suburb, city, pc]);
+//     const rows = await db.query("SELECT MAX(id) AS lastID FROM clients");
     
-    return rows[0].lastID;
-}
+//     return rows[0].lastID;
+// }
 
 // Creates a reminder entry
-exports.createReminder = async function(rDate, status, id) {
-    const sqlQuery = "INSERT INTO reminders (rDate, client_id, status) VALUES(?, ?, ?)";
-    await db.query(sqlQuery, [rDate, id, status]);
+exports.createReminder = async function(date, important, note, clientId) {
+    const sqlQuery = `
+        INSERT INTO reminders (client_id, rDate, status, important, note) 
+        SELECT c.id ?, 'pending', ?, ?
+        FROM clients c 
+        WHERE c.public_id = ?
+    `;
+    await db.query(sqlQuery, [date, status, important, note, clientId]);
 }
 
 // Create an interaction entry
-exports.createInteraction = async function(action, id, rId) {
-    const sqlQuery = "INSERT INTO interactions (client_id, reminder_id, interaction) VALUES(?, ?, ?)";
-    await db.query(sqlQuery, [id, rId, action]);
-}
+// exports.createInteraction = async function(action, id, rId) {
+//     const sqlQuery = "INSERT INTO interactions (client_id, reminder_id, interaction) VALUES(?, ?, ?)";
+//     await db.query(sqlQuery, [id, rId, action]);
+// }
 
 /***********************************************************
  * Edit
@@ -172,20 +161,9 @@ exports.editClient = async function(id, name, company, telephone, mobile, email,
 }
 
 // Edits a reminder entry
-exports.editReminder = async function(id, date) {
-    const sqlQuery = "UPDATE reminders SET rDate=? WHERE id=?";
-    await db.query(sqlQuery, [date, id]);
-}
-
-// Edit a reminder entry for a given client id
-exports.editClientReminder = async function(id, date, status) {
-    const sqlQuery = "UPDATE reminders SET rDate=?, status=? WHERE client_id=?";
-    await db.query(sqlQuery, [date, status, id]);
-}
-
-exports.setReminderFlag = async function(id, value) {
-    const sqlQuery = "UPDATE reminders SET flag=? WHERE id=?";
-    await db.query(sqlQuery, [value, id]);
+exports.editReminder = async function(id, date, important, note) {
+    const sqlQuery = "UPDATE reminders SET rDate=?, important=?, note=? WHERE id=?";
+    await db.query(sqlQuery, [date, important, note, id]);
 }
 
 /***********************************************************
@@ -219,7 +197,7 @@ exports.deleteClient = async function(id) {
 }
 
 exports.deleteClientReminder = async function(id) {
-    const sqlQuery = "DELETE FROM reminders WHERE client_id=?";
+    const sqlQuery = "DELETE FROM reminders WHERE id=?";
     await db.query(sqlQuery, id);
 }
 
