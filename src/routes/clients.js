@@ -136,37 +136,57 @@ router.get("/:id/activity", async (req, res) => {
 /***********************************************************
  * Add
  ***********************************************************/
-router.post("/add-client", async (req, res) => {
+router.post('/', async (req, res) => {
     try {
-        const formData = req.body.data;
-        const params = new URLSearchParams(formData);
-        const name = params.get('name');
-        const company = params.get('company');
-        const telephone = params.get('telephone');
-        const mobile = params.get('mobile');
-        const email = params.get('email');
-        const street = params.get('street');
-        const suburb = params.get('suburb');
-        const city = params.get('city');
-        const pc = params.get('pc');
+        const data = req.body;
+        //const address = data.address || {};
 
-        // Create new client
-        //let id = await clients.createClient(name, company, telephone, mobile, email, street, suburb, city, pc);
+        // Construct client object
+        const newClient = {
+            first_name: data.firstName,
+            last_name: data.lastName,
+            email: data.email,
+            phone: data.phone || null,
+            company: data.company,
+            position: data.position || null,
+            status: data.status,
+            priority: data.priority,
+            notes: data.notes || null,
+            source: data.source || null,
+            line1: data.line1 || null,
+            line2: data.line2 || null,
+            city: data.city || null,
+            state: data.state || null,
+            country: data.country || null,
+            postcode: data.postcode || null,
+        };
 
-        //await clients.createReminder(body.rDate, status, id);
-        res.status(201).json({ id:id });
-    } catch (error) {
-        // If error was caused by a duplicate name
-        if (error.message.includes("Duplicate entry")) {
-            const error = "Client already exists in database: " + req.body.name;
-            //let clientList = await clients.clientList(rowLimit);
+        const clientId = await clients.addClient(newClient);
+        const publicIdObj = await clients.getPublicId(clientId);
+        console.log(data.city);
 
-            res.render("clients/clients", {clients:clientList, error:error});
-        } else {
-            res.status(400).send(error.message);
+        // Optional reminder if selected
+        if (data.setReminder === 'yes' && data.reminderDate) {
+            const note = "Initial reminder";
+            const important = false;                // PLACEHOLDER
+            await clients.createReminder(data.reminderDate, important, note, publicIdObj.public_id);
         }
+
+        // Respond for AJAX
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.json({ success: true, redirectUrl: `/clients/${ publicIdObj.public_id}` });
+        }
+
+        res.redirect(`/clients/${ publicIdObj.public_id}`);
+    } catch (error) {
+        console.error('Error adding client:', error);
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.status(500).json({ error: 'Somethign went wrong, but client may have been created. Try searching for them.' });
+        }
+        res.redirect('/clients');
     }
 });
+
 
 /***********************************************************
  * Import clients

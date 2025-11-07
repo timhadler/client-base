@@ -36,7 +36,7 @@
                         <input type="text" id="lastName" name="lastName" 
                                 placeholder="<%= isEdit ? '' : 'Smith' %>" 
                                 value="<%= isEdit ? client.last_name : '' %>" 
-                                required>
+                                >
                     </div>
                     
                     <div class="cf-form-group">
@@ -44,7 +44,7 @@
                         <input type="email" id="email" name="email" 
                                 placeholder="john.smith@company.com" 
                                 value="<%= isEdit ? client.email : '' %>" 
-                                required>
+                                >
                     </div>
                     
                     <div class="cf-form-group">
@@ -59,7 +59,7 @@
                         <input type="text" id="company" name="company" 
                                 placeholder="Acme Corporation" 
                                 value="<%= isEdit ? client.company : '' %>" 
-                                required>
+                                >
                     </div>
                     
                     <div class="cf-form-group">
@@ -84,42 +84,42 @@
                     <div class="cf-form-grid">
                         <div class="cf-form-group cf-full-width">
                             <label for="addressLine1">Address Line 1</label>
-                            <input type="text" id="addressLine1" name="address[line1]" 
+                            <input type="text" id="addressLine1" name="line1" 
                                     placeholder="Street address, P.O. box"
                                     value="<%= isEdit && client.line1 ? (client.line1 || '') : '' %>">
                         </div>
                         
                         <div class="cf-form-group cf-full-width">
                             <label for="addressLine2">Address Line 2 <span class="cf-label-optional">(optional)</span></label>
-                            <input type="text" id="addressLine2" name="address[line2]" 
+                            <input type="text" id="addressLine2" name="line2" 
                                     placeholder="Apartment, suite, unit, building, floor, etc."
                                     value="<%= isEdit && client.line2 ? (client.line2 || '') : '' %>">
                         </div>
                         
                         <div class="cf-form-group">
                             <label for="city">City</label>
-                            <input type="text" id="city" name="address[city]" 
+                            <input type="text" id="city" name="city" 
                                     placeholder="Melbourne"
                                     value="<%= isEdit && client.city ? (client.city || '') : '' %>">
                         </div>
                         
                         <div class="cf-form-group">
                             <label for="state">State/Province</label>
-                            <input type="text" id="state" name="address[state]" 
+                            <input type="text" id="state" name="state" 
                                     placeholder="VIC"
                                     value="<%= isEdit && client.state ? (client.state || '') : '' %>">
                         </div>
                         
                         <div class="cf-form-group">
                             <label for="postcode">Postcode</label>
-                            <input type="text" id="postcode" name="address[postcode]" 
+                            <input type="text" id="postcode" name="postcode" 
                                     placeholder="3000"
                                     value="<%= isEdit && client.postcode ? (client.postcode || '') : '' %>">
                         </div>
                         
                         <div class="cf-form-group">
                             <label for="country">Country <span class="cf-label-optional">(optional)</span></label>
-                            <select id="country" name="address[country]">
+                            <select id="country" name="country">
                                 <option value="">Select country</option>
                                 <option value="Australia" <%= isEdit && client.country&& client.country === 'Australia' ? 'selected' : '' %>>Australia</option>
                                 <option value="New Zealand" <%= isEdit && client.country&& client.country === 'New Zealand' ? 'selected' : '' %>>New Zealand</option>
@@ -143,7 +143,7 @@
                         <select id="status" name="status" required>
                             <option value="">Select status</option>
                             <option value="active" <%= isEdit && client.status === 'active' ? 'selected' : '' %>>Active</option>
-                            <option value="pending" <%= isEdit && client.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                            <option value="pending" <%= (isEdit && client.status === 'pending') || !isEdit ? 'selected' : '' %>>Pending</option>
                             <option value="inactive" <%= isEdit && client.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
                         </select>
                         <div class="cf-form-hint">Current relationship status with this client</div>
@@ -154,7 +154,7 @@
                         <select id="priority" name="priority" required>
                             <option value="">Select priority</option>
                             <option value="high" <%= isEdit && client.priority === 'high' ? 'selected' : '' %>>High Priority</option>
-                            <option value="medium" <%= isEdit && client.priority === 'medium' ? 'selected' : '' %>>Medium Priority</option>
+                            <option value="medium" <%= (isEdit && client.priority === 'medium') || !isEdit ? 'selected' : '' %>>Medium Priority</option>
                             <option value="low" <%= isEdit && client.priority === 'low' ? 'selected' : '' %>>Low Priority</option>
                         </select>
                         <div class="cf-form-hint">How important is this client relationship</div>

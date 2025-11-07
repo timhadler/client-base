@@ -119,29 +119,56 @@ exports.getClientsNoRDate = async function() {
     return rows;
 }
 
+// Fetches the public id of a client by their internal id
+exports.getPublicId = async function(id) {
+    const sqlQuery = "SELECT public_id FROM clients WHERE id = ?";
+    const rows = await db.query(sqlQuery, [id]);
+
+    return rows[0];
+}
+
 /***********************************************************
  * Creation
  ***********************************************************/
 // Creates a client entry
-// Returns the id of the newly created client
-// exports.createClient = async function(name, company, telephone, mobile, email, street, suburb, city, pc) {
-//     const sqlQuery = "INSERT INTO clients (name, company, home, mobile, email, street, suburb, city, postcode) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-//     await db.query(sqlQuery, [name, company, telephone, mobile, email, street, suburb, city, pc]);
-//     const rows = await db.query("SELECT MAX(id) AS lastID FROM clients");
-    
-//     return rows[0].lastID;
-// }
+exports.addClient = async (client) => {
+    const result = await db.query(
+        `INSERT INTO clients 
+        (first_name, last_name, name, email, phone, company, position, status, priority, notes, source,
+         addressLine1, addressLine2, city, state, country, postcode)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+            client.first_name,
+            client.last_name,
+            client.first_name,
+            client.email,
+            client.phone,
+            client.company,
+            client.position,
+            client.status,
+            client.priority,
+            client.notes,
+            client.source,
+            client.line1,
+            client.line2,
+            client.city,
+            client.state,
+            client.country,
+            client.postcode,
+        ]
+    );
+    return result.insertId;
+};
 
 // Creates a reminder entry
 exports.createReminder = async function(date, important, note, clientId) {
     const sqlQuery = `
         INSERT INTO reminders (client_id, rDate, status, important, note) 
-        SELECT c.id ?, 'pending', ?, ?
+        SELECT c.id, ?, 'pending', ?, ?
         FROM clients c 
         WHERE c.public_id = ?
     `;
-    await db.query(sqlQuery, [date, status, important, note, clientId]);
+    await db.query(sqlQuery, [date, important, note, clientId]);
 }
 
 // Create an interaction entry
