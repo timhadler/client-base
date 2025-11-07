@@ -78,14 +78,17 @@ function renderClientHeader(client) {
     $('#breadcrumbName').text(client.name);
     
     // Set company
-    $('#clientCompany').text(client.company || 'No company');
+    $('#clientCompany').text(client.company || '');
     
     // Build meta items
-    let metaHtml = `
-        <div class="cd-meta-item">
-            📧 <strong>${escapeHtml(client.email)}</strong>
-        </div>
-    `;
+    let metaHtml = '';
+    if (client.email) {
+        metaHtml = `
+            <div class="cd-meta-item">
+                📧 <strong>${escapeHtml(client.email)}</strong>
+            </div>
+        `;
+    }
     
     if (client.phone) {
         metaHtml += `
@@ -148,8 +151,8 @@ function renderClientInfo(client) {
     const html = `
         <div class="cd-info-item">
             <div class="cd-info-label">Email</div>
-            <div class="cd-info-value">
-                <a href="mailto:${escapeHtml(client.email)}">${escapeHtml(client.email)}</a>
+            <div class="cd-info-value ${client.phone ? '' : 'cd-not-provided'}">
+                ${client.email ? `<a href="mailto:${escapeHtml(client.email)}">${escapeHtml(client.email)}</a>` : 'Not provided' }
             </div>
         </div>
         

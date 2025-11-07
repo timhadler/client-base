@@ -76,7 +76,7 @@ $(document).ready(function() {
                 submitBtn.prop('disabled', false).html(originalText);
                 
                 // Show error message
-                let errorMessage = 'Failed to save client. Please try again.';
+                let errorMessage = 'Somethign went wrong, but client may have been created. Try searching for them.';
                 if (xhr.responseJSON && xhr.responseJSON.error) {
                     errorMessage = xhr.responseJSON.error;
                 }
