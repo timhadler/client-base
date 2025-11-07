@@ -25,12 +25,7 @@ router.get('/new', (req, res) => {
             user: req.user // Assuming you have user authentication
         });
     } catch {
-        //res.status(500).send(error.message);
-    console.error('Error:', error); // Logs full error stack
-    res.status(500).json({
-    message: error.message,   // Shows the error message
-    stack: error.stack        // Shows stack trace for debugging
-});
+        res.status(500).send(error.message);
     }
 });
 
@@ -53,19 +48,14 @@ router.get('/:id/edit', async (req, res) => {
         });
 
     } catch (error) {
-        // console.error('Error loading client:', error);
-        // req.flash('error', 'Failed to load client');
-        // res.redirect('/clients');
-    console.error('Error:', error); // Logs full error stack
-    res.status(500).json({
-    message: error.message,   // Shows the error message
-    stack: error.stack        // Shows stack trace for debugging
-});
+        console.error('Error loading client:', error);
+        req.flash('error', 'Failed to load client');
+        res.redirect('/clients');
     }
 });
 
 // Usefull error catcthing for development
-// console.error('Error:', error); // Logs full error stack
+// console.error('Error:', error); // Logs full error stack - REMOVE IN PRODUCTION
 // res.status(500).json({
 //     message: error.message,   // Shows the error message
 //     stack: error.stack        // Shows stack trace for debugging
@@ -103,10 +93,10 @@ router.get("/:id/data", async (req, res) => {
         const client = await clients.getClientDetails(id);
 
         // Format dates
-        if(client) {
-            client.createdAt = new Date(client.createdAt).toISOString();
-            client.lastContact = client.lastContact ? new Date(client.lastContact).toISOString() : null;
-        }
+        // if(client) {
+        //     client.createdAt = new Date(client.createdAt).toISOString();
+        //     client.lastContact = client.lastContact ? new Date(client.lastContact).toISOString() : null;
+        // }
 
         res.json({ client:client });
     } catch (error) {
@@ -121,11 +111,8 @@ router.get("/:id/reminders", async (req, res) => {
 
         let reminders = await clients.getClientReminders(id);
 
-        // Filter out completed reminders and enforce UTC timestamp
+        // Filter out completed reminders
         reminders = reminders.filter(reminder => reminder.status !== "complete"); 
-        reminders.forEach(reminder => {
-            reminder.date = new Date(reminder.date).toISOString();
-        });
 
         res.json({ reminders:reminders });
     } catch (error) {
@@ -139,9 +126,6 @@ router.get("/:id/activity", async (req, res) => {
         const {limit} = req.body;
 
         let interactions = await clients.getClientInteractions(id);
-        interactions.forEach(interaction => {
-            interaction.date = new Date(interaction.date).toISOString();
-        });
 
         res.json({ interactions:interactions });
     } catch (error) {
@@ -167,7 +151,7 @@ router.post("/add-client", async (req, res) => {
         const pc = params.get('pc');
 
         // Create new client
-        let id = await clients.createClient(name, company, telephone, mobile, email, street, suburb, city, pc);
+        //let id = await clients.createClient(name, company, telephone, mobile, email, street, suburb, city, pc);
 
         //await clients.createReminder(body.rDate, status, id);
         res.status(201).json({ id:id });
@@ -181,24 +165,6 @@ router.post("/add-client", async (req, res) => {
         } else {
             res.status(400).send(error.message);
         }
-    }
-});
-
-// POST add reminder
-router.post("/add-reminder/", async (req, res) => {
-    try {
-        const formData = req.body.data;
-        const params = new URLSearchParams(formData);
-        const rDate = params.get('rDate');
-        const status = params.get('status');
-        const id = req.body.id;
-
-        if (rDate) {
-            await clients.createReminder(rDate, status, id)
-        }
-        res.status(201).end();
-    } catch (error) {
-        res.status(500).send(error.message);
     }
 });
 
@@ -320,7 +286,7 @@ router.post("/edit-reminder", async (req, res) => {
         const status = params.get('status');
         const id = req.body.id;
 
-        await clients.editClientReminder(id, rDate, status)
+        //await clients.editClientReminder(id, rDate, status)
         res.status(201).end();
     } catch (error) {
         res.status(500).send(error.message);
