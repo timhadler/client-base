@@ -139,15 +139,14 @@ router.get("/:id/activity", async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const data = req.body;
-        //const address = data.address || {};
 
         // Construct client object
         const newClient = {
             first_name: data.firstName,
-            last_name: data.lastName,
-            email: data.email,
+            last_name: data.lastName || null,
+            email: data.email || null,
             phone: data.phone || null,
-            company: data.company,
+            company: data.company || null,
             position: data.position || null,
             status: data.status,
             priority: data.priority,
@@ -274,26 +273,44 @@ router.post('/', async (req, res) => {
 /***********************************************************
  * Edit
  ***********************************************************/
-// Edit client
-router.post("/edit-client", async (req, res) => {
+// EDIT EXISTING CLIENT
+router.put('/:id', async (req, res) => {
     try {
-        const formData = req.body.data;
-        const params = new URLSearchParams(formData);
-        const id = req.body.id;
-        const name = params.get('name');
-        const company = params.get('company');
-        const telephone = params.get('telephone');
-        const mobile = params.get('mobile');
-        const email = params.get('email');
-        const street = params.get('street');
-        const suburb = params.get('suburb');
-        const city = params.get('city');
-        const pc = params.get('pc');
+        const clientId = req.params.id;
+        const data = req.body;
 
-        await clients.editClient(id, name, company, telephone, mobile, email, street, suburb, city, pc);
-        res.status(201).end();
+        const updatedClient = {
+            first_name: data.firstName,
+            last_name: data.lastName || null,
+            email: data.email || null,
+            phone: data.phone || null,
+            company: data.company || null,
+            position: data.position || null,
+            status: data.status,
+            priority: data.priority,
+            notes: data.notes || null,
+            source: data.source || null,
+            line1: data.line1 || null,
+            line2: data.line2 || null,
+            city: data.city || null,
+            state: data.state || null,
+            country: data.country || null,
+            postcode: data.postcode || null,
+        };
+
+        await clients.editClient(clientId, updatedClient);
+
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.json({ success: true, redirectUrl: `/clients/${clientId}` });
+        }
+
+        res.redirect(`/clients/${clientId}`);
     } catch (error) {
-        res.status(500).send(error.message);
+        console.error('Error updating client:', error);
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.status(500).json({ error: 'Error updating client' });
+        }
+        res.redirect('/clients');
     }
 });
 

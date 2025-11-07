@@ -140,7 +140,7 @@ exports.addClient = async (client) => {
         [
             client.first_name,
             client.last_name,
-            client.first_name,
+            client.first_name + ' ' + client.last_name,
             client.email,
             client.phone,
             client.company,
@@ -182,10 +182,35 @@ exports.createReminder = async function(date, important, note, clientId) {
  ***********************************************************/
 
 // Edits a client entry
-exports.editClient = async function(id, name, company, telephone, mobile, email, street, suburb, city, pc) {
-    const sqlQuery = "UPDATE clients SET name=?, company=?, home=?, mobile=?, email=?, street=?, suburb=?, city=?, postcode=? WHERE id=?";
-    await db.query(sqlQuery, [name, company, telephone, mobile, email, street, suburb, city, pc, id]);
-}
+exports.editClient = async (id, client) => {
+    await db.query(
+        `UPDATE clients SET 
+            first_name = ?, last_name = ?, name = ?, email = ?, phone = ?, company = ?, position = ?, 
+            status = ?, priority = ?, notes = ?, source = ?,
+            addressLine1 = ?, addressLine2 = ?, city = ?, state = ?, country = ?, postcode = ?
+         WHERE public_id = ?`,
+        [
+            client.first_name,
+            client.last_name,
+            client.first_name + ' ' + client.last_name,
+            client.email,
+            client.phone,
+            client.company,
+            client.position,
+            client.status,
+            client.priority,
+            client.notes,
+            client.source,
+            client.line1,
+            client.line2,
+            client.city,
+            client.state,
+            client.country,
+            client.postcode,
+            id,
+        ]
+    );
+};
 
 // Edits a reminder entry
 exports.editReminder = async function(id, date, important, note) {
