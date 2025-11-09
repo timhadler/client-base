@@ -120,18 +120,21 @@ router.get("/:id/reminders", async (req, res) => {
     }
 });
 
-router.get("/:id/activity", async (req, res) => {
-    try {
-        const id = req.params.id;
-        const {limit} = req.body;
+const interactionsRouter = require("./interactions");
+router.use("/:id/activity", interactionsRouter)
 
-        let interactions = await clients.getClientInteractions(id);
+// router.get("/:id/activity", async (req, res) => {
+//     try {
+//         const id = req.params.id;
+//         const {limit} = req.body;
 
-        res.json({ interactions:interactions });
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
+//         let interactions = await clients.getClientInteractions(id);
+
+//         res.json({ interactions:interactions });
+//     } catch (error) {
+//         res.status(500).send(error.message);
+//     }
+// });
 
 /***********************************************************
  * Add

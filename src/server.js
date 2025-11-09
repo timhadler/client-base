@@ -20,6 +20,7 @@ const clientRouter = require("./routes/clients");
 const overviewRouter = require("./routes/clientOverview");
 const authRouter = require("./routes/auth");
 const stripeRouter = require("./routes/stripe").router;
+const interactionsRouter  =require("./routes/interactions");
 
 //const { Passport } = require("passport/lib");
 //const req = require("express/lib/request");
@@ -98,10 +99,12 @@ if (process.env.NODE_ENV === "development") {
     app.use("/auth", authRouter);
     app.use("/clients", clientRouter);
     app.use("/reminders", reminderRouter);
-    app.use("/clientOverview", overviewRouter);
+    //app.use("/clientOverview", overviewRouter);
+    app.use('/interactions', interactionsRouter);
 } else {
     app.use("/auth", checkNotAuthenticated, authRouter);
     app.use("/reminders", checkAuthenticated, checkTrialorActive, reminderRouter);
     app.use("/clients", checkAuthenticated, checkTrialorActive, clientRouter);
-    app.use("/clientOverview", checkAuthenticated, checkTrialorActive, overviewRouter);
+    //app.use("/clientOverview", checkAuthenticated, checkTrialorActive, overviewRouter);
+    app.use('/interactions', interactionsRouter);
 }
