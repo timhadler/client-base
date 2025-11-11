@@ -21,18 +21,29 @@ router.get("/", async (req, res) => {
 /***********************************************************
  * post
  ***********************************************************/
-router.post("/:reminderId", async (req, res) => {
+router.post("/", async (req, res) => {
     try {
-        //const clientId = req.params.clientId;
+        const clientId = req.body.clientId;
         const reminderId = req.body.reminderId;
         const method = req.body.method;
-        const outcome = req.body.outcome;
+        const outcome = req.body.outcome ? req.body.outcome : 'waiting';
+        const createReminder = req.body.createNewReminder === "true";
+        const reminderDate = req.body.newReminderDate;
+        const reminderNote = req.body.newReminderNote;
 
-        await clients.createInteraction(reminderId, method, outcome);
+        // Create interaction
+        await clients.createInteraction(clientId, reminderId, method, outcome);
+
+        // Optional: create new reminder
+        if (createReminder) {
+            await clients.createReminder(reminderDate, false, reminderNote, clientId);
+        }
+
+        // Set current reminder complete
+        await clients.completeReminder(reminderId);
 
         res.status(201).json({ message: "Creation successful" });
     } catch (error) {
-        console.error("Error:", error)
         res.status(500).send(error.message);
     }
 });

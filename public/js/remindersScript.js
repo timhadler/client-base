@@ -1,137 +1,9 @@
-// Test clients
-let testClients = [
-    {
-        id: 1,
-        name: "Alice Johnson",
-        phone: "021 154 2211",
-        email: "alice.johnson@acme.com",
-        position: "Manager",
-        priority: "high",
-        notes: "Is a complete legend.",
-        totalReminders: "5",
-        lastContact: "Oct 10, 2025",
-        day: "23",
-        month: "Oct",
-        dateTime: "10:00 AM",
-        fullDate: "Oct 23, 2025",
-        status: "Pending",
-        company: "Acme Corp",
-        note: "Follow up about new contract",
-        interactions: [
-            { date: "Oct 1, 2025", type: "call", notes: "Requested follow-up next week", outcome: "followup" },
-            { date: "Oct 3, 2025", type: "email", notes: "Sent contract for review", outcome: "booked" },
-            { date: "Oct 5, 2025", type: "text", notes: "Left voicemail", outcome: null },
-            { date: "Oct 7, 2025", type: "call", notes: "Confirmed meeting", outcome: "no_answer" },
-            { date: "Oct 8, 2025", type: "email", notes: "Sent updated proposal", outcome: null }
-        ]
-    },
-    {
-        id: 2,
-        name: "Bob Smith",
-        phone: "022 334 5566",
-        email: "bob.smith@globex.com",
-        position: "Director",
-        priority: "medium",
-        notes: "Prefers email contact.",
-        totalReminders: "3",
-        lastContact: "Oct 15, 2025",
-        day: "24",
-        month: "Oct",
-        dateTime: "11:00 AM",
-        fullDate: "Oct 24, 2025",
-        status: "Pending",
-        company: "Globex Corp",
-        note: "Send proposal follow-up",
-        interactions: [
-            { date: "Oct 2, 2025", type: "call", notes: "Initial discussion", outcome: "declined" },
-            { date: "Oct 4, 2025", type: "email", notes: "Sent proposal", outcome: "followup" },
-            { date: "Oct 6, 2025", type: "text", notes: "Left message about proposal", outcome: null }
-        ]
-    },
-    {
-        id: 3,
-        name: "Charlie Davis",
-        phone: "021 998 8877",
-        email: "charlie.davis@initech.com",
-        position: "Team Lead",
-        priority: "low",
-        notes: "Prefers phone calls in morning.",
-        totalReminders: "2",
-        lastContact: "Oct 12, 2025",
-        day: "25",
-        month: "Oct",
-        dateTime: "9:30 AM",
-        fullDate: "Oct 25, 2025",
-        status: "Pending",
-        company: "Initech",
-        note: "Check project updates",
-        interactions: [
-            { date: "Oct 1, 2025", type: "email", notes: "Sent project plan", outcome: "booked" },
-            { date: "Oct 2, 2025", type: "call", notes: "Client requested clarification", outcome: "followup" },
-            { date: "Oct 3, 2025", type: "text", notes: "Left reminder about deadline", outcome: null },
-            { date: "Oct 5, 2025", type: "call", notes: "Confirmed changes", outcome: "booked" }
-        ]
-    },
-    {
-        id: 4,
-        name: "Diana Evans",
-        phone: "027 445 3322",
-        email: "diana.evans@umbrella.com",
-        position: "CEO",
-        priority: "high",
-        notes: "Important client, high priority.",
-        totalReminders: "7",
-        lastContact: "Oct 8, 2025",
-        day: "26",
-        month: "Oct",
-        dateTime: "2:00 PM",
-        fullDate: "Oct 26, 2025",
-        status: "Pending",
-        company: "Umbrella Corp",
-        note: "Schedule strategy meeting",
-        interactions: [
-            { date: "Oct 1, 2025", type: "call", notes: "Initial discussion", outcome: "followup" },
-            { date: "Oct 2, 2025", type: "email", notes: "Sent strategy document", outcome: "booked" },
-            { date: "Oct 3, 2025", type: "text", notes: "Follow-up on approval", outcome: "followup" },
-            { date: "Oct 4, 2025", type: "call", notes: "Confirmed meeting", outcome: "booked" },
-            { date: "Oct 5, 2025", type: "email", notes: "Sent meeting agenda", outcome: "followup" },
-            { date: "Oct 6, 2025", type: "text", notes: "Reminder about meeting", outcome: null },
-            { date: "Oct 7, 2025", type: "call", notes: "Final confirmation", outcome: "booked" }
-        ]
-    },
-    {
-        id: 5,
-        name: "Ethan Brown",
-        phone: "029 776 5544",
-        email: "ethan.brown@stark.com",
-        position: "Engineer",
-        priority: "medium",
-        notes: "Loves tech updates.",
-        totalReminders: "4",
-        lastContact: "Oct 20, 2025",
-        day: "27",
-        month: "Oct",
-        dateTime: "3:00 PM",
-        fullDate: "Oct 27, 2025",
-        status: "Pending",
-        company: "Stark Industries",
-        note: "Follow up on new specs",
-        interactions: [
-            { date: "Oct 10, 2025", type: "ignored", notes: "Sent new specs", outcome: null },
-            { date: "Oct 11, 2025", type: "call", notes: "Discussed adjustments", outcome: "followup" },
-            { date: "Oct 12, 2025", type: "text", notes: "Left voicemail", outcome: null },
-            { date: "Oct 13, 2025", type: "call", notes: "Followed up on issues", outcome: "declined" },
-            { date: "Oct 14, 2025", type: "email", notes: "Sent updated specs", outcome: "booked" }
-        ]
-    }
-];
-
-
 /*****************************************************************
  * Document Ready
  ****************************************************************/
-let currentClientCopyData = {email:"", phone:""};     // Selected client email/phone data for the copy feature
-let currentReminderId = 0;                            // For interaction modal
+let currentClientData = {id:"", email:"", phone:""};    // Selected client email/phone data for the copy feature
+let currentReminderId = 0;      // For interaction modal
+let currentTab = "all";         // For relaoding after completing a reminder
 
 $(document).ready(function() {
     $(".tab").on('click', function() { 
@@ -139,29 +11,30 @@ $(document).ready(function() {
         this.classList.add('active');
 
         // Load reminder table
-        queryListData($(this).data("filter")) 
+        currentTab = $(this).data("filter");
+        queryListData(currentTab);
     });
 
     // REVISIT
     // Mark as complete
-    document.querySelectorAll('.btn-icon.complete').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const row = this.closest('tr');
-            const badge = row.querySelector('.status-badge');
-            badge.className = 'status-badge completed';
-            badge.textContent = 'Completed';
-            row.dataset.status = 'completed';
-        });
-    });
+    // document.querySelectorAll('.btn-icon.complete').forEach(btn => {
+    //     btn.addEventListener('click', function() {
+    //         const row = this.closest('tr');
+    //         const badge = row.querySelector('.status-badge');
+    //         badge.className = 'status-badge completed';
+    //         badge.textContent = 'Completed';
+    //         row.dataset.status = 'completed';
+    //     });
+    // });
 
     // Delete confirmation
-    document.querySelectorAll('.btn-icon.delete').forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete this reminder?')) {
-                this.closest('tr').remove();
-            }
-        });
-    });
+    // document.querySelectorAll('.btn-icon.delete').forEach(btn => {
+    //     btn.addEventListener('click', function() {
+    //         if (confirm('Are you sure you want to delete this reminder?')) {
+    //             this.closest('tr').remove();
+    //         }
+    //     });
+    // });
 
     // Edit reminder form submit
     $('#editReminderForm').on('submit', function(e) {
@@ -180,8 +53,7 @@ $(document).ready(function() {
     initEditReminderModal('#tableBody');
     initInteractionModal();
 
-    //loadList(0, testClients);
-    queryListData("all"); 
+    queryListData(currentTab);
 });
 
 /*****************************************************************
@@ -329,7 +201,7 @@ async function openClientPanel(clientId) {
     const interactions = await fetchClientInteractions(clientId);
     
     // Update data for email/number copy feature
-    currentClientCopyData = {email:client.email, phone:client.phone};
+    currentClientData = {id:clientId, email:client.email, phone:client.phone};
 
     // Update panel content
     //const client = data.client;
@@ -417,9 +289,9 @@ function copyToClipboard(event, type) {
     let button = event.target;
     
     if (type === 'email') {
-        text = currentClientCopyData.email;
+        text = currentClientData.email;
     } else if (type === 'phone') {
-        text = currentClientCopyData.phone;
+        text = currentClientData.phone;
     }
     
     navigator.clipboard.writeText(text).then(() => {
@@ -432,21 +304,6 @@ function copyToClipboard(event, type) {
         }, 2000);
     });
 }
-
-// Mark complete button in panel
-// document.getElementById('markCompleteBtn').addEventListener('click', function() {
-//     if (confirm('Mark this reminder as complete?')) {
-//         // Find the active row and mark it complete
-//         const activeRow = document.querySelector(`[data-client-id="${currentClientData.id}"]`); // changed how client data is retrived
-//         if (activeRow) {
-//             const badge = activeRow.querySelector('.status-badge');
-//             badge.className = 'status-badge completed';
-//             badge.textContent = 'Completed';
-//             activeRow.dataset.status = 'completed';
-//         }
-//         closeClientPanel();
-//     }
-// });
 
 /*****************************************************************
  * Interaction modal
@@ -537,27 +394,31 @@ function initInteractionModal() {
     $('#interactionForm').on('submit', function(e) {
         e.preventDefault();
 
-        const formData = {
-            reminderId: $('#interactionReminderId').val(),
-            clientName: currentClientName,
-            contactMethod: selectedMethod,
+        const formData = {  
+            reminderId: currentReminderId,
+            clientId: currentClientData.id,
+            method: selectedMethod,     // These go to route?
             outcome: selectedOutcome,
-            interactionSummary: $('#interactionSummary').text(),
+            //interactionSummary: $('#interactionSummary').text(),
             createNewReminder: $('#createNewReminder').prop('checked'),
             newReminderDate: $('#newReminderDate').val(),
             newReminderNote: $('#newReminderNote').val()
         };
-
-        console.log('Interaction recorded:', formData);
-        alert(
-            'Interaction saved!\n\nClient: ' + currentClientName +
-            '\nMethod: ' + selectedMethod +
-            '\nOutcome: ' + (selectedOutcome || 'N/A') +
-            '\n\nCheck console for full data.'
-        );
+        $.ajax({
+            url: "/interactions",
+            method: "POST",
+            data: formData,
+            success: function(res) {
+                queryListData(currentTab);
+            },
+            error: function(xhr, status, error) {
+                // Handle AJAX error
+                console.log('AJAX Error while creating interaction', formData, error, xhr, status);
+            }
+        })
 
         closeModal();
-        closePanel();
+        closeClientPanel();
     });
 
     // --- Helper Functions (scoped inside for access to selected variables) ---
@@ -569,11 +430,16 @@ function initInteractionModal() {
         if (show) {
             $fields.show();
 
-            // Default to tomorrow 9AM
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            tomorrow.setHours(9, 0, 0, 0);
-            const dateTimeStr = tomorrow.toISOString().slice(0, 16);
+            // Default to 3 days from today
+            const defaultDate = new Date();
+            defaultDate.setDate(defaultDate.getDate() + 3);
+
+            // Format date to yyyy-mm-dd for html
+            const year = defaultDate.getFullYear();
+            const month = String(defaultDate.getMonth() + 1).padStart(2, '0'); // months are 0-based
+            const day = String(defaultDate.getDate()).padStart(2, '0');
+
+            const dateTimeStr = `${year}-${month}-${day}`;
             $dateInput.val(dateTimeStr);
         } else {
             $fields.hide();

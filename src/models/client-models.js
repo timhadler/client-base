@@ -100,12 +100,15 @@ exports.getReminderList = async function(filter, limit, offset) {
         case 'today':
             condition += " AND DATE(rDate) = CURDATE()";
             break;
+        case 'upcoming':
+            condition += " AND DATE(rDate) > CURDATE()";
+            break;
         case 'completed':
             condition = "reminders.status = 'complete'";
             break;
         // Add 'waiting' here 
     }
-    const sqlQuery = `SELECT clients.public_id as clientId, reminders.id, rDate as date, reminders.status, reminders.important, outcome, reminders.note, name, company FROM reminders INNER JOIN clients on reminders.client_id = clients.id WHERE ${condition} LIMIT ` + limit + ` OFFSET ` + offset;
+    const sqlQuery = `SELECT clients.public_id as clientId, reminders.id, rDate as date, reminders.status, reminders.important, outcome, reminders.note, name, company FROM reminders INNER JOIN clients on reminders.client_id = clients.id WHERE ${condition} ORDER BY rDate LIMIT ` + limit + ` OFFSET ` + offset;
     rows = await db.query(sqlQuery);
 
     return rows;
@@ -172,21 +175,15 @@ exports.createReminder = async function(date, important, note, clientId) {
 }
 
 // Creates an interaciton
-exports.createInteraction  =async function(reminderId, method, outcome) {
+exports.createInteraction  =async function(clientId, reminderId, method, outcome) {
     const sqlQuery = `
-        INSERT INTO interactions i (client_id, reminder_id, method, outcome)
-        SELECT r.client_id, ?, ?, ?
-        FROM reminders r
-        WEHRE r.id = ?
+        INSERT INTO interactions (client_id, reminder_id, method, outcome)
+        SELECT c.id, ?, ?, ?
+        FROM clients c
+        WHERE c.public_id = ?
     `;
-    await db.query(sqlQuery, [reminderId, method, outcome, reminderId]);
+    await db.query(sqlQuery, [reminderId, method, outcome, clientId]);
 };
-
-// Create an interaction entry
-// exports.createInteraction = async function(action, id, rId) {
-//     const sqlQuery = "INSERT INTO interactions (client_id, reminder_id, interaction) VALUES(?, ?, ?)";
-//     await db.query(sqlQuery, [id, rId, action]);
-// }
 
 /***********************************************************
  * Edit
@@ -228,6 +225,12 @@ exports.editReminder = async function(id, date, important, note) {
     const sqlQuery = "UPDATE reminders SET rDate=?, important=?, note=? WHERE id=?";
     await db.query(sqlQuery, [date, important, note, id]);
 };
+
+// Edits reminder status to complete
+exports.completeReminder = async function(id) {
+    const sqlQuery = "UPDATE reminders SET status='complete' WHERE id=?";
+    await db.query(sqlQuery, [id]);
+}
 
 // Adds a response to an interaction
 exports.respondInteraction = async function(id, outcome) {
