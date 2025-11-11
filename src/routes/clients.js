@@ -5,6 +5,10 @@ xl = require("../modules/excel-JS");
 const multer = require('multer');                   // For uploading files
 const upload = multer({ dest: "uploads/" });
 
+// Nested route
+const interactionsRouter = require("./interactions");
+router.use("/:clientId/activity", interactionsRouter)
+
 // Client Index
 router.get("/", async (req, res) => {
     try {
@@ -73,7 +77,7 @@ router.get("/load-client-list", async (req, res) => {
         const nClients = await clients.nTotalClients();
         const clientList = await clients.getClientList(limit, offset, search, status, priority);
 
-        res.json({ clientList:clientList, nClients:nClients });
+        res.status(200).json({ clientList:clientList, nClients:nClients });
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -98,7 +102,7 @@ router.get("/:id/data", async (req, res) => {
         //     client.lastContact = client.lastContact ? new Date(client.lastContact).toISOString() : null;
         // }
 
-        res.json({ client:client });
+        res.status(200).json({ client:client });
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -114,27 +118,11 @@ router.get("/:id/reminders", async (req, res) => {
         // Filter out completed reminders
         reminders = reminders.filter(reminder => reminder.status !== "complete"); 
 
-        res.json({ reminders:reminders });
+        res.status(200).json({ reminders:reminders });
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
-
-const interactionsRouter = require("./interactions");
-router.use("/:id/activity", interactionsRouter)
-
-// router.get("/:id/activity", async (req, res) => {
-//     try {
-//         const id = req.params.id;
-//         const {limit} = req.body;
-
-//         let interactions = await clients.getClientInteractions(id);
-
-//         res.json({ interactions:interactions });
-//     } catch (error) {
-//         res.status(500).send(error.message);
-//     }
-// });
 
 /***********************************************************
  * Add
