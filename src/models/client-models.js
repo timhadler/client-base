@@ -171,6 +171,17 @@ exports.createReminder = async function(date, important, note, clientId) {
     await db.query(sqlQuery, [date, important, note, clientId]);
 }
 
+// Creates an interaciton
+exports.createInteraction  =async function(reminderId, method, outcome) {
+    const sqlQuery = `
+        INSERT INTO interactions i (client_id, reminder_id, method, outcome)
+        SELECT r.client_id, ?, ?, ?
+        FROM reminders r
+        WEHRE r.id = ?
+    `;
+    await db.query(sqlQuery, [reminderId, method, outcome, reminderId]);
+};
+
 // Create an interaction entry
 // exports.createInteraction = async function(action, id, rId) {
 //     const sqlQuery = "INSERT INTO interactions (client_id, reminder_id, interaction) VALUES(?, ?, ?)";
@@ -216,7 +227,13 @@ exports.editClient = async (id, client) => {
 exports.editReminder = async function(id, date, important, note) {
     const sqlQuery = "UPDATE reminders SET rDate=?, important=?, note=? WHERE id=?";
     await db.query(sqlQuery, [date, important, note, id]);
-}
+};
+
+// Adds a response to an interaction
+exports.respondInteraction = async function(id, outcome) {
+    const sqlQuery = "UPDATE interactions SET outcome=?, respondedAt=CURDATE() WHERE id=?";
+    await db.query(sqlQuery, [outcome, id]);
+};
 
 /***********************************************************
  * Delete

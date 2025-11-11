@@ -363,10 +363,6 @@ function createReminderRow(reminder) {
     }
 
     let importantText = '';
-    //console.log(reminder.important) //????
-    if (reminder.important[0]) {
-        importantText = 'Urgent';
-    }
     
     return `
         <div class="cd-reminder-item ${statusClass}" data-reminder-id="${reminder.id}">
@@ -410,7 +406,7 @@ function initRecordResponseModal() {
     });
 
     // Outcome button selection
-    $('#responseModal').on('click', '.cd-outcome-btn', function() {
+    $('#recordResponseModal').on('click', '.cd-outcome-btn', function() {
         selectOutcome(this);
     });
 
@@ -484,8 +480,8 @@ function saveInteractionResponse() {
     const notes = $('#responseNotes').val().trim();
     
     $.ajax({
-        url: `/interactions/${currentInteractionId}/record-response`,
-        method: 'POST',
+        url: `/interactions/${currentInteractionId}`,
+        method: 'PUT',
         data: JSON.stringify({
             outcome: selectedOutcome,
             notes: notes
