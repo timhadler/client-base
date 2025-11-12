@@ -139,6 +139,155 @@ function getInteractionNote(interaction) {
 }
 
 /*****************************************************************
+ * Delete Modal Functions
+ ****************************************************************/
+let deleteModalData = {
+    type: null,      // 'reminder' or 'client'
+    id: null,
+    name: null,
+    successCallback: null,
+    errorCallback: null
+};
+
+// Initialize delete modal
+function initDeleteModal() {
+    // Close modal events
+    $('#deleteCancelBtn, #successDoneBtn').on('click', closeDeleteModal);
+    
+    // Overlay click to close
+    $('#deleteModal').on('click', function(e) {
+        if (e.target.id === 'deleteModal') {
+            closeDeleteModal();
+        }
+    });
+    
+    // Escape key to close
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && $('#deleteModal').hasClass('show')) {
+            closeDeleteModal();
+        }
+    });
+    
+    // Confirm delete button
+    $('#confirmDeleteBtn').on('click', confirmDelete);
+}
+
+// Show delete modal
+// successCallback: function to call after successful deletion
+// errorCallback: function to call if deletion fails
+function showDeleteModal(type, id, name, successCallback, errorCallback) {
+    deleteModalData = { 
+        type, 
+        id, 
+        name,
+        successCallback: successCallback || null,
+        errorCallback: errorCallback || null
+    };
+    
+    const $modal = $('#deleteModal');
+    const $icon = $('#modalIcon');
+    const $title = $('#deleteTitle');
+    const $message = $('#deleteMessage');
+    const $warning = $('#deleteWarning');
+    const $confirmBtnText = $('#confirmBtnText');
+    
+    // Reset to delete content
+    $('#deleteContent').show();
+    $('#deleteSuccess').removeClass('show');
+    $('#confirmDeleteBtn').prop('disabled', false);
+    
+    if (type === 'reminder') {
+        $icon.text('📅');
+        $title.text('Delete Reminder?');
+        $message.html('Are you sure you want to delete this reminder? <strong>This action cannot be undone.</strong>');
+        $warning.hide();
+        $confirmBtnText.text('Delete Reminder');
+    } else if (type === 'client') {
+        $icon.text('👤');
+        $title.text('Delete Client?');
+        $message.html(`Are you sure you want to delete <strong>${name}</strong>? <strong>This action cannot be undone.</strong>`);
+        $warning.show();
+        $confirmBtnText.text('Delete Client');
+    }
+    
+    $modal.addClass('show');
+}
+
+// Close delete modal
+function closeDeleteModal() {
+    $('#deleteModal').removeClass('show');
+    deleteModalData = { 
+        type: null, 
+        id: null, 
+        name: null,
+        successCallback: null,
+        errorCallback: null
+    };
+}
+
+// Confirm delete and make AJAX request
+function confirmDelete() {
+    const $confirmBtn = $('#confirmDeleteBtn');
+    const $confirmBtnIcon = $('#confirmBtnIcon');
+    const $confirmBtnText = $('#confirmBtnText');
+    
+    $confirmBtn.prop('disabled', true);
+    $confirmBtnIcon.text('⏳');
+    $confirmBtnText.text('Deleting...');
+
+    // Make AJAX delete request
+    $.ajax({
+        url: `/reminders/${deleteModalData.id}`,
+        method: 'DELETE',
+        success: function(response) {
+            showSuccessMessage();
+            
+            // Call the success callback after showing success message
+            //setTimeout(() => {
+                if (deleteModalData.successCallback && typeof deleteModalData.successCallback === 'function') {
+                    deleteModalData.successCallback(response);
+                }
+            //}, 2500);
+        },
+        error: function(xhr, status, error) {
+            console.error('Delete error:', error, xhr, status);
+            
+            // Call the error callback if provided
+            if (deleteModalData.errorCallback && typeof deleteModalData.errorCallback === 'function') {
+                deleteModalData.errorCallback(xhr, status, error);
+            } else {
+                // Default error handling
+                alert('Failed to delete. Please try again.');
+            }
+            
+            // Reset button state
+            $confirmBtn.prop('disabled', false);
+            $confirmBtnIcon.text('🗑️');
+            $confirmBtnText.text(deleteModalData.type === 'reminder' ? 'Delete Reminder' : 'Delete Client');
+        }
+    });
+}
+
+// Show success message
+function showSuccessMessage() {
+    const $successMessage = $('#successMessage');
+    
+    if (deleteModalData.type === 'reminder') {
+        $successMessage.text('The reminder has been permanently deleted.');
+    } else if (deleteModalData.type === 'client') {
+        $successMessage.text('The client and all associated reminders have been permanently deleted.');
+    }
+    
+    $('#deleteContent').hide();
+    $('#deleteSuccess').addClass('show');
+    
+    // Auto-close after 2.5 seconds
+    setTimeout(() => {
+        closeDeleteModal();
+    }, 2500);
+}
+
+/*****************************************************************
  * Helpers
  ****************************************************************/
 function capitalizeFirst(str) {

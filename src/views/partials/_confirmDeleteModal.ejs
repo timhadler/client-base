@@ -1,0 +1,49 @@
+<div class="delete-modal-overlay" id="deleteModal">
+    <div class="delete-modal">
+        <!-- Delete Content -->
+        <div id="deleteContent">
+            <div class="delete-modal-header">
+                <div class="delete-icon-wrapper">
+                    <span class="delete-icon" id="modalIcon">🗑️</span>
+                </div>
+                <h2 class="delete-modal-title" id="deleteTitle">Delete Reminder?</h2>
+                <p class="delete-modal-message" id="deleteMessage">
+                    Are you sure you want to delete this reminder? <strong>This action cannot be undone.</strong>
+                </p>
+            </div>
+            
+            <div class="delete-modal-body">
+                <div class="delete-warning" id="deleteWarning" style="display: none;">
+                    <span class="delete-warning-icon">⚠️</span>
+                    <div class="delete-warning-text">
+                        <strong>Warning:</strong> Deleting this client will also permanently delete all active reminders associated with this client.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="delete-modal-actions">
+                <button class="delete-btn delete-btn-cancel" id="deleteCancelBtn">
+                    Cancel
+                </button>
+                <button class="delete-btn delete-btn-confirm" id="confirmDeleteBtn">
+                    <span id="confirmBtnIcon">🗑️</span> 
+                    <span id="confirmBtnText">Delete</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Success Content -->
+        <div class="delete-success" id="deleteSuccess">
+            <div class="success-icon-wrapper">
+                <span class="success-icon">✓</span>
+            </div>
+            <h2 class="success-title">Deleted Successfully</h2>
+            <p class="success-message" id="successMessage">
+                The item has been permanently deleted.
+            </p>
+            <button class="success-btn" id="successDoneBtn">
+                Done
+            </button>
+        </div>
+    </div>
+</div>

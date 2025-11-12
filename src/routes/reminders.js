@@ -124,6 +124,15 @@ router.post("/:id/edit", async (req, res) => {
 /***********************************************************
  * Delete
  ***********************************************************/
+router.delete("/:id", async (req, res) => {
+    try {
+        await clients.deleteClientReminder(req.params.id);
+        res.status(204).json({message: "Delete successful"});
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 // DELETE multi clients
 router.delete("/multi-delete", async (req, res) => {
     try {

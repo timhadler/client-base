@@ -50,8 +50,10 @@ $(document).ready(function() {
 
     // Initialize features
     initClientPanel();
-    initEditReminderModal('#tableBody');
     initInteractionModal();
+    // In utils.js
+    initEditReminderModal('#tableBody');
+    initDeleteModal();
 
     queryListData(currentTab);
 });
@@ -160,12 +162,36 @@ function loadList(counts, reminders, offset=0) {
             // Attach reminder
             $row.find('.cd-edit-reminder-btn').data('id', reminder.id).data('note', reminder.note).data('date', reminder.date);
 
-            // Attach click listener
+            // Attach click listener for reminder row
             $row.on('click', function(e) {
                 if (!$(e.target).closest('.cd-edit-reminder-btn').length) {     // Avoid edit reminder button
                     currentReminderId = reminder.id;
                     openClientPanel(reminder.clientId);
                 }
+            });
+
+            // Delete button listener
+            $row.find('.delete-reminder-btn').on('click', function(e) {
+                e.stopPropagation(); // Prevent row click event
+                const reminderId = $(this).closest('tr').find('.cd-edit-reminder-btn').data('id');
+                const clientName = $(this).closest('tr').find('.client-name').text();
+                
+                // Show delete modal with success and error callbacks
+                showDeleteModal(
+                    'reminder', 
+                    reminderId, 
+                    clientName,
+                    // Success callback - reload reminders list
+                    function(response) {
+                        console.log('Reminder deleted successfully');
+                        queryListData(currentTab);
+                    },
+                    // Error callback - handle deletion error
+                    function(xhr, status, error) {
+                        console.error('Failed to delete reminder:', error);
+                        alert('Failed to delete reminder. Please try again.');
+                    }
+                );
             });
 
             // Append to the table
