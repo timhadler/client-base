@@ -35,7 +35,8 @@ $(document).ready(function() {
     });
     
     // Modal handlers
-    initEditReminderModal('#remindersList');
+    initEditReminderModal('#remindersList');    // utils.js
+    initDeleteModal();  // utils.js
     initRecordResponseModal();
 });
 
@@ -331,7 +332,31 @@ function renderReminders(reminders) {
     
     reminders.forEach(function(reminder) {    
         const row = createReminderRow(reminder);
-        $list.append(row);
+        
+        // Attach delete listener for this row
+        const $row = $(row);
+        $row.find('.delete-reminder-btn').on('click', function(e) {
+            e.stopPropagation(); // Prevent row click event
+            const reminderId = $(this).closest('.cd-reminder-item').data('reminder-id');
+            const clientName = $(this).closest('.cd-reminder-item').find('.cd-reminder-text').text();
+            
+            showDeleteModal(
+                'reminder', 
+                reminderId, 
+                clientName,
+                // Success callback - reload reminders list
+                function(response) {
+                    console.log('Reminder deleted successfully');
+                    loadReminders();
+                },
+                // Error callback - handle deletion error
+                function(xhr, status, error) {
+                    console.error('Failed to delete reminder:', error);
+                    alert('Failed to delete reminder. Please try again.');
+                }
+            );
+        });
+        $list.append($row);
     });
 }
 
@@ -377,6 +402,7 @@ function createReminderRow(reminder) {
             <div class="cd-reminder-actions-group">
                 <div class="cd-reminder-status ${statusClass}">${statusText}</div>
                 <button data-id="${reminder.id}" data-date="${reminder.date}" data-note="${reminder.note}" class="cd-btn-icon-sm cd-edit-reminder-btn" title="Edit">✏️</button>
+                <button class="btn-icon delete delete-reminder-btn" title="Delete">🗑️</button>
             </div>
         </div>
     `;
