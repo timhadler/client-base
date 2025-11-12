@@ -324,20 +324,14 @@ router.post("/edit-reminder", async (req, res) => {
 /***********************************************************
  * Delete
  ***********************************************************/
-// Delete client and all associated data
-router.delete("/delete-client", async (req, res) => {
+router.delete("/:id", async (req, res) => {
     try {
-        await clients.deleteClient(req.body.id);
-        res.status(204).end();
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
+        // Delete active reminders
+        await clients.deleteActiveReminders(req.params.id);
 
-// Delete from reminders table
-router.delete("/delete-reminder", async (req, res) => {
-    try {
-        await clients.deleteClientReminder(req.body.id);
+        // Delete client
+        await clients.deleteClient(req.params.id);
+
         res.status(204).end();
     } catch (error) {
         res.status(500).send(error.message);

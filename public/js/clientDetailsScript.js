@@ -33,7 +33,29 @@ $(document).ready(function() {
             alert('Failed to save reminder');
         });
     });
-    
+
+    // Delete client button listener
+    $('#confirmDeleteClientBtn').on('click', function(e) {
+        const clientName = $(this).closest('tr').find('.client-name').text();
+
+        // Show delete modal with success and error callbacks
+        showDeleteModal(
+            'client', 
+            clientId, 
+            clientData.name,
+            // Success callback - reload reminders list
+            function(response) {
+                console.log('Client deleted successfully');
+                window.location.href = '/clients';
+            },
+            // Error callback - handle deletion error
+            function(xhr, status, error) {
+                console.error('Failed to delete reminder:', error);
+                alert('Failed to delete reminder. Please try again.');
+            }
+        );
+    });
+
     // Modal handlers
     initEditReminderModal('#remindersList');    // utils.js
     initDeleteModal();  // utils.js

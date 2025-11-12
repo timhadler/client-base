@@ -242,30 +242,13 @@ exports.respondInteraction = async function(id, outcome) {
  * Delete
  ***********************************************************/
 exports.deleteClient = async function(id) {
-    // Use db transaction to ensure all related data is deleted
-    try {
-        const client = await db.getConnection();
-        await client.query("BEGIN");
+    const sqlQuery = "DELETE FROM clients WHERE public_id=?";
+    await db.query(sqlQuery, id);
+}
 
-        sqlQuery = "DELETE FROM reminders WHERE client_id=" + id;
-        await db.query(sqlQuery);
-
-        sqlQuery = "DELETE FROM interactions WHERE client_id=" + id;
-        await db.query(sqlQuery);
-
-        sqlQuery = "DELETE FROM notes WHERE client_id=" + id;
-        await db.query(sqlQuery);
-
-        sqlQuery = "DELETE FROM clients WHERE id=" + id;
-        await db.query(sqlQuery);
-        
-        await client.query("COMMIT");
-    } catch (error) {
-        await client.query("ROLLBACK");
-        throw error;
-    } finally {
-        client.release();
-    }
+exports.deleteActiveReminders = async function(id) {
+    const sqlQuery = "DELETE r FROM reminders r INNER JOIN clients c ON r.client_id = c.id WHERE c.public_id = ? AND r.status = 'pending'";
+    await db.query(sqlQuery, id);
 }
 
 exports.deleteClientReminder = async function(id) {

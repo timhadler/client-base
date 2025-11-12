@@ -235,19 +235,28 @@ function confirmDelete() {
     $confirmBtnIcon.text('⏳');
     $confirmBtnText.text('Deleting...');
 
+    // Determine the delete endpoint
+    let deleteUrl = '';
+    if (deleteModalData.type === 'reminder') {
+        deleteUrl = `/reminders/${deleteModalData.id}`;
+    } else if (deleteModalData.type === 'client') {
+        deleteUrl = `/clients/${deleteModalData.id}`;
+    }
+
     // Make AJAX delete request
     $.ajax({
-        url: `/reminders/${deleteModalData.id}`,
+        url: deleteUrl,
         method: 'DELETE',
         success: function(response) {
             showSuccessMessage();
             
             // Call the success callback after showing success message
-            //setTimeout(() => {
-                if (deleteModalData.successCallback && typeof deleteModalData.successCallback === 'function') {
-                    deleteModalData.successCallback(response);
+            const callback = deleteModalData.successCallback;   // Latch
+            setTimeout(() => {
+                if (callback && typeof callback === 'function') {
+                    callback(response);
                 }
-            //}, 2500);
+            }, 2000);
         },
         error: function(xhr, status, error) {
             console.error('Delete error:', error, xhr, status);
@@ -281,10 +290,10 @@ function showSuccessMessage() {
     $('#deleteContent').hide();
     $('#deleteSuccess').addClass('show');
     
-    // Auto-close after 2.5 seconds
+    // Auto-close after 2 seconds
     setTimeout(() => {
         closeDeleteModal();
-    }, 2500);
+    }, 2000);
 }
 
 /*****************************************************************
