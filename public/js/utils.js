@@ -3,8 +3,8 @@
  ****************************************************************/
 function initEditReminderModal(listSelector) {
     // Close modal handlers
-    $('#closeEditReminderModal, #cancelEditReminder').on('click', function() {
-        $('#editReminderModal').removeClass('show');
+    $('#closeReminderModal, #cancelReminder').on('click', function() {
+        $('#reminderModal').removeClass('show');
     });
 
     // Open modal handler
@@ -16,11 +16,32 @@ function initEditReminderModal(listSelector) {
 }
 
 // Global function for onclick
+function addReminder(data) {
+    if (!data) {
+        alert('Client data not found');
+        return;
+    }
+
+    // Set title and mode
+    $('#reminderModalTitle').text('Add Reminder for ' + data.name);
+    $('#reminderModal').attr('data-mode', 'add'); 
+
+    $('#editReminderNote').val('Initial contact attempt');
+    $('#rModalClientId').val(data.id);
+    $('#reminderModal').addClass('show');
+}
+
+// Global function for onclick
 function editReminder(data) {
     if (!data) {
         alert('Reminder data not found');
         return;
     }
+
+    // Set title and mode
+    $('#reminderModalTitle').text('Edit Reminder');
+    $('#reminderModal').attr('data-mode', 'edit'); 
+
     // Convert date to local date string (YYYY-MM-DD)
     const date = new Date(data.date);
     const pad = n => n.toString().padStart(2, '0');
@@ -33,7 +54,7 @@ function editReminder(data) {
     $('#editReminderDate').val(dateLocal);
     $('#editReminderNote').val(data.note);
     $('#editReminderImportant').val(data.important);
-    $('#editReminderModal').addClass('show');
+    $('#reminderModal').addClass('show');
 }
 
 function saveReminderEdit(onSuccess, onError) {

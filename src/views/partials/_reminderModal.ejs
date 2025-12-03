@@ -1,13 +1,14 @@
 <!-- Reminder Edit Modal -->
-<div class="cd-modal-overlay" id="editReminderModal">
+<div class="cd-modal-overlay" id="reminderModal">
     <div class="cd-modal-container">
         <div class="cd-modal-header">
-            <h2 class="cd-modal-title">Edit Reminder</h2>
-            <button class="cd-modal-close" id="closeEditReminderModal">×</button>
+            <h2 class="cd-modal-title" id="reminderModalTitle">Edit Reminder</h2>
+            <button class="cd-modal-close" id="closeReminderModal">×</button>
         </div>
         <div class="cd-modal-body">
-            <form id="editReminderForm">
+            <form id="reminderForm">
                 <input type="hidden" id="editReminderId">
+                <input type="hidden" id="rModalClientId">
                 
                 <div class="cd-form-group">
                     <label>Date & Time</label>
@@ -19,13 +20,13 @@
                     <textarea class="cd-form-control" id="editReminderNote" rows="3" required></textarea>
                 </div>
 
-                <div class="cd-form-group">
+                <!--div class="cd-form-group">
                     <label>Mark important</label>
                     <input type="checkbox" class="cd-form-control" id="editReminderImportant">
-                </div>
+                </div-->
                 
                 <div class="cd-modal-actions">
-                    <button type="button" class="cd-btn-modal cd-btn-secondary" id="cancelEditReminder">Cancel</button>
+                    <button type="button" class="cd-btn-modal cd-btn-secondary" id="cancelReminder">Cancel</button>
                     <button type="submit" class="cd-btn-modal cd-btn-primary">Save Changes</button>
                 </div>
             </form>
