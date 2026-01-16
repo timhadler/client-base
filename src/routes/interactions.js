@@ -19,9 +19,9 @@ router.get("/", async (req, res) => {
 });
 
 /***********************************************************
- * post
+ * POST
  ***********************************************************/
-router.post("/", async (req, res) => {
+router.post("/", async (req, res) => {                          // NEED to update contact date fields in clients table, reminders (last contact etc), and check other fields
     try {
         const clientId = req.body.clientId;
         const reminderId = req.body.reminderId;
@@ -49,7 +49,7 @@ router.post("/", async (req, res) => {
 });
 
 /***********************************************************
- * Put
+ * PUT
  ***********************************************************/
 router.put("/:interactionId", async (req, res) => {
     try {
