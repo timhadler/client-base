@@ -153,7 +153,6 @@ router.post('/', async (req, res) => {
 
         const clientId = await clients.addClient(newClient);
         const publicIdObj = await clients.getPublicId(clientId);
-        console.log(data.city);
 
         // Optional reminder if selected
         if (data.setReminder === 'yes' && data.reminderDate) {
