@@ -36,7 +36,7 @@ router.get('/new', (req, res) => {
 // GET - Show edit client form
 router.get('/:id/edit', async (req, res) => {
     try {
-        const client = await clients.getClientDetails(req.params.id);
+        const client = await clients.getClientDetails(req.params.id, req.user.id);
 
         if (!client) {
             req.flash('error', 'Client not found');
@@ -58,13 +58,6 @@ router.get('/:id/edit', async (req, res) => {
     }
 });
 
-// Usefull error catcthing for development
-// console.error('Error:', error); // Logs full error stack - REMOVE IN PRODUCTION
-// res.status(500).json({
-//     message: error.message,   // Shows the error message
-//     stack: error.stack        // Shows stack trace for debugging
-// });
-
 // Load client list
 router.get("/load-client-list", async (req, res) => {
     try {
@@ -74,8 +67,8 @@ router.get("/load-client-list", async (req, res) => {
         const status = req.query.status;
         const priority = req.query.priority;
 
-        const nClients = await clients.nTotalClients();
-        const clientList = await clients.getClientList(limit, offset, search, status, priority);
+        const nClients = await clients.nTotalClients(req.user.id);
+        const clientList = await clients.getClientList(limit, offset, search, status, priority, req.user.id);
 
         res.status(200).json({ clientList:clientList, nClients:nClients });
     } catch (error) {
@@ -94,13 +87,7 @@ router.get("/:id", async (req, res) => {
 router.get("/:id/data", async (req, res) => {
     try {
         const id = req.params.id;;
-        const client = await clients.getClientDetails(id);
-
-        // Format dates
-        // if(client) {
-        //     client.createdAt = new Date(client.createdAt).toISOString();
-        //     client.lastContact = client.lastContact ? new Date(client.lastContact).toISOString() : null;
-        // }
+        const client = await clients.getClientDetails(id, req.user.id);
 
         res.status(200).json({ client:client });
     } catch (error) {
@@ -113,7 +100,7 @@ router.get("/:id/reminders", async (req, res) => {
         const id = req.params.id;
         const {limit} = req.body;
 
-        let reminders = await clients.getClientReminders(id);
+        let reminders = await clients.getClientReminders(id, req.user.id);
 
         // Filter out completed reminders
         reminders = reminders.filter(reminder => reminder.status !== "complete"); 
@@ -130,6 +117,7 @@ router.get("/:id/reminders", async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const data = req.body;
+        const userId = req.user.id;
 
         // Construct client object
         const newClient = {
@@ -151,14 +139,15 @@ router.post('/', async (req, res) => {
             postcode: data.postcode || null,
         };
 
-        const clientId = await clients.addClient(newClient);
-        const publicIdObj = await clients.getPublicId(clientId);
+        const clientId = await clients.addClient(newClient, userId);
+        const publicIdObj = await clients.getPublicId(clientId, userId);
 
         // Optional reminder if selected
         if (data.setReminder === 'yes' && data.reminderDate) {
             const note = "Initial reminder";
             const important = false;                // PLACEHOLDER
-            await clients.createReminder(data.reminderDate, important, note, publicIdObj.public_id);
+            const reminderCount = 0;
+            await clients.createReminder(data.reminderDate, important, note, reminderCount, publicIdObj.public_id, userId);
         }
 
         // Respond for AJAX
@@ -288,7 +277,7 @@ router.put('/:id', async (req, res) => {
             postcode: data.postcode || null,
         };
 
-        await clients.editClient(clientId, updatedClient);
+        await clients.editClient(clientId, updatedClient, req.user.id);
 
         if (req.xhr || req.headers.accept.indexOf('json') > -1) {
             return res.json({ success: true, redirectUrl: `/clients/${clientId}` });
@@ -305,20 +294,20 @@ router.put('/:id', async (req, res) => {
 });
 
 // POST edit reminder (popup)
-router.post("/edit-reminder", async (req, res) => {
-    try {
-        const formData = req.body.data;
-        const params = new URLSearchParams(formData);
-        const rDate = params.get('rDate');
-        const status = params.get('status');
-        const id = req.body.id;
+// router.post("/edit-reminder", async (req, res) => {
+//     try {
+//         const formData = req.body.data;
+//         const params = new URLSearchParams(formData);
+//         const rDate = params.get('rDate');
+//         const status = params.get('status');
+//         const id = req.body.id;
 
-        //await clients.editClientReminder(id, rDate, status)
-        res.status(201).end();
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
+//         //await clients.editClientReminder(id, rDate, status)
+//         res.status(201).end();
+//     } catch (error) {
+//         res.status(500).send(error.message);
+//     }
+// });
 
 /***********************************************************
  * Delete
@@ -326,91 +315,15 @@ router.post("/edit-reminder", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     try {
         // Delete active reminders
-        await clients.deleteActiveReminders(req.params.id);
+        await clients.deleteActiveReminders(req.params.id, req.user.id);
 
         // Delete client
-        await clients.deleteClient(req.params.id);
+        await clients.deleteClient(req.params.id, req.user.id);
 
         res.status(204).end();
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
-
-/***********************************************************
- * Helper functions
- ***********************************************************/
-// Converts a date to format suitable for inserting into database
-// Input eg: "01-Feb-2021"
-// Output: "2022-02-01"
-// function convertDate(date) {
-//     if (typeof date == 'undefined') {
-//         return null;
-//     }
-
-//     let s = date.split('-');
-//     if (s.length != 3) {
-//         s = date.split('/');
-//     }
-//     if (s.length != 3) {
-//         return null;
-//     }
-
-//     let day = s[0];
-//     let month = s[1];
-//     const year = s[2];
-
-//     if (day.length == 1) {
-//         day = '0' + day;
-//     }
-//     if (month.length == 1) {
-//         month = '0' + month;
-//     }
-
-//     // const day = date.slice(0, 2);
-//     // let month = date.slice(3, 6);
-//     // const year = date.slice(7, 11);
-
-//     switch(month) {
-//         case ("Jan"): 
-//             month = "01";
-//             break;
-//         case ("Feb"): 
-//             month = "02";
-//         break;
-//         case ("Mar"): 
-//             month = "03";
-//             break;
-//         case ("Apr"): 
-//             month = "04";
-//             break;
-//         case ("May"): 
-//             month = "05";
-//             break;
-//         case ("Jun"): 
-//             month = "06";
-//             break;
-//         case ("Jul"): 
-//             month = "07";
-//             break;
-//         case ("Aug"): 
-//             month = "08";
-//             break;
-//         case ("Sep"): 
-//             month = "09";
-//             break;
-//         case ("Oct"): 
-//             month = "10";
-//             break;
-//         case ("Nov"): 
-//             month = "11";
-//             break;
-//         case ("Dec"): 
-//             month = "12";
-//             break;
-//     }
-//     const nDate = year + "-" + month + "-" + day
-//     return nDate;
-// }
 
 module.exports = router;

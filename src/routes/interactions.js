@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router({ mergeParams: true });   // MergeParams allows for parameters liek id to be passed from nested routes
+const router = express.Router({ mergeParams: true });   // MergeParams allows for parameters like id to be passed from nested routes
 const clients = require("../models/client-models");
 
 /***********************************************************
@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
         const clientId = req.params.clientId;
         const {limit} = req.body;
 
-        let interactions = await clients.getClientInteractions(clientId);
+        let interactions = await clients.getClientInteractions(clientId, req.user.id);
 
         res.status(200).json({ interactions:interactions });
     } catch (error) {
@@ -31,16 +31,19 @@ router.post("/", async (req, res) => {                          // NEED to updat
         const reminderDate = req.body.newReminderDate;
         const reminderNote = req.body.newReminderNote;
 
+        let userId = req.user.id;
+        let reminderCount = 0; // PLACEHOLDER
+
         // Create interaction
-        await clients.createInteraction(clientId, reminderId, method, outcome);
+        await clients.createInteraction(clientId, reminderId, method, outcome, userId);
 
         // Optional: create new reminder
         if (createReminder) {
-            await clients.createReminder(reminderDate, false, reminderNote, clientId);
+            await clients.createReminder(reminderDate, false, reminderNote, reminderCount, clientId, userId);
         }
 
         // Set current reminder complete
-        await clients.completeReminder(reminderId);
+        await clients.completeReminder(reminderId, userId);
 
         res.status(201).json({ message: "Creation successful" });
     } catch (error) {
@@ -57,7 +60,7 @@ router.put("/:interactionId", async (req, res) => {
         const outcome = req.body.outcome;
 
         if (outcome !== 'no_answer') {
-            await clients.respondInteraction(reminderId, outcome);
+            await clients.respondInteraction(reminderId, outcome, req.user.id);
         }
         res.status(204).json({ message: "Update successful" });
     } catch (error) {

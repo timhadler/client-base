@@ -35,17 +35,17 @@ router.get("/", async (req, res) => {
 router.get("/load-reminder-list", async (req, res) => {
     try {
         const filter = req.query.filter;
+        const userId = req.user.id;
         let reminders = [];
 
-        const overdueCount = await clients.nReminderListCount('overdue');
-        const todayCount = await clients.nReminderListCount('today');
-        reminders = await clients.getReminderList(filter, req.query.limit, req.query.offset);
+        const overdueCount = await clients.nReminderListCount('overdue', userId);
+        const todayCount = await clients.nReminderListCount('today', userId);
+        const initialCount = await clients.nReminderListCount('initial', userId);
+        const followUpCount = await clients.nReminderListCount('followUp', userId);
 
-        // reminders.forEach(reminder => {
-        //     reminder.date = new Date(reminder.date).toISOString();
-        // })
+        reminders = await clients.getReminderList(filter, req.query.limit, req.query.offset, userId);
+        const data = {listCounts:{today:todayCount, overdue:overdueCount, initial:initialCount, followUp:followUpCount}, listData:reminders};
 
-        const data = {listCounts:{today:todayCount, overdue:overdueCount}, listData:reminders};
         res.json(JSON.stringify(data));
     } catch (error) {
         res.status(500).send(error.message);
@@ -55,57 +55,58 @@ router.get("/load-reminder-list", async (req, res) => {
 /***********************************************************
  * Post
  ***********************************************************/
-// Add a reminder
+// Create a new reminder
 router.post("/add", async (req, res) => {
     try {
-        await clients.createReminder(req.body.date, req.body.important, req.body.note, req.body.clientId);
+        const reminderCount = 1;
+
+        await clients.createReminder(req.body.date, req.body.important, req.body.note, reminderCount, req.body.clientId, req.user.id);
         res.status(200).json({ message: "Add reminder successful" });
     } catch (error) {
         res.status(500).send(error.message);
-        //console.error('Error:', error); // Logs full error stack    // REMOVE FOR PRODUCTION
     }
 });
 
 // POST set multiple client statuses using checkboxes
-router.post("/set-reminder-status-multi", async (req, res) => {
-    try {
-        var rIds = req.body.reminders;
-        var ids = req.body.ids;
-        const formData = req.body.formData;     // formData in form of query string from AJAX request
-        const params = new URLSearchParams(formData);
-        const note = params.get('note');
-        const action = params.get('action');
-        const outcome = params.get('outcome');
-        let rDate = params.get('rDate');
+// router.post("/set-reminder-status-multi", async (req, res) => {
+//     try {
+//         var rIds = req.body.reminders;
+//         var ids = req.body.ids;
+//         const formData = req.body.formData;     // formData in form of query string from AJAX request
+//         const params = new URLSearchParams(formData);
+//         const note = params.get('note');
+//         const action = params.get('action');
+//         const outcome = params.get('outcome');
+//         let rDate = params.get('rDate');
 
-        if (typeof rIds == "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
-            rIds = [rIds];
-        } else if (typeof rIds == "undefined") {
-            rIds = [];
-        }
-        if (typeof ids == "string") {
-            ids = [ids];
-        } else if (typeof ids == "undefined") {
-            ids = [];
-        }
+//         if (typeof rIds == "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
+//             rIds = [rIds];
+//         } else if (typeof rIds == "undefined") {
+//             rIds = [];
+//         }
+//         if (typeof ids == "string") {
+//             ids = [ids];
+//         } else if (typeof ids == "undefined") {
+//             ids = [];
+//         }
 
-        for (let i = 0; i < rIds.length; i++) {
-            if (!params.get("noReminder") && rDate.length > 0) {
-                if (action == "ignore" || outcome == "booked" || outcome == "declined") {
-                    // Create new reminder
-                    await clients.createReminder(rDate, "pending", ids[i]);
-                } else if (outcome == "followUp") {
-                    // Update reminder
-                    await clients.editReminder(rIds[i], rDate);
-                }
-            }
-            //wait setReminderStatus(action, outcome, note, ids[i], rIds[i]);
-        }
-        res.status(201).json({ message: "Update successful" });
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
+//         for (let i = 0; i < rIds.length; i++) {
+//             if (!params.get("noReminder") && rDate.length > 0) {
+//                 if (action == "ignore" || outcome == "booked" || outcome == "declined") {
+//                     // Create new reminder
+//                     await clients.createReminder(rDate, "pending", ids[i]);
+//                 } else if (outcome == "followUp") {
+//                     // Update reminder
+//                     await clients.editReminder(rIds[i], rDate);
+//                 }
+//             }
+//             //wait setReminderStatus(action, outcome, note, ids[i], rIds[i]);
+//         }
+//         res.status(201).json({ message: "Update successful" });
+//     } catch (error) {
+//         res.status(500).send(error.message);
+//     }
+// });
 
 /***********************************************************
  * Put
@@ -113,12 +114,10 @@ router.post("/set-reminder-status-multi", async (req, res) => {
 // Edit a reminder
 router.post("/:id/edit", async (req, res) => {
     try {
-        console.log("Creatinf reminder, date: ", req.body.important)
-        await clients.editReminder(req.params.id, req.body.date, req.body.important, req.body.note);
+        await clients.editReminder(req.params.id, req.body.date, req.body.important, req.body.note, req.user.id);
         res.status(201).json({ message: "Update successful" });
     } catch (error) {
         res.status(500).send(error.message);
-        // /console.error('Error:', error); // Logs full error stack    // REMOVE FOR PRODUCTION
     }
 });
 
@@ -127,7 +126,7 @@ router.post("/:id/edit", async (req, res) => {
  ***********************************************************/
 router.delete("/:id", async (req, res) => {
     try {
-        await clients.deleteClientReminder(req.params.id);
+        await clients.deleteClientReminder(req.params.id, req.user.id);
         res.status(204).json({message: "Delete successful"});
     } catch (error) {
         res.status(500).send(error.message);
@@ -135,26 +134,26 @@ router.delete("/:id", async (req, res) => {
 });
 
 // DELETE multi clients
-router.delete("/multi-delete", async (req, res) => {
-    try {
-        var ids = req.body.ids;
+// router.delete("/multi-delete", async (req, res) => {
+//     try {
+//         var ids = req.body.ids;
 
-        // If only one selected, ids will be a string, put in list for the for loop
-        if (typeof ids == "string") {
-            ids = [ids];
-        } else if (typeof ids == "undefined") {
-            ids = [];
-        }
+//         // If only one selected, ids will be a string, put in list for the for loop
+//         if (typeof ids == "string") {
+//             ids = [ids];
+//         } else if (typeof ids == "undefined") {
+//             ids = [];
+//         }
 
-        for (let i = 0; i < ids.length; i++) {
-            await clients.deleteClient(ids[i]);
-        }
+//         for (let i = 0; i < ids.length; i++) {
+//             await clients.deleteClient(ids[i]);
+//         }
 
-        res.status(200).end();
-    } catch (error) {
-        res.status(404).send(error.message);
-    }
-});
+//         res.status(200).end();
+//     } catch (error) {
+//         res.status(404).send(error.message);
+//     }
+// });
 
 /***********************************************
 Helper Functions
