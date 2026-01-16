@@ -37,10 +37,10 @@ $(document).ready(function() {
     // });
 
     // Edit reminder form submit
-    $('#editReminderForm').on('submit', function(e) {
+    $('#reminderForm').on('submit', function(e) {
         e.preventDefault();
         saveReminderEdit(function(res) {
-            $('#editReminderModal').removeClass('show');
+            $('#reminderModal').removeClass('show');
             queryListData("all"); // reload the list on this page
         }, function(err) {
             console.error('Error updating reminder:', err);

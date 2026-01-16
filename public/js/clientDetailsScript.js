@@ -23,15 +23,22 @@ $(document).ready(function() {
     //loadEngagementStats();
 
     // Edit reminder form submit
-    $('#editReminderForm').on('submit', function(e) {
+    $('#reminderForm').on('submit', function(e) {
+        //console.log($('#reminderModal').attr('data-mode'))
+        const mode = $('#reminderModal').attr('data-mode');
         e.preventDefault();
-        saveReminderEdit(function(res) {
-            $('#editReminderModal').removeClass('show');
-            loadReminders(); // reload the list on this page
-        }, function(err) {
-            console.error('Error updating reminder');
-            alert('Failed to save reminder');
-        });
+
+        if (mode === 'edit') {
+            saveReminderEdit(function(res) {
+                $('#reminderModal').removeClass('show');
+                loadReminders(); // reload the list on this page
+            }, function(err) {
+                console.error('Error updating reminder');
+                alert('Failed to save reminder');
+            });
+        } else if (mode === 'add') {
+            // To do
+        }
     });
 
     // Delete client button listener
@@ -152,7 +159,10 @@ function renderClientHeader(client) {
     
     // Update action buttons
     $('#editBtn').attr('href', `/clients/${client.id}/edit`);
-    $('#addReminderBtn').attr('href', `/reminders/new?client=${client.id}`);
+    //$('#addReminderBtn').attr('href', `/reminders/new?client=${client.id}`);
+    $('#addReminderBtn').on('click', function() {
+        addReminder(clientData);
+    })
 }
 
 /*****************************************************************
