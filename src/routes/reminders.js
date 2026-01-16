@@ -58,10 +58,11 @@ router.get("/load-reminder-list", async (req, res) => {
 // Add a reminder
 router.post("/add", async (req, res) => {
     try {
-        await clients.createReminder(req.query.date, req.query.important, req.query.note, req.query.clientId);
+        await clients.createReminder(req.body.date, req.body.important, req.body.note, req.body.clientId);
+        res.status(200).json({ message: "Add reminder successful" });
     } catch (error) {
-        //res.status(500).send(error.message);
-        console.error('Error:', error); // Logs full error stack    // REMOVE FOR PRODUCTION
+        res.status(500).send(error.message);
+        //console.error('Error:', error); // Logs full error stack    // REMOVE FOR PRODUCTION
     }
 });
 

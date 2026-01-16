@@ -37,7 +37,13 @@ $(document).ready(function() {
                 alert('Failed to save reminder');
             });
         } else if (mode === 'add') {
-            // To do
+            saveNewReminder(function(res) {
+                $('#reminderModal').removeClass('show');
+                loadReminders(); // reload the list on this page
+            }, function(err) {
+                console.log("Error creating reminder");
+                alert("Failed to create new reminder");
+            });
         }
     });
 

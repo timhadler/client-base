@@ -166,8 +166,8 @@ exports.addClient = async (client) => {
 // Creates a reminder entry
 exports.createReminder = async function(date, important, note, clientId) {
     const sqlQuery = `
-        INSERT INTO reminders (client_id, rDate, status, important, note) 
-        SELECT c.id, ?, 'pending', ?, ?
+        INSERT INTO reminders (client_id, rDate, status, important, note, reminderCount) 
+        SELECT c.id, ?, 'pending', ?, ?, 1
         FROM clients c 
         WHERE c.public_id = ?
     `;

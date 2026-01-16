@@ -57,6 +57,7 @@ function editReminder(data) {
     $('#reminderModal').addClass('show');
 }
 
+// Reminder modal functions
 function saveReminderEdit(onSuccess, onError) {
     const reminderId = $('#editReminderId').val();
     const date = $('#editReminderDate').val();
@@ -70,6 +71,31 @@ function saveReminderEdit(onSuccess, onError) {
             date: date,
             note: note, 
             important: important
+        }),
+        contentType: 'application/json',
+        success: function(res) {
+            if (onSuccess) onSuccess(res); // call the page-specific callback
+        },
+        error: function(err) {
+            if (onError) onError(err);
+        },
+    });
+}
+
+function saveNewReminder(onSuccess, onError) {
+    const date = $('#editReminderDate').val();
+    const note = $('#editReminderNote').val();
+    const important = $('#editReminderImportant').is(":checked");
+    const clientId = $('#rModalClientId').val();
+
+    $.ajax({
+        url: `/reminders/add`,
+        method: 'POST',
+        data: JSON.stringify({
+            date: date,
+            note: note, 
+            important: important, 
+            clientId: clientId
         }),
         contentType: 'application/json',
         success: function(res) {
