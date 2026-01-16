@@ -51,10 +51,12 @@ $(document).ready(function() {
     // Initialize features
     initClientPanel();
     initInteractionModal();
+
     // In utils.js
     initEditReminderModal('#tableBody');
     initDeleteModal();
 
+    // Retrieve the initial list
     queryListData(currentTab);
 });
 
@@ -124,11 +126,21 @@ function loadList(counts, reminders, offset=0) {
     let $table = $('#tableBody');
 
     // Add list counts if > 0
-    let overdueCount = counts.overdue;
-    let todayCount = counts.today;
+    const overdueCount = counts.overdue;
+    const todayCount = counts.today;
+    const initialCount = counts.initial;
+    const followUpCount = counts.followUp;
 
-    overdueCount ? $("#overdueCount").text('(' + overdueCount + ')') : '';
-    todayCount ? $("#todayCount").text('(' + todayCount + ')') : '';
+    const overdueCountText = overdueCount ? '(' + overdueCount + ')' : '';
+    const todayCountText = todayCount ? '(' + todayCount + ')' : '';
+    const initialCountText = initialCount ? '(' + initialCount + ')' : '';
+    const followUpCountText = followUpCount ? '(' + followUpCount + ')' : '';
+
+    $("#overdueCount").text(overdueCountText);
+    $("#todayCount").text(todayCountText);
+    $("#initialCount").text(initialCountText);
+    $("#followUpCount").text(followUpCountText);
+
 
     if (offset === 0) {
         $table.empty(); // Clear the list only for the initial load
