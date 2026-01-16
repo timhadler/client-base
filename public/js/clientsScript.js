@@ -18,6 +18,7 @@ let currentFilters = {
 $(document).ready(function() {
     // Initialize page
     loadClients();
+    initDeleteModal();  // utils.js
     
     // Search functionality with debounce
     let searchTimeout;
@@ -232,26 +233,22 @@ function handleDeleteClient($button) {
     const clientId = $button.data('client-id');
     const $row = $button.closest('tr');
     const clientName = $row.find('.client-name').text();
-    
-    if (!confirm(`Are you sure you want to delete ${clientName}?`)) {
-        return;
-    }
-    
-    $.ajax({
-        url: `/clients/${clientId}/delete`,
-        method: 'POST',
-        success: function(response) {
-            // Show success message (you can implement a toast notification)
-            console.log('Client deleted successfully');
-            
-            // Reload the current page
-            loadClients();
+
+    // Show delete modal with success and error callbacks
+    showDeleteModal(
+        'client', 
+        clientId, 
+        clientName,
+        // Success callback - reload reminders list
+        function(response) {
+            window.location.href = '/clients';
         },
-        error: function(xhr, status, error) {
-            console.error('Error deleting client:', error);
-            alert('Failed to delete client. Please try again.');
+        // Error callback - handle deletion error
+        function(xhr, status, error) {
+            console.error('Failed to delete reminder:', error);
+            alert('Failed to delete reminder. Please try again.');
         }
-    });
+    );
 }
 
 /*****************************************************************
