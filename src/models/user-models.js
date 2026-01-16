@@ -32,7 +32,7 @@ exports.setFailedPayment = async (customerId) => {
 
 // Reveives a user with a given id
 exports.getUserById = async function(id) {
-    const sqlQuery = "SELECT public_id as id, email as username, subscription_status from users WHERE public_id=?";
+    const sqlQuery = "SELECT id, email as username, subscription_status from users WHERE id=?";
     const rows = await db.query(sqlQuery, id);
 
     if (rows.length > 0) {
@@ -44,7 +44,7 @@ exports.getUserById = async function(id) {
 
 // Reveives a user with a given username
 exports.getUserByUsername = async function(username) {
-    const sqlQuery = "SELECT public_id as id, email, password_hash as password from users WHERE email=?";
+    const sqlQuery = "SELECT id, email, password_hash as password from users WHERE email=?";
     const rows = await db.query(sqlQuery, username);
 
     if (rows.length > 0) {
