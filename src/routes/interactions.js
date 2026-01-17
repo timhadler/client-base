@@ -25,6 +25,7 @@ router.post("/", async (req, res) => {                          // NEED to updat
     try {
         const clientId = req.body.clientId;
         const reminderId = req.body.reminderId;
+        const reminderCount = req.body.reminderCount;
         const method = req.body.method;
         const outcome = req.body.outcome ? req.body.outcome : 'waiting';
         const createReminder = req.body.createNewReminder === "true";
@@ -32,14 +33,14 @@ router.post("/", async (req, res) => {                          // NEED to updat
         const reminderNote = req.body.newReminderNote;
 
         let userId = req.user.id;
-        let reminderCount = 0; // PLACEHOLDER
+        const newReminderCount = reminderCount + 1;
 
         // Create interaction
         await clients.createInteraction(clientId, reminderId, method, outcome, userId);
 
         // Optional: create new reminder
         if (createReminder) {
-            await clients.createReminder(reminderDate, false, reminderNote, reminderCount, clientId, userId);
+            await clients.createReminder(reminderDate, false, reminderNote, newReminderCount, clientId, userId);
         }
 
         // Set current reminder complete

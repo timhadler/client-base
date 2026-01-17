@@ -1,8 +1,9 @@
 /*****************************************************************
  * Document Ready
  ****************************************************************/
-let currentClientData = {id:"", email:"", phone:""};    // Selected client email/phone data for the copy feature
+let currentClientData = {id:"", email:"", phone:""};    // Selected client email/phone data for the copy feature and interaction form submit
 let currentReminderId = 0;      // For interaction modal
+let currentReminderCount = 0;
 let currentTab = "all";         // For relaoding after completing a reminder
 
 $(document).ready(function() {
@@ -178,6 +179,7 @@ function loadList(counts, reminders, offset=0) {
             $row.on('click', function(e) {
                 if (!$(e.target).closest('.cd-edit-reminder-btn').length) {     // Avoid edit reminder button
                     currentReminderId = reminder.id;
+                    currentReminderCount = reminder.reminderCount;
                     openClientPanel(reminder.clientId);
                 }
             });
@@ -237,7 +239,7 @@ function initClientPanel() {
 async function openClientPanel(clientId) {
     const client = await fetchClientDetails(clientId);
     const interactions = await fetchClientInteractions(clientId);
-    
+
     // Update data for email/number copy feature
     currentClientData = {id:clientId, email:client.email, phone:client.phone};
 
@@ -434,6 +436,7 @@ function initInteractionModal() {
 
         const formData = {  
             reminderId: currentReminderId,
+            reminderCount: currentReminderCount,
             clientId: currentClientData.id,
             method: selectedMethod,     // These go to route?
             outcome: selectedOutcome,
