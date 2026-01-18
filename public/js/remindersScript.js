@@ -533,18 +533,21 @@ function initInteractionModal() {
                 showNewReminder(true);
             }
         }
-        // For text, email, ignored
-        else if (['text', 'email', 'ignored'].includes(method)) {
+        // For text, email
+        else if (['text', 'email'].includes(method)) {
             $('#reminderOptionsGroup').show();
             $('#newReminderWrapper').show();
             $('#nextCycleWrapper').show();
             
-            if (method !== 'ignored') {
-                $('#createNewReminder').prop('checked', true);
-                $('#reminderDescription').text(newReminderText);
-                $('#reminderDescription').show();
-                showNewReminder(true);
-            }
+            $('#createNewReminder').prop('checked', true);
+            $('#reminderDescription').text(newReminderText);
+            $('#reminderDescription').show();
+            showNewReminder(true);
+        
+        // For ignored
+        } else if (method === 'ignored') {
+            $('#reminderOptionsGroup').show();
+            $('#nextCycleWrapper').show();
         }
     }
 
