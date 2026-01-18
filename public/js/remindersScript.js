@@ -400,8 +400,8 @@ function initInteractionModal() {
         selectedOutcome = $(this).data('outcome');
         $('#outcome').val(selectedOutcome);
 
-        generateSummary();
-        setDefaultReminderNote(selectedOutcome);
+        generateSummary();  // Remove this later
+
         $('#summaryGroup').show();
 
         showReminderOptions(selectedMethod, selectedOutcome);
@@ -442,11 +442,11 @@ function initInteractionModal() {
             reminderId: currentReminderId,
             reminderCount: currentReminderCount,
             clientId: currentClientData.id,
-            method: selectedMethod,     // These go to route?
+            method: selectedMethod,
             outcome: selectedOutcome,
             //interactionSummary: $('#interactionSummary').text(),
             createNewReminder: $('#createNewReminder').prop('checked'),
-            moveToNextCyclew: $('#moveToNextCycle').prop('checked'),
+            moveToNextCycle: $('#moveToNextCycle').prop('checked'),
             newReminderDate: $('#newReminderDate').val(),
             newReminderNote: $('#newReminderNote').val()
         };
@@ -467,7 +467,7 @@ function initInteractionModal() {
         closeClientPanel();
     });
 
-    // --- Helper Functions (scoped inside for access to selected variables) ---
+    // --- Helper Functions ---
 
     function showNewReminder(show) {
         const $fields = $('#newReminderFields');
@@ -476,7 +476,11 @@ function initInteractionModal() {
         if (show) {
             $fields.show();
 
-            // Default to 3 days from today
+            // Set default note
+            setDefaultReminderNote();
+
+            // Set default date
+            // Default to 3 days from today - will set based on user settings later
             const defaultDate = new Date();
             defaultDate.setDate(defaultDate.getDate() + 3);
 
@@ -511,7 +515,6 @@ function initInteractionModal() {
                 $('#moveToNextCycle').prop('checked', true);
                 $('#reminderDescription').text(nextCycleText);
                 $('#reminderDescription').show();
-                setDefaultReminderNote(outcome);
                 showNewReminder(true);
             } else if (outcome === 'followup') {
                 // Only show "Create New Reminder"
@@ -519,7 +522,6 @@ function initInteractionModal() {
                 $('#createNewReminder').prop('checked', true);
                 $('#reminderDescription').text(newReminderText);
                 $('#reminderDescription').show();
-                setDefaultReminderNote(outcome);
                 showNewReminder(true);
             } else if (outcome === 'no_answer') {
                 // Show both options
@@ -528,7 +530,6 @@ function initInteractionModal() {
                 $('#createNewReminder').prop('checked', true);
                 $('#reminderDescription').text(newReminderText);
                 $('#reminderDescription').show();
-                setDefaultReminderNote(outcome);
                 showNewReminder(true);
             }
         }
@@ -542,7 +543,6 @@ function initInteractionModal() {
                 $('#createNewReminder').prop('checked', true);
                 $('#reminderDescription').text(newReminderText);
                 $('#reminderDescription').show();
-                setDefaultReminderNote(method);
                 showNewReminder(true);
             }
         }
@@ -578,33 +578,28 @@ function initInteractionModal() {
         $('#interactionSummary').text(summary);
     }
 
-    function setDefaultReminderNote(reason) {
+    function setDefaultReminderNote() {
+        const followUp = $('#createNewReminder').prop('checked');
+        const moveToNextCylce = $('#moveToNextCycle').prop('checked');
+
         let defaultNote;
 
-        switch (reason) {
-            // From selected outcome
-            case 'booked':
-                defaultNote = 'Requested appointment reminder';
-                break;
-            case 'followup': 
-                defaultNote = 'Requested a follow-up';
-                break;
-            case 'declined': 
-                defaultNote = 'Follow up after decline';
-                break;
-            case 'no_answer':
-                defaultNote = 'Follow up after missed call';
-                break
-            
-            // From selected method
-            case 'text':
-                defaultNote = 'Follow up after text';
-                break;
-            case 'email':
-                defaultNote = 'Follow up after email';
-                break;
-            default:
-                defaultNote = '';
+        if (moveToNextCylce) {
+            defaultNote = "Initial appointment attempt";
+        } else if (followUp) {
+            const notes = {
+                call: {
+                    followup: "Requested a follow-up",
+                    no_answer: "Follow-up after missed call"
+                },
+                email: "Follow-up after email",
+                text: "Follow-up after text"
+            };
+
+            defaultNote =
+                typeof notes[selectedMethod] === "string"
+                    ? notes[selectedMethod]
+                    : notes[selectedMethod]?.[selectedOutcome];
         }
 
         $('#newReminderNote').val(defaultNote);
