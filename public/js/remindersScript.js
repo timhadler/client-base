@@ -352,6 +352,9 @@ function initInteractionModal() {
     let selectedMethod = null;
     let selectedOutcome = null;
 
+    const newReminderText = "Schedule a follow-up reminder";
+    const nextCycleText = "End this follow-up cycle and schedule a reminder for their next appointment";
+
     // --- Open Modal ---
     $('#markCompleteBtn').on('click', function() {
         $('#interactionReminderId').val(currentReminderId);
@@ -377,24 +380,14 @@ function initInteractionModal() {
 
         if (selectedMethod === 'call') {
             $('#outcomeGroup').show();
-            $('#summaryGroup, #newReminderGroup, #newReminderFields').hide();
+            $('#summaryGroup, #reminderOptionsGroup, #newReminderFields').hide();
             $('#submitInteraction').prop('disabled', true);
         } else {
             $('#outcomeGroup').hide();
             generateSummary();
             $('#summaryGroup').show();
-            $('#newReminderGroup, #newReminderFields').hide();
-            if (['text', 'email', 'ignored'].includes(selectedMethod)) {
-                $('#newReminderGroup').show();
-                if (selectedMethod !== 'ignored') {
-                    $('#createNewReminder').prop('checked', true);
-                    setDefaultReminderNote(selectedMethod);
-                    showNewReminder(true);
-                }
-            } else {
-                $('#newReminderGroup, #newReminderFields').hide();
-                $('#createNewReminder').prop('checked', false);
-            }
+            
+            showReminderOptions(selectedMethod, null);
             $('#submitInteraction').prop('disabled', false);
         }
     });
@@ -411,23 +404,34 @@ function initInteractionModal() {
         setDefaultReminderNote(selectedOutcome);
         $('#summaryGroup').show();
 
-        if (['booked', 'followup', 'declined', 'noanswer'].includes(selectedOutcome)) {
-            $('#newReminderGroup').show();
-            if (selectedOutcome === 'followup') {
-                $('#createNewReminder').prop('checked', true);
-                showNewReminder(true);
-            }
-        } else {
-            $('#newReminderGroup, #newReminderFields').hide();
-            $('#createNewReminder').prop('checked', false);
-        }
+        showReminderOptions(selectedMethod, selectedOutcome);
 
         $('#submitInteraction').prop('disabled', false);
     });
 
-    // --- New Reminder Toggle ---
+    // --- Checkbox Changes (Mutually Exclusive) ---
     $('#createNewReminder').on('change', function() {
-        showNewReminder(this.checked);
+        if (this.checked) {
+            $('#moveToNextCycle').prop('checked', false);
+            $('#reminderDescription').text(newReminderText);
+            $('#reminderDescription').show();
+            showNewReminder(true);
+        } else {
+            $('#reminderDescription').hide();
+            showNewReminder(false);
+        }
+    });
+
+    $('#moveToNextCycle').on('change', function() {
+        if (this.checked) {
+            $('#createNewReminder').prop('checked', false);
+            $('#reminderDescription').text(nextCycleText);
+            $('#reminderDescription').show();
+            showNewReminder(true);
+        } else {
+            $('#reminderDescription').hide();
+            showNewReminder(false);
+        }
     });
 
     // --- Form Submission ---
@@ -442,6 +446,7 @@ function initInteractionModal() {
             outcome: selectedOutcome,
             //interactionSummary: $('#interactionSummary').text(),
             createNewReminder: $('#createNewReminder').prop('checked'),
+            moveToNextCyclew: $('#moveToNextCycle').prop('checked'),
             newReminderDate: $('#newReminderDate').val(),
             newReminderNote: $('#newReminderNote').val()
         };
@@ -485,6 +490,68 @@ function initInteractionModal() {
         } else {
             $fields.hide();
         }
+    }
+
+    function showReminderOptions(method, outcome) {
+        // Hide everything first
+        $('#reminderOptionsGroup').hide();
+        $('#newReminderWrapper').hide();
+        $('#nextCycleWrapper').hide();
+        $('#reminderDescription').hide();
+        $('#newReminderFields').hide();
+        resetReminderCheckboxes();
+
+        // For call outcomes
+        if (method === 'call' && outcome) {
+            $('#reminderOptionsGroup').show();
+            
+            if (outcome === 'booked' || outcome === 'declined') {
+                // Only show "Move to Next Cycle"
+                $('#nextCycleWrapper').show();
+                $('#moveToNextCycle').prop('checked', true);
+                $('#reminderDescription').text(nextCycleText);
+                $('#reminderDescription').show();
+                setDefaultReminderNote(outcome);
+                showNewReminder(true);
+            } else if (outcome === 'followup') {
+                // Only show "Create New Reminder"
+                $('#newReminderWrapper').show();
+                $('#createNewReminder').prop('checked', true);
+                $('#reminderDescription').text(newReminderText);
+                $('#reminderDescription').show();
+                setDefaultReminderNote(outcome);
+                showNewReminder(true);
+            } else if (outcome === 'noanswer') {
+                // Show both options
+                $('#newReminderWrapper').show();
+                $('#nextCycleWrapper').show();
+                $('#createNewReminder').prop('checked', true);
+                $('#reminderDescription').text(newReminderText);
+                $('#reminderDescription').show();
+                setDefaultReminderNote(outcome);
+                showNewReminder(true);
+            }
+        }
+        // For text, email, ignored
+        else if (['text', 'email', 'ignored'].includes(method)) {
+            $('#reminderOptionsGroup').show();
+            $('#newReminderWrapper').show();
+            $('#nextCycleWrapper').show();
+            
+            if (method !== 'ignored') {
+                $('#createNewReminder').prop('checked', true);
+                $('#reminderDescription').text(newReminderText);
+                $('#reminderDescription').show();
+                setDefaultReminderNote(method);
+                showNewReminder(true);
+            }
+        }
+    }
+
+    function resetReminderCheckboxes() {
+        $('#createNewReminder').prop('checked', false);
+        $('#moveToNextCycle').prop('checked', false);
+        $('#reminderDescription').hide();
     }
 
     function generateSummary() {
@@ -553,7 +620,9 @@ function initInteractionModal() {
         selectedOutcome = null;
         $('#interactionForm')[0].reset();
         $('.option-btn').removeClass('selected');
-        $('#outcomeGroup, #summaryGroup, #newReminderGroup, #newReminderFields').hide();
+        $('#outcomeGroup, #summaryGroup, #reminderOptionsGroup, #newReminderFields').hide();
+        $('#newReminderWrapper, #nextCycleWrapper, #reminderDescription').hide();
+        resetReminderCheckboxes();
         $('#submitInteraction').prop('disabled', true);
     }
 }
