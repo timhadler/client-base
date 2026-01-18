@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {                          // NEED to updat
         const reminderNote = req.body.newReminderNote;
 
         let userId = req.user.id;
-        const newReminderCount = reminderCount + 1;
+        const newReminderCount = Number(reminderCount) + 1;
 
         // Create interaction
         await clients.createInteraction(clientId, reminderId, method, outcome, userId);

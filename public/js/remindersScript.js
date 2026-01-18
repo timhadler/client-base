@@ -521,7 +521,7 @@ function initInteractionModal() {
                 $('#reminderDescription').show();
                 setDefaultReminderNote(outcome);
                 showNewReminder(true);
-            } else if (outcome === 'noanswer') {
+            } else if (outcome === 'no_answer') {
                 // Show both options
                 $('#newReminderWrapper').show();
                 $('#nextCycleWrapper').show();
@@ -565,7 +565,7 @@ function initInteractionModal() {
         if (selectedMethod === 'call') {
             if (selectedOutcome === 'booked') summary = `Called client on ${dateStr} - Appointment booked`;
             else if (selectedOutcome === 'followup') summary = `Called client on ${dateStr} - Requested a follow-up`;
-            else if (selectedOutcome === 'noanswer') summary = `Called client on ${dateStr} - No answer`;
+            else if (selectedOutcome === 'no_answer') summary = `Called client on ${dateStr} - No answer`;
             else if (selectedOutcome === 'declined') summary = `Called client on ${dateStr} - Declined service`;
         } else if (selectedMethod === 'text') {
             summary = `Texted client on ${dateStr}`;
@@ -592,7 +592,7 @@ function initInteractionModal() {
             case 'declined': 
                 defaultNote = 'Follow up after decline';
                 break;
-            case 'noanswer':
+            case 'no_answer':
                 defaultNote = 'Follow up after missed call';
                 break
             
