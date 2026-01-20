@@ -29,8 +29,11 @@ router.post("/", async (req, res) => {                          // NEED to updat
         const method = req.body.method;
         const outcome = req.body.outcome ? req.body.outcome : 'waiting';
         const createReminder = req.body.createNewReminder === "true";
+        const moveToNextCycle = req.body.moveToNextCycle === "true";
         const reminderDate = req.body.newReminderDate;
         const reminderNote = req.body.newReminderNote;
+
+        console.log(moveToNextCycle);
 
         let userId = req.user.id;
         const newReminderCount = Number(reminderCount) + 1;
@@ -55,13 +58,19 @@ router.post("/", async (req, res) => {                          // NEED to updat
 /***********************************************************
  * PUT
  ***********************************************************/
+// Update interaction and reminder outcome
+// Called when user records a response from client to text or email
 router.put("/:interactionId", async (req, res) => {
     try {
-        const reminderId = req.params.interactionId;
+        const interactionId = req.params.interactionId;
+        const reminderId = req.body.reminderId;
         const outcome = req.body.outcome;
+        const notes = req.body.notes;
 
+        // Ignore no_answer outcomes
         if (outcome !== 'no_answer') {
-            await clients.respondInteraction(reminderId, outcome, req.user.id);
+            // Update interaction and reminder outcome
+            await clients.respondInteraction(interactionId, reminderId, outcome, req.user.id);
         }
         res.status(204).json({ message: "Update successful" });
     } catch (error) {

@@ -9,6 +9,7 @@ let clientData = null;
 // Recording interaction responses
 let selectedOutcome = null;
 let currentInteractionId = null;
+let currentReminderId = null;       // For the currently selected interaction
 
 /*****************************************************************
  * Document Ready
@@ -462,11 +463,12 @@ function initRecordResponseModal() {
         
         const $item = $(this).closest('.interaction-item');
         const interactionId = $item.data('interaction-id');
+        const reminderId = $item.data('reminder-id');
         const method = $item.find('.interaction-type').text().trim().toLowerCase();
         const desc = $item.find('.interaction-content > div:last-child').text().trim();
         const date = $item.find('.interaction-date').text().trim();
         
-        openResponseModal(interactionId, method, desc, date);
+        openResponseModal(interactionId, reminderId, method, desc, date);
     });
 
     // Outcome button selection
@@ -484,8 +486,9 @@ function initRecordResponseModal() {
 /*****************************************************************
  * Open Response Modal
  ****************************************************************/
-function openResponseModal(interactionId, method, description, date) {
+function openResponseModal(interactionId, reminderId, method, description, date) {
     currentInteractionId = interactionId;
+    currentReminderId = reminderId;
     
     const icons = { 
         email: '✉️', 
@@ -548,14 +551,13 @@ function saveInteractionResponse() {
         method: 'PUT',
         data: JSON.stringify({
             outcome: selectedOutcome,
+            reminderId: currentReminderId,
             notes: notes
         }),
         contentType: 'application/json',
         success: function(response) {
-            console.log('Response recorded successfully');
+            // Close modal and reload activity history to show updated interaction
             closeResponseModal();
-            
-            // Reload activity history to show updated interaction
             loadActivityHistory();
         },
         error: function(xhr, status, error) {
@@ -652,7 +654,7 @@ function createInteractionRow(interaction) {
     }
 
     return `
-        <div class="interaction-item ${pendingClass}" data-interaction-id="${interaction.id}">
+        <div class="interaction-item ${pendingClass}" data-interaction-id="${interaction.id}" data-reminder-id="${interaction.reminderId}">
             <div class="interaction-icon ${iconClass}">${getInteractionEmoji(interaction.method)}</div>
             <div class="interaction-content">
                 <div class="interaction-header">

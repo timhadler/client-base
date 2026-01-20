@@ -98,7 +98,7 @@ exports.getClientReminders = async function(id, user_id) {
 
 // Fetchs all interactions associated with a client id
 exports.getClientInteractions = async function (id, user_id) {
-    const sqlQuery = "SELECT i.id, method, outcome, i.createdAt as date FROM interactions i JOIN clients c ON i.client_id = c.id WHERE c.public_id = ? AND c.user_id = ? ORDER BY i.createdAt DESC";
+    const sqlQuery = "SELECT i.id, i.reminder_id as reminderId, method, outcome, i.createdAt as date FROM interactions i JOIN clients c ON i.client_id = c.id WHERE c.public_id = ? AND c.user_id = ? ORDER BY i.createdAt DESC";
     rows = await db.query(sqlQuery, [id, user_id]);
 
     return rows;
@@ -249,10 +249,29 @@ exports.completeReminder = async function(id, user_id) {
     await db.query(sqlQuery, [id, user_id]);
 }
 
-// Adds a response to an interaction
-exports.respondInteraction = async function(id, outcome, user_id) {
-    const sqlQuery = "UPDATE interactions SET outcome=?, respondedAt=CURDATE() WHERE id=? AND user_id=?";
-    await db.query(sqlQuery, [outcome, id, user_id]);
+// Adds a response to an interaction, updates reminder outcome
+exports.respondInteraction = async function(id, reminderId, outcome, user_id) {
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
+        
+        await connection.query(
+            "UPDATE interactions SET outcome=?, respondedAt=CURDATE() WHERE id=? AND user_id=?",
+            [outcome, id, user_id]
+        );
+        
+        await connection.query(
+            "UPDATE reminders SET outcome=? WHERE id=? AND user_id=?",
+            [outcome, reminderId, user_id]
+        );
+        
+        await connection.commit();
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    } finally {
+        connection.release();
+    }
 };
 
 /***********************************************************
