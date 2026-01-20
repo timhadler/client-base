@@ -531,7 +531,7 @@ function selectOutcome(btn) {
     $(btn).addClass('cd-selected');
     selectedOutcome = $(btn).data('outcome');
     
-    $('#responseNotesGroup').show();
+    //$('#responseNotesGroup').show();              // Removing note feature for now, route code remains for possible future use
     $('#saveResponseBtn').prop('disabled', false);
 }
 
