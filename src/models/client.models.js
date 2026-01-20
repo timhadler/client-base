@@ -57,11 +57,13 @@ exports.getClientList = async function (limit, offset, search, status, priority,
 
 // Fetches client details with a given id
 exports.getClientDetails = async function(id, user_id, conn = db) {
-    const sqlQuery = `SELECT public_id as id, name, first_name, last_name, email, phone, company, position, status, priority, source, 
-        createdAt, lastContact, notes, addressLine1 as line1, addressLine2 as line2, city, state, postcode, country 
+    const sqlQuery = `
+        SELECT public_id as id, name, first_name, last_name, email, phone, company, position, status, priority, source, 
+            createdAt, lastContact, notes, addressLine1 as line1, addressLine2 as line2, city, state, postcode, country 
         FROM clients 
         WHERE public_id = ? 
-        AND user_id = ?`;
+        AND user_id = ?
+    `;
     rows = await conn.query(sqlQuery, [id, user_id]);
 
     return rows[0];
@@ -69,11 +71,13 @@ exports.getClientDetails = async function(id, user_id, conn = db) {
 
 // Fetches all reminders associated with a client id
 exports.getClientReminders = async function(id, user_id, conn = db) {
-    const sqlQuery = `SELECT reminders.id, rDate as date, reminders.status, note, outcome, important, reminderCount 
+    const sqlQuery = `
+        SELECT reminders.id, rDate as date, reminders.status, note, outcome, important, reminderCount 
         FROM reminders 
         JOIN clients on reminders.client_id = clients.id 
         WHERE clients.public_id = ? 
-        AND clients.user_id = ?`;
+        AND clients.user_id = ?
+    `;
     rows = await conn.query(sqlQuery, [id, user_id]);
 
     return rows;
@@ -81,7 +85,12 @@ exports.getClientReminders = async function(id, user_id, conn = db) {
 
 // Fetches the public id of a client by their internal id
 exports.getPublicId = async function(id, user_id, conn = db) {
-    const sqlQuery = "SELECT public_id FROM clients WHERE id = ? AND user_id = ?";
+    const sqlQuery = `
+        SELECT public_id 
+        FROM clients 
+        WHERE id = ? 
+        AND user_id = ?
+    `;
     const rows = await conn.query(sqlQuery, [id, user_id]);
 
     return rows[0];
@@ -92,11 +101,13 @@ exports.getPublicId = async function(id, user_id, conn = db) {
  ***********************************************************/
 // Creates a client entry
 exports.addClient = async (client, user_id, conn = db) => {
-    const result = await conn.query(
-        `INSERT INTO clients 
-        (first_name, last_name, name, email, phone, company, position, status, priority, notes, source,
-         addressLine1, addressLine2, city, state, country, postcode, user_id)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    const result = await conn.query(`
+        INSERT INTO clients (
+            first_name, last_name, name, email, phone, company, position, status, priority, notes, source,
+            addressLine1, addressLine2, city, state, country, postcode, user_id
+            )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `,
         [
             client.firstName,
             client.lastName,
@@ -126,12 +137,15 @@ exports.addClient = async (client, user_id, conn = db) => {
  ***********************************************************/
 // Edits a client entry
 exports.editClient = async (id, client, user_id, conn = db) => {
-    await conn.query(
-        `UPDATE clients SET 
+    await conn.query(`
+        UPDATE clients 
+        SET 
             first_name = ?, last_name = ?, name = ?, email = ?, phone = ?, company = ?, position = ?, 
             status = ?, priority = ?, notes = ?, source = ?,
             addressLine1 = ?, addressLine2 = ?, city = ?, state = ?, country = ?, postcode = ?
-         WHERE public_id = ? AND user_id = ?`,
+        WHERE public_id = ? 
+        AND user_id = ?
+        `,
         [
             client.first_name,
             client.last_name,
@@ -161,12 +175,20 @@ exports.editClient = async (id, client, user_id, conn = db) => {
  ***********************************************************/
 // Delete a client entry
 exports.deleteClient = async function(id, user_id, conn = db) {
-    const sqlQuery = "DELETE FROM clients WHERE public_id=? AND user_id=?";
+    const sqlQuery = "DELETE FROM clients WHERE public_id= ?  AND user_id=?";
     await conn.query(sqlQuery, [id, user_id]);
 }
 
 // Deletes active reminders for a given client id
 exports.deleteActiveReminders = async function(id, user_id, conn = db) {
-    const sqlQuery = "DELETE r FROM reminders r INNER JOIN clients c ON r.client_id = c.id WHERE c.public_id = ? AND r.status = 'pending' AND c.user_id=?";
+    const sqlQuery = `
+        DELETE r 
+        FROM reminders r 
+        INNER JOIN clients c 
+        ON r.client_id = c.id 
+        WHERE c.public_id = ? 
+        AND r.status = 'pending' 
+        AND c.user_id= ? 
+    `;
     await conn.query(sqlQuery, [id, user_id]);
 }

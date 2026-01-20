@@ -5,7 +5,16 @@ const db = require('../database');
  ***********************************************************/
 // Fetchs all interactions associated with a client id
 exports.getClientInteractions = async function (id, user_id, conn = db) {
-    const sqlQuery = "SELECT i.id, i.reminder_id as reminderId, method, outcome, i.createdAt as date FROM interactions i JOIN clients c ON i.client_id = c.id WHERE c.public_id = ? AND c.user_id = ? ORDER BY i.createdAt DESC";
+    const sqlQuery = `
+        SELECT i.id, i.reminder_id as reminderId, method, outcome, i.createdAt as date 
+        FROM interactions i 
+        JOIN clients c 
+        ON i.client_id = c.id 
+        WHERE c.public_id = ? 
+        AND c.user_id = ? 
+        ORDER BY i.createdAt 
+        DESC
+    `;
     const rows = await conn.query(sqlQuery, [id, user_id]);
 
     return rows;
