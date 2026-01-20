@@ -106,5 +106,5 @@ if (process.env.NODE_ENV === "development") {
     app.use("/reminders", checkAuthenticated, checkTrialorActive, reminderRouter);
     app.use("/clients", checkAuthenticated, checkTrialorActive, clientRouter);
     //app.use("/clientOverview", checkAuthenticated, checkTrialorActive, overviewRouter);
-    app.use('/interactions', interactionsRouter);
+    app.use('/interactions', checkAuthenticated, checkTrialorActive, interactionsRouter);
 }
