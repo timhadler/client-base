@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const clients = require("../models/client-models");   
+const reminderServices = require("../services/reminder.services");   
+const reminderModels = require("../models/reminder.models");   
 
 // Get the dates that define the current month for the pending list
 global.D1_P = getDate(0).slice(0, 8) + "01"
@@ -29,22 +30,16 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Get the filtered reminder list
-// Also returns list counts for overdue and due today for tab headers
-// Replace upcoming col with waiting for response (reminder.status = waiting, reminder will have from_interaction field)
+// Get the paginated filtered reminder list
+// Also returns list counts for appropriate filters
 router.get("/load-reminder-list", async (req, res) => {
     try {
-        const filter = req.query.filter;
-        const userId = req.user.id;
-        let reminders = [];
-
-        const overdueCount = await clients.nReminderListCount('overdue', userId);
-        const todayCount = await clients.nReminderListCount('today', userId);
-        const initialCount = await clients.nReminderListCount('initial', userId);
-        const followUpCount = await clients.nReminderListCount('followUp', userId);
-
-        reminders = await clients.getReminderList(filter, req.query.limit, req.query.offset, userId);
-        const data = {listCounts:{today:todayCount, overdue:overdueCount, initial:initialCount, followUp:followUpCount}, listData:reminders};
+        const data = await reminderServices.loadReminderList({
+            filter: req.query.filter,
+            userId: req.user.id, 
+            limit: req.query.limit, 
+            offset: req.query.offset
+        });
 
         res.json(JSON.stringify(data));
     } catch (error) {
@@ -60,7 +55,7 @@ router.post("/add", async (req, res) => {
     try {
         const reminderCount = 1;
 
-        await clients.createReminder(req.body.date, req.body.important, req.body.note, reminderCount, req.body.clientId, req.user.id);
+        await reminderModels.createReminder(req.body.date, req.body.important, req.body.note, reminderCount, req.body.clientId, req.user.id);
         res.status(200).json({ message: "Add reminder successful" });
     } catch (error) {
         res.status(500).send(error.message);
@@ -114,7 +109,7 @@ router.post("/add", async (req, res) => {
 // Edit a reminder
 router.post("/:id/edit", async (req, res) => {
     try {
-        await clients.editReminder(req.params.id, req.body.date, req.body.important, req.body.note, req.user.id);
+        await reminderModels.editReminder(req.params.id, req.body.date, req.body.important, req.body.note, req.user.id);
         res.status(201).json({ message: "Update successful" });
     } catch (error) {
         res.status(500).send(error.message);
@@ -126,7 +121,7 @@ router.post("/:id/edit", async (req, res) => {
  ***********************************************************/
 router.delete("/:id", async (req, res) => {
     try {
-        await clients.deleteClientReminder(req.params.id, req.user.id);
+        await reminderModels.deleteReminder(req.params.id, req.user.id);
         res.status(204).json({message: "Delete successful"});
     } catch (error) {
         res.status(500).send(error.message);
