@@ -108,7 +108,6 @@ router.get("/:id/reminders", async (req, res) => {
 
         res.status(200).json({ reminders:reminders });
     } catch (error) {
-        console.log(error)
         res.status(500).send(error.message);
     }
 });
@@ -154,7 +153,6 @@ router.post('/', async (req, res) => {
 
         res.redirect(`/clients/${ id }`);
     } catch (error) {
-        console.error('Error adding client:', error);
         if (req.xhr || req.headers.accept.indexOf('json') > -1) {
             return res.status(500).json({ error: 'Somethign went wrong. Please try again.' });
         }
@@ -282,7 +280,6 @@ router.put('/:id', async (req, res) => {
 
         res.redirect(`/clients/${clientId}`);
     } catch (error) {
-        console.error('Error updating client:', error);
         if (req.xhr || req.headers.accept.indexOf('json') > -1) {
             return res.status(500).json({ error: 'Error updating client' });
         }
@@ -316,7 +313,6 @@ router.delete("/:id", async (req, res) => {
 
         res.status(204).end();
     } catch (error) {
-        console.log(error)
         res.status(500).send(error.message);
     }
 });
