@@ -244,9 +244,9 @@ exports.editReminder = async function(id, date, important, note, user_id) {
 };
 
 // Edits reminder status to complete
-exports.completeReminder = async function(id, user_id) {
-    const sqlQuery = "UPDATE reminders SET status='complete' WHERE id=? AND user_id=?";
-    await db.query(sqlQuery, [id, user_id]);
+exports.completeReminder = async function(id, outcome, user_id) {
+    const sqlQuery = "UPDATE reminders SET status='complete', outcome=? WHERE id=? AND user_id=?";
+    await db.query(sqlQuery, [outcome, id, user_id]);
 }
 
 // Adds a response to an interaction, updates reminder outcome

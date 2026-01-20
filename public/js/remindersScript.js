@@ -459,7 +459,7 @@ function initInteractionModal() {
             },
             error: function(xhr, status, error) {
                 // Handle AJAX error
-                console.log('AJAX Error while creating interaction', formData, error, xhr, status);
+                console.log('AJAX Error while creating interaction', error, xhr, status);
             }
         })
 

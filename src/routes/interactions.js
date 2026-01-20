@@ -21,36 +21,45 @@ router.get("/", async (req, res) => {
 /***********************************************************
  * POST
  ***********************************************************/
-router.post("/", async (req, res) => {                          // NEED to update contact date fields in clients table, reminders (last contact etc), and check other fields
+router.post("/", async (req, res) => {                          // NEED to update contact date fields in clients table, reminders (last contact etc)
     try {
         const clientId = req.body.clientId;
+        const userId = req.user.id;
         const reminderId = req.body.reminderId;
         const reminderCount = req.body.reminderCount;
         const method = req.body.method;
-        const outcome = req.body.outcome ? req.body.outcome : 'waiting';
         const createReminder = req.body.createNewReminder === "true";
         const moveToNextCycle = req.body.moveToNextCycle === "true";
         const reminderDate = req.body.newReminderDate;
         const reminderNote = req.body.newReminderNote;
+        let outcome = req.body.outcome ? req.body.outcome : 'waiting';
+        const important = false;    // Placeholder for future use
 
         console.log(moveToNextCycle);
 
-        let userId = req.user.id;
-        const newReminderCount = Number(reminderCount) + 1;
+        // If moving to next cycle, reset reminder count and set outcome to end_attmept
+        let newReminderCount = 0;
+        if (moveToNextCycle) {
+            newReminderCount = 1;
+            outcome = 'end_attempt';
+        } else {
+            newReminderCount = Number(reminderCount) + 1;
+        }
 
         // Create interaction
         await clients.createInteraction(clientId, reminderId, method, outcome, userId);
 
         // Optional: create new reminder
-        if (createReminder) {
-            await clients.createReminder(reminderDate, false, reminderNote, newReminderCount, clientId, userId);
+        if (createReminder || moveToNextCycle) {
+            await clients.createReminder(reminderDate, important, reminderNote, newReminderCount, clientId, userId);
         }
 
         // Set current reminder complete
-        await clients.completeReminder(reminderId, userId);
+        await clients.completeReminder(reminderId, outcome, userId);
 
         res.status(201).json({ message: "Creation successful" });
     } catch (error) {
+        console.log(error)
         res.status(500).send(error.message);
     }
 });
