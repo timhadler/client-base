@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });   // MergeParams allows for parameters like id to be passed from nested routes
-const clients = require("../models/client-models");
+const interactionServices = require("../services/interaction.services");
+const interactionModels = require("../models/interaction.models");
 
 /***********************************************************
  * GET
@@ -10,7 +11,7 @@ router.get("/", async (req, res) => {
         const clientId = req.params.clientId;
         const {limit} = req.body;
 
-        let interactions = await clients.getClientInteractions(clientId, req.user.id);
+        let interactions = await interactionModels.getClientInteractions(clientId, req.user.id);
 
         res.status(200).json({ interactions:interactions });
     } catch (error) {
@@ -21,45 +22,23 @@ router.get("/", async (req, res) => {
 /***********************************************************
  * POST
  ***********************************************************/
-router.post("/", async (req, res) => {                          // NEED to update contact date fields in clients table, reminders (last contact etc)
+router.post("/", async (req, res) => {
     try {
-        const clientId = req.body.clientId;
-        const userId = req.user.id;
-        const reminderId = req.body.reminderId;
-        const reminderCount = req.body.reminderCount;
-        const method = req.body.method;
-        const createReminder = req.body.createNewReminder === "true";
-        const moveToNextCycle = req.body.moveToNextCycle === "true";
-        const reminderDate = req.body.newReminderDate;
-        const reminderNote = req.body.newReminderNote;
-        let outcome = req.body.outcome ? req.body.outcome : 'waiting';
-        const important = false;    // Placeholder for future use
-
-        console.log(moveToNextCycle);
-
-        // If moving to next cycle, reset reminder count and set outcome to end_attmept
-        let newReminderCount = 0;
-        if (moveToNextCycle) {
-            newReminderCount = 1;
-            outcome = 'end_attempt';
-        } else {
-            newReminderCount = Number(reminderCount) + 1;
-        }
-
-        // Create interaction
-        await clients.createInteraction(clientId, reminderId, method, outcome, userId);
-
-        // Optional: create new reminder
-        if (createReminder || moveToNextCycle) {
-            await clients.createReminder(reminderDate, important, reminderNote, newReminderCount, clientId, userId);
-        }
-
-        // Set current reminder complete
-        await clients.completeReminder(reminderId, outcome, userId);
+        await interactionServices.recordInteraction({
+            clientId: req.body.clientId,
+            userId: req.user.id,
+            reminderId: req.body.reminderId,
+            reminderCount: req.body.reminderCount,
+            method: req.body.method,
+            outcome: req.body.outcome ? req.body.outcome : 'waiting',
+            createNewReminder: req.body.createNewReminder === "true",
+            moveToNextCycle: req.body.moveToNextCycle === "true",
+            newReminderDate: req.body.newReminderDate,
+            newReminderNote: req.body.newReminderNote,
+        });
 
         res.status(201).json({ message: "Creation successful" });
     } catch (error) {
-        console.log(error)
         res.status(500).send(error.message);
     }
 });
@@ -76,11 +55,9 @@ router.put("/:interactionId", async (req, res) => {
         const outcome = req.body.outcome;
         const notes = req.body.notes;
 
-        // Ignore no_answer outcomes
-        if (outcome !== 'no_answer') {
-            // Update interaction and reminder outcome
-            await clients.respondInteraction(interactionId, reminderId, outcome, req.user.id);
-        }
+        // Update interaction and reminder outcome
+        await interactionServices.respondInteraction(interactionId, reminderId, outcome, req.user.id);
+
         res.status(204).json({ message: "Update successful" });
     } catch (error) {
         res.status(500).send(error.message);

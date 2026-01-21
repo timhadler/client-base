@@ -1,15 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const clients = require("../models/client-models");
+const clientModels = require("../models/client.models");
+const clientServices = require("../services/client.services");
 xl = require("../modules/excel-JS");
 const multer = require('multer');                   // For uploading files
 const upload = multer({ dest: "uploads/" });
 
 // Nested route
 const interactionsRouter = require("./interactions");
+//const { createReminder } = require("../models/client-models");
 router.use("/:clientId/activity", interactionsRouter)
 
-// Client Index
+// GET - Client Index
 router.get("/", async (req, res) => {
     try {
         res.status(200).render("clients/clients", { bodyClass: "clientsPage", showNavBar: true });
@@ -26,7 +28,7 @@ router.get('/new', (req, res) => {
             showNavBar: true,
             isEdit: false,
             client: {},
-            user: req.user // Assuming you have user authentication
+            user: req.user
         });
     } catch {
         res.status(500).send(error.message);
@@ -36,7 +38,7 @@ router.get('/new', (req, res) => {
 // GET - Show edit client form
 router.get('/:id/edit', async (req, res) => {
     try {
-        const client = await clients.getClientDetails(req.params.id, req.user.id);
+        const client = await clientModels.getClientDetails(req.params.id, req.user.id);
 
         if (!client) {
             req.flash('error', 'Client not found');
@@ -50,44 +52,48 @@ router.get('/:id/edit', async (req, res) => {
             client: client,
             user: req.user
         });
-
     } catch (error) {
-        console.error('Error loading client:', error);
         req.flash('error', 'Failed to load client');
         res.redirect('/clients');
     }
 });
 
-// Load client list
+// GET - Load client list
 router.get("/load-client-list", async (req, res) => {
     try {
-        const limit = req.query.limit;
-        const offset = req.query.offset;
-        const search = req.query.search;
-        const status = req.query.status;
-        const priority = req.query.priority;
+        const data = await clientServices.getClientList({
+            userId: req.user.id,
+            limit: req.query.limit, 
+            offset: req.query.offset, 
+            search: req.query.search, 
+            status: req.query.status, 
+            priortiy: req.query.priority
+        })
 
-        const nClients = await clients.nTotalClients(req.user.id);
-        const clientList = await clients.getClientList(limit, offset, search, status, priority, req.user.id);
-
-        res.status(200).json({ clientList:clientList, nClients:nClients });
+        res.status(200).json(data);
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
 
+// GET - Render client details page
 router.get("/:id", async (req, res) => {
     try {
-        res.status(200).render("clients/client-details", { bodyClass: "", clientId: req.params.id, showNavBar: true });
+        res.status(200).render("clients/client-details", { 
+            bodyClass: "", 
+            clientId: req.params.id, 
+            showNavBar: true 
+        });
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
 
+// GET - Retrieve client data
 router.get("/:id/data", async (req, res) => {
     try {
         const id = req.params.id;;
-        const client = await clients.getClientDetails(id, req.user.id);
+        const client = await clientModels.getClientDetails(id, req.user.id);
 
         res.status(200).json({ client:client });
     } catch (error) {
@@ -95,15 +101,10 @@ router.get("/:id/data", async (req, res) => {
     }
 });
 
+// GET - Retrieve client reminder data
 router.get("/:id/reminders", async (req, res) => {
     try {
-        const id = req.params.id;
-        const {limit} = req.body;
-
-        let reminders = await clients.getClientReminders(id, req.user.id);
-
-        // Filter out completed reminders
-        reminders = reminders.filter(reminder => reminder.status !== "complete"); 
+        const reminders = await clientServices.getActiveReminders(req.params.id, req.user.id);
 
         res.status(200).json({ reminders:reminders });
     } catch (error) {
@@ -114,52 +115,46 @@ router.get("/:id/reminders", async (req, res) => {
 /***********************************************************
  * Add
  ***********************************************************/
+// POST - Add a new client
 router.post('/', async (req, res) => {
     try {
         const data = req.body;
-        const userId = req.user.id;
 
-        // Construct client object
-        const newClient = {
-            first_name: data.firstName,
-            last_name: data.lastName || null,
-            email: data.email || null,
-            phone: data.phone || null,
-            company: data.company || null,
-            position: data.position || null,
-            status: data.status,
-            priority: data.priority,
-            notes: data.notes || null,
-            source: data.source || null,
-            line1: data.line1 || null,
-            line2: data.line2 || null,
-            city: data.city || null,
-            state: data.state || null,
-            country: data.country || null,
-            postcode: data.postcode || null,
-        };
+        const id = await clientServices.createClient({
+            userId: req.user.id,
+            createReminder: data.setReminder === 'yes',
+            reminderDate: data.reminderDate,
+            clientData: {
+                firstName: data.firstName,
+                lastName: data.lastName || null,
+                email: data.email || null,
+                phone: data.phone || null,
+                company: data.company || null,
+                position: data.position || null,
 
-        const clientId = await clients.addClient(newClient, userId);
-        const publicIdObj = await clients.getPublicId(clientId, userId);
+                status: data.status,
+                priority: data.priority,
+                notes: data.notes || null,
+                source: data.source || null,
 
-        // Optional reminder if selected
-        if (data.setReminder === 'yes' && data.reminderDate) {
-            const note = "Initial reminder";
-            const important = false;                // PLACEHOLDER
-            const reminderCount = 0;
-            await clients.createReminder(data.reminderDate, important, note, reminderCount, publicIdObj.public_id, userId);
-        }
+                line1: data.line1 || null,
+                line2: data.line2 || null,
+                city: data.city || null,
+                state: data.state || null,
+                country: data.country || null,
+                postcode: data.postcode || null,
+            }
+        });
 
         // Respond for AJAX
         if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-            return res.json({ success: true, redirectUrl: `/clients/${ publicIdObj.public_id}` });
+            return res.json({ success: true, redirectUrl: `/clients/${ id}` });
         }
 
-        res.redirect(`/clients/${ publicIdObj.public_id}`);
+        res.redirect(`/clients/${ id }`);
     } catch (error) {
-        console.error('Error adding client:', error);
         if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-            return res.status(500).json({ error: 'Somethign went wrong, but client may have been created. Try searching for them.' });
+            return res.status(500).json({ error: 'Somethign went wrong. Please try again.' });
         }
         res.redirect('/clients');
     }
@@ -252,7 +247,7 @@ router.post('/', async (req, res) => {
 /***********************************************************
  * Edit
  ***********************************************************/
-// EDIT EXISTING CLIENT
+// PUT - Edit an existing client
 router.put('/:id', async (req, res) => {
     try {
         const clientId = req.params.id;
@@ -277,7 +272,7 @@ router.put('/:id', async (req, res) => {
             postcode: data.postcode || null,
         };
 
-        await clients.editClient(clientId, updatedClient, req.user.id);
+        await clientModels.editClient(clientId, updatedClient, req.user.id);
 
         if (req.xhr || req.headers.accept.indexOf('json') > -1) {
             return res.json({ success: true, redirectUrl: `/clients/${clientId}` });
@@ -285,7 +280,6 @@ router.put('/:id', async (req, res) => {
 
         res.redirect(`/clients/${clientId}`);
     } catch (error) {
-        console.error('Error updating client:', error);
         if (req.xhr || req.headers.accept.indexOf('json') > -1) {
             return res.status(500).json({ error: 'Error updating client' });
         }
@@ -312,13 +306,10 @@ router.put('/:id', async (req, res) => {
 /***********************************************************
  * Delete
  ***********************************************************/
+// DELETE - Delete client data including remaining active reminders
 router.delete("/:id", async (req, res) => {
     try {
-        // Delete active reminders
-        await clients.deleteActiveReminders(req.params.id, req.user.id);
-
-        // Delete client
-        await clients.deleteClient(req.params.id, req.user.id);
+        await clientServices.deleteClientData(req.params.id, req.user.id)
 
         res.status(204).end();
     } catch (error) {
