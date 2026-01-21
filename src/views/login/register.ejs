@@ -1,19 +1,44 @@
-<form class="grid_col_1_s3" action="/auth/register" method="POST">
-    <div class="login_container">
+<div class="login-container">
+    <div class="login-header">
+        <div class="logo-container">
+            <div class="logo">CB</div>
+        </div>
+        <h1>ClientBase</h1>
+        <p>Create an account</p>
+    </div>
+    <div class="login-body">
         <% if (locals.error) { %>
             <p style="color: red;"> <%= locals.error %> </p>
             <br />
         <% } %>
-        <h2> Register </h2>
-        <br />
 
-        <label for="email"> Email: </label>
-        <input required type="email" name="email" id="register_email"> <br /><br />
+        <form id="registerForm" action="/auth/register" method="POST">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input 
+                    type="email" 
+                    id="register_email" 
+                    name="email" 
+                    placeholder="you@company.com" 
+                    required
+                >
+            </div>
 
-        <label for="password"> Password: </label>
-        <input required type="password" name="password" id="register_password"> <br /><br />
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="register_password" 
+                    name="password" 
+                    placeholder="Enter your password" 
+                    required
+                >
+            </div>
 
-        <button type="submit" class="button_primary"> Register </button>
-        <a href="/auth/login" class="button button_secondary margin-r-sm"> Login </a>
+            <button type="submit" class="btn-login"> Register </button>
+        </form>
+        <div class="login-footer">
+            Already have an account? <a href="/auth/login" class="button button_secondary margin-r-sm"> Login </a>
+        </div>
     </div>
-</form>
+</div>
