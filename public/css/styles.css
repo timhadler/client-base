@@ -773,6 +773,12 @@ td {
     color: var(--gray-700);
 }
 
+.reminders-reminderCount {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+}
+
 .status-badge {
     display: inline-block;
     padding: 6px 14px;
@@ -781,24 +787,19 @@ td {
     font-weight: 600;
 }
 
-.status-badge.overdue {
-    background: #fef2f2;
-    color: var(--accent-red);
-}
-
-.status-badge.today {
-    background: #fef3c7;
-    color: #d97706;
-}
-
-.status-badge.upcoming {
-    background: #f0fdfa;
-    color: var(--accent-teal);
-}
-
-.status-badge.completed {
+.status-badge.active {
     background: #d1fae5;
     color: #065f46;
+}
+
+.status-badge.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.inactive {
+    background: #fee2e2;
+    color: #991b1b;
 }
 
 .action-buttons {
@@ -1599,21 +1600,6 @@ td {
 .client-email {
     color: var(--gray-600);
     font-size: 14px;
-}
-
-.status-badge.active {
-    background: #d1fae5;
-    color: #065f46;
-}
-
-.status-badge.pending {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.status-badge.inactive {
-    background: #fee2e2;
-    color: #991b1b;
 }
 
 .priority-badge {
