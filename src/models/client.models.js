@@ -171,6 +171,17 @@ exports.editClient = async (id, client, user_id, conn = db) => {
     );
 };
 
+// Updates lastContact field for a client
+// Sets the lastContact field to the current date
+exports.updateClientLastContact = async function(id, user_id, conn = db) {
+    const sqlQuery = `
+        UPDATE clients 
+        SET lastContact = CURDATE()
+        WHERE public_id = ? AND user_id = ?
+    `;
+    await conn.query(sqlQuery, [id, user_id]);
+}
+
 // Updates the next contact field for a client
 // - Finds the closest reminder date for the client and sets nextFollowup to that date
 // - If no reminder exists, nextFollowup is set to NULL
@@ -191,7 +202,7 @@ exports.updateClientNextContact = async function(clientId, userId, conn = db) {
     await conn.query(sqlQuery, [userId, clientId, userId]);
 };
 
-// Updates the next contact field for a client with a given reminder id
+// Updates the nextFollowup field for a client with a given reminder id
 // - Finds the closest reminder date for the client associated with reminderId and sets nextFollowup to that date
 // - If no reminder exists, nextFollowup is set to NULL
 exports.updateClientNextContactFromReminder = async function(reminderId, userId, conn = db) {

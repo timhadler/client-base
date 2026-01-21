@@ -550,6 +550,7 @@ function saveInteractionResponse() {
         method: 'PUT',
         data: JSON.stringify({
             outcome: selectedOutcome,
+            clientId: clientId,
             reminderId: currentReminderId,
             notes: notes
         }),
