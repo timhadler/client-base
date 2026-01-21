@@ -122,7 +122,7 @@ router.post("/:id/edit", async (req, res) => {
             note: req.body.note, 
             userId: req.user.id
         })
-        //await reminderModels.editReminder(req.params.id, req.body.date, req.body.important, req.body.note, req.user.id);
+
         res.status(201).json({ message: "Update successful" });
     } catch (error) {
         console.log(error);
@@ -135,7 +135,11 @@ router.post("/:id/edit", async (req, res) => {
  ***********************************************************/
 router.delete("/:id", async (req, res) => {
     try {
-        await reminderModels.deleteReminder(req.params.id, req.user.id);
+        await reminderServices.deleteReminder({
+            id: req.params.id, 
+            userId: req.user.id
+        });
+
         res.status(204).json({message: "Delete successful"});
     } catch (error) {
         res.status(500).send(error.message);

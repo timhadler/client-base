@@ -32,6 +32,20 @@ exports.getReminderList = async function(filter, limit, offset, user_id, conn = 
     return rows;
 }
 
+// Fetches the public_id of the client associated with a given remidner id
+exports.getClientIdFromReminder = async function(reminder_id, user_id, conn = db) {
+    const sqlQuery = `
+        SELECT clients.public_id as id
+        FROM clients
+        INNER JOIN reminders ON reminders.client_id = clients.id
+        WHERE reminders.id = ?
+        AND reminders.user_id = ?
+    `;
+    const rows = await conn.query(sqlQuery, [reminder_id, user_id])
+    
+    return(rows[0].id)
+}
+
 /***********************************************************
  * Create
  ***********************************************************/

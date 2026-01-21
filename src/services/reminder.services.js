@@ -23,7 +23,7 @@ exports.loadReminderList = async function({ filter, limit, offset, userId }) {
 };
 
 // Adds a new reminder
-// Updates client's next contact field
+// Updates clients next contact field
 exports.addReminder = async function({ date, important, note, reminderCount, clientId, userId }) {
     await reminderModels.createReminder(date, important, note, reminderCount, clientId, userId);
     await clientModels.updateClientNextContact(clientId, userId);
@@ -34,4 +34,18 @@ exports.addReminder = async function({ date, important, note, reminderCount, cli
 exports.editReminder = async function({ date, important, note, id, userId }) {
     await reminderModels.editReminder(id, date, important, note, userId);
     await clientModels.updateClientNextContactFromReminder(id, userId);
+}
+
+// Deletes a reminder
+// Updates clients next contact field
+// Fetches public client id to update next contact
+exports.deleteReminder = async function({ id, userId }) {
+    // Get clients id from reminder
+    const clientId = await reminderModels.getClientIdFromReminder(id, userId);
+
+    // Delete reminder
+    await reminderModels.deleteReminder(id, userId);
+
+    // Update clients nect contact date
+    await clientModels.updateClientNextContact(clientId, userId);
 }
