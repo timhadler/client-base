@@ -1,4 +1,5 @@
-const reminderModel = require('../models/reminder.models');
+const reminderModels = require('../models/reminder.models');
+const clientModels = require('../models/client.models');
 // /const db = require('../database');
 
 // Returns paginated reminder data for a given filter
@@ -6,17 +7,32 @@ const reminderModel = require('../models/reminder.models');
 exports.loadReminderList = async function({ filter, limit, offset, userId }) {
     // Get counts
     const [overdueCount, todayCount, initialCount, followUpCount] = await Promise.all([
-        reminderModel.nReminderListCount('overdue', userId),
-        reminderModel.nReminderListCount('today', userId),
-        reminderModel.nReminderListCount('initial', userId),
-        reminderModel.nReminderListCount('followUp', userId),
+        reminderModels.nReminderListCount('overdue', userId),
+        reminderModels.nReminderListCount('today', userId),
+        reminderModels.nReminderListCount('initial', userId),
+        reminderModels.nReminderListCount('followUp', userId),
     ]);
 
     // Get reminder list
-    const reminders = await reminderModel.getReminderList(filter, limit, offset, userId);
+    const reminders = await reminderModels.getReminderList(filter, limit, offset, userId);
 
     return {
         listCounts: { overdue: overdueCount, today: todayCount, initial: initialCount, followUp: followUpCount },
         listData: reminders
     };
 };
+
+// Adds a new reminder
+// Updates client's next contact field
+exports.addReminder = async function({ date, important, note, reminderCount, clientId, userId }) {
+    await reminderModels.createReminder(date, important, note, reminderCount, clientId, userId);
+    await clientModels.updateClientNextContact(clientId, userId);
+}
+
+// Edits a reminder
+// Updates client's next contact field
+exports.editReminder = async function({ date, important, note, id, userId }) {
+    const clientId = null;  // getClientPublicId(reminderId)
+    await reminderModels.editReminder(id, date, important, note, userId);
+    //await clientModels.updateClientNextContact(clientId, userId);     // need to get clientId
+}

@@ -53,9 +53,15 @@ router.get("/load-reminder-list", async (req, res) => {
 // Create a new reminder
 router.post("/add", async (req, res) => {
     try {
-        const reminderCount = 1;
+        await reminderServices.addReminder({
+            date: req.body.date, 
+            important: false,   // Placeholder for now 
+            note: req.body.note, 
+            reminderCount: 1, 
+            clientId: req.body.clientId, 
+            userId: req.user.id
+        });
 
-        await reminderModels.createReminder(req.body.date, req.body.important, req.body.note, reminderCount, req.body.clientId, req.user.id);
         res.status(200).json({ message: "Add reminder successful" });
     } catch (error) {
         res.status(500).send(error.message);
@@ -109,9 +115,17 @@ router.post("/add", async (req, res) => {
 // Edit a reminder
 router.post("/:id/edit", async (req, res) => {
     try {
-        await reminderModels.editReminder(req.params.id, req.body.date, req.body.important, req.body.note, req.user.id);
+        await reminderServices.editReminder({
+            id: req.params.id, 
+            date: req.body.date, 
+            important: false,   // Placeholder for now
+            note: req.body.note, 
+            userId: req.user.id
+        })
+        //await reminderModels.editReminder(req.params.id, req.body.date, req.body.important, req.body.note, req.user.id);
         res.status(201).json({ message: "Update successful" });
     } catch (error) {
+        console.log(error);
         res.status(500).send(error.message);
     }
 });
