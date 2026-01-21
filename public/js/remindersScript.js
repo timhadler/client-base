@@ -77,7 +77,7 @@ function queryListData(filter, offset=0) {
         },
         error: function(xhr, status, error) {
             // Handle AJAX error
-            console.log('AJAX Error while fetching list with filter: ' +  filter +  ' reminder list:', error, xhr, status);
+            console.log('AJAX Error while fetching list with filter: ' +  filter +  ' reminder list:', xhr, status);
         }
   });
 }
@@ -459,7 +459,7 @@ function initInteractionModal() {
             },
             error: function(xhr, status, error) {
                 // Handle AJAX error
-                console.log('AJAX Error while creating interaction', error, xhr, status);
+                console.log('AJAX Error while creating interaction', xhr, status);
             }
         })
 
