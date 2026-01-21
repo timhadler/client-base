@@ -14,7 +14,11 @@ router.use("/:clientId/activity", interactionsRouter)
 // GET - Client Index
 router.get("/", async (req, res) => {
     try {
-        res.status(200).render("clients/clients", { bodyClass: "mainPage", showNavBar: true });
+        res.status(200).render("clients/clients", { 
+            bodyClass: "mainPage", 
+            username: req.user.username,
+            showNavBar: true 
+        });
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -25,6 +29,7 @@ router.get('/new', (req, res) => {
     try {
         res.render('clients/client-form', {
             bodyClass: "",
+            username: req.user.username,
             showNavBar: true,
             isEdit: false,
             client: {},
@@ -47,6 +52,7 @@ router.get('/:id/edit', async (req, res) => {
 
         res.render('clients/client-form', {
             bodyClass: "mainPage",
+            username: req.user.username,
             showNavBar: true,
             isEdit: true,
             client: client,
@@ -81,6 +87,7 @@ router.get("/:id", async (req, res) => {
     try {
         res.status(200).render("clients/client-details", { 
             bodyClass: "mainPage", 
+            username: req.user.username,
             clientId: req.params.id, 
             showNavBar: true 
         });
