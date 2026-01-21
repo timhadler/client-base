@@ -95,7 +95,7 @@ async function fetchClientDetails(id) {
             },
             error: function(xhr, status, error) {
                 // Handle AJAX error
-                console.log('AJAX Error while client details for client ' +  id, error, xhr, status);
+                console.log('AJAX Error while client details for client ' +  id, xhr, status);
                 reject(error);
             }
         });
@@ -115,7 +115,7 @@ async function fetchClientInteractions(id) {
             },
             error: function(xhr, status, error) {
                 // Handle AJAX error
-                console.log('AJAX Error while client interactions for client ' +  id, error, xhr, status);
+                console.log('AJAX Error while client interactions for client ' +  id, xhr, status);
                 reject(error);
             }
         });
