@@ -1,7 +1,10 @@
 # client-base
 https://clientbaseapp.com
 
-This is a branch from main to implement the Stripe checkout page and API
-![master](https://github.com/user-attachments/assets/ddd11001-da13-4f15-8b5b-20402e47c7e0)
-![Screenshot 2025-06-24 185149](https://github.com/user-attachments/assets/2adedeb4-b9b5-4532-81f8-54194283f1de)
-![master](https://github.com/user-attachments/assets/19f45c0f-9846-4878-a992-e394f1a8a860)
+This is a branch from addStripe to completely overhaul the app. 
+- Modern front end design
+- Smooth reminder/interaction tracking
+- Record interation and reminder history
+- Record interactions with contact method, and outcome
+
+<img width="1385" height="588" alt="Screenshot 2026-01-21 132937" src="https://github.com/user-attachments/assets/93338e32-1f18-4f5f-b685-106c16871a1e" />
