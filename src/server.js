@@ -17,7 +17,6 @@ const passport  = require("./passport-config");
 // Routes
 const reminderRouter = require("./routes/reminders");
 const clientRouter = require("./routes/clients");
-const overviewRouter = require("./routes/clientOverview");
 const authRouter = require("./routes/auth");
 const stripeRouter = require("./routes/stripe").router;
 const interactionsRouter  =require("./routes/interactions");
