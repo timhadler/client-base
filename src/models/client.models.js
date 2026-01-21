@@ -77,6 +77,7 @@ exports.getClientReminders = async function(id, user_id, conn = db) {
         JOIN clients on reminders.client_id = clients.id 
         WHERE clients.public_id = ? 
         AND clients.user_id = ?
+        ORDER BY rDate
     `;
     rows = await conn.query(sqlQuery, [id, user_id]);
 
