@@ -32,7 +32,6 @@ exports.addReminder = async function({ date, important, note, reminderCount, cli
 // Edits a reminder
 // Updates client's next contact field
 exports.editReminder = async function({ date, important, note, id, userId }) {
-    const clientId = null;  // getClientPublicId(reminderId)
     await reminderModels.editReminder(id, date, important, note, userId);
-    //await clientModels.updateClientNextContact(clientId, userId);     // need to get clientId
+    await clientModels.updateClientNextContactFromReminder(id, userId);
 }

@@ -190,6 +190,30 @@ exports.updateClientNextContact = async function(clientId, userId, conn = db) {
     await conn.query(sqlQuery, [userId, clientId, userId]);
 };
 
+// Updates the next contact field for a client with a given reminder id
+// - Finds the closest reminder date for the client associated with reminderId and sets nextFollowup to that date
+// - If no reminder exists, nextFollowup is set to NULL
+exports.updateClientNextContactFromReminder = async function(reminderId, userId, conn = db) {
+    const sqlQuery = `
+        UPDATE clients c
+        JOIN reminders r ON r.client_id = c.id
+        LEFT JOIN (
+            SELECT r2.client_id, MIN(r2.rDate) AS next_date
+            FROM reminders r2
+            WHERE r2.user_id = ?
+            AND r2.status = 'pending'
+            GROUP BY r2.client_id
+        ) rmin ON c.id = rmin.client_id
+        SET c.nextFollowup = rmin.next_date
+        WHERE r.id = ?
+        AND r.user_id = ?
+        AND c.user_id = ?;
+    `;
+
+    await conn.query(sqlQuery, [userId, reminderId, userId, userId]);
+}
+
+
 /***********************************************************
  * Delete
  ***********************************************************/
