@@ -46,16 +46,23 @@ router.post("/register", async (req, res) => {
 
         res.redirect("/auth/login");
     } catch (error) {
+        let message = "An unexpected error occured. Please try again later.";
+
         // If error was caused by a duplicate email
         if (error.message.includes("Duplicate entry")) {
-            res.render("login/register", {error:"User already exists"});
+            message = "User already exists";
+
+        // If error was caused by invalid email format
         } else if (error.message.includes("Invalid email address")) {
-            res.render("login/register", {error:"Invalid email address"});
+            message = "Invalid email address";
+
+        // If error was caused by invalid password
         } else if (error.message.includes("Password must") || error.message.includes("Error creating user")) {
-            res.render("login/register", {error:error.message});
+            message = error.message;
         } else {
-            res.status(400).render("login/register", {error:"An unexpected error occured. Please try again later."});
+            res.status(400);
         }
+        res.render("login/register", { bodyClass: "authPage", showNavBar: false, error: message });
     }
 });
 
