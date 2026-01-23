@@ -13,3 +13,39 @@ function setActiveNav() {
 
 // Run automatically when the DOM is ready
 document.addEventListener('DOMContentLoaded', setActiveNav);
+
+/***********************************************************
+ * User Menu functionality
+ ***********************************************************/
+function initUserMenu() {
+    const userMenuTrigger = document.getElementById('userMenuTrigger');
+    const userDropdown = document.getElementById('userDropdown');
+
+    if (!userMenuTrigger || !userDropdown) return;
+
+    // Toggle dropdown
+    userMenuTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        userMenuTrigger.classList.toggle('active');
+        userDropdown.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!userMenuTrigger.contains(e.target) && !userDropdown.contains(e.target)) {
+            userMenuTrigger.classList.remove('active');
+            userDropdown.classList.remove('show');
+        }
+    });
+
+    // Close dropdown when clicking menu items (except logout form)
+    document.querySelectorAll('.dropdown-item:not(.logout)').forEach(item => {
+        item.addEventListener('click', () => {
+            userMenuTrigger.classList.remove('active');
+            userDropdown.classList.remove('show');
+        });
+    });
+}
+
+// Initialize user menu when DOM is ready
+document.addEventListener('DOMContentLoaded', initUserMenu);
