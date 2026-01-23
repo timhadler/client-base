@@ -1,0 +1,59 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [ main, master, 2025-refactor ]
+  push:
+    branches: [ main, master, 2025-refactor ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Check for syntax errors
+      run: node --check src/server.js
+    
+    - name: Run security audit
+      run: npm audit --audit-level=high
+      continue-on-error: true
+    
+    - name: Run ESLint
+      run: npm run lint
+    
+    - name: Test server startup
+      run: |
+        timeout 10s npm start || code=$?
+        if [ $code -eq 124 ]; then
+          echo "Server started successfully (timed out as expected)"
+          exit 0
+        elif [ $code -eq 0 ]; then
+          echo "Server started and stopped successfully"
+          exit 0
+        else
+          echo "Server failed to start"
+          exit 1
+        fi
+      env:
+        NODE_ENV: test
+        DB_HOST: localhost
+        DB_USER: test_user
+        DB_PASS: test_password
+        SESSION_SECRET: test_secret_key_for_ci
+        PORT: 3000
