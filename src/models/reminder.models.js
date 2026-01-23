@@ -16,14 +16,20 @@ exports.nReminderListCount = async function(filter, user_id, conn = db) {
 // Fetches filtered reminder list
 exports.getReminderList = async function(filter, limit, offset, user_id, conn = db) {
     let condition = getReminderFilterCondition(filter);
-    if (filter !== 'completed') condition = "reminders.status != 'complete' AND " + condition;
+    let order = "ASC"
+
+    if (filter !== 'completed') { 
+       condition = "reminders.status != 'complete' AND " + condition;
+    } else {
+        order = "DESC";
+    }
 
     const sqlQuery = `
         SELECT clients.public_id as clientId, reminders.id, rDate as date, reminders.status, reminderCount, reminders.important, outcome, reminders.note, name, company 
         FROM reminders 
         INNER JOIN clients on reminders.client_id = clients.id 
         WHERE ${condition} AND clients.user_id = ? 
-        ORDER BY rDate 
+        ORDER BY rDate ${order}
         LIMIT ${limit}
         OFFSET ${offset}
     `;
