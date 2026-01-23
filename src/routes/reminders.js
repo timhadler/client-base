@@ -125,7 +125,6 @@ router.post("/:id/edit", async (req, res) => {
 
         res.status(201).json({ message: "Update successful" });
     } catch (error) {
-        console.log(error);
         res.status(500).send(error.message);
     }
 });
