@@ -67,7 +67,6 @@ async function fetchClientDetails(id) {
         $.ajax({
             url: `clients/${id}/data`,
             method: "GET",
-            data: { limit:10 },
             success: function(res) {
                 const data = typeof res === 'string' ? JSON.parse(res) : res;
                 resolve(data.client);
@@ -87,7 +86,7 @@ async function fetchClientInteractions(id) {
         $.ajax({
             url: `clients/${id}/activity`,
             method: "GET",
-            data: { limit:10 },
+            data: { limit:LIMIT },
             success: function(res) {
                 const data = typeof res === 'string' ? JSON.parse(res) : res;
                 resolve(data.interactions || []);
