@@ -38,6 +38,7 @@ exports.createClient = async function({userId, createReminder, reminderDate, cli
             const important = false;                // PLACEHOLDER
             const reminderCount = 1;
             await reminderModels.createReminder(reminderDate, important, note, reminderCount, publicIdObj.public_id, userId, connection);
+            await clientModels.updateClientNextContact(publicIdObj.public_id, userId, connection);
         }
         await connection.commit();
         return publicIdObj.public_id;

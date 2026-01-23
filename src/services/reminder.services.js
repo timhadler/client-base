@@ -1,6 +1,6 @@
 const reminderModels = require('../models/reminder.models');
 const clientModels = require('../models/client.models');
-// /const db = require('../database');
+const db = require('../database');
 
 // Returns paginated reminder data for a given filter
 // Returns row count for overdue, today, initial, and followUp filters
@@ -25,29 +25,65 @@ exports.loadReminderList = async function({ filter, limit, offset, userId }) {
 // Adds a new reminder
 // Updates clients next contact field
 exports.addReminder = async function({ date, important, note, reminderCount, clientId, userId }) {
-    await reminderModels.createReminder(date, important, note, reminderCount, clientId, userId);
-    await clientModels.updateClientNextContact(clientId, userId);
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        await reminderModels.createReminder(date, important, note, reminderCount, clientId, userId, connection);
+        await clientModels.updateClientNextContact(clientId, userId, connection);
+
+        await connection.commit();
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    } finally {
+        connection.release();
+    }
 }
 
 // Edits a reminder
 // Updates client's next contact field
 exports.editReminder = async function({ date, important, note, id, userId }) {
-    await reminderModels.editReminder(id, date, important, note, userId);
-    await clientModels.updateClientNextContactFromReminder(id, userId);
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        await reminderModels.editReminder(id, date, important, note, userId, connection);
+        await clientModels.updateClientNextContactFromReminder(id, userId, connection);
+
+        await connection.commit();
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    } finally {
+        connection.release();
+    }
 }
 
 // Deletes a reminder
 // Updates clients next contact field
 // Fetches public client id to update next contact
 exports.deleteReminder = async function({ id, userId }) {
-    // Get clients id from reminder
-    const clientId = await reminderModels.getClientIdFromReminder(id, userId);
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
 
-    // Delete reminder
-    await reminderModels.deleteReminder(id, userId);
+        // Get clients id from reminder
+        const clientId = await reminderModels.getClientIdFromReminder(id, userId, connection);
 
-    // Update clients nect contact date
-    if (clientId) {
-        await clientModels.updateClientNextContact(clientId, userId);
+        // Delete reminder
+        await reminderModels.deleteReminder(id, userId, connection);
+
+        // Update clients nect contact date
+        if (clientId) {
+            await clientModels.updateClientNextContact(clientId, userId, connection);
+        }
+
+        await connection.commit();
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    } finally {
+        connection.release();
     }
 }
