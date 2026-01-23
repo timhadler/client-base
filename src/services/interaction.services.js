@@ -1,5 +1,6 @@
 const interactionModel = require('../models/interaction.models');
 const reminderModel = require('../models/reminder.models');
+const clientModel = require('../models/client.models');
 const db = require('../database');
 
 // Record an interation
@@ -7,7 +8,6 @@ const db = require('../database');
 // Sets current reminder status to compelte
 // Optionally creates a new reminder
 // - incremenets reminder counter for new reminders, resets counter if moving to next cycle
-// NEED to update contact date fields in clients table, reminders (last contact etc)
 exports.recordInteraction = async function({
     clientId,
     userId,
@@ -36,15 +36,23 @@ exports.recordInteraction = async function({
         // Create interaction
         await interactionModel.createInteraction(clientId, reminderId, method, outcome, userId, connection);
 
+        // Set current reminder complete
+        await reminderModel.completeReminder(reminderId, outcome, userId, connection);
+
         // Optional: create new reminder
         if (createNewReminder || moveToNextCycle) {
             // Use false as placeholder for 'important'
             await reminderModel.createReminder(newReminderDate, false, newReminderNote, newReminderCount, clientId, userId, connection);
         }
 
-        // Set current reminder complete
-        await reminderModel.completeReminder(reminderId, outcome, userId, connection);
-        
+        // Update nextFollowUp client field
+        await clientModel.updateClientNextContact(clientId, userId, connection);
+
+        // Update client lastContact field
+        if (method !== 'ignored') {
+            await clientModel.updateClientLastContact(clientId, userId, connection);
+        }
+
         await connection.commit();
     } catch (error) {
         await connection.rollback();
@@ -55,7 +63,7 @@ exports.recordInteraction = async function({
 };
 
 // Updates interaction and reminder outcomes
-exports.respondInteraction = async function(id, reminderId, outcome, user_id) {
+exports.respondInteraction = async function(clientId, interactionId, reminderId, outcome, userId) {
     const connection = await db.getConnection();
     try {
         await connection.beginTransaction();
@@ -63,8 +71,11 @@ exports.respondInteraction = async function(id, reminderId, outcome, user_id) {
         // Ignore no_answer outcomes
         if (outcome !== 'no_answer') {
             // Update outcomes
-            await interactionModel.setInteractionOutcome(id, outcome, user_id, connection);
-            await reminderModel.setReminderOutcome(reminderId, outcome, user_id, connection);
+            await interactionModel.setInteractionOutcome(interactionId, outcome, userId, connection);
+            await reminderModel.setReminderOutcome(reminderId, outcome, userId, connection);
+
+            // Update client lastContact field
+            await clientModel.updateClientLastContact(clientId, userId, connection);
         }
         
         await connection.commit();

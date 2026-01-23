@@ -340,7 +340,6 @@ function loadReminders() {
             renderReminders(data.reminders || []);
         },
         error: function(xhr, status, error) {
-            console.error('Error loading reminders:', error);
             $('#remindersList').html(`
                 <div class="cd-empty-reminders">
                     <div class="cd-empty-icon">📅</div>
@@ -551,6 +550,7 @@ function saveInteractionResponse() {
         method: 'PUT',
         data: JSON.stringify({
             outcome: selectedOutcome,
+            clientId: clientId,
             reminderId: currentReminderId,
             notes: notes
         }),

@@ -77,6 +77,7 @@ exports.getClientReminders = async function(id, user_id, conn = db) {
         JOIN clients on reminders.client_id = clients.id 
         WHERE clients.public_id = ? 
         AND clients.user_id = ?
+        ORDER BY rDate
     `;
     rows = await conn.query(sqlQuery, [id, user_id]);
 
@@ -169,6 +170,61 @@ exports.editClient = async (id, client, user_id, conn = db) => {
         ]
     );
 };
+
+// Updates lastContact field for a client
+// Sets the lastContact field to the current date
+exports.updateClientLastContact = async function(id, user_id, conn = db) {
+    const sqlQuery = `
+        UPDATE clients 
+        SET lastContact = CURDATE()
+        WHERE public_id = ? AND user_id = ?
+    `;
+    await conn.query(sqlQuery, [id, user_id]);
+}
+
+// Updates the next contact field for a client
+// - Finds the closest reminder date for the client and sets nextFollowup to that date
+// - If no reminder exists, nextFollowup is set to NULL
+exports.updateClientNextContact = async function(clientId, userId, conn = db) {
+    const sqlQuery = `
+        UPDATE clients c
+        LEFT JOIN (
+            SELECT r.client_id, MIN(r.rDate) AS next_date
+            FROM reminders r
+            WHERE r.user_id = ?
+            AND r.status = 'pending'
+            GROUP BY r.client_id
+        ) rmin ON c.id = rmin.client_id
+        SET c.nextFollowup = rmin.next_date
+        WHERE c.public_id = ? AND c.user_id = ?;
+    `;
+
+    await conn.query(sqlQuery, [userId, clientId, userId]);
+};
+
+// Updates the nextFollowup field for a client with a given reminder id
+// - Finds the closest reminder date for the client associated with reminderId and sets nextFollowup to that date
+// - If no reminder exists, nextFollowup is set to NULL
+exports.updateClientNextContactFromReminder = async function(reminderId, userId, conn = db) {
+    const sqlQuery = `
+        UPDATE clients c
+        JOIN reminders r ON r.client_id = c.id
+        LEFT JOIN (
+            SELECT r2.client_id, MIN(r2.rDate) AS next_date
+            FROM reminders r2
+            WHERE r2.user_id = ?
+            AND r2.status = 'pending'
+            GROUP BY r2.client_id
+        ) rmin ON c.id = rmin.client_id
+        SET c.nextFollowup = rmin.next_date
+        WHERE r.id = ?
+        AND r.user_id = ?
+        AND c.user_id = ?;
+    `;
+
+    await conn.query(sqlQuery, [userId, reminderId, userId, userId]);
+}
+
 
 /***********************************************************
  * Delete

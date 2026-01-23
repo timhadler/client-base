@@ -306,7 +306,7 @@ function confirmDelete() {
             }, 2000);
         },
         error: function(xhr, status, error) {
-            console.error('Delete error:', error, xhr, status);
+            console.error('Delete error:', xhr, status);
             
             // Call the error callback if provided
             if (deleteModalData.errorCallback && typeof deleteModalData.errorCallback === 'function') {

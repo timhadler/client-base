@@ -6,6 +6,7 @@ const interactionModels = require("../models/interaction.models");
 /***********************************************************
  * GET
  ***********************************************************/
+// Gets the interaction list for a given client
 router.get("/", async (req, res) => {
     try {
         const clientId = req.params.clientId;
@@ -22,6 +23,7 @@ router.get("/", async (req, res) => {
 /***********************************************************
  * POST
  ***********************************************************/
+// Create a new interaction
 router.post("/", async (req, res) => {
     try {
         await interactionServices.recordInteraction({
@@ -50,13 +52,8 @@ router.post("/", async (req, res) => {
 // Called when user records a response from client to text or email
 router.put("/:interactionId", async (req, res) => {
     try {
-        const interactionId = req.params.interactionId;
-        const reminderId = req.body.reminderId;
-        const outcome = req.body.outcome;
-        const notes = req.body.notes;
-
         // Update interaction and reminder outcome
-        await interactionServices.respondInteraction(interactionId, reminderId, outcome, req.user.id);
+        await interactionServices.respondInteraction(req.body.clientId, req.params.interactionId, req.body.reminderId, req.body.outcome, req.user.id);
 
         res.status(204).json({ message: "Update successful" });
     } catch (error) {
