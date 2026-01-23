@@ -47,5 +47,7 @@ exports.deleteReminder = async function({ id, userId }) {
     await reminderModels.deleteReminder(id, userId);
 
     // Update clients nect contact date
-    await clientModels.updateClientNextContact(clientId, userId);
+    if (clientId) {
+        await clientModels.updateClientNextContact(clientId, userId);
+    }
 }

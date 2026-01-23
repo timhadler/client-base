@@ -43,7 +43,7 @@ exports.getClientIdFromReminder = async function(reminder_id, user_id, conn = db
     `;
     const rows = await conn.query(sqlQuery, [reminder_id, user_id])
     
-    return(rows[0].id)
+    return(rows[0].id ? rows[0].id : null);
 }
 
 /***********************************************************
