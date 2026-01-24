@@ -10,7 +10,8 @@ exports.loadReminderList = async function({ filter, reminderCount, limit, offset
         reminderModels.nReminderListCount('overdue', userId),
         reminderModels.nReminderListCount('today', userId),
         reminderModels.nReminderListCount('thisMonth', userId),
-        reminderModels.nReminderListCount('initial', userId),
+        'x', 
+        //reminderModels.nReminderListCount('initial', userId),
         reminderModels.nReminderListCount('followUp', userId),
     ]);
 
