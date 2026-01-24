@@ -64,7 +64,7 @@ exports.getClientDetails = async function(id, user_id, conn = db) {
         WHERE public_id = ? 
         AND user_id = ?
     `;
-    rows = await conn.query(sqlQuery, [id, user_id]);
+    const rows = await conn.query(sqlQuery, [id, user_id]);
 
     return rows[0];
 }
@@ -79,7 +79,7 @@ exports.getClientReminders = async function(id, user_id, conn = db) {
         AND clients.user_id = ?
         ORDER BY rDate
     `;
-    rows = await conn.query(sqlQuery, [id, user_id]);
+    const rows = await conn.query(sqlQuery, [id, user_id]);
 
     return rows;
 }

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const clientModels = require("../models/client.models");
 const clientServices = require("../services/client.services");
-xl = require("../modules/excel-JS");
+const xl = require("../modules/excel-JS");
 const multer = require('multer');                   // For uploading files
 const upload = multer({ dest: "uploads/" });
 
@@ -34,7 +34,7 @@ router.get('/new', (req, res) => {
             client: {},
             user: req.user
         });
-    } catch {
+    } catch (error) {
         res.status(500).send(error.message);
     }
 });
