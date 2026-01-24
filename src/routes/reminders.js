@@ -3,28 +3,18 @@ const router = express.Router();
 const reminderServices = require("../services/reminder.services");   
 const reminderModels = require("../models/reminder.models");   
 
-// Get the dates that define the current month for the pending list
-global.D1_P = getDate(0).slice(0, 8) + "01"
-global.D2_P = D1_P.slice(0, 8) + getLastDate(D1_P.slice(5, 7));
-global.MONTH_P = D1_P.slice(0, 7);
-global.ORDER_P = "rDate"
-// Follow up lists starts with getting all followUp entries from db
-global.D1_FU = "0001-01-01";
-global.D2_FU = "9999-12-31";
-global.MONTH_FU = MONTH_P;
-global.ORDER_FU = "status"
-// Awaiting list
-global.D1_A = "0001-01-01";
-global.D2_A = "9999-12-31";
-global.MONTH_A = MONTH_P;
-global.ORDER_A = "latest_created"
-
 /***********************************************************
  * Get
  ***********************************************************/
 router.get("/", async (req, res) => {
     try {
-        res.status(200).render("reminders/reminders", {bodyClass:"mainPage", username: req.user.username, showNavBar:true, month_p:MONTH_P, month_fu:MONTH_FU, month_a:MONTH_A, d1_p:D1_P, d2_p:D2_P, d1_fu:D1_FU, d2_fu:D2_FU, d1_a:D1_A, d2_a:D2_A});
+        res.status(200).render("reminders/reminders", {
+            bodyClass:"mainPage", 
+            username: 
+            req.user.username, 
+            showNavBar:true
+        });
+        
     } catch (error) {
         res.status(500).send(error.message);
     }
