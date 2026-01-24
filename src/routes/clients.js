@@ -8,10 +8,9 @@ const upload = multer({ dest: "uploads/" });
 
 // Nested route
 const interactionsRouter = require("./interactions");
-//const { createReminder } = require("../models/client-models");
 router.use("/:clientId/activity", interactionsRouter)
 
-// GET - Client Index
+//   - Client Index
 router.get("/", async (req, res) => {
     try {
         res.status(200).render("clients/clients", { 
@@ -167,90 +166,6 @@ router.post('/', async (req, res) => {
     }
 });
 
-
-/***********************************************************
- * Import clients
- ***********************************************************/
-// router.post("/import-clients", upload.single("importExcel"), async (req, res) => {
-//     try {
-//         // Verifying file
-//         const mandatoryExcelHeaders = ['Full name', 'Company', 'Email address', 'Mobile', "Phone", 'Street', 'Suburb', 'City', 'Postcode', 'Reminder date'];
-
-//         if (req.file == null) {
-//             res.redirect("/clients/import-clients");
-//         } else {
-//             let n = 0;              // number of succesful client uploads
-//             let fails = [];         // List of clients that resulted in error and the error message, list of objects
-//             let duplicates = [];    // List of clients that failed due to a duplicate name error
-//             let noReminderDate = [];
-//             let incorrectReminders = [];
-//             let clientObjs = [];
-
-//             try {
-//                 clientObjs = xl.readData(req.file.originalname, (req.file.path), mandatoryExcelHeaders);
-//             } catch (error) {
-//                 let message = error.message;
-//                 if (message.includes("no such file or directory")) {
-//                     message = "No such file or directory.";
-//                 }
-//                 res.render("clients/importClients", {error:message});
-//                 return;
-//             }
-
-//             let clientNumber = clientObjs.length;
-//             for (let i = 0; i < clientNumber; i++) {
-//                 const name = clientObjs[i]["Full name"];
-//                 let company = clientObjs[i].Company;
-//                 const rDate = clientObjs[i]["Reminder date"];
-//                 let street = clientObjs[i].Street;
-//                 let suburb = clientObjs[i].Suburb;
-//                 let city = clientObjs[i].City;
-//                 let postcode = clientObjs[i].Postcode;
-//                 let email = clientObjs[i]["Email address"];
-//                 let mobile = clientObjs[i].Mobile;
-//                 let home = clientObjs[i].Phone;
-
-//                 // Handle empty fields
-//                 if (name.trim().length == 0) { fails.push({name:("Client (index: " + (i + 2) + ") failed upload"), message:"No name provided"}); continue;};   // If no name was provided, push to fails list
-//                 if (home.length == 0) {home=null};
-//                 if (mobile.length == 0) {mobile=null};
-//                 if (city.length == 0) {city=null};
-//                 if (email.length == 0) {email=null};
-//                 if (postcode.length == 0) {postcode=null};
-//                 if (suburb.length == 0) {suburb=null};
-//                 if (street.length == 0) {street=null};
-//                 if (company.length == 0) {company=null};
-//                 //console.log(name, company, rDate, street, suburb, city, postcode, mobile, home)
-
-//                 try {
-//                     const client_id = await clients.createClient(name, company, home, mobile, email, street, suburb, city, postcode);
-//                     n++;
-//                     // Check for duplicates
-//                     const dups = await clients.getClientsByName(name);
-//                     if (dups.length > 1 && !duplicates.includes(name)) {
-//                         duplicates.push(name);
-//                     }
-//                     await clients.createReminder(convertDate(rDate), "pending", client_id);
-//                 } catch (error) {
-//                     if (error.message.includes("Incorrect date value") || error.message.includes("Column 'rDate' cannot be null")) {
-//                         noReminderDate.push(name);
-//                         continue;
-//                     } else if (error.message.includes("date.slice is not a function") || error.message.includes("date.split is not a function")) {
-//                         incorrectReminders.push(name);
-//                         continue;
-//                     } else {
-//                         fails.push({name:name, message:error.message});
-//                         continue;
-//                     }
-//                 }
-//             }
-//             res.status(200).render("clients/importClients", {successes:n, total:clientNumber, fails:fails, duplicates:duplicates, noReminderDate:noReminderDate, incorrectReminders:incorrectReminders});
-//         }
-//     } catch (error) {
-//         res.status(500).send(error.message);
-//     }
-// });
-
 /***********************************************************
  * Edit
  ***********************************************************/
@@ -293,22 +208,6 @@ router.put('/:id', async (req, res) => {
         res.redirect('/clients');
     }
 });
-
-// POST edit reminder (popup)
-// router.post("/edit-reminder", async (req, res) => {
-//     try {
-//         const formData = req.body.data;
-//         const params = new URLSearchParams(formData);
-//         const rDate = params.get('rDate');
-//         const status = params.get('status');
-//         const id = req.body.id;
-
-//         //await clients.editClientReminder(id, rDate, status)
-//         res.status(201).end();
-//     } catch (error) {
-//         res.status(500).send(error.message);
-//     }
-// });
 
 /***********************************************************
  * Delete

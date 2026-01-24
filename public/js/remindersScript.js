@@ -16,27 +16,6 @@ $(document).ready(function() {
         queryListData(currentTab);
     });
 
-    // REVISIT
-    // Mark as complete
-    // document.querySelectorAll('.btn-icon.complete').forEach(btn => {
-    //     btn.addEventListener('click', function() {
-    //         const row = this.closest('tr');
-    //         const badge = row.querySelector('.status-badge');
-    //         badge.className = 'status-badge completed';
-    //         badge.textContent = 'Completed';
-    //         row.dataset.status = 'completed';
-    //     });
-    // });
-
-    // Delete confirmation
-    // document.querySelectorAll('.btn-icon.delete').forEach(btn => {
-    //     btn.addEventListener('click', function() {
-    //         if (confirm('Are you sure you want to delete this reminder?')) {
-    //             this.closest('tr').remove();
-    //         }
-    //     });
-    // });
-
     // Edit reminder form submit
     $('#reminderForm').on('submit', function(e) {
         e.preventDefault();
@@ -244,7 +223,6 @@ async function openClientPanel(clientId) {
     currentClientData = {id:clientId, email:client.email, phone:client.phone};
 
     // Update panel content
-    //const client = data.client;
     document.getElementById('panelClientName').textContent = client.name;
     document.getElementById('panelClientCompany').textContent = client.company;
     document.getElementById('panelEmail').textContent = client.email;

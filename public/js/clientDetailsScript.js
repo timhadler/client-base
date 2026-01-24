@@ -25,7 +25,6 @@ $(document).ready(function() {
 
     // Edit reminder form submit
     $('#reminderForm').on('submit', function(e) {
-        //console.log($('#reminderModal').attr('data-mode'))
         const mode = $('#reminderModal').attr('data-mode');
         e.preventDefault();
 

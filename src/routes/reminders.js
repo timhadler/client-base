@@ -68,47 +68,6 @@ router.post("/add", async (req, res) => {
     }
 });
 
-// POST set multiple client statuses using checkboxes
-// router.post("/set-reminder-status-multi", async (req, res) => {
-//     try {
-//         var rIds = req.body.reminders;
-//         var ids = req.body.ids;
-//         const formData = req.body.formData;     // formData in form of query string from AJAX request
-//         const params = new URLSearchParams(formData);
-//         const note = params.get('note');
-//         const action = params.get('action');
-//         const outcome = params.get('outcome');
-//         let rDate = params.get('rDate');
-
-//         if (typeof rIds == "string") {       // If only one client has been selected, rIds will be a string, list of rIds if more than one
-//             rIds = [rIds];
-//         } else if (typeof rIds == "undefined") {
-//             rIds = [];
-//         }
-//         if (typeof ids == "string") {
-//             ids = [ids];
-//         } else if (typeof ids == "undefined") {
-//             ids = [];
-//         }
-
-//         for (let i = 0; i < rIds.length; i++) {
-//             if (!params.get("noReminder") && rDate.length > 0) {
-//                 if (action == "ignore" || outcome == "booked" || outcome == "declined") {
-//                     // Create new reminder
-//                     await clients.createReminder(rDate, "pending", ids[i]);
-//                 } else if (outcome == "followUp") {
-//                     // Update reminder
-//                     await clients.editReminder(rIds[i], rDate);
-//                 }
-//             }
-//             //wait setReminderStatus(action, outcome, note, ids[i], rIds[i]);
-//         }
-//         res.status(201).json({ message: "Update successful" });
-//     } catch (error) {
-//         res.status(500).send(error.message);
-//     }
-// });
-
 /***********************************************************
  * Put
  ***********************************************************/
@@ -144,28 +103,6 @@ router.delete("/:id", async (req, res) => {
         res.status(500).send(error.message);
     }
 });
-
-// DELETE multi clients
-// router.delete("/multi-delete", async (req, res) => {
-//     try {
-//         var ids = req.body.ids;
-
-//         // If only one selected, ids will be a string, put in list for the for loop
-//         if (typeof ids == "string") {
-//             ids = [ids];
-//         } else if (typeof ids == "undefined") {
-//             ids = [];
-//         }
-
-//         for (let i = 0; i < ids.length; i++) {
-//             await clients.deleteClient(ids[i]);
-//         }
-
-//         res.status(200).end();
-//     } catch (error) {
-//         res.status(404).send(error.message);
-//     }
-// });
 
 /***********************************************
 Helper Functions

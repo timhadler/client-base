@@ -66,12 +66,6 @@ router.post("/register", async (req, res) => {
     }
 });
 
-// router.post("/login", passport.authenticate("local", {
-//     successRedirect: "/reminders",
-//     failureRedirect: "/auth/login",
-//     failureFlash: true
-// }));
-
 router.post("/login", (req, res, next) => {
   // If "Remember me" is checked, make session last longer (e.g. 30 days)
   if (req.body.remember) {
