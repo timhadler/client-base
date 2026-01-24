@@ -6,24 +6,28 @@ let currentReminderId = 0;      // For interaction modal
 let currentReminderCount = 0;
 let currentTab = "all";         // For relaoding after completing a reminder
 
+let selectedReminderCount = 'all';
+const MAX_REMINDER_COUNT = 10;
+
 $(document).ready(function() {
-    $(".tab").on('click', function() { 
+    $(".tab:not(.filter-dropdown-trigger)").on('click', function() {
         $('.tab').removeClass('active');
         this.classList.add('active');
 
-        // Load reminder table
         currentTab = $(this).data("filter");
+        
+        resetCountFilter();
+        
         queryListData(currentTab);
     });
 
-    // Edit reminder form submit
     $('#reminderForm').on('submit', function(e) {
         e.preventDefault();
         saveReminderEdit(function(res) {
             $('#reminderModal').removeClass('show');
-            queryListData("all"); // reload the list on this page
+            queryListData(currentTab);
         }, function(err) {
-            console.error('Error updating reminder:', err);
+            console.error('Error updating reminder');
             alert('Failed to save reminder');
         });
     });
@@ -31,12 +35,12 @@ $(document).ready(function() {
     // Initialize features
     initClientPanel();
     initInteractionModal();
+    initCountFilterDropdown();
+    populateCountFilterOptions();
 
-    // In utils.js
     initEditReminderModal('#tableBody');
     initDeleteModal();
 
-    // Retrieve the initial list
     queryListData(currentTab);
 });
 
@@ -49,7 +53,12 @@ function queryListData(filter, offset=0) {
     $.ajax({
         url: "reminders/load-reminder-list",
         method: "GET",
-        data: { filter:filter, limit:LIMIT, offset:offset },
+        data: { 
+            filter: filter, 
+            limit: LIMIT, 
+            offset: offset,
+            reminderCount: selectedReminderCount
+        },
         success: function(res) {
             const data = JSON.parse(res);
             loadList(data.listCounts, data.listData, offset);
@@ -601,4 +610,100 @@ function initInteractionModal() {
         resetReminderCheckboxes();
         $('#submitInteraction').prop('disabled', true);
     }
+}
+
+/*****************************************************************
+ * Reminder Count Filter Dropdown
+ ****************************************************************/
+function initCountFilterDropdown() {
+    const $trigger = $('#countFilterTrigger');
+    const $menu = $('#countFilterMenu');
+    const $overlay = $('#dropdownOverlay');
+    
+    $trigger.on('click', function(e) {
+        e.stopPropagation();
+        const isOpen = $trigger.hasClass('open');
+        
+        if (isOpen) {
+            closeCountDropdown();
+        } else {
+            openCountDropdown();
+        }
+    });
+    
+    $overlay.on('click', closeCountDropdown);
+    
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && $trigger.hasClass('open')) {
+            closeCountDropdown();
+        }
+    });
+    
+    $menu.on('click', '.filter-dropdown-item', function(e) {
+        e.stopPropagation();
+        const count = $(this).data('count');
+        
+        $('.filter-dropdown-item').removeClass('selected');
+        $(this).addClass('selected');
+        
+        selectedReminderCount = count;
+        
+        if (count === 'all') {
+            $('#countFilterLabel').text('Attempt #');
+            $trigger.removeClass('active');
+        } else {
+            $('#countFilterLabel').text(`Attempt #${count}`);
+            $trigger.addClass('active');
+        }
+        
+        closeCountDropdown();
+        
+        queryListData(currentTab);
+    });
+    
+    function openCountDropdown() {
+        $trigger.addClass('open');
+        $menu.addClass('show');
+        $overlay.addClass('show');
+    }
+    
+    function closeCountDropdown() {
+        $trigger.removeClass('open');
+        $menu.removeClass('show');
+        $overlay.removeClass('show');
+    }
+}
+
+function resetCountFilter() {
+    selectedReminderCount = 'all';
+    $('#countFilterLabel').text('Attempt #');
+    $('#countFilterTrigger').removeClass('active');
+    $('.filter-dropdown-item').removeClass('selected');
+    $('.filter-dropdown-item[data-count="all"]').addClass('selected');
+    closeCountDropdown();
+}
+
+function closeCountDropdown() {
+    $('#countFilterTrigger').removeClass('open');
+    $('#countFilterMenu').removeClass('show');
+    $('#dropdownOverlay').removeClass('show');
+}
+
+function populateCountFilterOptions() {
+    const $container = $('#countOptionsContainer');
+    $container.empty();
+    
+    // Simply create options from 1 to MAX_REMINDER_COUNT
+    for (let i = 1; i <= MAX_REMINDER_COUNT; i++) {
+        const $item = $(`
+            <button class="filter-dropdown-item" data-count="${i}">
+                <span class="filter-check">✓</span>
+                Attempt #${i}
+            </button>
+        `);
+        
+        $container.append($item);
+    }
+    
+    $('.filter-dropdown-item[data-count="all"]').addClass('selected');
 }

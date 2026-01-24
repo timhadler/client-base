@@ -14,9 +14,16 @@ exports.nReminderListCount = async function(filter, user_id, conn = db) {
 }
 
 // Fetches filtered reminder list
-exports.getReminderList = async function(filter, limit, offset, user_id, conn = db) {
+exports.getReminderList = async function(filter, limit, offset, user_id, reminderCount = 'all', conn = db) {
     let condition = getReminderFilterCondition(filter);
-    if (filter !== 'completed') condition = "reminders.status != 'complete' AND " + condition;
+
+    if (filter !== 'completed') { 
+       condition = "reminders.status != 'complete' AND " + condition;
+    }
+    
+    if (reminderCount !== 'all') {
+        condition += ` AND reminders.reminderCount = ${parseInt(reminderCount)}`;
+    }
 
     const sqlQuery = `
         SELECT clients.public_id as clientId, reminders.id, rDate as date, reminders.status, reminderCount, reminders.important, outcome, reminders.note, name, company 
