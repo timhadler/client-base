@@ -38,6 +38,25 @@ exports.getReminderList = async function(filter, limit, offset, user_id, conn = 
     return rows;
 }
 
+// Fetches the total count of reminders within a given filter
+exports.getReminderCount = async function(filter, user_id, conn = db) {
+    let condition = getReminderFilterCondition(filter);
+    
+    if (filter !== 'completed') { 
+       condition = "reminders.status != 'complete' AND " + condition;
+    }
+
+    const sqlQuery = `
+        SELECT COUNT(*) as total
+        FROM reminders 
+        INNER JOIN clients on reminders.client_id = clients.id 
+        WHERE ${condition} AND clients.user_id = ?
+    `;
+    
+    const result = await conn.query(sqlQuery, [user_id]);
+    return result[0].total;
+}
+
 // Fetches the public_id of the client associated with a given remidner id
 exports.getClientIdFromReminder = async function(reminder_id, user_id, conn = db) {
     const sqlQuery = `
