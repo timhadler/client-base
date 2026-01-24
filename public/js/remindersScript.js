@@ -117,16 +117,19 @@ function loadList(counts, reminders, offset=0) {
     // Add list counts if > 0
     const overdueCount = counts.overdue;
     const todayCount = counts.today;
+    const thisMonthCount = counts.thisMonth;
     const initialCount = counts.initial;
     const followUpCount = counts.followUp;
 
     const overdueCountText = overdueCount ? '(' + overdueCount + ')' : '';
     const todayCountText = todayCount ? '(' + todayCount + ')' : '';
+    const thisMonthCountText = thisMonthCount ? '(' + thisMonthCount + ')' : '';
     const initialCountText = initialCount ? '(' + initialCount + ')' : '';
     const followUpCountText = followUpCount ? '(' + followUpCount + ')' : '';
 
     $("#overdueCount").text(overdueCountText);
     $("#todayCount").text(todayCountText);
+    $("#thisMonthCount").text(thisMonthCountText);
     $("#initialCount").text(initialCountText);
     $("#followUpCount").text(followUpCountText);
 

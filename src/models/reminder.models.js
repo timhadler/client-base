@@ -104,6 +104,7 @@ function getReminderFilterCondition(filter) {
     switch (filter) {
         case 'overdue': return "DATE(rDate) < CURDATE()";
         case 'today': return "DATE(rDate) = CURDATE()";
+        case 'thisMonth' : return "rDate >= DATE_FORMAT(CURDATE(), '%Y-%m-01') AND rDate <  DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')";
         case 'initial': return "reminderCount = 1";
         case 'followUp': return "reminderCount > 1";
         case 'completed': return "reminders.status = 'complete'";
