@@ -1,4 +1,4 @@
-xlsx = require("xlsx");
+const xlsx = require("xlsx");
 
 // Reads data from a file in excel (table data), only reads first excel sheet
 // Returns list of objects representing rows in excel table
