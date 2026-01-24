@@ -145,7 +145,7 @@ function loadList(counts, reminders, offset=0) {
             $row.find('.date-day').text(day);           //23
             $row.find('.date-month').text(month);       //Oct
             $row.find('.date-full').text(fullDate);     //Oct 23, 2025
-            $row.find('.reminders-reminderCount').text(reminder.reminderCount);
+            $row.find('.reminder-count-cell').text(reminder.reminderCount);
 
             $row.find('.client-name').text(reminder.name);
             $row.find('.client-company').text(reminder.company);

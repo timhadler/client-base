@@ -773,10 +773,9 @@ td {
     color: var(--gray-700);
 }
 
-.reminders-reminderCount {
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 600;
+th.reminder-count-header,
+.reminder-count-cell {
+    text-align: center;
 }
 
 .status-badge {
