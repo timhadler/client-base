@@ -70,7 +70,9 @@ exports.getClientDetails = async function(id, user_id, conn = db) {
 }
 
 // Fetches all reminders associated with a client id
-exports.getClientReminders = async function(id, user_id, conn = db) {
+exports.getClientReminders = async function(id, user_id, limit, conn = db) {
+    limit = limit ? limit : 10;
+
     const sqlQuery = `
         SELECT reminders.id, rDate as date, reminders.status, note, outcome, important, reminderCount 
         FROM reminders 
@@ -78,9 +80,25 @@ exports.getClientReminders = async function(id, user_id, conn = db) {
         WHERE clients.public_id = ? 
         AND clients.user_id = ?
         ORDER BY rDate
+        LIMIT ?
     `;
-    const rows = await conn.query(sqlQuery, [id, user_id]);
+    const rows = await conn.query(sqlQuery, [id, user_id, limit]);
+    return rows;
+}
 
+// Fetches all reminders with statius 'pending' for a given client id
+exports.getClientActiveReminders = async function(id, user_id, limit, conn = db) {
+       const sqlQuery = `
+       SELECT reminders.id, rDate as date, reminders.status, note, outcome, important, reminderCount 
+       FROM reminders 
+       JOIN clients on reminders.client_id = clients.id 
+       WHERE clients.public_id = ? 
+       AND clients.user_id = ?
+       AND reminders.status = 'pending'
+       ORDER BY rDate
+       LIMIT ?
+    `;
+    const rows = await conn.query(sqlQuery, [id, user_id, limit]);
     return rows;
 }
 

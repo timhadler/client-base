@@ -110,10 +110,16 @@ router.get("/:id/data", async (req, res) => {
 // GET - Retrieve client reminder data
 router.get("/:id/reminders", async (req, res) => {
     try {
-        const reminders = await clientServices.getActiveReminders(req.params.id, req.user.id);
+        const reminders = await clientServices.getActiveReminders
+        (
+            req.params.id, 
+            req.user.id,
+            Number(req.query.limit)
+        );
 
         res.status(200).json({ reminders:reminders });
     } catch (error) {
+        console.log(error);
         res.status(500).send(error.message);
     }
 });
