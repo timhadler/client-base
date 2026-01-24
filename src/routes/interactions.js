@@ -10,9 +10,9 @@ const interactionModels = require("../models/interaction.models");
 router.get("/", async (req, res) => {
     try {
         const clientId = req.params.clientId;
-        const {limit} = req.body;
+        const limit = Number(req.query.limit);
 
-        let interactions = await interactionModels.getClientInteractions(clientId, req.user.id);
+        let interactions = await interactionModels.getClientInteractions(clientId, req.user.id, limit);
 
         res.status(200).json({ interactions:interactions });
     } catch (error) {

@@ -4,7 +4,9 @@ const db = require('../database');
  * Read
  ***********************************************************/
 // Fetchs all interactions associated with a client id
-exports.getClientInteractions = async function (id, user_id, conn = db) {
+exports.getClientInteractions = async function (id, user_id, limit, conn = db) {
+    limit = limit ? limit : 10;
+
     const sqlQuery = `
         SELECT i.id, i.reminder_id as reminderId, method, outcome, i.createdAt as date 
         FROM interactions i 
@@ -14,8 +16,9 @@ exports.getClientInteractions = async function (id, user_id, conn = db) {
         AND c.user_id = ? 
         ORDER BY i.createdAt 
         DESC
+        LIMIT ?
     `;
-    const rows = await conn.query(sqlQuery, [id, user_id]);
+    const rows = await conn.query(sqlQuery, [id, user_id, limit]);
 
     return rows;
 }

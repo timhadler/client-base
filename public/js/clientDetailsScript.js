@@ -574,7 +574,7 @@ function loadActivityHistory() {
         url: `/clients/${clientId}/activity`,
         method: 'GET',
         data: {
-            limit: 10
+            limit: 8
         },
         success: function(response) {
             const data = typeof response === 'string' ? JSON.parse(response) : response;

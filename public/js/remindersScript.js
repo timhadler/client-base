@@ -6,7 +6,8 @@ let currentReminderId = 0;      // For interaction modal
 let currentReminderCount = 0;
 let currentTab = "all";         // For default tab
 
-const LIMIT = 10;
+const REMINDERS_LIST_LIMIT = 10;    // Limits the number of reminders retrieved per request
+
 let currentOffset = 0;
 let totalReminders = 0;
 let hasMoreReminders = false;
@@ -56,7 +57,7 @@ function queryListData(filter, offset=0) {
     $.ajax({
         url: "reminders/load-reminder-list",
         method: "GET",
-        data: { filter:filter, limit:LIMIT, offset:offset },
+        data: { filter:filter, limit:REMINDERS_LIST_LIMIT, offset:offset },
         success: function(res) {
             const data = JSON.parse(res);
 
@@ -101,7 +102,7 @@ async function fetchClientInteractions(id) {
         $.ajax({
             url: `clients/${id}/activity`,
             method: "GET",
-            data: { limit:LIMIT },
+            data: { limit: 8 },
             success: function(res) {
                 const data = typeof res === 'string' ? JSON.parse(res) : res;
                 resolve(data.interactions || []);
@@ -218,12 +219,12 @@ function initLoadMoreButton() {
         $btn.prop('disabled', true).text('Loading...');
         
         // Increment offset and load more
-        currentOffset += LIMIT;
+        currentOffset += REMINDERS_LIST_LIMIT;
         
         $.ajax({
             url: "reminders/load-reminder-list",
             method: "GET",
-            data: { filter: currentTab, limit: LIMIT, offset: currentOffset },
+            data: { filter: currentTab, limit: REMINDERS_LIST_LIMIT, offset: currentOffset },
             success: function(res) {
                 const data = JSON.parse(res);
                 loadList(data.listCounts, data.listData, currentOffset);
