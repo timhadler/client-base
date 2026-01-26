@@ -28,6 +28,7 @@ router.get("/load-reminder-list", async (req, res) => {
     try {
         const data = await reminderServices.loadReminderList({
             filter: req.query.filter,
+            reminderCount: req.query.reminderCount,
             userId: req.user.id, 
             limit: req.query.limit, 
             offset: req.query.offset
