@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const passport  = require("../passport-config");
 const bcrypt = require("bcrypt");
-const users = require("../models/user-models");
 
+const { passport }  = require("../passport-config");
+const users = require("../models/user-models");
 const stripeModule = require("./stripe");
 
 // GET
