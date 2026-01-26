@@ -88,7 +88,6 @@ function loadClients() {
             renderPagination();
         },
         error: function(xhr, status, error) {
-            console.error('Error loading clients:', error);
             $('#clientsTableBody').html(`
                 <tr>
                     <td colspan="7" style="text-align: center; padding: 40px; color: var(--accent-red);">
@@ -245,8 +244,7 @@ function handleDeleteClient($button) {
         },
         // Error callback - handle deletion error
         function(xhr, status, error) {
-            console.error('Failed to delete reminder:', error);
-            alert('Failed to delete reminder. Please try again.');
+            alert(xhr.responseJSON?.error ?? 'Error');
         }
     );
 }

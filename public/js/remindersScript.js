@@ -23,8 +23,7 @@ $(document).ready(function() {
             $('#reminderModal').removeClass('show');
             queryListData("all"); // reload the list on this page
         }, function(err) {
-            console.error('Error updating reminder:', err);
-            alert('Failed to save reminder');
+            alert(err.responseJSON.error);
         });
     });
 
@@ -56,7 +55,7 @@ function queryListData(filter, offset=0) {
         },
         error: function(xhr, status, error) {
             // Handle AJAX error
-            console.log('AJAX Error while fetching list with filter: ' +  filter +  ' reminder list:', xhr, status);
+            alert(xhr.responseJSON?.error ?? 'Failed fetching list');
         }
   });
 }
@@ -74,8 +73,7 @@ async function fetchClientDetails(id) {
             },
             error: function(xhr, status, error) {
                 // Handle AJAX error
-                console.log('AJAX Error while client details for client ' +  id, xhr, status);
-                reject(error);
+                reject(xhr.responseJSON?.error ?? 'Error');
             }
         });
     });
@@ -94,8 +92,7 @@ async function fetchClientInteractions(id) {
             },
             error: function(xhr, status, error) {
                 // Handle AJAX error
-                console.log('AJAX Error while client interactions for client ' +  id, xhr, status);
-                reject(error);
+                reject(xhr.responseJSON?.error ?? 'Error');
             }
         });
     })
@@ -176,13 +173,11 @@ function loadList(counts, reminders, offset=0) {
                     clientName,
                     // Success callback - reload reminders list
                     function(response) {
-                        console.log('Reminder deleted successfully');
                         queryListData(currentTab);
                     },
                     // Error callback - handle deletion error
                     function(xhr, status, error) {
-                        console.error('Failed to delete reminder:', error);
-                        alert('Failed to delete reminder. Please try again.');
+                        alert(xhr.responseJSON?.error ?? 'Failed to delete reminder. Please try again.');
                     }
                 );
             });
@@ -216,8 +211,16 @@ function initClientPanel() {
 // Opens client panel when reminder is clicked
 // Lads large client details on panel open
 async function openClientPanel(clientId) {
-    const client = await fetchClientDetails(clientId);
-    const interactions = await fetchClientInteractions(clientId);
+    let client;
+    let interactions;
+
+    try {
+        client = await fetchClientDetails(clientId);
+        interactions = await fetchClientInteractions(clientId);
+    } catch (errorMsg) {
+        alert(errorMsg);
+        return;
+    }
 
     // Update data for email/number copy feature
     currentClientData = {id:clientId, email:client.email, phone:client.phone};
@@ -437,7 +440,7 @@ function initInteractionModal() {
             },
             error: function(xhr, status, error) {
                 // Handle AJAX error
-                console.log('AJAX Error while creating interaction', xhr, status);
+                alert('Record interaction failed');
             }
         })
 

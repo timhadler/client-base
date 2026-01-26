@@ -305,15 +305,13 @@ function confirmDelete() {
                 }
             }, 2000);
         },
-        error: function(xhr, status, error) {
-            console.error('Delete error:', xhr, status);
-            
+        error: function(xhr, status, error) {    
             // Call the error callback if provided
             if (deleteModalData.errorCallback && typeof deleteModalData.errorCallback === 'function') {
                 deleteModalData.errorCallback(xhr, status, error);
             } else {
                 // Default error handling
-                alert('Failed to delete. Please try again.');
+                alert(xhr.responseJSON?.error ?? 'Failed to delete reminder');
             }
             
             // Reset button state
