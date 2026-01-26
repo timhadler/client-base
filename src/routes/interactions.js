@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });   // MergeParams allows for parameters like id to be passed from nested routes
+
 const interactionServices = require("../services/interaction.services");
 const interactionModels = require("../models/interaction.models");
+const { logError } = require('../config/logger');
 
 /***********************************************************
  * GET
@@ -16,7 +18,10 @@ router.get("/", async (req, res) => {
 
         res.status(200).json({ interactions:interactions });
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to fetch interactions', error, req, {
+            clientId: req.params.clientId
+        });
+        res.status(500).end();
     }
 });
 
@@ -39,9 +44,13 @@ router.post("/", async (req, res) => {
             newReminderNote: req.body.newReminderNote,
         });
 
-        res.status(201).json({ message: "Creation successful" });
+        res.status(201).end();
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to create an interaction', error, req, {
+            clientId: req.body.clientId, 
+            reminderId: req.body.reminderId
+        });
+        res.status(500).end();
     }
 });
 
@@ -55,9 +64,14 @@ router.put("/:interactionId", async (req, res) => {
         // Update interaction and reminder outcome
         await interactionServices.respondInteraction(req.body.clientId, req.params.interactionId, req.body.reminderId, req.body.outcome, req.user.id);
 
-        res.status(204).json({ message: "Update successful" });
+        res.end();
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to edit interaciton', error, req, {
+            clientId: req.body.clientId, 
+            interactionId: req.params.interactionId, 
+            reminderId: req.body.reminderId
+        });
+        res.status(500).end();
     }
 });
 

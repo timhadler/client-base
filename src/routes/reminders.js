@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
+
 const reminderServices = require("../services/reminder.services");   
-const reminderModels = require("../models/reminder.models");   
+const reminderModels = require("../models/reminder.models");
+const { logError } = require('../config/logger');   
 
 /***********************************************************
  * Get
@@ -10,13 +12,13 @@ router.get("/", async (req, res) => {
     try {
         res.status(200).render("reminders/reminders", {
             bodyClass:"mainPage", 
-            username: 
-            req.user.username, 
+            username: req.user.username, 
             showNavBar:true
         });
         
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to render reminders page', error, req);
+        res.status(500).send();
     }
 });
 
@@ -33,7 +35,12 @@ router.get("/load-reminder-list", async (req, res) => {
 
         res.json(JSON.stringify(data));
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to load reminder list', error, req, {
+            filter: req.query.filter,
+            limit: req.query.limit, 
+            offset: req.query.offset
+        });
+        res.status(500).send();
     }
 });
 
@@ -52,9 +59,12 @@ router.post("/add", async (req, res) => {
             userId: req.user.id
         });
 
-        res.status(200).json({ message: "Add reminder successful" });
+        res.status(200).send();
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to create anew reminder', error, req, {
+            clientId: req.body.clientId
+        })
+        res.status(500).send();
     }
 });
 
@@ -72,9 +82,12 @@ router.post("/:id/edit", async (req, res) => {
             userId: req.user.id
         })
 
-        res.status(201).json({ message: "Update successful" });
+        res.status(201).send();
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to edit reminder', error, req, {
+            reminderId: req.params.id   // Can get clientId here too?
+        });
+        res.status(500).send();
     }
 });
 
@@ -88,9 +101,12 @@ router.delete("/:id", async (req, res) => {
             userId: req.user.id
         });
 
-        res.status(204).json({message: "Delete successful"});
+        res.status(204).send();
     } catch (error) {
-        res.status(500).send(error.message);
+            logError('Failed to delete reminder', error, req, {
+                reminderId: req.params.id
+        });
+        res.status(500).send();
     }
 });
 
