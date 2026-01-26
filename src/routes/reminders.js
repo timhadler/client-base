@@ -3,7 +3,7 @@ const router = express.Router();
 
 const reminderServices = require("../services/reminder.services");   
 const reminderModels = require("../models/reminder.models");
-const logError = require('../config/logger');   
+const { logError } = require('../config/logger');   
 
 /***********************************************************
  * Get

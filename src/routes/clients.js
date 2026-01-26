@@ -6,7 +6,7 @@ const upload = multer({ dest: "uploads/" });
 
 const clientModels = require("../models/client.models");
 const clientServices = require("../services/client.services");
-const logError = require('../config/logger'); 
+const { logError } = require('../config/logger'); 
 
 // Nested route
 const interactionsRouter = require("./interactions");

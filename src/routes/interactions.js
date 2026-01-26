@@ -3,8 +3,7 @@ const router = express.Router({ mergeParams: true });   // MergeParams allows fo
 
 const interactionServices = require("../services/interaction.services");
 const interactionModels = require("../models/interaction.models");
-const logError = require('../config/logger');
-const { log } = require("winston");
+const { logError } = require('../config/logger');
 
 /***********************************************************
  * GET

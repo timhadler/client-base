@@ -49,4 +49,11 @@ function logError(message, error, req, extraContext = {}) {
   });
 }
 
-module.exports = logError;
+// Log info
+function logInfo(message, meta = {}) {
+  logger.info(message, {
+    ...meta
+  });
+}
+
+module.exports = { logError, logInfo };

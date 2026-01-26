@@ -19,6 +19,7 @@ const stripeRouter = require("./routes/stripe").router;
 const interactionsRouter  =require("./routes/interactions");
 
 const { passport, autoLoginDev } = require("./passport-config");
+const { logInfo } = require("./config/logger");
 
 // Setup folder structure
 app.set("view engine", "ejs");
@@ -97,4 +98,4 @@ app.use('/interactions', checkAuthenticated, interactionsRouter);
 
 // Start server
 app.listen(process.env.PORT);
-console.log("Listening on port: " + process.env.PORT);
+logInfo(`Listening on port: ${process.env.PORT}, in environment: ${process.env.NODE_ENV}`);
