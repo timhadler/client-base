@@ -1,12 +1,17 @@
 /*****************************************************************
  * Document Ready
  ****************************************************************/
+// Data for the selected client and reminder
 let currentClientData = {id:"", email:"", phone:""};    // Selected client email/phone data for the copy feature and interaction form submit
 let currentReminderId = 0;      // For interaction modal
 let currentReminderCount = 0;
-let currentTab = "all";         // For default tab
 
+// Default tab
+let currentTab = "all";
+
+// List limits
 const REMINDERS_LIST_LIMIT = 10;    // Limits the number of reminders retrieved per request
+const REMINDERS_INTERACTION_LIMIT = 8;
 
 let currentOffset = 0;
 let totalReminders = 0;
@@ -102,7 +107,7 @@ async function fetchClientInteractions(id) {
         $.ajax({
             url: `clients/${id}/activity`,
             method: "GET",
-            data: { limit: 8 },
+            data: { limit: REMINDERS_INTERACTION_LIMIT },
             success: function(res) {
                 const data = typeof res === 'string' ? JSON.parse(res) : res;
                 resolve(data.interactions || []);

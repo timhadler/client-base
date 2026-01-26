@@ -2,7 +2,11 @@
  * Client Detail Page
  * Uses jQuery and AJAX to fetch and display all client data
  ****************************************************************/
+// Set limits (constant for now, mayby scroll later)
+const CLIENT_REMINDERS_LIMIT = 5;
+const CLIENT_INTERACTION_LIMIT = 8;
 
+// Client data
 let clientId;
 let clientData = null;
 
@@ -332,7 +336,7 @@ function loadReminders() {
         url: `/clients/${clientId}/reminders`,
         method: 'GET',
         data: {
-            limit: 5
+            limit: CLIENT_REMINDERS_LIMIT
         },
         success: function(response) {
             const data = typeof response === 'string' ? JSON.parse(response) : response;
@@ -574,7 +578,7 @@ function loadActivityHistory() {
         url: `/clients/${clientId}/activity`,
         method: 'GET',
         data: {
-            limit: 8
+            limit: CLIENT_INTERACTION_LIMIT
         },
         success: function(response) {
             const data = typeof response === 'string' ? JSON.parse(response) : response;
