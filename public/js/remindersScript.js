@@ -68,7 +68,7 @@ function queryListData(filter, offset=0) {
 
             // Update pagination state
             if (offset === 0) {
-                totalReminders = data.total || 0; // Backend should return total count
+                totalReminders = data.total || 0;
                 currentOffset = 0;
             }
 
@@ -239,9 +239,8 @@ function initLoadMoreButton() {
                 $btn.prop('disabled', false).text(originalText);
             },
             error: function(xhr, status, error) {
-                console.log('AJAX Error while loading more reminders:', xhr, status);
                 $btn.prop('disabled', false).text(originalText);
-                alert('Failed to load more reminders. Please try again.');
+                alert(xhr.responseJSON?.error ?? 'Failed to load more reminders. Please try again.');
             }
         });
     });
