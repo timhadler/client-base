@@ -11,9 +11,13 @@
             <span style="color: var(--gray-900); font-weight: 600;"><%= isEdit ? 'Edit' : 'Add' %> Client</span>
         </div>
         <h1 class="cf-page-title"><%= isEdit ? 'Edit' : 'Add New' %> Client</h1>
-        <p class="cf-page-subtitle">
-            <%= isEdit ? 'Update the client information below' : 'Enter the client information to begin tracking their engagement' %>
-        </p>
+
+        <!-- Display flash error -->
+        <% if (error.length > 0) { %>
+            <p class="error-message"> <%= error[0] %> </p>
+        <% } else { %>
+            <p class="cf-page-subtitle"> <%= isEdit ? 'Update the client information below' : 'Enter the client information to begin tracking their engagement' %> </p>
+        <% } %>
     </div>
     
     <!-- Form Card -->

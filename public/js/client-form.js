@@ -76,11 +76,7 @@ $(document).ready(function() {
                 submitBtn.prop('disabled', false).html(originalText);
                 
                 // Show error message
-                let errorMessage = 'Somethign went wrong, but client may have been created. Try searching for them.';
-                if (xhr.responseJSON && xhr.responseJSON.error) {
-                    errorMessage = xhr.responseJSON.error;
-                }
-                showNotification(errorMessage, 'error');
+                showNotification(xhr.responseJSON?.error ?? 'Error saving client', 'error');
             }
         });
     });

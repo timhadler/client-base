@@ -19,7 +19,7 @@ const stripeRouter = require("./routes/stripe").router;
 const interactionsRouter  =require("./routes/interactions");
 
 const { passport, autoLoginDev } = require("./passport-config");
-const { logInfo } = require("./config/logger");
+const { logInfo, logError } = require("./config/logger");
 
 // Setup folder structure
 app.set("view engine", "ejs");
@@ -40,8 +40,15 @@ app.use(session({
     //cookie: {maxAge:86400000}, // one day
     store: new MemoryStore({
         checkPeriod: 86400000 // prune expired entries every 24h
-      })
- }));
+    })
+}));
+
+// Allow flash in templates
+ app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
 
 // Helmet security headers
 app.use(helmet());
@@ -95,6 +102,16 @@ app.use("/auth", authRouter);
 app.use("/reminders", checkAuthenticated, reminderRouter);
 app.use("/clients", checkAuthenticated, clientRouter);
 app.use('/interactions', checkAuthenticated, interactionsRouter);
+
+// Global error handler (doesnt inlcude async errros)
+app.use((err, req, res, next) => {
+    logError('Uncaught Error', err, req);
+
+    if (!res.headersSent) {
+        req.flash('error', 'Something went wrong');
+        res.status(500).redirect('/reminders');
+    }
+});
 
 // Start server
 app.listen(process.env.PORT);

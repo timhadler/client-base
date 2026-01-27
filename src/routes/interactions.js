@@ -16,12 +16,12 @@ router.get("/", async (req, res) => {
 
         let interactions = await interactionModels.getClientInteractions(clientId, req.user.id);
 
-        res.status(200).json({ interactions:interactions });
+        res.json({ interactions:interactions });
     } catch (error) {
         logError('Failed to fetch interactions', error, req, {
             clientId: req.params.clientId
         });
-        res.status(500).end();
+        res.status(500).json({ error: 'Fetch interactions failed' });
     }
 });
 
@@ -44,13 +44,13 @@ router.post("/", async (req, res) => {
             newReminderNote: req.body.newReminderNote,
         });
 
-        res.status(201).end();
+        res.status(201).send();
     } catch (error) {
         logError('Failed to create an interaction', error, req, {
             clientId: req.body.clientId, 
             reminderId: req.body.reminderId
         });
-        res.status(500).end();
+        res.status(500).json({ error: 'Add interaction failed' });
     }
 });
 
@@ -64,14 +64,14 @@ router.put("/:interactionId", async (req, res) => {
         // Update interaction and reminder outcome
         await interactionServices.respondInteraction(req.body.clientId, req.params.interactionId, req.body.reminderId, req.body.outcome, req.user.id);
 
-        res.end();
+        res.status(204).end();
     } catch (error) {
         logError('Failed to edit interaciton', error, req, {
             clientId: req.body.clientId, 
             interactionId: req.params.interactionId, 
             reminderId: req.body.reminderId
         });
-        res.status(500).end();
+        res.status(500).json({ error: 'Edit interaction failed' });
     }
 });
 

@@ -10,7 +10,7 @@ const { logError } = require('../config/logger');
  ***********************************************************/
 router.get("/", async (req, res) => {
     try {
-        res.status(200).render("reminders/reminders", {
+        res.render("reminders/reminders", {
             bodyClass:"mainPage", 
             username: req.user.username, 
             showNavBar:true
@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
         
     } catch (error) {
         logError('Failed to render reminders page', error, req);
-        res.status(500).send();
+        res.status(500).json({ error: 'Render reminders page failed' });
     }
 });
 
@@ -41,7 +41,7 @@ router.get("/load-reminder-list", async (req, res) => {
             limit: req.query.limit, 
             offset: req.query.offset
         });
-        res.status(500).send();
+        res.status(500).json({ error: 'Fetch reminder list failed' });
     }
 });
 
@@ -60,12 +60,12 @@ router.post("/add", async (req, res) => {
             userId: req.user.id
         });
 
-        res.status(200).send();
+        res.status(201).send();
     } catch (error) {
-        logError('Failed to create anew reminder', error, req, {
+        logError('Failed to create a new reminder', error, req, {
             clientId: req.body.clientId
         })
-        res.status(500).send();
+        res.status(500).json({ error: 'Add new reminder failed' });
     }
 });
 
@@ -83,12 +83,12 @@ router.post("/:id/edit", async (req, res) => {
             userId: req.user.id
         })
 
-        res.status(201).send();
+        res.status(204).end();
     } catch (error) {
         logError('Failed to edit reminder', error, req, {
             reminderId: req.params.id   // Can get clientId here too?
         });
-        res.status(500).send();
+        res.status(500).json({ error: 'Edit reminder failed' });
     }
 });
 
@@ -102,12 +102,12 @@ router.delete("/:id", async (req, res) => {
             userId: req.user.id
         });
 
-        res.status(204).send();
+        res.status(204).end();
     } catch (error) {
             logError('Failed to delete reminder', error, req, {
                 reminderId: req.params.id
         });
-        res.status(500).send();
+        res.status(500).json({ error: 'Delete reminder failed' });
     }
 });
 

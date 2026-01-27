@@ -33,16 +33,14 @@ $(document).ready(function() {
                 $('#reminderModal').removeClass('show');
                 loadReminders(); // reload the list on this page
             }, function(err) {
-                console.error('Error updating reminder');
-                alert('Failed to save reminder');
+                alert(err.responseJSON?.error ?? 'Failed to save reminder');
             });
         } else if (mode === 'add') {
             saveNewReminder(function(res) {
                 $('#reminderModal').removeClass('show');
                 loadReminders(); // reload the list on this page
             }, function(err) {
-                console.log("Error creating reminder");
-                alert("Failed to create new reminder");
+                alert(err.responseJSON?.error ?? "Failed to create new reminder");
             });
         }
     });
@@ -63,8 +61,7 @@ $(document).ready(function() {
             },
             // Error callback - handle deletion error
             function(xhr, status, error) {
-                console.error('Failed to delete reminder:', error);
-                alert('Failed to delete reminder. Please try again.');
+                alert(xhr.responseJSON?.error ?? 'Error deleting reminder');
             }
         );
     });
@@ -90,7 +87,6 @@ function loadClientData() {
             renderAddress(clientData);
         },
         error: function(xhr, status, error) {
-            console.error('Error loading client data');
             $('#clientName').text('Error loading client');
             alert('Failed to load client data. Please refresh the page.');
         }
@@ -319,7 +315,6 @@ function copyAddress() {
             $btn.html(originalHtml).removeClass('cd-copied');
         }, 2000);
     }).catch(err => {
-        console.error('Failed to copy address:', err);
         alert('Failed to copy address');
     });
 }
@@ -388,8 +383,7 @@ function renderReminders(reminders) {
                 },
                 // Error callback - handle deletion error
                 function(xhr, status, error) {
-                    console.error('Failed to delete reminder:', error);
-                    alert('Failed to delete reminder. Please try again.');
+                    alert(xhr.responseJSON?.error ?? 'Error deleting reminder');
                 }
             );
         });
@@ -560,8 +554,7 @@ function saveInteractionResponse() {
             loadActivityHistory();
         },
         error: function(xhr, status, error) {
-            console.error('Error recording response');
-            alert('Failed to record response. Please try again.');
+            alert(xhr.responseJSON?.error ?? 'Failed to record response');
         }
     });
 }
@@ -581,7 +574,6 @@ function loadActivityHistory() {
             renderInteraction(data.interactions || []);
         },
         error: function(xhr, status, error) {
-            console.error('Error loading interaction');
             $('#activityList').html(`
                 <div class="cd-empty-activity">
                     <div class="cd-empty-icon">📋</div>
@@ -717,7 +709,6 @@ function loadEngagementStats() {
             renderStats(data.stats || {});
         },
         error: function(xhr, status, error) {
-            console.error('Error loading stats');
             renderStats({});
         }
     });
