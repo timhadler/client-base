@@ -23,7 +23,7 @@ $(document).ready(function() {
             $('#reminderModal').removeClass('show');
             queryListData("all"); // reload the list on this page
         }, function(err) {
-            alert(err.responseJSON.error);
+            alert(err.responseJSON?.error ?? 'Error saving reminder');
         });
     });
 
