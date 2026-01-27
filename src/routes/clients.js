@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const clientModels = require("../models/client.models");
-const clientServices = require("../services/client.services");
 const xl = require("../modules/excel-JS");
 const multer = require('multer');                   // For uploading files
 const upload = multer({ dest: "uploads/" });
+
+const clientModels = require("../models/client.models");
+const clientServices = require("../services/client.services");
+const { logError } = require('../config/logger'); 
 
 // Nested route
 const interactionsRouter = require("./interactions");
@@ -13,13 +15,14 @@ router.use("/:clientId/activity", interactionsRouter)
 //   - Client Index
 router.get("/", async (req, res) => {
     try {
-        res.status(200).render("clients/clients", { 
+        res.render("clients/clients", { 
             bodyClass: "mainPage", 
             username: req.user.username,
             showNavBar: true 
         });
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to render clients page', error, req);
+        res.status(500).json({ error: 'Render clients page failed' });
     }
 });
 
@@ -35,7 +38,8 @@ router.get('/new', (req, res) => {
             user: req.user
         });
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to render add client form', error, req);
+        res.status(500).json({ error: 'Render new client form failed' });
     }
 });
 
@@ -46,7 +50,7 @@ router.get('/:id/edit', async (req, res) => {
 
         if (!client) {
             req.flash('error', 'Client not found');
-            return res.redirect('/clients');
+            return res.redirect('/clients/new');
         }
 
         res.render('clients/client-form', {
@@ -58,8 +62,9 @@ router.get('/:id/edit', async (req, res) => {
             user: req.user
         });
     } catch (error) {
+        logError('Failed to render edit client form', error, req);
         req.flash('error', 'Failed to load client');
-        res.redirect('/clients');
+        res.status(500).redirect('/clients/new');
     }
 });
 
@@ -75,23 +80,33 @@ router.get("/load-client-list", async (req, res) => {
             priortiy: req.query.priority
         })
 
-        res.status(200).json(data);
+        res.json(data);
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to fetch client list', error, req, {
+            search: req.query.search, 
+            limit: req.query.limit, 
+            offset: req.query.offset,
+            status: req.query.status, 
+            priority: req.query.priority 
+        });
+        res.status(500).json({ error: 'Fetch client list failed' });
     }
 });
 
 // GET - Render client details page
 router.get("/:id", async (req, res) => {
     try {
-        res.status(200).render("clients/client-details", { 
+        res.render("clients/client-details", { 
             bodyClass: "mainPage", 
             username: req.user.username,
             clientId: req.params.id, 
             showNavBar: true 
         });
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to render client details page', error, req, {
+            clientId: req.params.id
+        });
+        res.status(500).json({ error: 'Render client details page failed' });
     }
 });
 
@@ -101,9 +116,12 @@ router.get("/:id/data", async (req, res) => {
         const id = req.params.id;;
         const client = await clientModels.getClientDetails(id, req.user.id);
 
-        res.status(200).json({ client:client });
+        res.json({ client:client });
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to fetch client data', error, req, {
+            clientId: req.params.id
+        });
+        res.status(500).json({ error: 'Fetch client data failed' });
     }
 });
 
@@ -117,10 +135,12 @@ router.get("/:id/reminders", async (req, res) => {
             Number(req.query.limit)
         );
 
-        res.status(200).json({ reminders:reminders });
+        res.json({ reminders:reminders });
     } catch (error) {
-        console.log(error);
-        res.status(500).send(error.message);
+        logError('Failed to fetch client reminders', error, req, {
+            clientId: req.params.id
+        });
+        res.status(500).json({ error: 'Fetch client reminders failed' });
     }
 });
 
@@ -160,15 +180,18 @@ router.post('/', async (req, res) => {
 
         // Respond for AJAX
         if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-            return res.json({ success: true, redirectUrl: `/clients/${ id}` });
+            return res.status(201).json({ success: true, redirectUrl: `/clients/${id}` });
         }
 
-        res.redirect(`/clients/${ id }`);
+        res.status(201).redirect(`/clients/${id}`);
     } catch (error) {
+        logError('Failed to add a new client', error, req, {
+            body: req.body
+        });
         if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-            return res.status(500).json({ error: 'Somethign went wrong. Please try again.' });
+            return res.status(500).json({ error: 'Add new client failed' });
         }
-        res.redirect('/clients');
+        res.status(500).redirect('/clients');
     }
 });
 
@@ -208,10 +231,14 @@ router.put('/:id', async (req, res) => {
 
         res.redirect(`/clients/${clientId}`);
     } catch (error) {
+        logError('Failed to edit a client', error, req, {
+            clientId: req.params.id, 
+            body: req.body
+        });
         if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-            return res.status(500).json({ error: 'Error updating client' });
+            return res.status(500).json({ error: 'Update client failed' });
         }
-        res.redirect('/clients');
+        res.status(500).redirect('/clients');
     }
 });
 
@@ -223,9 +250,12 @@ router.delete("/:id", async (req, res) => {
     try {
         await clientServices.deleteClientData(req.params.id, req.user.id)
 
-        res.status(204).end();
+        res.end();
     } catch (error) {
-        res.status(500).send(error.message);
+        logError('Failed to delete a client', error, req, {
+            clientId: req.params.id
+        });
+        res.status(500).json({ error: 'Delete client failed' });
     }
 });
 

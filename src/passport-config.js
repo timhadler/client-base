@@ -37,4 +37,26 @@ passport.deserializeUser(async (userId, done) => {
     }
 });
 
-module.exports = passport;
+// Dev Auto Sign in middleware
+function autoLoginDev(req, res, next) {
+    if (process.env.NODE_ENV !== 'development') {
+        return next();
+    }
+
+    // Already logged in
+    if (req.isAuthenticated()) {
+        return next();
+    }
+
+    // Dev user ID
+    const devUserId = process.env.DEV_USER_ID;
+
+    req.login(devUserId, (err) => {
+        if (err) {
+        return next(err);
+        }
+        next();
+    });
+};
+
+module.exports = { passport, autoLoginDev };
