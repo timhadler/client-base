@@ -45,7 +45,7 @@ function logError(message, error, req, extraContext = {}) {
       route: req.route?.path || req.path,
       method: req.method,
       ...extraContext,
-      ...(process.env.NODE_ENV !== 'production' && {stack: error.stack})              // Only log stack in development, can disable later if never used
+      ...(process.env.NODE_ENV === 'development' && {stack: error.stack})              // Only log stack in development, can disable later if never used
   });
 }
 
