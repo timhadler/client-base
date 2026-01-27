@@ -48,7 +48,7 @@ router.get('/:id/edit', async (req, res) => {
 
         if (!client) {
             req.flash('error', 'Client not found');
-            return res.redirect('/clients');
+            return res.redirect('/clients/new');
         }
 
         res.render('clients/client-form', {
@@ -61,7 +61,7 @@ router.get('/:id/edit', async (req, res) => {
         });
     } catch (error) {
         req.flash('error', 'Failed to load client');
-        res.status(500).redirect('/clients');
+        res.status(500).redirect('/clients/new');
     }
 });
 

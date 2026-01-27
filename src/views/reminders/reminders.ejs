@@ -204,7 +204,13 @@
     <div class="page-header">
         <div class="page-title-section">
             <h1>Reminders</h1>
-            <p>Stay on top of your client follow-ups and callbacks</p>
+
+            <!-- Display flash error -->
+            <% if (error.length > 0) { %>
+                <p class="error-message"> <%= error[0] %> </p>
+            <% } else { %>
+                <p class="cf-page-subtitle"> Stay on top of your client follow-ups and callbacks </p>
+            <% } %>
         </div>
         <!--a href="/reminders/new" class="btn btn-primary">
             <span>📅</span> Add Reminder
