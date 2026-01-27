@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const { passport }  = require("../passport-config");
 const users = require("../models/user-models");
 const stripeModule = require("./stripe");
+const { logError } = require('../config/logger');  
 
 // GET
 router.get("/register", (req, res) => {
@@ -60,7 +61,10 @@ router.post("/register", async (req, res) => {
         } else if (error.message.includes("Password must") || error.message.includes("Error creating user")) {
             message = error.message;
         } else {
-            res.status(400);
+            logError('Error registering user', error, req, {
+                email: req.body.email
+            })
+            res.status(500);
         }
         res.render("login/register", { bodyClass: "authPage", showNavBar: false, error: message });
     }
