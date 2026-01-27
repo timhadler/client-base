@@ -1753,6 +1753,11 @@ th.reminder-count-header,
     flex: 1;
 }
 
+.cd-subtitle {
+    font-size: 13px;
+    color: var(--gray-600);
+}
+
 .cd-avatar-large {
     width: 80px;
     height: 80px;

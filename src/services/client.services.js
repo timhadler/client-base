@@ -15,11 +15,10 @@ exports.getClientList= async function({ search, status, priority, limit, offset,
 }
 
 // Returns all active reminders for a given client
-exports.getActiveReminders= async function(id, userId) {
-    let reminders = await clientModels.getClientReminders(id, userId);
+exports.getActiveReminders= async function(id, userId, limit) {
+    let reminders = await clientModels.getClientActiveReminders(id, userId, limit);
 
-    // Filter out completed reminders
-    return reminders.filter(reminder => reminder.status !== "complete");
+    return reminders;
 }
 
 // Creates a new client entry

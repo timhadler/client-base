@@ -2,7 +2,11 @@
  * Client Detail Page
  * Uses jQuery and AJAX to fetch and display all client data
  ****************************************************************/
+// Set limits (constant for now, mayby scroll later)
+const CLIENT_REMINDERS_LIMIT = 5;
+const CLIENT_INTERACTION_LIMIT = 8;
 
+// Client data
 let clientId;
 let clientData = null;
 
@@ -327,7 +331,7 @@ function loadReminders() {
         url: `/clients/${clientId}/reminders`,
         method: 'GET',
         data: {
-            limit: 5
+            limit: CLIENT_REMINDERS_LIMIT
         },
         success: function(response) {
             const data = typeof response === 'string' ? JSON.parse(response) : response;
@@ -358,6 +362,9 @@ function renderReminders(reminders) {
             </div>
         `);
         return;
+    } else if (reminders.length === CLIENT_REMINDERS_LIMIT) {
+        // Set display limit text
+        $('#remindersLimitText').text(`(Showing the next ${CLIENT_REMINDERS_LIMIT} upcoming reminders)`);
     }
     
     $list.empty();
@@ -567,7 +574,7 @@ function loadActivityHistory() {
         url: `/clients/${clientId}/activity`,
         method: 'GET',
         data: {
-            limit: 10
+            limit: CLIENT_INTERACTION_LIMIT
         },
         success: function(response) {
             const data = typeof response === 'string' ? JSON.parse(response) : response;
@@ -598,6 +605,9 @@ function renderInteraction(interactions) {
             </div>
         `);
         return;
+    } else if (interactions.length === CLIENT_INTERACTION_LIMIT) {
+        // Set display limit text
+        $('#interactionLimitText').text(`(Showing the ${CLIENT_INTERACTION_LIMIT} most recent interactions)`);
     }
     
     $list.empty();
