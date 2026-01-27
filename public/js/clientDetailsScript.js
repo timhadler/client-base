@@ -367,6 +367,9 @@ function renderReminders(reminders) {
             </div>
         `);
         return;
+    } else if (reminders.length === CLIENT_REMINDERS_LIMIT) {
+        // Set display limit text
+        $('#remindersLimitText').text(`(Showing the next ${CLIENT_REMINDERS_LIMIT} upcoming reminders)`);
     }
     
     $list.empty();
@@ -610,6 +613,9 @@ function renderInteraction(interactions) {
             </div>
         `);
         return;
+    } else if (interactions.length === CLIENT_INTERACTION_LIMIT) {
+        // Set display limit text
+        $('#interactionLimitText').text(`(Showing the ${CLIENT_INTERACTION_LIMIT} most recent interactions)`);
     }
     
     $list.empty();
