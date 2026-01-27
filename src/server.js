@@ -115,4 +115,4 @@ app.use((err, req, res, next) => {
 
 // Start server
 app.listen(process.env.PORT);
-console.log("Listening on port: " + process.env.PORT);
+logInfo(`Listening on port: ${process.env.PORT}, in environment: ${process.env.NODE_ENV}`);

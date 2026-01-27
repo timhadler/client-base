@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const clientModels = require("../models/client.models");
-const clientServices = require("../services/client.services");
 const xl = require("../modules/excel-JS");
 const multer = require('multer');                   // For uploading files
 const upload = multer({ dest: "uploads/" });
+
+const clientModels = require("../models/client.models");
+const clientServices = require("../services/client.services");
+const { logError } = require('../config/logger'); 
 
 // Nested route
 const interactionsRouter = require("./interactions");
@@ -60,6 +62,7 @@ router.get('/:id/edit', async (req, res) => {
             user: req.user
         });
     } catch (error) {
+        logError('Failed to render edit client form', error, req);
         req.flash('error', 'Failed to load client');
         res.status(500).redirect('/clients/new');
     }
@@ -177,10 +180,13 @@ router.post('/', async (req, res) => {
 
         res.status(201).redirect(`/clients/${id}`);
     } catch (error) {
+        logError('Failed to add a new client', error, req, {
+            body: req.body
+        });
         if (req.xhr || req.headers.accept.indexOf('json') > -1) {
             return res.status(500).json({ error: 'Add new client failed' });
         }
-        res.redirect('/clients');
+        res.status(500).redirect('/clients');
     }
 });
 
@@ -220,10 +226,14 @@ router.put('/:id', async (req, res) => {
 
         res.redirect(`/clients/${clientId}`);
     } catch (error) {
+        logError('Failed to edit a client', error, req, {
+            clientId: req.params.id, 
+            body: req.body
+        });
         if (req.xhr || req.headers.accept.indexOf('json') > -1) {
             return res.status(500).json({ error: 'Update client failed' });
         }
-        res.redirect('/clients');
+        res.status(500).redirect('/clients');
     }
 });
 
@@ -235,7 +245,7 @@ router.delete("/:id", async (req, res) => {
     try {
         await clientServices.deleteClientData(req.params.id, req.user.id)
 
-        res.status(204).end();
+        res.end();
     } catch (error) {
         logError('Failed to delete a client', error, req, {
             clientId: req.params.id

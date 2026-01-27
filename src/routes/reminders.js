@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
+
 const reminderServices = require("../services/reminder.services");   
-const reminderModels = require("../models/reminder.models");   
+const reminderModels = require("../models/reminder.models");
+const { logError } = require('../config/logger');   
 
 /***********************************************************
  * Get
@@ -10,8 +12,7 @@ router.get("/", async (req, res) => {
     try {
         res.render("reminders/reminders", {
             bodyClass:"mainPage", 
-            username: 
-            req.user.username, 
+            username: req.user.username, 
             showNavBar:true
         });
         
@@ -27,6 +28,7 @@ router.get("/load-reminder-list", async (req, res) => {
     try {
         const data = await reminderServices.loadReminderList({
             filter: req.query.filter,
+            reminderCount: req.query.reminderCount,
             userId: req.user.id, 
             limit: req.query.limit, 
             offset: req.query.offset

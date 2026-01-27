@@ -11,8 +11,10 @@ node_modules
 # production
 /build
 
+# my files
 uploads/
 exports/
+logs/
 
 # misc
 .DS_Store

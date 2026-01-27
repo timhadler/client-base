@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });   // MergeParams allows for parameters like id to be passed from nested routes
+
 const interactionServices = require("../services/interaction.services");
 const interactionModels = require("../models/interaction.models");
+const { logError } = require('../config/logger');
 
 /***********************************************************
  * GET

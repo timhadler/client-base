@@ -222,10 +222,30 @@
         <button class="tab active" data-filter="all">All Reminders</button>
         <button class="tab" data-filter="overdue">Overdue <span id="overdueCount"></span></button>
         <button class="tab" data-filter="today">Today <span id="todayCount"></span></button>
-        <button class="tab" data-filter="initial">First Attempts <span id="initialCount"></span></button>
+        <button class="tab" data-filter="thisMonth">This Month <span id="thisMonthCount"></span></button>
+        <button hidden class="tab" data-filter="initial">First Attempts <span id="initialCount"></span></button>
         <button class="tab" data-filter="followUp">Follow-ups <span id="followUpCount"></span></button>
         <button class="tab" data-filter="completed">Completed</button>
+        
+        <!-- Reminder Count Filter Dropdown -->
+        <div class="filter-dropdown-wrapper">
+            <button class="tab filter-dropdown-trigger" id="countFilterTrigger">
+                <span id="countFilterLabel">Attempt #</span>
+                <span class="filter-chevron">▼</span>
+            </button>
+            <div class="filter-dropdown-menu" id="countFilterMenu">
+                <div class="filter-dropdown-header">Filter by Attempt Number</div>
+                <button class="filter-dropdown-item selected" data-count="all">
+                    <span class="filter-check">✓</span>
+                    All Attempts
+                </button>
+                <div id="countOptionsContainer"></div>
+            </div>
+        </div>
     </div>
+
+    <!-- Dropdown Overlay -->
+    <div class="filter-dropdown-overlay" id="dropdownOverlay"></div>
     
     <!-- Table Card -->
     <div class="table-card">
@@ -236,7 +256,7 @@
                         <th>Due Date</th>
                         <th>Client</th>
                         <th>Reminder Note</th>
-                        <th>Status</th>
+                        <th class="reminder-count-header"># Contact Attempts</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
