@@ -9,17 +9,11 @@ const { logError } = require('../config/logger');
  * Get
  ***********************************************************/
 router.get("/", async (req, res) => {
-    try {
-        res.render("reminders/reminders", {
-            bodyClass:"mainPage", 
-            username: req.user.username, 
-            showNavBar:true
-        });
-        
-    } catch (error) {
-        logError('Failed to render reminders page', error, req);
-        res.status(500).json({ error: 'Render reminders page failed' });
-    }
+    res.render("reminders/reminders", {
+        bodyClass:"mainPage", 
+        username: req.user.username, 
+        showNavBar:true
+    });
 });
 
 // Get the paginated filtered reminder list

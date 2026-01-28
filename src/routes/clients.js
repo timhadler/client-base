@@ -14,33 +14,23 @@ router.use("/:clientId/activity", interactionsRouter)
 
 //   - Client Index
 router.get("/", async (req, res) => {
-    try {
-        res.render("clients/clients", { 
-            bodyClass: "mainPage", 
-            username: req.user.username,
-            showNavBar: true 
-        });
-    } catch (error) {
-        logError('Failed to render clients page', error, req);
-        res.status(500).json({ error: 'Render clients page failed' });
-    }
+    res.render("clients/clients", { 
+        bodyClass: "mainPage", 
+        username: req.user.username,
+        showNavBar: true 
+    });
 });
 
 // GET - Show add client form
 router.get('/new', (req, res) => {
-    try {
-        res.render('clients/client-form', {
-            bodyClass: "",
-            username: req.user.username,
-            showNavBar: true,
-            isEdit: false,
-            client: {},
-            user: req.user
-        });
-    } catch (error) {
-        logError('Failed to render add client form', error, req);
-        res.status(500).json({ error: 'Render new client form failed' });
-    }
+    res.render('clients/client-form', {
+        bodyClass: "",
+        username: req.user.username,
+        showNavBar: true,
+        isEdit: false,
+        client: {},
+        user: req.user
+    });
 });
 
 // GET - Show edit client form
@@ -95,19 +85,12 @@ router.get("/load-client-list", async (req, res) => {
 
 // GET - Render client details page
 router.get("/:id", async (req, res) => {
-    try {
-        res.render("clients/client-details", { 
-            bodyClass: "mainPage", 
-            username: req.user.username,
-            clientId: req.params.id, 
-            showNavBar: true 
-        });
-    } catch (error) {
-        logError('Failed to render client details page', error, req, {
-            clientId: req.params.id
-        });
-        res.status(500).json({ error: 'Render client details page failed' });
-    }
+    res.render("clients/client-details", { 
+        bodyClass: "mainPage", 
+        username: req.user.username,
+        clientId: req.params.id, 
+        showNavBar: true 
+    });
 });
 
 // GET - Retrieve client data

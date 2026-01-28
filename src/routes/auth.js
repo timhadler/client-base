@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 
 const { passport }  = require("../passport-config");
-const users = require("../models/user-models");
+const users = require("../models/user.models");
 const stripeModule = require("./stripe");
 const { logError } = require('../config/logger');  
 
@@ -34,15 +34,22 @@ router.post("/register", async (req, res) => {
         } 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create stripe customer and start a free subscription trial
-        const stripeID = await stripeModule.createCustomer(email)
-        const subscriptionID = await stripeModule.createTrialSubscription(stripeID);    // Stripe webhook will handle updating subscription details in db
+        
+        // Create stripe customer and start a free subscription trial (Stripe not fully implmented yet)
+        let stripeID = null;
 
-        // Create user in db
-        if (stripeID) {
-            await users.createUser(email, hashedPassword, stripeID);
+        if (process.env.STRIPE_FEATURE === 'enabled') {
+            stripeID = await stripeModule.createCustomer(email)
+            const subscriptionID = await stripeModule.createTrialSubscription(stripeID);    // Stripe webhook will handle updating subscription details in db
+
+            // Create user
+            if (stripeID) {
+                await users.createUser(email, hashedPassword, stripeID);
+            } else {
+                throw new Error("Error creating user. Please try again.");
+            }
         } else {
-            throw new Error("Error creating user. Please try again.");
+            await users.createUser(email, hashedPassword, stripeID);
         }
 
         res.redirect("/auth/login");
@@ -58,11 +65,12 @@ router.post("/register", async (req, res) => {
             message = "Invalid email address";
 
         // If error was caused by invalid password
-        } else if (error.message.includes("Password must") || error.message.includes("Error creating user")) {
+        } else if (error.message.includes("Password must")) {
             message = error.message;
         } else {
             logError('Error registering user', error, req, {
-                email: req.body.email
+                email: req.body.email, 
+                stripeId: stripeID
             })
             res.status(500);
         }

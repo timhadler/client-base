@@ -15,7 +15,7 @@ const helmet = require('helmet');
 const reminderRouter = require("./routes/reminders");
 const clientRouter = require("./routes/clients");
 const authRouter = require("./routes/auth");
-const stripeRouter = require("./routes/stripe").router;
+const stripeRouter = require("./routes/stripe");
 const interactionsRouter  =require("./routes/interactions");
 
 const { passport, autoLoginDev } = require("./passport-config");
@@ -37,7 +37,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    //cookie: {maxAge:86400000}, // one day
+    cookie: {maxAge:86400000}, // one day
     store: new MemoryStore({
         checkPeriod: 86400000 // prune expired entries every 24h
     })
