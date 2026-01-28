@@ -98,6 +98,10 @@ app.use("/subscriptions", stripeRouter);
 app.use(express.json());    // Call before routes to parse JSON bodies, call after subscriptions route as webhooks need raw body
 
 // Mount routers
+app.get("/", checkAuthenticated, (req, res) => {
+  res.redirect("/reminders");
+});
+
 app.use("/auth", authRouter);
 app.use("/reminders", checkAuthenticated, reminderRouter);
 app.use("/clients", checkAuthenticated, clientRouter);
