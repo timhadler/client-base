@@ -26,19 +26,12 @@ SET FOREIGN_KEY_CHECKS=1;
 -- --------------------------------------------------------
 -- Demo User
 -- Email: demo@clientbase.com
--- Password: demo123
+-- Password: DemoPass@123
 -- Hash generated with bcrypt rounds=10
 -- --------------------------------------------------------
 
 INSERT INTO `users` (`id`, `email`, `email_verified`, `password_hash`, `subscription_status`, `subscription_tier`, `created_at`) VALUES
 (1, 'demo@clientbase.com', b'1', '$2b$10$tFYFWNLIhvoh1btUENt/TOA0Q1Q5rB0CJ9d3/UXpNuBBsaLXwgdJG', 'active', 'premium', '2024-01-15 08:00:00');
-
--- --------------------------------------------------------
--- Settings
--- --------------------------------------------------------
-
-INSERT INTO `settings` (`id`, `setting_key`, `setting_value`) VALUES
-(1, 'reminder_default_days', 7);
 
 -- --------------------------------------------------------
 -- Demo Clients (all owned by demo user)
@@ -142,5 +135,5 @@ INSERT INTO `interactions` (`id`, `client_id`, `reminder_id`, `user_id`, `method
 -- Seed data loaded successfully
 -- Demo user can log in with:
 -- Email: demo@clientbase.com
--- Password: demo123
+-- Password: DemoPass@123
 -- --------------------------------------------------------

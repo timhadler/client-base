@@ -14,12 +14,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
--- Dumping database structure for clientbase
-CREATE DATABASE IF NOT EXISTS `clientbase` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
-USE `clientbase`;
-
--- Dumping structure for table clientbase.clients
+-- Dumping structure for table clientbase-test1.clients
 CREATE TABLE IF NOT EXISTS `clients` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `public_id` uuid NOT NULL DEFAULT uuid(),
@@ -29,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `last_name` varchar(100) DEFAULT NULL,
   `company` varchar(100) DEFAULT NULL,
   `phone` varchar(30) DEFAULT NULL,
-  `email` varchar(150) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
   `addressLine1` varchar(150) DEFAULT NULL,
   `addressLine2` varchar(150) DEFAULT NULL,
   `city` varchar(100) DEFAULT NULL,
@@ -39,41 +34,41 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `createdAt` date NOT NULL DEFAULT current_timestamp(),
   `lastContact` date DEFAULT NULL,
   `nextFollowup` date DEFAULT NULL,
-  `priority` enum('low','medium','high') NOT NULL,
+  `priority` enum('low','medium','high') NOT NULL DEFAULT 'medium',
   `source` enum('website','referral','social media','advertisement','walk-in','cold outreach','networking event','other') DEFAULT NULL,
-  `notes` varchar(250) DEFAULT NULL,
+  `notes` varchar(500) DEFAULT NULL,
   `position` varchar(50) DEFAULT NULL,
-  `status` enum('pending','active','inactive') NOT NULL,
+  `status` enum('pending','active','inactive') NOT NULL DEFAULT 'active',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `public_id` (`public_id`),
   KEY `FK-clients-user` (`user_id`),
   CONSTRAINT `FK-clients-user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='This table will contain client details';
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='This table will contain client details';
 
 -- Data exporting was unselected.
 
--- Dumping structure for table clientbase.interactions
+-- Dumping structure for table clientbase-test1.interactions
 CREATE TABLE IF NOT EXISTS `interactions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `client_id` int(11) unsigned DEFAULT NULL,
   `reminder_id` int(11) unsigned NOT NULL,
   `user_id` int(11) unsigned NOT NULL,
   `method` enum('call','email','text','ignored') NOT NULL,
-  `outcome` enum('booked','followup','no_answer','declined','waiting','end_attempt') NOT NULL,
+  `outcome` enum('booked','followup','no_answer','declined','waiting','end_attempt') DEFAULT NULL,
   `createdAt` date NOT NULL DEFAULT current_timestamp(),
   `respondedAt` date DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK-interactions-reminder` (`reminder_id`),
   KEY `FK-interactions-clients` (`client_id`),
   KEY `FK-interactions-users` (`user_id`),
+  KEY `fk_interactions_reminders` (`reminder_id`),
   CONSTRAINT `FK-interactions-clients` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  CONSTRAINT `FK-interactions-reminder` FOREIGN KEY (`reminder_id`) REFERENCES `reminders` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `FK-interactions-users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=20643 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  CONSTRAINT `FK-interactions-users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_interactions_reminders` FOREIGN KEY (`reminder_id`) REFERENCES `reminders` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=20645 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Data exporting was unselected.
 
--- Dumping structure for table clientbase.reminders
+-- Dumping structure for table clientbase-test1.reminders
 CREATE TABLE IF NOT EXISTS `reminders` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `client_id` int(11) unsigned DEFAULT NULL,
@@ -83,36 +78,38 @@ CREATE TABLE IF NOT EXISTS `reminders` (
   `important` bit(1) DEFAULT NULL,
   `outcome` enum('booked','followup','no_answer','declined','waiting','end_attempt') DEFAULT NULL,
   `reminderCount` smallint(5) unsigned NOT NULL,
-  `note` varchar(150) NOT NULL,
+  `note` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK-reminders-client` (`client_id`),
   KEY `FK-reminders-users` (`user_id`),
   CONSTRAINT `FK-reminders-client` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
   CONSTRAINT `FK-reminders-users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='This table will contain the dates to remind user to contact or meet with clients';
+) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='This table will contain the dates to remind user to contact or meet with clients';
 
 -- Data exporting was unselected.
 
--- Dumping structure for table clientbase.settings
+-- Dumping structure for table clientbase-test1.settings
 CREATE TABLE IF NOT EXISTS `settings` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `setting_key` varchar(100) NOT NULL,
-  `setting_value` smallint(5) unsigned NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
+  `setting_value` varchar(100) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `setting_key` (`setting_key`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Data exporting was unselected.
 
--- Dumping structure for table clientbase.users
+-- Dumping structure for table clientbase-test1.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `stripe_customer_id` varchar(255) DEFAULT NULL,
   `stripe_subscription_id` varchar(255) DEFAULT NULL,
-  `email` varchar(50) NOT NULL DEFAULT '',
+  `email` varchar(255) NOT NULL DEFAULT '',
   `email_verified` bit(1) NOT NULL DEFAULT b'0',
+  `isDev` bit(1) DEFAULT b'0',
   `password_hash` varchar(250) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `last_login` timestamp NULL DEFAULT NULL,
   `subscription_status` varchar(50) DEFAULT NULL,
   `subscription_tier` varchar(50) DEFAULT NULL,
@@ -128,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `stripe_customer_id` (`stripe_customer_id`),
   UNIQUE KEY `stripe_subscription_id` (`stripe_subscription_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Data exporting was unselected.
 

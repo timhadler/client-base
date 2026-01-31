@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM Workflow</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@300;400;500;600&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: #0f1117;
+    color: #e2e4e9;
+    min-height: 100vh;
+    padding: 48px 24px 60px;
+  }
+  .page { max-width: 880px; margin: 0 auto; }
+
+  /* ─── HEADER ─── */
+  header { margin-bottom: 36px; }
+  header h1 { font-size: 21px; font-weight: 600; color: #fff; letter-spacing: -0.3px; }
+  header p { color: #50545f; font-size: 12.5px; margin-top: 5px; }
+
+  /* ─── BADGES ─── */
+  .badge-row { display: flex; gap: 10px; margin-bottom: 32px; flex-wrap: wrap; }
+  .badge {
+    display: flex; align-items: center; gap: 10px;
+    background: #141620; border: 1px solid #24273a; border-radius: 7px;
+    padding: 9px 14px; flex: 1; min-width: 180px;
+  }
+  .badge .icon { font-size: 15px; flex-shrink: 0; }
+  .badge .text { font-size: 11px; color: #6a6f84; line-height: 1.5; }
+  .badge .text strong { color: #b0b4c4; font-weight: 500; }
+
+  /* ─── SECTION LABEL ─── */
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px; color: #3a3f5c; text-transform: uppercase;
+    letter-spacing: 1.4px; margin-bottom: 14px; margin-top: 32px;
+  }
+  .section-label:first-of-type { margin-top: 0; }
+
+  /* ─── STAGE 1 ─── */
+  .start-node {
+    background: #2a5cff; color: #fff; border-radius: 20px;
+    padding: 8px 22px; font-size: 12.5px; font-weight: 600;
+    display: inline-block; margin: 0 auto 10px;
+  }
+  .center { text-align: center; }
+
+  .conn { width: 1.5px; background: #2e3350; align-self: center; }
+
+  .h-split { display: flex; align-items: center; width: 100%; }
+  .h-split .line { height: 1.5px; background: #2e3350; flex: 1; }
+  .h-split .tick { width: 1.5px; height: 11px; background: #2e3350; }
+
+  .methods { display: flex; gap: 8px; margin-top: 0; }
+  .mcol { flex: 1; display: flex; flex-direction: column; align-items: center; }
+
+  .method-node {
+    background: #181b2c; border: 1.5px solid #2a2e46; color: #8a90a8;
+    border-radius: 7px; padding: 8px 6px; font-size: 11.5px; font-weight: 500;
+    text-align: center; width: 100%; margin-top: 10px;
+  }
+
+  .alabel {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+    color: #3f4358; text-align: center; margin: 5px 0; line-height: 1.4;
+  }
+
+  .pending-node {
+    background: #2a2518; border: 1.5px solid #433a1e; color: #c9a94a;
+    border-radius: 7px; padding: 6px 8px; font-size: 10.5px;
+    text-align: center; width: 100%;
+  }
+
+  .outcomes { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+  .out {
+    border-radius: 5px; padding: 5.5px 8px; font-size: 10.5px;
+    font-weight: 500; text-align: center;
+  }
+  .o-booked   { background: #14332a; border: 1.5px solid #244e3f; color: #5dd89c; }
+  .o-declined { background: #2a1818; border: 1.5px solid #553030; color: #d95d5d; }
+  .o-followup { background: #181c2c; border: 1.5px solid #34415e; color: #5da8d9; }
+  .o-noanswer { background: #231d1d; border: 1.5px solid #3f2e2e; color: #b07070; }
+
+  /* ─── STAGE 2: RULE TABLE ─── */
+  .rules { display: flex; flex-direction: column; gap: 6px; }
+
+  .rule {
+    display: flex; border-radius: 7px; overflow: hidden;
+    border: 1px solid #222636; background: #141620;
+  }
+
+  /* Left: trigger tags */
+  .rule-left {
+    display: flex; flex-wrap: wrap; gap: 5px; align-items: center;
+    padding: 9px 10px; min-width: 175px; background: #111420;
+    border-right: 1px solid #222636;
+  }
+  .tag {
+    font-size: 9.5px; font-weight: 500; border-radius: 3px;
+    padding: 2.5px 7px; white-space: nowrap;
+  }
+  .tag-booked   { background: #14332a; color: #5dd89c; }
+  .tag-declined { background: #2a1818; color: #d95d5d; }
+  .tag-followup { background: #181c2c; color: #5da8d9; }
+  .tag-noanswer { background: #231d1d; color: #b07070; }
+  .tag-pending  { background: #2a2518; color: #c9a94a; }
+  .tag-ignore   { background: #1c1c22; color: #5e5e6b; }
+
+  /* Middle: arrow */
+  .rule-arrow {
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 6px; color: #2e3350; font-size: 13px; flex-shrink: 0;
+  }
+
+  /* Right: options */
+  .rule-right {
+    flex: 1; padding: 10px 14px; display: flex; flex-direction: column;
+    gap: 5px; justify-content: center;
+  }
+
+  .opt-line {
+    display: flex; align-items: center; gap: 7px; font-size: 11px;
+  }
+  .opt-icon { width: 18px; text-align: center; font-size: 13px; flex-shrink: 0; }
+  .opt-text { color: #8a8fa5; }
+  .opt-text strong { color: #c9cbd4; font-weight: 500; }
+  .opt-req {
+    font-family: 'IBM Plex Mono', monospace; font-size: 8.5px;
+    color: #3d6a8a; background: #1a2030; border-radius: 3px;
+    padding: 1.5px 5px; margin-left: 3px;
+  }
+  .opt-note {
+    font-family: 'IBM Plex Mono', monospace; font-size: 8.5px;
+    color: #4a4f65; margin-left: 3px;
+  }
+
+  .opt-divider {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+    color: #2e3350; padding-left: 25px; margin: 1px 0;
+  }
+
+  /* Fallback line (no action taken) */
+  .opt-fallback {
+    display: flex; align-items: center; gap: 7px;
+    margin-top: 2px; padding-top: 5px; border-top: 1px solid #1e2030;
+  }
+  .opt-fallback .opt-icon { color: #3a3a44; }
+  .opt-fallback .opt-text { color: #4a4f65; font-size: 10.5px; }
+  .opt-fallback .opt-text strong { color: #5e5e6b; }
+
+  /* ─── LEGEND ─── */
+  .legend {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 7px; margin-top: 28px;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 8px;
+    background: #141620; border: 1px solid #1e2030; border-radius: 6px;
+    padding: 7px 10px;
+  }
+  .ldot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+  .legend-item span { font-size: 10.5px; color: #5e6378; }
+  .legend-item strong { color: #7a7f94; font-weight: 500; }
+
+  @media (max-width: 640px) {
+    .methods { gap: 5px; }
+    .method-node { font-size: 10.5px; padding: 7px 4px; }
+    .out { font-size: 10px; padding: 5px 4px; }
+    .rule { flex-direction: column; }
+    .rule-left { border-right: none; border-bottom: 1px solid #222636; min-width: auto; }
+    .legend { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <h1>CRM Appointment Workflow</h1>
+  <p>Interaction tracking — method → outcome → next action</p>
+</header>
+
+<div class="badge-row">
+  <div class="badge">
+    <div class="icon">🔁</div>
+    <div class="text"><strong>Outreach Counter</strong> — increments per interaction. Resets on new cycle.</div>
+  </div>
+  <div class="badge">
+    <div class="icon">📜</div>
+    <div class="text"><strong>Interaction History</strong> — previous entries with timestamps + notes.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STAGE 1
+═══════════════════════════════════════════ -->
+<div class="section-label">Stage 1 — Method &amp; Outcome</div>
+
+<div class="center">
+  <div class="start-node">Log Interaction</div>
+</div>
+<div class="conn" style="height:10px; margin: 0 auto;"></div>
+<div class="h-split">
+  <div class="line"></div><div class="tick"></div>
+  <div class="line"></div><div class="tick"></div>
+  <div class="line"></div><div class="tick"></div>
+  <div class="line"></div>
+</div>
+
+<div class="methods">
+
+  <!-- CALL -->
+  <div class="mcol">
+    <div class="method-node">📞 Call</div>
+    <div class="alabel">immediate</div>
+    <div class="outcomes">
+      <div class="out o-booked">Booked</div>
+      <div class="out o-declined">Declined</div>
+      <div class="out o-followup">Follow Up</div>
+      <div class="out o-noanswer">No Answer</div>
+    </div>
+  </div>
+
+  <!-- TEXT -->
+  <div class="mcol">
+    <div class="method-node">💬 Text</div>
+    <div class="alabel">non-immediate</div>
+    <div class="pending-node">⏳ Waiting</div>
+    <div class="alabel">on response</div>
+    <div class="outcomes">
+      <div class="out o-booked">Booked</div>
+      <div class="out o-declined">Declined</div>
+      <div class="out o-followup">Follow Up</div>
+    </div>
+  </div>
+
+  <!-- EMAIL -->
+  <div class="mcol">
+    <div class="method-node">✉️ Email</div>
+    <div class="alabel">non-immediate</div>
+    <div class="pending-node">⏳ Waiting</div>
+    <div class="alabel">on response</div>
+    <div class="outcomes">
+      <div class="out o-booked">Booked</div>
+      <div class="out o-declined">Declined</div>
+      <div class="out o-followup">Follow Up</div>
+    </div>
+  </div>
+
+  <!-- IGNORE -->
+  <div class="mcol">
+    <div class="method-node">🚫 Ignore</div>
+    <div class="alabel">auto end</div>
+    <div style="height:10px;"></div>
+    <div class="outcomes">
+      <!-- empty outcomes, handled entirely in stage 2 -->
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STAGE 2
+═══════════════════════════════════════════ -->
+<div class="section-label">Stage 2 — What happens next</div>
+
+<div class="rules">
+
+  <!-- RULE 1: Follow Up → only new reminder -->
+  <div class="rule">
+    <div class="rule-left">
+      <div class="tag tag-followup">Follow Up</div>
+    </div>
+    <div class="rule-arrow">›</div>
+    <div class="rule-right">
+      <div class="opt-line">
+        <div class="opt-icon">🔔</div>
+        <div class="opt-text"><strong>New Follow-up Reminder</strong><span class="opt-req">date required</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RULE 2: No Answer / Pending → reminder OR next cycle (mutually exclusive) -->
+  <div class="rule">
+    <div class="rule-left">
+      <div class="tag tag-noanswer">No Answer</div>
+      <div class="tag tag-pending">Pending</div>
+    </div>
+    <div class="rule-arrow">›</div>
+    <div class="rule-right">
+      <div class="opt-line">
+        <div class="opt-icon">🔔</div>
+        <div class="opt-text"><strong>New Follow-up Reminder</strong><span class="opt-req">date required</span></div>
+      </div>
+      <div class="opt-divider">— or —</div>
+      <div class="opt-line">
+        <div class="opt-icon">⏭️</div>
+        <div class="opt-text"><strong>Next Cycle</strong><span class="opt-req">date required</span><span class="opt-note">— ends attempt</span></div>
+      </div>
+      <div class="opt-fallback">
+        <div class="opt-icon">⊘</div>
+        <div class="opt-text"><strong>End Attempt</strong><span class="opt-note">— if neither selected</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RULE 3: Booked / Declined / Ignore → next cycle only -->
+  <div class="rule">
+    <div class="rule-left">
+      <div class="tag tag-booked">Booked</div>
+      <div class="tag tag-declined">Declined</div>
+      <div class="tag tag-ignore">Ignore</div>
+    </div>
+    <div class="rule-arrow">›</div>
+    <div class="rule-right">
+      <div class="opt-line">
+        <div class="opt-icon">⏭️</div>
+        <div class="opt-text"><strong>Next Cycle</strong><span class="opt-req">date required</span><span class="opt-note">— ends attempt</span></div>
+      </div>
+      <div class="opt-fallback">
+        <div class="opt-icon">⊘</div>
+        <div class="opt-text"><strong>End Attempt</strong></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end rules -->
+
+<!-- ═══════════════════════════════════════════
+     LEGEND
+═══════════════════════════════════════════ -->
+<div class="legend">
+  <div class="legend-item">
+    <div class="ldot" style="background:#244e3f;"></div>
+    <span><strong>Booked</strong> — secured</span>
+  </div>
+  <div class="legend-item">
+    <div class="ldot" style="background:#553030;"></div>
+    <span><strong>Declined</strong> — refused</span>
+  </div>
+  <div class="legend-item">
+    <div class="ldot" style="background:#34415e;"></div>
+    <span><strong>Follow Up</strong> — requested</span>
+  </div>
+  <div class="legend-item">
+    <div class="ldot" style="background:#3f2e2e;"></div>
+    <span><strong>No Answer</strong> — call only</span>
+  </div>
+  <div class="legend-item">
+    <div class="ldot" style="background:#433a1e;"></div>
+    <span><strong>Pending</strong> — awaiting</span>
+  </div>
+  <div class="legend-item">
+    <div class="ldot" style="background:#3a3a44;"></div>
+    <span><strong>End Attempt</strong> — end current appointment attempt</span>
+  </div>
+</div>
+
+</div><!-- end page -->
+</body>
+</html>
