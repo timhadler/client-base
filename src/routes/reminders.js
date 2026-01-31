@@ -49,7 +49,7 @@ router.post("/add", async (req, res) => {
             date: req.body.date, 
             important: false,   // Placeholder for now 
             note: req.body.note, 
-            reminderCount: 1, 
+            reminderCount: 0,   // New reminder starts at 0
             clientId: req.body.clientId, 
             userId: req.user.id
         });

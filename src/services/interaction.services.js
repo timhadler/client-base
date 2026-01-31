@@ -7,7 +7,7 @@ const db = require('../database');
 // Creates a new interaction
 // Sets current reminder status to compelte
 // Optionally creates a new reminder
-// - incremenets reminder counter for new reminders, resets counter if moving to next cycle
+// - increments reminder counter for new reminders, resets counter if moving to next cycle
 exports.recordInteraction = async function({
     clientId,
     userId,
@@ -25,12 +25,8 @@ exports.recordInteraction = async function({
         await connection.beginTransaction();
 
         // If moving to next cycle, reset reminder count and set outcome to end_attmept
-        let newReminderCount = 0;
-        if (moveToNextCycle) {
-            newReminderCount = 1;
+        if (method !== 'call' && !createNewReminder) {
             outcome = 'end_attempt';
-        } else {
-            newReminderCount = Number(reminderCount) + 1;
         }
 
         // Create interaction
@@ -40,6 +36,7 @@ exports.recordInteraction = async function({
         await reminderModel.completeReminder(reminderId, outcome, userId, connection);
 
         // Optional: create new reminder
+        const newReminderCount = moveToNextCycle ? 0 : Number(reminderCount) + 1;
         if (createNewReminder || moveToNextCycle) {
             // Use false as placeholder for 'important'
             await reminderModel.createReminder(newReminderDate, false, newReminderNote, newReminderCount, clientId, userId, connection);
