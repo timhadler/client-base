@@ -1,7 +1,9 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
+
 const users = require("./models/user.models");
+const { logInfo } = require('./config/logger'); 
 
 
 passport.use(new LocalStrategy(
@@ -12,12 +14,15 @@ passport.use(new LocalStrategy(
                 return done(null, false, {message: "No user with that username"});
             }
             if (await bcrypt.compare(password, user.password)) {
+                logInfo('User logged in: ', {
+                    userId: user.id
+                });
                 return done(null, user.id);
             } else {
                 return done(null, false, {message: "Incorrect password"});
             }
         } catch (error) {
-            console.log("Error serializing user", error);
+            throw error;
         }
     }
 ));

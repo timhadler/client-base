@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const { passport }  = require("../passport-config");
 const users = require("../models/user.models");
 const stripeModule = require("./stripe");
-const { logError } = require('../config/logger');  
+const { logInfo, logError } = require('../config/logger');  
 
 // GET
 router.get("/register", (req, res) => {
@@ -52,6 +52,10 @@ router.post("/register", async (req, res) => {
             await users.createUser(email, hashedPassword, stripeID);
         }
 
+        logInfo('User registerd', {
+            stripeId: stripeID
+        })
+
         res.redirect("/auth/login");
     } catch (error) {
         let message = "An unexpected error occured. Please try again later.";
@@ -69,8 +73,7 @@ router.post("/register", async (req, res) => {
             message = error.message;
         } else {
             logError('Error registering user', error, req, {
-                email: req.body.email, 
-                stripeId: stripeID
+                email: req.body.email
             })
             res.status(500);
         }

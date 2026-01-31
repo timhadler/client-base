@@ -47,8 +47,7 @@ router.post("/", async (req, res) => {
         res.status(201).send();
     } catch (error) {
         logError('Failed to create an interaction', error, req, {
-            clientId: req.body.clientId, 
-            reminderId: req.body.reminderId
+            body: req.body
         });
         res.status(500).json({ error: 'Add interaction failed' });
     }
@@ -67,9 +66,8 @@ router.put("/:interactionId", async (req, res) => {
         res.status(204).end();
     } catch (error) {
         logError('Failed to edit interaciton', error, req, {
-            clientId: req.body.clientId, 
-            interactionId: req.params.interactionId, 
-            reminderId: req.body.reminderId
+            interactionId: req.params.interactionId,
+            body: req.body
         });
         res.status(500).json({ error: 'Edit interaction failed' });
     }

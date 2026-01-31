@@ -57,7 +57,9 @@ router.post("/add", async (req, res) => {
         res.status(201).send();
     } catch (error) {
         logError('Failed to create a new reminder', error, req, {
-            clientId: req.body.clientId
+            date: req.body.date,
+            clientId: req.body.clientId, 
+            note: req.body.note, 
         })
         res.status(500).json({ error: 'Add new reminder failed' });
     }
