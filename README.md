@@ -59,6 +59,9 @@ If using seed data, user credentials:
 - **Database:** MariaDB
 - **Sessions:** Express-session
 
+## Further Development
+Plans for further development can be found in management/Further Development.md
+
 ## Screenshots
 <p align="center">
   <img src="images/v3.0.0/reminders.png" alt="Dashboard" width="1385">
