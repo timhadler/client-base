@@ -3,16 +3,6 @@ const db = require('../database');
 /***********************************************************
  * Read
  ***********************************************************/
-exports.nReminderListCount = async function(filter, user_id, conn = db) {
-    let condition = getReminderFilterCondition(filter);
-    if (filter !== 'completed') condition = "reminders.status != 'complete' AND " + condition;
-    
-    const sqlQuery = "SELECT COUNT(*) as n FROM reminders WHERE " + condition + " AND user_id = ?";
-    const rows = await conn.query(sqlQuery, [user_id]);
-
-    return rows[0].n;
-}
-
 // Fetches filtered reminder list
 exports.getReminderList = async function(filter, limit, offset, user_id, reminderCount = 'all', conn = db) {
     let condition = getReminderFilterCondition(filter);
@@ -58,7 +48,7 @@ exports.getReminderCount = async function(filter, user_id, conn = db) {
     `;
     
     const result = await conn.query(sqlQuery, [user_id]);
-    return result[0].total;
+    return result[0].total ? result[0].total : null;
 }
 
 // Fetches the public_id of the client associated with a given remidner id

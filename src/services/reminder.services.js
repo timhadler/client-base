@@ -6,13 +6,11 @@ const db = require('../database');
 // Returns row count for overdue, today, initial, and followUp filters
 exports.loadReminderList = async function({ filter, reminderCount, limit, offset, userId }) {
     // Get counts
-    const [overdueCount, todayCount, thisMonthCount, initialCount, followUpCount] = await Promise.all([
-        reminderModels.nReminderListCount('overdue', userId),
-        reminderModels.nReminderListCount('today', userId),
-        reminderModels.nReminderListCount('thisMonth', userId),
-        'x', 
-        //reminderModels.nReminderListCount('initial', userId),
-        reminderModels.nReminderListCount('followUp', userId),
+    const [overdueCount, todayCount, thisMonthCount, followUpCount] = await Promise.all([
+        reminderModels.getReminderCount('overdue', userId),
+        reminderModels.getReminderCount('today', userId),
+        reminderModels.getReminderCount('thisMonth', userId),
+        reminderModels.getReminderCount('followUp', userId),
     ]);
 
     // Get reminder list
