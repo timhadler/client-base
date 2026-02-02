@@ -65,18 +65,31 @@ exports.getClientIdFromReminder = async function(reminder_id, user_id, conn = db
     return(rows[0].id ? rows[0].id : null);
 }
 
+// Fetches appointment attempt id for a given reminder
+exports.getAttemptIdFromReminder = async function(reminder_id, user_id, conn = db) {
+    const sqlQuery = `
+        SELECT appointment_attempt_id as id
+        FROM reminders
+        WHERE reminders.id = ?
+        AND user_id = ?
+    `;
+    const rows = await conn.query(sqlQuery, [reminder_id, user_id])
+    
+    return(rows[0].id ? rows[0].id : null);
+}
+
 /***********************************************************
  * Create
  ***********************************************************/
 // Creates a reminder entry
-exports.createReminder = async function(date, important, note, reminderCount, clientId, user_id, conn = db) {
+exports.createReminder = async function(attemptId, date, important, note, reminderCount, clientId, user_id, conn = db) {
     const sqlQuery = `
-        INSERT INTO reminders (client_id, rDate, status, important, note, reminderCount, user_id) 
-        SELECT c.id, ?, 'pending', ?, ?, ?, ?
+        INSERT INTO reminders (client_id, appointment_attempt_id, rDate, status, important, note, reminderCount, user_id) 
+        SELECT c.id, ?, ?, 'pending', ?, ?, ?, ?
         FROM clients c 
         WHERE c.public_id = ?
     `;
-    await conn.query(sqlQuery, [date, important, note, reminderCount, user_id, clientId]);
+    await conn.query(sqlQuery, [attemptId, date, important, note, reminderCount, user_id, clientId]);
 }
 
 /***********************************************************
@@ -95,9 +108,9 @@ exports.setReminderOutcome = async function(id, outcome, user_id, conn = db) {
 }
 
 // Edits reminder status to complete
-exports.completeReminder = async function(id, outcome, user_id, conn = db) {
-    const sqlQuery = "UPDATE reminders SET status='complete', outcome=? WHERE id=? AND user_id=?";
-    await conn.query(sqlQuery, [outcome, id, user_id]);
+exports.completeReminder = async function(id, outcome, reminderCount, user_id, conn = db) {
+    const sqlQuery = "UPDATE reminders SET status='complete', outcome=?, reminderCount=? WHERE id=? AND user_id=?";
+    await conn.query(sqlQuery, [outcome, reminderCount, id, user_id]);
 }
 
 /***********************************************************

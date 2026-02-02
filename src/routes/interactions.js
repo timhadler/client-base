@@ -3,6 +3,7 @@ const router = express.Router({ mergeParams: true });   // MergeParams allows fo
 
 const interactionServices = require("../services/interaction.services");
 const interactionModels = require("../models/interaction.models");
+const reminderServices = require("../services/reminder.services"); 
 const { logError } = require('../config/logger');
 
 /***********************************************************
@@ -31,13 +32,13 @@ router.get("/", async (req, res) => {
 // Create a new interaction
 router.post("/", async (req, res) => {
     try {
-        await interactionServices.recordInteraction({
+        await reminderServices.completeReminder({
             clientId: req.body.clientId,
             userId: req.user.id,
             reminderId: req.body.reminderId,
             reminderCount: req.body.reminderCount,
             method: req.body.method,
-            outcome: req.body.outcome ? req.body.outcome : 'waiting',
+            outcome: req.body.outcome,
             createNewReminder: req.body.createNewReminder === "true",
             moveToNextCycle: req.body.moveToNextCycle === "true",
             newReminderDate: req.body.newReminderDate,
