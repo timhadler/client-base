@@ -454,6 +454,7 @@ describe('completeReminder - Decision Table Tests', () => {
             // Should complete reminder, resolve attempt, update client last contact
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'call', 
                 'booked',
                 1,
                 basePayload.userId,
@@ -487,6 +488,7 @@ describe('completeReminder - Decision Table Tests', () => {
             );
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'call',
                 'booked',
                 1,
                 basePayload.userId,
@@ -515,6 +517,7 @@ describe('completeReminder - Decision Table Tests', () => {
             // Should complete reminder, resolve attempt, update client last contact
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'call',
                 'declined',
                 1,
                 basePayload.userId,
@@ -547,6 +550,7 @@ describe('completeReminder - Decision Table Tests', () => {
             );
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'call',
                 'declined',
                 1,
                 basePayload.userId,
@@ -575,6 +579,7 @@ describe('completeReminder - Decision Table Tests', () => {
             // Should complete reminder, abandon attempt
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'call',
                 'no_answer',
                 1,
                 basePayload.userId,
@@ -598,6 +603,7 @@ describe('completeReminder - Decision Table Tests', () => {
             // Should complete reminder, create new reminder (count+1)
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'call',
                 'no_answer',
                 1,
                 basePayload.userId,
@@ -635,6 +641,7 @@ describe('completeReminder - Decision Table Tests', () => {
             );
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'call',
                 'no_answer',
                 1,
                 basePayload.userId,
@@ -675,6 +682,7 @@ describe('completeReminder - Decision Table Tests', () => {
             // Should complete reminder, create new reminder (count+1), update client last contact
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'call',
                 'followup',
                 1,
                 basePayload.userId,
@@ -712,6 +720,7 @@ describe('completeReminder - Decision Table Tests', () => {
             // Should complete reminder, abandon attempt
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'text',
                 'waiting',
                 1,
                 basePayload.userId,
@@ -739,6 +748,7 @@ describe('completeReminder - Decision Table Tests', () => {
             );
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'text',
                 'waiting',
                 1,
                 basePayload.userId,
@@ -759,6 +769,7 @@ describe('completeReminder - Decision Table Tests', () => {
             // Should complete reminder, create new reminder (count+1)
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'text',
                 'waiting',
                 1,
                 basePayload.userId,
@@ -792,6 +803,7 @@ describe('completeReminder - Decision Table Tests', () => {
             // Should complete reminder, abandon attempt
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'email',
                 'waiting',
                 1,
                 basePayload.userId,
@@ -819,6 +831,7 @@ describe('completeReminder - Decision Table Tests', () => {
             );
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'email',
                 'waiting',
                 1,
                 basePayload.userId,
@@ -839,6 +852,7 @@ describe('completeReminder - Decision Table Tests', () => {
             // Should complete reminder, create new reminder (count+1)
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'email',
                 'waiting',
                 1,
                 basePayload.userId,
@@ -863,15 +877,17 @@ describe('completeReminder - Decision Table Tests', () => {
         test('ignore + none + moveToNextCycle=false + createNewReminder=false', async () => {
             await service.completeReminder({
                 ...basePayload,
-                method: 'ignore',
+                reminderCount: 1,
+                method: 'ignored',
                 outcome: 'none',
                 moveToNextCycle: false,
                 createNewReminder: false
             });
 
-            // Should complete reminder, abandon attempt, NO client timestamp updates
+            // Should complete reminder, abandon attempt, NO client timestamp updates, no increment reminder count
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'ignored',
                 'none',
                 1,
                 basePayload.userId,
@@ -886,7 +902,7 @@ describe('completeReminder - Decision Table Tests', () => {
         test('ignore + none + moveToNextCycle=true + createNewReminder=false', async () => {
             await service.completeReminder({
                 ...basePayload,
-                method: 'ignore',
+                method: 'ignored',
                 outcome: 'none',
                 moveToNextCycle: true,
                 createNewReminder: false
@@ -901,8 +917,9 @@ describe('completeReminder - Decision Table Tests', () => {
             );
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
+                'ignored',
                 'none',
-                1,
+                0,
                 basePayload.userId,
                 mockConnection
             );
@@ -933,7 +950,7 @@ describe('completeReminder - Decision Table Tests', () => {
             await service.completeReminder({
                 ...basePayload,
                 reminderCount: 0,
-                method: 'ignore',
+                method: 'ignored',
                 outcome: 'none',
                 moveToNextCycle: false,
                 createNewReminder: false
