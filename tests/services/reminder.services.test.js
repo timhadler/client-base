@@ -1013,3 +1013,83 @@ describe('completeReminder - Decision Table Tests', () => {
         });
     });
 });
+
+// Edit reminder
+describe('editReminder', () => {
+    const baseParams = {
+        date: '2024-12-15',
+        important: true,
+        note: 'Follow up appointment',
+        id: 500,
+        userId: 100
+    };
+    describe('successful edit scenarios', () => {
+        test('should edit reminder and update client next contact', async () => {
+            await service.editReminder(baseParams);
+
+            expect(reminderModels.editReminder).toHaveBeenCalledWith(
+                500,
+                '2024-12-15',
+                true,
+                'Follow up appointment',
+                100,
+                mockConnection
+            );
+            expect(clientModels.updateClientNextContactFromReminder).toHaveBeenCalledWith(
+                500,
+                100,
+                mockConnection
+            );
+            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(mockConnection.release).toHaveBeenCalled();
+        });
+
+        test('should handle important flag as false', async () => {
+            await service.editReminder({
+                ...baseParams,
+                important: false
+            });
+
+            expect(reminderModels.editReminder).toHaveBeenCalledWith(
+                500,
+                '2024-12-15',
+                false,
+                'Follow up appointment',
+                100,
+                mockConnection
+            );
+        });
+
+        test('should handle empty note', async () => {
+            await service.editReminder({
+                ...baseParams,
+                note: ''
+            });
+
+            expect(reminderModels.editReminder).toHaveBeenCalledWith(
+                500,
+                '2024-12-15',
+                true,
+                '',
+                100,
+                mockConnection
+            );
+        });
+
+        test('should handle null note', async () => {
+            await service.editReminder({
+                ...baseParams,
+                note: null
+            });
+
+            expect(reminderModels.editReminder).toHaveBeenCalledWith(
+                500,
+                '2024-12-15',
+                true,
+                null,
+                100,
+                mockConnection
+            );
+        });
+    });
+});
