@@ -80,24 +80,24 @@ exports.editReminder = async function({ date, important, note, id, userId }) {
  *  @decision_table
  * | method | outcome    | moveToNextCycle | createNewReminder | Behavior                                                                                     |
  * |--------|------------|-----------------|-------------------|----------------------------------------------------------------------------------------------|
- * | call   | booked     | false           | false             | Complete reminder, resolve attempt, update client last contact                               |
- * | call   | booked     | true            | false             | Complete reminder, resolve attempt, create new attempt, update client last contact           |
- * | call   | declined   | false           | false             | Complete reminder, resolve attempt, update client last contact                               |
- * | call   | declined   | true            | false             | Complete reminder, resolve attempt, create new attempt, update client last contact           |
- * | call   | no_answer  | false           | false             | Complete reminder, abandon attempt                                                           |
- * | call   | no_answer  | false           | true              | Complete reminder, create new reminder (count+1)                                             |
- * | call   | no_answer  | true            | false             | Complete reminder, abandon attempt, create new attempt                                       |
- * | call   | followup   | false           | false             | Do nothing, expect user to add new reminder for outcome: followup                            |
- * | call   | followup   | false           | true              | Complete reminder, create new reminder (count+1), update client last contact                 |
- * | text   | waiting    | false           | false             | Complete reminder, abandon attempt                                                           |
- * | text   | waiting    | true            | false             | Complete reminder, abandon attempt, create new attempt                                       |
- * | text   | waiting    | false           | true              | Complete reminder, create new reminder (count+1)                                             |
- * | email  | waiting    | false           | false             | Complete reminder, abandon attempt                                                           |
- * | email  | waiting    | true            | false             | Complete reminder, abandon attempt, create new attempt                                       |
- * | email  | waiting    | false           | true              | Complete reminder, create new reminder (count+1)                                             |
- * | ignore | none       | false           | false             | Complete reminder, abandon attempt, NO client timestamp updates                              |
- * | ignore | none       | true            | false             | Complete reminder, abandon attempt, create new attempt, NO client timestamp updates          |
- 
+ * | call   | booked     | false           | false             | Complete reminder, resolve attempt, update client last contact                                             |
+ * | call   | booked     | true            | false             | Complete reminder, resolve attempt, create new attempt, update client last contact                         |
+ * | call   | declined   | false           | false             | Complete reminder, resolve attempt, update client last contact                                             |
+ * | call   | declined   | true            | false             | Complete reminder, resolve attempt, create new attempt, update client last contact                         |
+ * | call   | no_answer  | false           | false             | Complete reminder, abandon attempt                                                                         |
+ * | call   | no_answer  | false           | true              | Complete reminder, create new reminder (count+1)                                                           |
+ * | call   | no_answer  | true            | false             | Complete reminder, abandon attempt, create new attempt                                                     |
+ * | call   | followup   | false           | false             | Do nothing, expect user to add new reminder for outcome: followup                                          |
+ * | call   | followup   | false           | true              | Complete reminder, create new reminder (count+1), update client last contact                               |
+ * | text   | waiting    | false           | false             | Complete reminder, abandon attempt                                                                         |
+ * | text   | waiting    | true            | false             | Complete reminder, abandon attempt, create new attempt                                                     |
+ * | text   | waiting    | false           | true              | Complete reminder, create new reminder (count+1)                                                           |
+ * | email  | waiting    | false           | false             | Complete reminder, abandon attempt                                                                         |
+ * | email  | waiting    | true            | false             | Complete reminder, abandon attempt, create new attempt                                                     |
+ * | email  | waiting    | false           | true              | Complete reminder, create new reminder (count+1)                                                           |
+ * | ignored| none       | false           | false             | Complete reminder, abandon attempt, NO client timestamp or reminder count updates                          |
+ * | ignored| none       | true            | false             | Complete reminder, abandon attempt, create new attempt, NO client timestamp or reminder count updates      |
+  
  * 
  * @workflow
  * 1. Resolve business logic (outcome, reminder creation rules)
@@ -133,7 +133,9 @@ exports.completeReminder = async function({
     try {
         await connection.beginTransaction();
 
-        const currentReminderCount = Number(reminderCount) + 1;     // Increment reminder count
+        // Increment reminder count unles reminder ignored
+        const currentReminderCount = (method === 'ignored') ? reminderCount : Number(reminderCount) + 1;
+
         let currentAttemptId = await reminderModels.getAttemptIdFromReminder(reminderId, userId, connection);
         let newAttemptId;
 
@@ -145,7 +147,7 @@ exports.completeReminder = async function({
         }
 
         // Set first reminder sent if this is the first reminder
-        if (reminderCount === 0 && method !== 'ignore') {
+        if (reminderCount === 0 && method !== 'ignored') {
             await attemptModels.setFirstReminderSentAt(currentAttemptId, userId, connection);
         }
 
@@ -161,7 +163,7 @@ exports.completeReminder = async function({
         }
 
         // Set current reminder complete and update outcome, reminderCount
-        await reminderModels.completeReminder(reminderId, resolveObj.outcome, currentReminderCount, userId, connection);
+        await reminderModels.completeReminder(reminderId, method, resolveObj.outcome, currentReminderCount, userId, connection);
 
         // Update appointment attempt and update outcome, reminderCount
         await attemptModels.updateAttempt(currentAttemptId, resolveObj.outcome, currentReminderCount, userId, connection);
@@ -232,7 +234,7 @@ function resolveOutcome(method, outcome, oldReminderCount, createNewReminder, mo
     // If no immediate outcome, set based ion method
     if (!outcome && (method === 'text' || method ==='email')) {
         obj.outcome = 'waiting';
-    } else if (method === 'ignore') {
+    } else if (method === 'ignored') {
         obj.outcome = 'none';
     }
 

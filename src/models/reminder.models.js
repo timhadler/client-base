@@ -108,9 +108,9 @@ exports.setReminderOutcome = async function(id, outcome, user_id, conn = db) {
 }
 
 // Edits reminder status to complete
-exports.completeReminder = async function(id, outcome, reminderCount, user_id, conn = db) {
-    const sqlQuery = "UPDATE reminders SET status='complete', outcome=?, reminderCount=? WHERE id=? AND user_id=?";
-    await conn.query(sqlQuery, [outcome, reminderCount, id, user_id]);
+exports.completeReminder = async function(id, method, outcome, reminderCount, user_id, conn = db) {
+    const sqlQuery = "UPDATE reminders SET status='complete', method=?, outcome=?, reminderCount=? WHERE id=? AND user_id=?";
+    await conn.query(sqlQuery, [method, outcome, reminderCount, id, user_id]);
 }
 
 /***********************************************************
