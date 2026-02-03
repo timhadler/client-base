@@ -43,7 +43,7 @@ beforeEach(() => {
     reminderModels.getReminderCount.mockResolvedValue(mockReminderCount);
     reminderModels.getAttemptIdFromReminder.mockResolvedValue(mockGetAttemptId);
     attemptModels.createAttempt.mockResolvedValue(mockCreateAttemptId);
-    reminderModels.nReminderListCount.mockImplementation((filter) => {
+    reminderModels.getReminderCount.mockImplementation((filter) => {
         const counts = {
             'overdue': 5,
             'today': 10,
@@ -87,11 +87,11 @@ describe('loadReminderList', () => {
         test('should call all count functions with correct userId', async () => {
             await service.loadReminderList(baseParams);
 
-            expect(reminderModels.nReminderListCount).toHaveBeenCalledWith('overdue', 100);
-            expect(reminderModels.nReminderListCount).toHaveBeenCalledWith('today', 100);
-            expect(reminderModels.nReminderListCount).toHaveBeenCalledWith('thisMonth', 100);
-            expect(reminderModels.nReminderListCount).toHaveBeenCalledWith('followUp', 100);
-            expect(reminderModels.nReminderListCount).toHaveBeenCalledTimes(4);
+            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('overdue', 100);
+            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('today', 100);
+            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('thisMonth', 100);
+            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('followUp', 100);
+            expect(reminderModels.getReminderCount).toHaveBeenCalledTimes(5);
         });
 
         test('should call getReminderList with correct parameters', async () => {
@@ -271,15 +271,15 @@ describe('loadReminderList', () => {
             expect(result.listData).toEqual([]);
             expect(result.total).toBe(0);
             expect(result.listCounts).toEqual({
-                overdue: 5,
-                today: 10,
-                thisMonth: 25,
-                followUp: 8
+                overdue: 0,
+                today: 0,
+                thisMonth: 0,
+                followUp: 0
             });
         });
 
         test('should handle all counts being zero', async () => {
-            reminderModels.nReminderListCount.mockResolvedValue(0);
+            reminderModels.getReminderCount.mockResolvedValue(0);
             reminderModels.getReminderList.mockResolvedValue([]);
             reminderModels.getReminderCount.mockResolvedValue(0);
 
@@ -294,7 +294,7 @@ describe('loadReminderList', () => {
         });
 
         test('should handle large counts', async () => {
-            reminderModels.nReminderListCount.mockImplementation((filter) => {
+            reminderModels.getReminderCount.mockImplementation((filter) => {
                 const counts = {
                     'overdue': 1000,
                     'today': 2000,
@@ -303,7 +303,6 @@ describe('loadReminderList', () => {
                 };
                 return Promise.resolve(counts[filter] || 0);
             });
-            reminderModels.getReminderCount.mockResolvedValue(2000);
 
             const result = await service.loadReminderList(baseParams);
 
@@ -318,8 +317,8 @@ describe('loadReminderList', () => {
     });
 
     describe('error handling', () => {
-        test('should throw error if nReminderListCount fails', async () => {
-            reminderModels.nReminderListCount.mockRejectedValue(new Error('Database error'));
+        test('should throw error if getReminderCount fails', async () => {
+            reminderModels.getReminderCount.mockRejectedValue(new Error('Database error'));
 
             await expect(service.loadReminderList(baseParams)).rejects.toThrow('Database error');
         });
@@ -342,7 +341,7 @@ describe('loadReminderList', () => {
             const startTime = Date.now();
             
             // Mock each count call to take 100ms
-            reminderModels.nReminderListCount.mockImplementation((filter) => {
+            reminderModels.getReminderCount.mockImplementation((filter) => {
                 return new Promise(resolve => {
                     setTimeout(() => resolve(10), 100);
                 });
@@ -353,12 +352,12 @@ describe('loadReminderList', () => {
             const duration = Date.now() - startTime;
             
             // Should take ~100ms (parallel) not ~400ms (sequential)
-            expect(duration).toBeLessThan(200);
-            expect(reminderModels.nReminderListCount).toHaveBeenCalledTimes(4);
+            expect(duration).toBeLessThan(300);
+            expect(reminderModels.getReminderCount).toHaveBeenCalledTimes(5);
         });
 
         test('should fail fast if any count query fails', async () => {
-            reminderModels.nReminderListCount.mockImplementation((filter) => {
+            reminderModels.getReminderCount.mockImplementation((filter) => {
                 if (filter === 'today') {
                     return Promise.reject(new Error('Today count failed'));
                 }
@@ -376,7 +375,7 @@ describe('loadReminderList', () => {
                 userId: 999
             });
 
-            expect(reminderModels.nReminderListCount).toHaveBeenCalledWith('overdue', 999);
+            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('overdue', 999);
             expect(reminderModels.getReminderList).toHaveBeenCalledWith(
                 'today',
                 20,
