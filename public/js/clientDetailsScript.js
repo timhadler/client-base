@@ -12,7 +12,6 @@ let clientData = null;
 
 // Recording interaction responses
 let selectedOutcome = null;
-let currentInteractionId = null;
 let currentReminderId = null;       // For the currently selected interaction
 
 /*****************************************************************
@@ -461,13 +460,12 @@ function initRecordResponseModal() {
         e.stopPropagation();
         
         const $item = $(this).closest('.interaction-item');
-        const interactionId = $item.data('interaction-id');
         const reminderId = $item.data('reminder-id');
         const method = $item.find('.interaction-type').text().trim().toLowerCase();
         const desc = $item.find('.interaction-content > div:last-child').text().trim();
         const date = $item.find('.interaction-date').text().trim();
         
-        openResponseModal(interactionId, reminderId, method, desc, date);
+        openResponseModal(reminderId, method, desc, date);
     });
 
     // Outcome button selection
@@ -485,8 +483,7 @@ function initRecordResponseModal() {
 /*****************************************************************
  * Open Response Modal
  ****************************************************************/
-function openResponseModal(interactionId, reminderId, method, description, date) {
-    currentInteractionId = interactionId;
+function openResponseModal(reminderId, method, description, date) {
     currentReminderId = reminderId;
     
     const icons = { 
@@ -520,7 +517,7 @@ function closeResponseModal() {
         $('#responseNotes').val('');
         $('#saveResponseBtn').prop('disabled', true);
         selectedOutcome = null;
-        currentInteractionId = null;
+        currentReminderId = null;
     }, 300);
 }
 
@@ -538,7 +535,7 @@ function selectOutcome(btn) {
  * Save Interaction Response
  ****************************************************************/
 function saveInteractionResponse() {
-    if (!currentInteractionId || !selectedOutcome) {
+    if (!currentReminderId || !selectedOutcome) {
         alert('Please select an outcome');
         return;
     }
@@ -546,12 +543,11 @@ function saveInteractionResponse() {
     const notes = $('#responseNotes').val().trim();
     
     $.ajax({
-        url: `/interactions/${currentInteractionId}`,
+        url: `/interactions/${currentReminderId}`,
         method: 'PUT',
         data: JSON.stringify({
             outcome: selectedOutcome,
             clientId: clientId,
-            reminderId: currentReminderId,
             notes: notes
         }),
         contentType: 'application/json',
@@ -622,7 +618,7 @@ function renderInteraction(interactions) {
  * Create Interaction Row HTML (replaces activity row)
  ****************************************************************/
 function createInteractionRow(interaction) {
-    let date = new Date(interaction.date);
+    let date = interaction.respondedDate ? new Date(interaction.respondedDate) : new Date(interaction.completedDate);
     date = date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
@@ -655,7 +651,7 @@ function createInteractionRow(interaction) {
     }
 
     return `
-        <div class="interaction-item ${pendingClass}" data-interaction-id="${interaction.id}" data-reminder-id="${interaction.reminderId}">
+        <div class="interaction-item ${pendingClass}" data-reminder-id="${interaction.id}">
             <div class="interaction-icon ${iconClass}">${getInteractionEmoji(interaction.method)}</div>
             <div class="interaction-content">
                 <div class="interaction-header">

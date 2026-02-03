@@ -103,13 +103,13 @@ exports.editReminder = async function(id, date, important, note, user_id) {
 
 // Sets the outcome of a reminder
 exports.setReminderOutcome = async function(id, outcome, user_id, conn = db) {
-    const sqlQuery = "UPDATE reminders SET outcome=? WHERE id=? AND user_id=?";
+    const sqlQuery = "UPDATE reminders SET outcome=?, respondedAt = NOW() WHERE id=? AND user_id=?";
     await conn.query(sqlQuery, [outcome, id, user_id]);
 }
 
 // Edits reminder status to complete
 exports.completeReminder = async function(id, method, outcome, reminderCount, user_id, conn = db) {
-    const sqlQuery = "UPDATE reminders SET status='complete', method=?, outcome=?, reminderCount=? WHERE id=? AND user_id=?";
+    const sqlQuery = "UPDATE reminders SET status='complete', method=?, outcome=?, reminderCount=?, completedAt = NOW() WHERE id=? AND user_id=?";
     await conn.query(sqlQuery, [method, outcome, reminderCount, id, user_id]);
 }
 

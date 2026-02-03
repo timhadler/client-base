@@ -147,7 +147,7 @@ exports.completeReminder = async function({
         }
 
         // Set first reminder sent if this is the first reminder
-        if (reminderCount === 0 && method !== 'ignored') {
+        if (reminderCount == 0 && method !== 'ignored') {
             await attemptModels.setFirstReminderSentAt(currentAttemptId, userId, connection);
         }
 
@@ -189,6 +189,37 @@ exports.completeReminder = async function({
         connection.release();
     }
 }
+
+// Updates reminder outcomes
+// Set resolved for booked or declined outcome
+exports.respondToReminder = async function(clientId, reminderId, outcome, userId) {
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        // Ignore no_answer outcomes
+        if (outcome !== 'no_answer') {
+            // Update outcome
+            await reminderModels.setReminderOutcome(reminderId, outcome, userId, connection);
+
+            // Resolve appointment attempt
+            if (outcome === 'booked' || outcome === 'declined') {
+                const attemptId = await reminderModels.getAttemptIdFromReminder(reminderId, userId, connection);
+                await attemptModels.resolveAttempt(attemptId, userId, connection);
+            }
+
+            // Update client lastContact field
+            await clientModels.updateClientLastContact(clientId, userId, connection);
+        }
+        
+        await connection.commit();
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    } finally {
+        connection.release();
+    }
+};
 
 // Deletes a reminder
 // Updates clients next contact field
