@@ -21,7 +21,7 @@ exports.loadReminderList = async function({ filter, reminderCount, limit, offset
     const totalCount = await reminderModels.getReminderCount(filter, userId);
 
     return {
-        listCounts: { overdue: overdueCount, today: todayCount, thisMonth: thisMonthCount, initial: initialCount, followUp: followUpCount },
+        listCounts: { overdue: overdueCount, today: todayCount, thisMonth: thisMonthCount, followUp: followUpCount },
         listData: reminders, 
         total: totalCount
     };
