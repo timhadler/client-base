@@ -74,7 +74,7 @@ exports.getClientReminders = async function(id, user_id, limit, conn = db) {
     limit = limit ? limit : 10;
 
     const sqlQuery = `
-        SELECT reminders.id, rDate as date, reminders.status, note, outcome, important, reminderCount 
+        SELECT reminders.id, rDate as date, reminders.status, note, method, outcome, important, reminderCount, respondedAt 
         FROM reminders 
         JOIN clients on reminders.client_id = clients.id 
         WHERE clients.public_id = ? 
@@ -96,6 +96,23 @@ exports.getClientActiveReminders = async function(id, user_id, limit, conn = db)
        AND clients.user_id = ?
        AND reminders.status = 'pending'
        ORDER BY rDate
+       LIMIT ?
+    `;
+    const rows = await conn.query(sqlQuery, [id, user_id, limit]);
+    return rows;
+}
+
+// Fetches all reminders with status complete for a given client id
+exports.getClientCompleteReminders = async function(id, user_id, limit, conn = db) {
+       const sqlQuery = `
+       SELECT reminders.id, rDate as date, reminders.status, note, method, outcome, important, reminderCount, respondedAt as respondedDate, completedAt as completedDate
+       FROM reminders 
+       JOIN clients on reminders.client_id = clients.id 
+       WHERE clients.public_id = ? 
+       AND clients.user_id = ?
+       AND reminders.status = 'complete'
+       ORDER BY completedDate
+       DESC
        LIMIT ?
     `;
     const rows = await conn.query(sqlQuery, [id, user_id, limit]);

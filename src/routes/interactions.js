@@ -3,6 +3,8 @@ const router = express.Router({ mergeParams: true });   // MergeParams allows fo
 
 const interactionServices = require("../services/interaction.services");
 const interactionModels = require("../models/interaction.models");
+const reminderServices = require("../services/reminder.services"); 
+const clientModels = require("../models/client.models"); 
 const { logError } = require('../config/logger');
 
 /***********************************************************
@@ -14,7 +16,7 @@ router.get("/", async (req, res) => {
         const clientId = req.params.clientId;
         const limit = Number(req.query.limit);
 
-        let interactions = await interactionModels.getClientInteractions(clientId, req.user.id, limit);
+        let interactions = await clientModels.getClientCompleteReminders(clientId, req.user.id, limit);
 
         res.json({ interactions:interactions });
     } catch (error) {
@@ -31,13 +33,13 @@ router.get("/", async (req, res) => {
 // Create a new interaction
 router.post("/", async (req, res) => {
     try {
-        await interactionServices.recordInteraction({
+        await reminderServices.completeReminder({
             clientId: req.body.clientId,
             userId: req.user.id,
             reminderId: req.body.reminderId,
             reminderCount: req.body.reminderCount,
             method: req.body.method,
-            outcome: req.body.outcome ? req.body.outcome : 'waiting',
+            outcome: req.body.outcome,
             createNewReminder: req.body.createNewReminder === "true",
             moveToNextCycle: req.body.moveToNextCycle === "true",
             newReminderDate: req.body.newReminderDate,
@@ -58,15 +60,15 @@ router.post("/", async (req, res) => {
  ***********************************************************/
 // Update interaction and reminder outcome
 // Called when user records a response from client to text or email
-router.put("/:interactionId", async (req, res) => {
+router.put("/:reminderId", async (req, res) => {
     try {
         // Update interaction and reminder outcome
-        await interactionServices.respondInteraction(req.body.clientId, req.params.interactionId, req.body.reminderId, req.body.outcome, req.user.id);
+        await reminderServices.respondToReminder(req.body.clientId, req.params.reminderId, req.body.outcome, req.user.id);
 
         res.status(204).end();
     } catch (error) {
         logError('Failed to edit interaciton', error, req, {
-            interactionId: req.params.interactionId,
+            reminderId: req.params.reminderId,
             body: req.body
         });
         res.status(500).json({ error: 'Edit interaction failed' });
