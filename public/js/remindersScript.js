@@ -744,7 +744,7 @@ function populateCountFilterOptions() {
     $container.empty();
     
     // Simply create options from 1 to MAX_REMINDER_COUNT
-    for (let i = 1; i <= MAX_REMINDER_COUNT; i++) {
+    for (let i = 0; i < MAX_REMINDER_COUNT; i++) {
         const $item = $(`
             <button class="filter-dropdown-item" data-count="${i}">
                 <span class="filter-check">✓</span>
