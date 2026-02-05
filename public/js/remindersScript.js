@@ -13,6 +13,10 @@ let currentTab = "all";
 const REMINDERS_LIST_LIMIT = 10;    // Limits the number of reminders retrieved per request
 const REMINDERS_INTERACTION_LIMIT = 8;
 
+// Time between reminders constants
+const FOLLOW_UP_PERIOD_DAYS = 2;
+const CYCLE_PERIOD_DAYS = 365;
+
 let currentOffset = 0;
 let totalReminders = 0;
 let hasMoreReminders = false;
@@ -535,9 +539,11 @@ function initInteractionModal() {
             setDefaultReminderNote();
 
             // Set default date
-            // Default to 3 days from today - will set based on user settings later
+            let numDays;
+            numDays =  $('#createNewReminder').prop('checked') ? FOLLOW_UP_PERIOD_DAYS : CYCLE_PERIOD_DAYS;
+
             const defaultDate = new Date();
-            defaultDate.setDate(defaultDate.getDate() + 3);
+            defaultDate.setDate(defaultDate.getDate() + numDays);
 
             // Format date to yyyy-mm-dd for html
             const year = defaultDate.getFullYear();
