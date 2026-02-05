@@ -162,20 +162,12 @@ router.post('/', async (req, res) => {
             }
         });
 
-        // Respond for AJAX
-        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-            return res.status(201).json({ success: true, redirectUrl: `/clients/${id}` });
-        }
-
-        res.status(201).redirect(`/clients/${id}`);
+        return res.status(201).json({ success: true, redirectUrl: `/clients/${id}` });
     } catch (error) {
         logError('Failed to add a new client', error, req, {
             body: req.body
         });
-        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-            return res.status(500).json({ error: 'Add new client failed' });
-        }
-        res.status(500).redirect('/clients');
+        return res.status(500).json({ error: 'Add new client failed' });
     }
 });
 
@@ -208,20 +200,13 @@ router.put('/:id', async (req, res) => {
 
         await clientModels.editClient(clientId, updatedClient, req.user.id);
 
-        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-            return res.json({ success: true, redirectUrl: `/clients/${clientId}` });
-        }
-
-        res.redirect(`/clients/${clientId}`);
+        return res.json({ success: true, redirectUrl: `/clients/${clientId}` });
     } catch (error) {
         logError('Failed to edit a client', error, req, {
             clientId: req.params.id, 
             body: req.body
         });
-        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-            return res.status(500).json({ error: 'Update client failed' });
-        }
-        res.status(500).redirect('/clients');
+        return res.status(500).json({ error: 'Update client failed' });
     }
 });
 
