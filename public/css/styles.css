@@ -284,17 +284,6 @@ td {
     overflow-y: auto;
 }
 
-.summary-display {
-    background: var(--gray-50);
-    border: 2px solid var(--gray-200);
-    border-radius: 8px;
-    padding: 16px;
-    font-size: 15px;
-    color: var(--gray-700);
-    line-height: 1.6;
-    margin-top: 8px;
-}
-
 .checkbox-options-row {
     display: flex;
     gap: 12px;

@@ -443,13 +443,10 @@ function initInteractionModal() {
 
         if (selectedMethod === 'call') {
             $('#outcomeGroup').show();
-            $('#summaryGroup, #reminderOptionsGroup, #newReminderFields').hide();
+            $('#reminderOptionsGroup, #newReminderFields').hide();
             $('#submitInteraction').prop('disabled', true);
         } else {
             $('#outcomeGroup').hide();
-            generateSummary();
-            $('#summaryGroup').show();
-            
             showReminderOptions(selectedMethod, null);
             $('#submitInteraction').prop('disabled', false);
         }
@@ -462,10 +459,6 @@ function initInteractionModal() {
 
         selectedOutcome = $(this).data('outcome');
         $('#outcome').val(selectedOutcome);
-
-        generateSummary();  // Remove this later
-
-        $('#summaryGroup').show();
 
         showReminderOptions(selectedMethod, selectedOutcome);
 
@@ -507,7 +500,6 @@ function initInteractionModal() {
             clientId: currentClientData.id,
             method: selectedMethod,
             outcome: selectedOutcome,
-            //interactionSummary: $('#interactionSummary').text(),
             createNewReminder: $('#createNewReminder').prop('checked'),
             moveToNextCycle: $('#moveToNextCycle').prop('checked'),
             newReminderDate: $('#newReminderDate').val(),
@@ -620,30 +612,6 @@ function initInteractionModal() {
         $('#reminderDescription').hide();
     }
 
-    function generateSummary() {
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('en-US', {
-            month: 'short', day: 'numeric', year: 'numeric'
-        });
-
-        let summary = '';
-
-        if (selectedMethod === 'call') {
-            if (selectedOutcome === 'booked') summary = `Called client on ${dateStr} - Appointment booked`;
-            else if (selectedOutcome === 'followup') summary = `Called client on ${dateStr} - Requested a follow-up`;
-            else if (selectedOutcome === 'no_answer') summary = `Called client on ${dateStr} - No answer`;
-            else if (selectedOutcome === 'declined') summary = `Called client on ${dateStr} - Declined service`;
-        } else if (selectedMethod === 'text') {
-            summary = `Texted client on ${dateStr}`;
-        } else if (selectedMethod === 'email') {
-            summary = `Emailed client on ${dateStr}`;
-        } else if (selectedMethod === 'ignore') {
-            summary = `Reminder ignored on ${dateStr}`;
-        }
-
-        $('#interactionSummary').text(summary);
-    }
-
     function setDefaultReminderNote() {
         const followUp = $('#createNewReminder').prop('checked');
         const moveToNextCylce = $('#moveToNextCycle').prop('checked');
@@ -681,7 +649,7 @@ function initInteractionModal() {
         selectedOutcome = null;
         $('#interactionForm')[0].reset();
         $('.option-btn').removeClass('selected');
-        $('#outcomeGroup, #summaryGroup, #reminderOptionsGroup, #newReminderFields').hide();
+        $('#outcomeGroup, #reminderOptionsGroup, #newReminderFields').hide();
         $('#newReminderWrapper, #nextCycleWrapper, #reminderDescription').hide();
         resetReminderCheckboxes();
         $('#submitInteraction').prop('disabled', true);
