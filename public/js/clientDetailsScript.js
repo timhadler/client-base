@@ -77,9 +77,8 @@ function loadClientData() {
     $.ajax({
         url: `/api/clients/${clientId}`,
         method: 'GET',
-        success: function(response) {
-            const data = typeof response === 'string' ? JSON.parse(response) : response;
-            clientData = data.client;
+        success: function(res) {
+            clientData = res.client;
             renderClientHeader(clientData);
             renderClientInfo(clientData);
             renderAddress(clientData);
@@ -326,9 +325,8 @@ function loadReminders() {
         data: {
             limit: CLIENT_REMINDERS_LIMIT
         },
-        success: function(response) {
-            const data = typeof response === 'string' ? JSON.parse(response) : response;
-            renderReminders(data.reminders || []);
+        success: function(res) {
+            renderReminders(res.reminders || []);
         },
         error: function(xhr, status, error) {
             $('#remindersList').html(`
@@ -566,9 +564,8 @@ function loadActivityHistory() {
         data: {
             limit: CLIENT_INTERACTION_LIMIT
         },
-        success: function(response) {
-            const data = typeof response === 'string' ? JSON.parse(response) : response;
-            renderInteraction(data.interactions || []);
+        success: function(res) {
+            renderInteraction(res.interactions || []);
         },
         error: function(xhr, status, error) {
             $('#activityList').html(`
@@ -669,9 +666,8 @@ function loadEngagementStats() {
     $.ajax({
         url: `/api/clients/${clientId}/stats`,
         method: 'GET',
-        success: function(response) {
-            const data = typeof response === 'string' ? JSON.parse(response) : response;
-            renderStats(data.stats || {});
+        success: function(res) {
+            renderStats(res.stats || {});
         },
         error: function(xhr, status, error) {
             renderStats({});
