@@ -1,12 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const xl = require("../modules/excel-JS");
-const multer = require('multer');       // For uploading files
+
+// For uploading files
+const xl = require("../../modules/excel-JS");
+const multer = require('multer');
 const upload = multer({ dest: "uploads/" });
 
-const clientModels = require("../models/client.models");
-const clientServices = require("../services/client.services");
-const { logError } = require('../config/logger'); 
+const clientModels = require("../../models/client.models");
+const clientServices = require("../../services/client.services");
+const reminderServices = require("../../services/reminder.services");
+const { logError } = require('../../config/logger'); 
 
 // Nested route for now
 const interactionsRouter = require("./interactions");

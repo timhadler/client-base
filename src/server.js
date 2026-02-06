@@ -19,8 +19,8 @@ const stripeRouter = require("./routes/stripe");
 const interactionsRouter  =require("./routes/interactions");
 
 // API Routes
-const apiReminderRouter = require("./routes/api.reminders");
-const apiClientRouter = require("./routes/api.clients");
+const apiReminderRouter = require("./routes/api/api.reminders");
+const apiClientRouter = require("./routes/api/api.clients");
 
 // Config
 const { passport, autoLoginDev } = require("./passport-config");
