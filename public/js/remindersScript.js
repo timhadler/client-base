@@ -1,16 +1,18 @@
 /*****************************************************************
- * Document Ready
+ * Reminders Page
  ****************************************************************/
-// Data for the selected client and reminder
-let currentClientData = {id:"", email:"", phone:""};    // Selected client email/phone data for the copy feature and interaction form submit
-let currentReminderId = 0;      // For interaction modal
+// Selected client data
+let currentClientData = {id:"", email:"", phone:""};
+
+// For interaction modal
+let currentReminderId = 0;
 let currentReminderCount = 0;
 
 // Default tab
 let currentTab = "all";
 
 // List limits
-const REMINDERS_LIST_LIMIT = 10;    // Limits the number of reminders retrieved per request
+const REMINDERS_LIST_LIMIT = 10;
 const REMINDERS_INTERACTION_LIMIT = 8;
 
 // Time between reminders constants
@@ -87,7 +89,6 @@ function queryListData(filter, offset=0) {
             updatePaginationUI(offset, data.listData.length);
         },
         error: function(xhr, status, error) {
-            // Handle AJAX error
             alert(xhr.responseJSON?.error ?? 'Failed fetching list');
         }
   });
@@ -104,7 +105,6 @@ async function fetchClientDetails(id) {
                 resolve(data.client);
             },
             error: function(xhr, status, error) {
-                // Handle AJAX error
                 reject(xhr.responseJSON?.error ?? 'Error');
             }
         });
@@ -123,7 +123,6 @@ async function fetchClientInteractions(id) {
                 resolve(data.interactions || []);
             },
             error: function(xhr, status, error) {
-                // Handle AJAX error
                 reject(xhr.responseJSON?.error ?? 'Error');
             }
         });
@@ -207,11 +206,11 @@ function loadList(counts, reminders, offset=0) {
                     'reminder', 
                     reminderId, 
                     clientName,
-                    // Success callback - reload reminders list
+                    // Success callback
                     function(response) {
                         queryListData(currentTab);
                     },
-                    // Error callback - handle deletion error
+                    // Error callback
                     function(xhr, status, error) {
                         alert(xhr.responseJSON?.error ?? 'Failed to delete reminder. Please try again.');
                     }
@@ -230,10 +229,8 @@ function initLoadMoreButton() {
         const $btn = $(this);
         const originalText = $btn.text();
         
-        // Disable button and show loading state
         $btn.prop('disabled', true).text('Loading...');
         
-        // Increment offset and load more
         currentOffset += REMINDERS_LIST_LIMIT;
         
         $.ajax({
@@ -245,7 +242,6 @@ function initLoadMoreButton() {
                 loadList(data.listCounts, data.listData, currentOffset);
                 updatePaginationUI(currentOffset, data.listData.length);
                 
-                // Re-enable button
                 $btn.prop('disabled', false).text(originalText);
             },
             error: function(xhr, status, error) {
@@ -743,7 +739,6 @@ function populateCountFilterOptions() {
     const $container = $('#countOptionsContainer');
     $container.empty();
     
-    // Simply create options from 1 to MAX_REMINDER_COUNT
     for (let i = 0; i < MAX_REMINDER_COUNT; i++) {
         const $item = $(`
             <button class="filter-dropdown-item" data-count="${i}">

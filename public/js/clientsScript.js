@@ -1,6 +1,5 @@
 /*****************************************************************
- * Clients Page JavaScript
- * Uses jQuery and AJAX to fetch and display client data
+ * Clients List Page
  ****************************************************************/
 
 const LIMIT = 10; // Clients per page
@@ -12,9 +11,6 @@ let currentFilters = {
     priority: ''
 };
 
-/*****************************************************************
- * Document Ready
- ****************************************************************/
 $(document).ready(function() {
     // Initialize page
     loadClients();
@@ -54,7 +50,7 @@ $(document).ready(function() {
 });
 
 /*****************************************************************
- * AJAX Function to Load Clients
+ * Load Clients
  ****************************************************************/
 function loadClients() {
     const offset = (currentPage - 1) * LIMIT;

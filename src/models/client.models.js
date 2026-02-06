@@ -135,7 +135,6 @@ exports.getPublicId = async function(id, user_id, conn = db) {
 /***********************************************************
  * Create
  ***********************************************************/
-// Creates a client entry
 exports.addClient = async (client, user_id, conn = db) => {
     const result = await conn.query(`
         INSERT INTO clients (
@@ -171,7 +170,6 @@ exports.addClient = async (client, user_id, conn = db) => {
 /***********************************************************
  * Edit
  ***********************************************************/
-// Edits a client entry
 exports.editClient = async (id, client, user_id, conn = db) => {
     await conn.query(`
         UPDATE clients 
@@ -264,7 +262,6 @@ exports.updateClientNextContactFromReminder = async function(reminderId, userId,
 /***********************************************************
  * Delete
  ***********************************************************/
-// Delete a client entry
 exports.deleteClient = async function(id, user_id, conn = db) {
     const sqlQuery = "DELETE FROM clients WHERE public_id= ?  AND user_id=?";
     await conn.query(sqlQuery, [id, user_id]);

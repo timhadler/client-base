@@ -82,7 +82,7 @@ router.post("/:id/edit", async (req, res) => {
         res.status(204).end();
     } catch (error) {
         logError('Failed to edit reminder', error, req, {
-            reminderId: req.params.id   // Can get clientId here too?
+            reminderId: req.params.id
         });
         res.status(500).json({ error: 'Edit reminder failed' });
     }
@@ -106,42 +106,5 @@ router.delete("/:id", async (req, res) => {
         res.status(500).json({ error: 'Delete reminder failed' });
     }
 });
-
-/***********************************************
-Helper Functions
- ***********************************************/
-// Gets the date n days from the current date (output: yyyy-mm-dd)
-function getDate(n) {
-    let date = new Date();
-    date.setDate(date.getDate() + n);
-    date = date.toISOString().slice(0, 10).replace('T', ' ');
-
-    return date;
-};
-
-// Returns string of the last date in a given month
-// Input: "12", Output: "31"
-function getLastDate(m) {
-    let d = "31"
-
-    switch(m) {
-        case ("02"):
-            d = "28";
-            break;
-        case ("04"):
-            d = "30";
-            break;
-        case ("06"):
-            d = "30";
-            break;
-        case ("09"):
-            d = "30";
-            break;
-        case ("11"):
-            d = "30";
-            break
-    }
-    return d;
-}
 
 module.exports = router;

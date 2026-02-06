@@ -12,7 +12,9 @@ const { logError } = require('../config/logger');
 const interactionsRouter = require("./interactions");
 router.use("/:clientId/activity", interactionsRouter)
 
-//   - Client Index
+/***********************************************************
+ * Get
+ ***********************************************************/
 router.get("/", async (req, res) => {
     res.render("clients/clients", { 
         bodyClass: "mainPage", 
@@ -21,7 +23,7 @@ router.get("/", async (req, res) => {
     });
 });
 
-// GET - Show add client form
+// Add client form
 router.get('/new', (req, res) => {
     res.render('clients/client-form', {
         bodyClass: "",
@@ -33,7 +35,7 @@ router.get('/new', (req, res) => {
     });
 });
 
-// GET - Show edit client form
+// Edit client form
 router.get('/:id/edit', async (req, res) => {
     try {
         const client = await clientModels.getClientDetails(req.params.id, req.user.id);
@@ -58,7 +60,7 @@ router.get('/:id/edit', async (req, res) => {
     }
 });
 
-// GET - Load client list
+// Client list
 router.get("/load-client-list", async (req, res) => {
     try {
         const data = await clientServices.getClientList({
@@ -67,7 +69,7 @@ router.get("/load-client-list", async (req, res) => {
             offset: req.query.offset, 
             search: req.query.search, 
             status: req.query.status, 
-            priortiy: req.query.priority
+            priority: req.query.priority
         })
 
         res.json(data);
@@ -83,7 +85,7 @@ router.get("/load-client-list", async (req, res) => {
     }
 });
 
-// GET - Render client details page
+// Client details page
 router.get("/:id", async (req, res) => {
     res.render("clients/client-details", { 
         bodyClass: "mainPage", 
@@ -93,7 +95,7 @@ router.get("/:id", async (req, res) => {
     });
 });
 
-// GET - Retrieve client data
+// Client data
 router.get("/:id/data", async (req, res) => {
     try {
         const id = req.params.id;;
@@ -108,7 +110,7 @@ router.get("/:id/data", async (req, res) => {
     }
 });
 
-// GET - Retrieve client reminder data
+// Client reminder data
 router.get("/:id/reminders", async (req, res) => {
     try {
         const reminders = await clientServices.getActiveReminders
@@ -130,7 +132,6 @@ router.get("/:id/reminders", async (req, res) => {
 /***********************************************************
  * Add
  ***********************************************************/
-// POST - Add a new client
 router.post('/', async (req, res) => {
     try {
         const data = req.body;
@@ -181,7 +182,6 @@ router.post('/', async (req, res) => {
 /***********************************************************
  * Edit
  ***********************************************************/
-// PUT - Edit an existing client
 router.put('/:id', async (req, res) => {
     try {
         const clientId = req.params.id;
@@ -228,7 +228,7 @@ router.put('/:id', async (req, res) => {
 /***********************************************************
  * Delete
  ***********************************************************/
-// DELETE - Delete client data including remaining active reminders
+// Delete client data including remaining active reminders
 router.delete("/:id", async (req, res) => {
     try {
         await clientServices.deleteClientData(req.params.id, req.user.id)

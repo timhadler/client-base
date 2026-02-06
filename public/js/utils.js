@@ -99,7 +99,7 @@ function saveNewReminder(onSuccess, onError) {
         }),
         contentType: 'application/json',
         success: function(res) {
-            if (onSuccess) onSuccess(res); // call the page-specific callback
+            if (onSuccess) onSuccess(res);
         },
         error: function(err) {
             if (onError) onError(err);
@@ -196,7 +196,6 @@ let deleteModalData = {
     errorCallback: null
 };
 
-// Initialize delete modal
 function initDeleteModal() {
     // Close modal events
     $('#deleteCancelBtn, #successDoneBtn').on('click', closeDeleteModal);
@@ -219,9 +218,6 @@ function initDeleteModal() {
     $('#confirmDeleteBtn').on('click', confirmDelete);
 }
 
-// Show delete modal
-// successCallback: function to call after successful deletion
-// errorCallback: function to call if deletion fails
 function showDeleteModal(type, id, name, successCallback, errorCallback) {
     deleteModalData = { 
         type, 
@@ -260,7 +256,6 @@ function showDeleteModal(type, id, name, successCallback, errorCallback) {
     $modal.addClass('show');
 }
 
-// Close delete modal
 function closeDeleteModal() {
     $('#deleteModal').removeClass('show');
     deleteModalData = { 
@@ -290,7 +285,6 @@ function confirmDelete() {
         deleteUrl = `/clients/${deleteModalData.id}`;
     }
 
-    // Make AJAX delete request
     $.ajax({
         url: deleteUrl,
         method: 'DELETE',
@@ -298,7 +292,7 @@ function confirmDelete() {
             showSuccessMessage();
             
             // Call the success callback after showing success message
-            const callback = deleteModalData.successCallback;   // Latch
+            const callback = deleteModalData.successCallback;
             setTimeout(() => {
                 if (callback && typeof callback === 'function') {
                     callback(response);

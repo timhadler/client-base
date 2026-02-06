@@ -51,7 +51,6 @@ exports.getReminderCount = async function(filter, user_id, conn = db) {
     return result[0].total ? result[0].total : null;
 }
 
-// Fetches the public_id of the client associated with a given remidner id
 exports.getClientIdFromReminder = async function(reminder_id, user_id, conn = db) {
     const sqlQuery = `
         SELECT clients.public_id as id
@@ -65,7 +64,6 @@ exports.getClientIdFromReminder = async function(reminder_id, user_id, conn = db
     return(rows[0].id ? rows[0].id : null);
 }
 
-// Fetches appointment attempt id for a given reminder
 exports.getAttemptIdFromReminder = async function(reminder_id, user_id, conn = db) {
     const sqlQuery = `
         SELECT appointment_attempt_id as id
@@ -81,7 +79,6 @@ exports.getAttemptIdFromReminder = async function(reminder_id, user_id, conn = d
 /***********************************************************
  * Create
  ***********************************************************/
-// Creates a reminder entry
 exports.createReminder = async function(attemptId, date, important, note, reminderCount, clientId, user_id, conn = db) {
     const sqlQuery = `
         INSERT INTO reminders (client_id, appointment_attempt_id, rDate, status, important, note, reminderCount, user_id) 
@@ -95,19 +92,16 @@ exports.createReminder = async function(attemptId, date, important, note, remind
 /***********************************************************
  * Edit
  ***********************************************************/
-// Edits a reminder entry
 exports.editReminder = async function(id, date, important, note, user_id) {
     const sqlQuery = "UPDATE reminders SET rDate=?, important=?, note=? WHERE id=? AND user_id=?";
     await db.query(sqlQuery, [date, important, note, id, user_id]);
 };
 
-// Sets the outcome of a reminder
 exports.setReminderOutcome = async function(id, outcome, user_id, conn = db) {
     const sqlQuery = "UPDATE reminders SET outcome=?, respondedAt = NOW() WHERE id=? AND user_id=?";
     await conn.query(sqlQuery, [outcome, id, user_id]);
 }
 
-// Edits reminder status to complete
 exports.completeReminder = async function(id, method, outcome, reminderCount, user_id, conn = db) {
     const sqlQuery = "UPDATE reminders SET status='complete', method=?, outcome=?, reminderCount=?, completedAt = NOW() WHERE id=? AND user_id=?";
     await conn.query(sqlQuery, [method, outcome, reminderCount, id, user_id]);
@@ -118,8 +112,10 @@ exports.completeReminder = async function(id, method, outcome, reminderCount, us
  ***********************************************************/
 // Delete a reminder
 exports.deleteReminder = async function(id, user_id, conn = db) {
-    const sqlQuery = "DELETE FROM reminders WHERE id=? AND user_id=?";
-    await conn.query(sqlQuery, [id, user_id]);
+    const sqlQuery = "DELETE FROM reminders WHERE id=? AND user_id=? RETURNING client_id";
+    const result = await conn.query(sqlQuery, [id, user_id]);
+
+    return result[0].clientId ? result[0].clientId : null;
 }
 
 /***********************************************************

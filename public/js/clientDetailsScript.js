@@ -1,8 +1,7 @@
 /*****************************************************************
- * Client Detail Page
- * Uses jQuery and AJAX to fetch and display all client data
+ * Client Details Page
  ****************************************************************/
-// Set limits (constant for now, mayby scroll later)
+// Set limits (constant for now, maybe scroll later)
 const CLIENT_REMINDERS_LIMIT = 5;
 const CLIENT_INTERACTION_LIMIT = 8;
 
@@ -10,13 +9,10 @@ const CLIENT_INTERACTION_LIMIT = 8;
 let clientId;
 let clientData = null;
 
-// Recording interaction responses
+// Recording reminder responses
 let selectedOutcome = null;
-let currentReminderId = null;       // For the currently selected interaction
+let currentReminderId = null;
 
-/*****************************************************************
- * Document Ready
- ****************************************************************/
 $(document).ready(function() {
     clientId = document.getElementById('client-data').dataset.clientId;
 
@@ -34,14 +30,14 @@ $(document).ready(function() {
         if (mode === 'edit') {
             saveReminderEdit(function(res) {
                 $('#reminderModal').removeClass('show');
-                loadReminders(); // reload the list on this page
+                loadReminders();
             }, function(err) {
                 alert(err.responseJSON?.error ?? 'Failed to save reminder');
             });
         } else if (mode === 'add') {
             saveNewReminder(function(res) {
                 $('#reminderModal').removeClass('show');
-                loadReminders(); // reload the list on this page
+                loadReminders();
             }, function(err) {
                 alert(err.responseJSON?.error ?? "Failed to create new reminder");
             });
@@ -52,7 +48,6 @@ $(document).ready(function() {
     $('#confirmDeleteClientBtn').on('click', function(e) {
         const clientName = $(this).closest('tr').find('.client-name').text();
 
-        // Show delete modal with success and error callbacks
         showDeleteModal(
             'client', 
             clientId, 
@@ -164,7 +159,6 @@ function renderClientHeader(client) {
     
     // Update action buttons
     $('#editBtn').attr('href', `/clients/${client.id}/edit`);
-    //$('#addReminderBtn').attr('href', `/reminders/new?client=${client.id}`);
     $('#addReminderBtn').on('click', function() {
         addReminder(clientData);
     })
@@ -667,41 +661,6 @@ function createInteractionRow(interaction) {
         </div>
     `;
 }
-
-/*****************************************************************
- * Create Activity Row HTML -- Keep in case i want to add activity history instead of just interaction history
- ****************************************************************/
-// function createActivityRow(activity) {
-//     const { icon, color } = getActivityIconAndColor(activity.type);
-//     const timestamp = formatActivityTime(activity.createdAt);
-    
-//     return `
-//         <div class="cd-activity-item">
-//             <div class="cd-activity-icon ${color}">${icon}</div>
-//             <div class="cd-activity-content">
-//                 <div class="cd-activity-text">${escapeHtml(activity.description)}</div>
-//                 <div class="cd-activity-time">${timestamp}</div>
-//             </div>
-//         </div>
-//     `;
-// }
-
-/*****************************************************************
- * Get Activity Icon and Color
- ****************************************************************/
-// function getActivityIconAndColor(type) {
-//     const types = {
-//         'reminder_completed': { icon: '✓', color: 'blue' },
-//         'reminder_created': { icon: '📅', color: 'orange' },
-//         'reminder_updated': { icon: '✏️', color: 'blue' },
-//         'client_updated': { icon: '📝', color: 'teal' },
-//         'client_created': { icon: '➕', color: 'teal' },
-//         'note_added': { icon: '📝', color: 'blue' },
-//         'status_changed': { icon: '🔄', color: 'teal' }
-//     };
-    
-//     return types[type] || { icon: '•', color: 'blue' };
-// }
 
 /*****************************************************************
  * Load Engagement Stats

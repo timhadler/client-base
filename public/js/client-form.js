@@ -1,5 +1,8 @@
+/*****************************************************************
+ * Add/Edit Client Form
+ ****************************************************************/
+
 $(document).ready(function() {
-    
     // Toggle address fields when checkbox is clicked
     $('#addressCheckboxWrapper').on('click', function() {
         const checkbox = $('#hasAddress');
@@ -59,7 +62,6 @@ $(document).ready(function() {
             method: formMethod,
             data: formData,
             success: function(response) {
-                // Show success message
                 showNotification('Client saved successfully!', 'success');
                 
                 // Redirect after short delay
@@ -75,7 +77,6 @@ $(document).ready(function() {
                 // Re-enable submit button
                 submitBtn.prop('disabled', false).html(originalText);
                 
-                // Show error message
                 showNotification(xhr.responseJSON?.error ?? 'Error saving client', 'error');
             }
         });
@@ -95,7 +96,7 @@ $(document).ready(function() {
         }
     });
     
-    // Phone number formatting (optional)
+    // Phone number formatting
     $('#phone').on('blur', function() {
         let phone = $(this).val().trim();
         if (phone) {

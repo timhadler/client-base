@@ -1,4 +1,3 @@
-// Framework for future implementation
 
 const express = require('express');
 const router = express.Router();

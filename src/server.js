@@ -18,6 +18,7 @@ const authRouter = require("./routes/auth");
 const stripeRouter = require("./routes/stripe");
 const interactionsRouter  =require("./routes/interactions");
 
+// Config
 const { passport, autoLoginDev } = require("./passport-config");
 const { logInfo, logError } = require("./config/logger");
 
@@ -43,7 +44,6 @@ app.use(session({
     })
 }));
 
-// Allow flash in templates
  app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
@@ -95,7 +95,9 @@ function checkActivePaid(req, res, next) {
  * Routes
  */
 app.use("/subscriptions", stripeRouter);
-app.use(express.json());    // Call before routes to parse JSON bodies, call after subscriptions route as webhooks need raw body
+
+// Call before routes to parse JSON bodies, call after subscriptions route as webhooks need raw body
+app.use(express.json());
 
 // Mount routers
 app.get("/", checkAuthenticated, (req, res) => {

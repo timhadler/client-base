@@ -1,3 +1,7 @@
+/*****************************************************************
+ * Nav Bar
+ ****************************************************************/
+
 function setActiveNav() {
     const path = window.location.pathname;
     document.querySelectorAll('.nav-links a').forEach(link => {
@@ -38,7 +42,7 @@ function initUserMenu() {
         }
     });
 
-    // Close dropdown when clicking menu items (except logout form)
+    // Close dropdown when clicking menu items
     document.querySelectorAll('.dropdown-item:not(.logout)').forEach(item => {
         item.addEventListener('click', () => {
             userMenuTrigger.classList.remove('active');

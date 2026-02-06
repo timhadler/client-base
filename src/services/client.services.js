@@ -55,10 +55,7 @@ exports.deleteClientData = async function(id, userId) {
     try {
         await connection.beginTransaction();
 
-        // Delete active reminders
         await clientModels.deleteActiveReminders(id, userId, connection);
-
-        // Delete client
         await clientModels.deleteClient(id, userId, connection);
 
         await connection.commit();

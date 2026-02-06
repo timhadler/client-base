@@ -1,36 +1,8 @@
 const db = require("../database");
 
-// Create new user record
-exports.createUser = async function(email, password, stripeID) {
-    const sqlQuery = "INSERT INTO users (email, password_hash, stripe_customer_id) VALUES(?, ?, ?)";
-    await db.query(sqlQuery, [email, password, stripeID]);
-}
-
-// Update user record with subscription details
-exports.createSubscription = async (customerId, subscriptionId, product, startDate, endDate, nextBillingDate, status) => {
-    const sqlQuery = "UPDATE users SET stripe_subscription_id = ?, subscription_status = ?, subscription_tier = ?, subscription_start = ?, subscription_end = ?, next_billing_date = ? WHERE stripe_customer_id = ?";
-    await db.query(sqlQuery, [subscriptionId, status, product, startDate, endDate, nextBillingDate, customerId]);
-};
-
-// Update user record to reflect subscription deletion
-exports.deleteSubscription = async (customerId, status) => {
-    const sqlQuery = "UPDATE users SET subscription_status = ?, subscription_end = CURRENT_TIMESTAMP(), subscription_tier = ?, next_billing_date = ? WHERE stripe_customer_id = ?";
-    await db.query(sqlQuery, [status, null, null, customerId]);
-};
-
-// Update user record on successful payment
-exports.setSuccessfulPayment = async (customerId) => {
-    const sqlQuery = "UPDATE users SET last_payment_at = CURRENT_TIMESTAMP() WHERE stripe_customer_id = ?";
-    await db.query(sqlQuery, [customerId]);
-};
-
-// Update user record on failed payment
-exports.setFailedPayment = async (customerId) => {
-    const sqlQuery = "UPDATE users SET last_payment_failed_at = CURRENT_TIMESTAMP() WHERE stripe_customer_id = ?";
-    await db.query(sqlQuery, [customerId]);
-};
-
-// Reveives a user with a given id
+/***********************************************************
+ * Read
+ ***********************************************************/
 exports.getUserById = async function(id) {
     const sqlQuery = "SELECT id, email as username, subscription_status from users WHERE id=?";
     const rows = await db.query(sqlQuery, id);
@@ -42,7 +14,6 @@ exports.getUserById = async function(id) {
     };
 }
 
-// Reveives a user with a given username
 exports.getUserByUsername = async function(username) {
     const sqlQuery = "SELECT id, email, password_hash as password from users WHERE email=?";
     const rows = await db.query(sqlQuery, username);
@@ -53,3 +24,35 @@ exports.getUserByUsername = async function(username) {
         return null;
     };
 }
+
+/***********************************************************
+ * Create
+ ***********************************************************/
+exports.createUser = async function(email, password, stripeID) {
+    const sqlQuery = "INSERT INTO users (email, password_hash, stripe_customer_id) VALUES(?, ?, ?)";
+    await db.query(sqlQuery, [email, password, stripeID]);
+}
+
+/***********************************************************
+ * Edit
+ ***********************************************************/
+// Update user record with subscription details
+exports.createSubscription = async (customerId, subscriptionId, product, startDate, endDate, nextBillingDate, status) => {
+    const sqlQuery = "UPDATE users SET stripe_subscription_id = ?, subscription_status = ?, subscription_tier = ?, subscription_start = ?, subscription_end = ?, next_billing_date = ? WHERE stripe_customer_id = ?";
+    await db.query(sqlQuery, [subscriptionId, status, product, startDate, endDate, nextBillingDate, customerId]);
+};
+
+exports.deleteSubscription = async (customerId, status) => {
+    const sqlQuery = "UPDATE users SET subscription_status = ?, subscription_end = CURRENT_TIMESTAMP(), subscription_tier = ?, next_billing_date = ? WHERE stripe_customer_id = ?";
+    await db.query(sqlQuery, [status, null, null, customerId]);
+};
+
+exports.setSuccessfulPayment = async (customerId) => {
+    const sqlQuery = "UPDATE users SET last_payment_at = CURRENT_TIMESTAMP() WHERE stripe_customer_id = ?";
+    await db.query(sqlQuery, [customerId]);
+};
+
+exports.setFailedPayment = async (customerId) => {
+    const sqlQuery = "UPDATE users SET last_payment_failed_at = CURRENT_TIMESTAMP() WHERE stripe_customer_id = ?";
+    await db.query(sqlQuery, [customerId]);
+};

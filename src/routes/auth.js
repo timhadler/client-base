@@ -7,7 +7,9 @@ const users = require("../models/user.models");
 const stripeModule = require("./stripe");
 const { logInfo, logError } = require('../config/logger');  
 
-// GET
+/***********************************************************
+ * Get
+ ***********************************************************/
 router.get("/register", (req, res) => {
     res.render("login/register", { bodyClass: "authPage", showNavBar: false });
 });
@@ -16,7 +18,9 @@ router.get("/login", (req, res) => {
     res.render("login/login", { bodyClass: "authPage", showNavBar: false });
 });
 
-// POST
+/***********************************************************
+ * Post
+ ***********************************************************/
 router.post("/register", async (req, res) => {
     try {
         const body = req.body;
@@ -35,9 +39,10 @@ router.post("/register", async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         
-        // Create stripe customer and start a free subscription trial (Stripe not fully implmented yet)
+        // Create stripe customer and start a free subscription trial
         let stripeID = null;
 
+        // In deleopment
         if (process.env.STRIPE_FEATURE === 'enabled') {
             stripeID = await stripeModule.createCustomer(email)
             const subscriptionID = await stripeModule.createTrialSubscription(stripeID);    // Stripe webhook will handle updating subscription details in db
@@ -82,7 +87,6 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", (req, res, next) => {
-  // If "Remember me" is checked, make session last longer (e.g. 30 days)
   if (req.body.remember) {
     req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
   } else {
@@ -97,7 +101,9 @@ router.post("/login", (req, res, next) => {
 });
 
 
-// DELETE
+/***********************************************************
+ * Delete
+ ***********************************************************/
 router.delete("/logout", (req, res, next) => {
     req.logout(function(err) {
         if (err) { return next(err); }

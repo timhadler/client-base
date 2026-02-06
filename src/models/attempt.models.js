@@ -61,7 +61,6 @@ exports.averageRemindersByOutcome = async function(userId, conn = db) {
 /***********************************************************
  * Create
  ***********************************************************/
-// Creates a new appointment attempt for a client
 exports.createAttempt = async function(clientId, userId, conn = db) {
     const sqlQuery = `
         INSERT INTO appointment_attempts (client_id, user_id)
@@ -108,7 +107,7 @@ exports.resolveAttempt = async function(id, userId, conn = db) {
     await conn.query(sqlQuery, [ id, userId]);
 }
 
-// Sets an appointment attempts first_reminder_sent_at field
+// Sets an appointment attempts 'first_reminder_sent_at' field
 exports.setFirstReminderSentAt = async function(id, userId, conn = db) {
     const sqlQuery = `
         UPDATE appointment_attempts
