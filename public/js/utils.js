@@ -66,7 +66,7 @@ function saveReminderEdit(onSuccess, onError) {
 
     $.ajax({
         url: `/api/reminders/${reminderId}`,
-        method: 'POST',
+        method: 'PUT',
         data: JSON.stringify({
             date: date,
             note: note, 

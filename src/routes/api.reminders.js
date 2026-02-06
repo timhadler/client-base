@@ -63,7 +63,7 @@ router.post("/", async (req, res) => {
 /***********************************************************
  * Put
  ***********************************************************/
-router.post("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
     try {
         await reminderServices.editReminder({
             id: req.params.id, 
