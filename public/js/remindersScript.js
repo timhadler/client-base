@@ -96,7 +96,7 @@ function queryListData(filter, offset=0) {
 async function fetchClientDetails(id) {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: `clients/${id}/data`,
+            url: `/api/clients/${id}`,
             method: "GET",
             success: function(res) {
                 const data = typeof res === 'string' ? JSON.parse(res) : res;
@@ -113,7 +113,7 @@ async function fetchClientDetails(id) {
 async function fetchClientInteractions(id) {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: `clients/${id}/activity`,
+            url: `/api/clients/${id}/activity`,
             method: "GET",
             data: { limit: REMINDERS_INTERACTION_LIMIT },
             success: function(res) {

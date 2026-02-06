@@ -282,7 +282,7 @@ function confirmDelete() {
     if (deleteModalData.type === 'reminder') {
         deleteUrl = `/api/reminders/${deleteModalData.id}`;
     } else if (deleteModalData.type === 'client') {
-        deleteUrl = `/clients/${deleteModalData.id}`;
+        deleteUrl = `/api/clients/${deleteModalData.id}`;
     }
 
     $.ajax({
