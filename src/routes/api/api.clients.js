@@ -11,10 +11,6 @@ const clientServices = require("../../services/client.services");
 const reminderServices = require("../../services/reminder.services");
 const { logError } = require('../../config/logger'); 
 
-// Nested route for now
-const interactionsRouter = require("./interactions");
-router.use("/:clientId/activity", interactionsRouter)
-
 /***********************************************************
  * Get
  ***********************************************************/
@@ -45,20 +41,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/:id", async (req, res) => {
-    try {
-        const id = req.params.id;;
-        const client = await clientModels.getClientDetails(id, req.user.id);
-
-        res.json({ client:client });
-    } catch (error) {
-        logError('Failed to fetch client data', error, req, {
-            clientId: req.params.id
-        });
-        res.status(500).json({ error: 'Fetch client data failed' });
-    }
-});
-
 router.get("/:id/reminders", async (req, res) => {
     try {
         const reminders = await clientServices.getActiveReminders
@@ -74,6 +56,37 @@ router.get("/:id/reminders", async (req, res) => {
             clientId: req.params.id
         });
         res.status(500).json({ error: 'Fetch client reminders failed' });
+    }
+});
+
+// Returns a list of past reminders (status = 'complete') for a given client
+router.get("/:id/interactions", async (req, res) => {
+    try {
+        const clientId = req.params.id;
+        const limit = Number(req.query.limit);
+
+        let interactions = await clientModels.getClientCompleteReminders(clientId, req.user.id, limit);
+
+        res.json({ interactions:interactions });
+    } catch (error) {
+        logError('Failed to fetch interactions', error, req, {
+            clientId: req.params.id
+        });
+        res.status(500).json({ error: 'Fetch interactions failed' });
+    }
+});
+
+router.get("/:id", async (req, res) => {
+    try {
+        const id = req.params.id;;
+        const client = await clientModels.getClientDetails(id, req.user.id);
+
+        res.json({ client:client });
+    } catch (error) {
+        logError('Failed to fetch client data', error, req, {
+            clientId: req.params.id
+        });
+        res.status(500).json({ error: 'Fetch client data failed' });
     }
 });
 
@@ -155,6 +168,23 @@ router.put('/:id', async (req, res) => {
             body: req.body
         });
         res.status(500).json({ error: 'Update client failed' });
+    }
+});
+
+// Update reminder outcome (interaction = reminder with status = 'complete')
+// Called when user records a response to text or email
+router.put("/:id/interactions/:reminderId", async (req, res) => {
+    try {
+        // Update interaction and reminder outcome
+        await reminderServices.respondToReminder(req.params.id, req.params.reminderId, req.body.outcome, req.user.id);
+
+        res.json({ success: true });
+    } catch (error) {
+        logError('Failed to edit interaciton', error, req, {
+            reminderId: req.params.reminderId,
+            body: req.body
+        });
+        res.status(500).json({ error: 'Edit interaction failed' });
     }
 });
 

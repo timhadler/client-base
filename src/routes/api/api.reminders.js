@@ -60,6 +60,31 @@ router.post("/", async (req, res) => {
     }
 });
 
+// Implements workflow logic to complete a reminder
+router.post("/:id/complete", async (req, res) => {
+    try {
+        await reminderServices.completeReminder({
+            clientId: req.body.clientId,
+            userId: req.user.id,
+            reminderId: req.params.id,
+            reminderCount: req.body.reminderCount,
+            method: req.body.method,
+            outcome: req.body.outcome,
+            createNewReminder: req.body.createNewReminder ? true : false,
+            moveToNextCycle: req.body.moveToNextCycle ? true : false,
+            newReminderDate: req.body.newReminderDate,
+            newReminderNote: req.body.newReminderNote,
+        });
+
+        res.status(204).end();
+    } catch (error) {
+        logError('Failed to create an interaction', error, req, {
+            body: req.body
+        });
+        res.status(500).json({ error: 'Add interaction failed' });
+    }
+});
+
 /***********************************************************
  * Put
  ***********************************************************/

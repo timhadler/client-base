@@ -535,11 +535,10 @@ function saveInteractionResponse() {
     const notes = $('#responseNotes').val().trim();
     
     $.ajax({
-        url: `/interactions/${currentReminderId}`,
+        url: `/api/clients/${clientId}/interactions/${currentReminderId}`,
         method: 'PUT',
         data: JSON.stringify({
             outcome: selectedOutcome,
-            clientId: clientId,
             notes: notes
         }),
         contentType: 'application/json',
@@ -559,7 +558,7 @@ function saveInteractionResponse() {
  ****************************************************************/
 function loadActivityHistory() {
     $.ajax({
-        url: `/api/clients/${clientId}/activity`,
+        url: `/api/clients/${clientId}/interactions`,
         method: 'GET',
         data: {
             limit: CLIENT_INTERACTION_LIMIT

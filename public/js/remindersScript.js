@@ -113,7 +113,7 @@ async function fetchClientDetails(id) {
 async function fetchClientInteractions(id) {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: `/api/clients/${id}/activity`,
+            url: `/api/clients/${id}/interactions`,
             method: "GET",
             data: { limit: REMINDERS_INTERACTION_LIMIT },
             success: function(res) {
@@ -492,7 +492,6 @@ function initInteractionModal() {
         e.preventDefault();
 
         const formData = {  
-            reminderId: currentReminderId,
             reminderCount: currentReminderCount,
             clientId: currentClientData.id,
             method: selectedMethod,
@@ -503,9 +502,10 @@ function initInteractionModal() {
             newReminderNote: $('#newReminderNote').val()
         };
         $.ajax({
-            url: "/interactions",
+            url: `/api/reminders/${currentReminderId}/complete`,
             method: "POST",
-            data: formData,
+            data: JSON.stringify(formData),
+            contentType: "application/json",
             success: function(res) {
                 queryListData(currentTab);
             },
