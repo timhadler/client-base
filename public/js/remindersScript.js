@@ -68,7 +68,7 @@ $(document).ready(function() {
 // AJAX Retrieve data for selected reminder list
 function queryListData(filter, offset=0) {
     $.ajax({
-        url: "reminders/load-reminder-list",
+        url: "/api/reminders",
         method: "GET",
         data: { 
             filter: filter, 
@@ -77,16 +77,14 @@ function queryListData(filter, offset=0) {
             reminderCount: selectedReminderCount
         },
         success: function(res) {
-            const data = JSON.parse(res);
-
             // Update pagination state
             if (offset === 0) {
-                totalReminders = data.total || 0;
+                totalReminders = res.pageTotal || 0;
                 currentOffset = 0;
             }
 
-            loadList(data.listCounts, data.listData, offset);
-            updatePaginationUI(offset, data.listData.length);
+            loadList(res.counts, res.data, offset);
+            updatePaginationUI(offset, res.data.length);
         },
         error: function(xhr, status, error) {
             alert(xhr.responseJSON?.error ?? 'Failed fetching list');
@@ -234,13 +232,12 @@ function initLoadMoreButton() {
         currentOffset += REMINDERS_LIST_LIMIT;
         
         $.ajax({
-            url: "reminders/load-reminder-list",
+            url: "api/reminders/",
             method: "GET",
             data: { filter: currentTab, limit: REMINDERS_LIST_LIMIT, offset: currentOffset },
             success: function(res) {
-                const data = JSON.parse(res);
-                loadList(data.listCounts, data.listData, currentOffset);
-                updatePaginationUI(currentOffset, data.listData.length);
+                loadList(res.counts, res.data, currentOffset);
+                updatePaginationUI(currentOffset, res.data.length);
                 
                 $btn.prop('disabled', false).text(originalText);
             },

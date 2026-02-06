@@ -65,7 +65,7 @@ function saveReminderEdit(onSuccess, onError) {
     const important = $('#editReminderImportant').is(":checked");
 
     $.ajax({
-        url: `/reminders/${reminderId}/edit`,
+        url: `/api/reminders/${reminderId}`,
         method: 'POST',
         data: JSON.stringify({
             date: date,
@@ -89,7 +89,7 @@ function saveNewReminder(onSuccess, onError) {
     const clientId = $('#rModalClientId').val();
 
     $.ajax({
-        url: `/reminders/add`,
+        url: "/api/reminders",
         method: 'POST',
         data: JSON.stringify({
             date: date,
@@ -280,7 +280,7 @@ function confirmDelete() {
     // Determine the delete endpoint
     let deleteUrl = '';
     if (deleteModalData.type === 'reminder') {
-        deleteUrl = `/reminders/${deleteModalData.id}`;
+        deleteUrl = `/api/reminders/${deleteModalData.id}`;
     } else if (deleteModalData.type === 'client') {
         deleteUrl = `/clients/${deleteModalData.id}`;
     }
