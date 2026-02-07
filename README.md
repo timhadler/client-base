@@ -1,5 +1,5 @@
 # ClientBase
-A client management system that tracks appointment attempts through a structured contact workflow. Users create reminders for client outreach, record each interaction and its outcome, then seamlessly schedule follow-ups or move to the next booking cycle. Data capture supports future analytics features.
+A client management system that tracks appointment attempts through a structured contact workflow. Users create reminders for client outreach, record each contact attempt and its outcome, then seamlessly schedule follow-ups or move to the next booking cycle. Data capture supports future analytics features.
 
 ## Live Demo
 Users can register an account  
@@ -56,15 +56,17 @@ If using seed data, user credentials:
 - **Authentication:** Passport.js (session-based)
 - **Frontend:** EJS, CSS
 - **Client-side:** JavaScript, jQuery, AJAX
+- **Testing:** Jest
 - **Database:** MariaDB
 - **Sessions:** Express-session
 
 ## Further Development
-Plans for further development can be found in management/Further Development.md
+Plans for further development can be found in [Further Development](./management/Further%20Development.md)
 
 ## Screenshots
-<p align="center">
-  <img src="images/v3.0.0/reminders.png" alt="Dashboard" width="1385">
-  <img src="images/v3.0.0/reminders panel.png" alt="Dashboard" width="1385">
-  <img src="images/v3.0.0/clients.png" alt="Dashboard" width="1385">
-</p>
+Reminders page
+<p align="center"> <img src="images/v3.0.0/reminders.png" alt="Dashboard" width="1385"> </p>
+Recording a contact attempt
+<p align="center"> <img src="images/v3.0.0/recording contact.png" alt="Dashboard" width="1385"> </p>
+Clients page
+<p align="center"> <img src="images/v3.0.0/clients.png" alt="Dashboard" width="1385"> </p>
