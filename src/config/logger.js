@@ -42,9 +42,14 @@ function logError(message, error, req, extraContext = {}) {
   
   logger.error(`${message}: ${errorMsg}`, {
       userId: req.user?.id,
-      route: req.route?.path || req.path,
+      route: req.originalUrl,
       method: req.method,
-      ...extraContext
+      ...extraContext,
+      ...(process.env.NODE_ENV === 'development' && { 
+        sqlMessage: error.sqlMessage, 
+        sql: error.sql, 
+        sqlCode: error.code
+      }),
   });
 }
 
