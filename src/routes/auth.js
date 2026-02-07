@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcrypt");
 
-const { passport }  = require("../passport-config");
+const { passport }  = require("../config/passport-config");
 const users = require("../models/user.models");
 const stripeModule = require("./stripe");
 const { logInfo, logError } = require('../config/logger');  

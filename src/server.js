@@ -22,7 +22,7 @@ const apiReminderRouter = require("./routes/api/api.reminders");
 const apiClientRouter = require("./routes/api/api.clients");
 
 // Config
-const { passport, autoLoginDev } = require("./passport-config");
+const { passport, autoLoginDev } = require("./config/passport-config");
 const { logInfo, logError } = require("./config/logger");
 
 // Setup folder structure

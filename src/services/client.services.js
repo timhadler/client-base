@@ -1,6 +1,6 @@
 const clientModels = require('../models/client.models');
 const reminderServices = require('../services/reminder.services');
-const db = require('../database');
+const db = require('../config/database');
 
 // Returns paginated client list according to filters
 // Also returns the total number of clients

@@ -1,7 +1,7 @@
 const reminderModels = require('../models/reminder.models');
 const clientModels = require('../models/client.models');
 const attemptModels = require('../models/attempt.models');
-const db = require('../database');
+const db = require('../config/database');
 
 // Returns paginated reminder rows for a given filter
 // Returns row count for overdue, today, this month, and followUp filters
