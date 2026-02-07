@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
  ***********************************************************/
 router.post("/", async (req, res) => {
     try {
-        const reminder = await reminderServices.addReminder({
+        await reminderServices.addReminder({
             date: req.body.date, 
             important: false,   // Placeholder for now 
             note: req.body.note, 
@@ -49,7 +49,7 @@ router.post("/", async (req, res) => {
             userId: req.user.id
         });
 
-        res.status(201).send(reminder);
+        res.status(201).end();
     } catch (error) {
         logError('Failed to create a new reminder', error, req, {
             date: req.body.date,

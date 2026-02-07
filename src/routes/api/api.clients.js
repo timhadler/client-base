@@ -50,7 +50,9 @@ router.get("/:id/reminders", async (req, res) => {
             Number(req.query.limit)
         );
 
-        res.json({ reminders:reminders });
+        res.json({ 
+            reminders: reminders 
+        });
     } catch (error) {
         logError('Failed to fetch client reminders', error, req, {
             clientId: req.params.id
@@ -67,7 +69,9 @@ router.get("/:id/interactions", async (req, res) => {
 
         let interactions = await clientModels.getClientCompleteReminders(clientId, req.user.id, limit);
 
-        res.json({ interactions:interactions });
+        res.json({ 
+            interactions: interactions 
+        });
     } catch (error) {
         logError('Failed to fetch interactions', error, req, {
             clientId: req.params.id
@@ -81,7 +85,9 @@ router.get("/:id", async (req, res) => {
         const id = req.params.id;;
         const client = await clientModels.getClientDetails(id, req.user.id);
 
-        res.json({ client:client });
+        res.json({ 
+            client: client 
+        });
     } catch (error) {
         logError('Failed to fetch client data', error, req, {
             clientId: req.params.id
@@ -123,7 +129,9 @@ router.post('/', async (req, res) => {
             }
         });
 
-        res.status(201).json({ success: true, redirectUrl: `/clients/${id}` });
+        res.status(201).json({ 
+            redirectUrl: `/clients/${id}` 
+        });
     } catch (error) {
         logError('Failed to add a new client', error, req, {
             body: req.body
@@ -161,7 +169,9 @@ router.put('/:id', async (req, res) => {
 
         await clientModels.editClient(clientId, updatedClient, req.user.id);
 
-        res.json({ success: true, redirectUrl: `/clients/${clientId}` });
+        res.json({ 
+            redirectUrl: `/clients/${clientId}` 
+        });
     } catch (error) {
         logError('Failed to edit a client', error, req, {
             clientId: req.params.id, 
@@ -178,7 +188,7 @@ router.put("/:id/interactions/:reminderId", async (req, res) => {
         // Update interaction and reminder outcome
         await reminderServices.respondToReminder(req.params.id, req.params.reminderId, req.body.outcome, req.user.id);
 
-        res.json({ success: true });
+        res.status(204).end();
     } catch (error) {
         logError('Failed to edit interaciton', error, req, {
             reminderId: req.params.reminderId,

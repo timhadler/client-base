@@ -42,7 +42,7 @@ router.post("/register", async (req, res) => {
         // Create stripe customer and start a free subscription trial
         let stripeID = null;
 
-        // In deleopment
+        // In development
         if (process.env.STRIPE_FEATURE === 'enabled') {
             stripeID = await stripeModule.createCustomer(email)
             const subscriptionID = await stripeModule.createTrialSubscription(stripeID);    // Stripe webhook will handle updating subscription details in db
@@ -65,15 +65,12 @@ router.post("/register", async (req, res) => {
     } catch (error) {
         let message = "An unexpected error occured. Please try again later.";
 
-        // If error was caused by a duplicate email
         if (error.message.includes("Duplicate entry")) {
             message = "User already exists";
 
-        // If error was caused by invalid email format
         } else if (error.message.includes("Invalid email address")) {
             message = "Invalid email address";
 
-        // If error was caused by invalid password
         } else if (error.message.includes("Password must")) {
             message = error.message;
         } else {
