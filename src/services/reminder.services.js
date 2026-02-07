@@ -29,22 +29,33 @@ exports.loadReminderList = async function({ filter, reminderCount, limit, offset
 
 // Creates a new appointment attempt and reminder
 // Updates clients next contact field
-exports.addReminder = async function({ date, important, note, reminderCount, clientId, userId }) {
-    const connection = await db.getConnection();
+// txn: db connection used when calling from within a transaction in another service function
+exports.addReminder = async function({ date, important, note, reminderCount, clientId, userId }, txn = null) {
+    const isExternalTransaction = !!txn;
+    const connection = txn || await db.getConnection();
+
     try {
-        await connection.beginTransaction();
+        if (!isExternalTransaction) {
+            await connection.beginTransaction();
+        }
 
         const attemptId = await attemptModels.createAttempt(clientId, userId, connection);
 
         await reminderModels.createReminder(attemptId, date, important, note, reminderCount, clientId, userId, connection);
         await clientModels.updateClientNextContact(clientId, userId, connection);
 
-        await connection.commit();
+        if (!isExternalTransaction) {
+            await connection.commit();
+        }
     } catch (error) {
-        await connection.rollback();
+        if (!isExternalTransaction) {
+            await connection.rollback();
+        }
         throw error;
     } finally {
-        connection.release();
+        if (!isExternalTransaction) {
+            connection.release();
+        }
     }
 }
 

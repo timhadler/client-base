@@ -136,12 +136,13 @@ exports.getPublicId = async function(id, user_id, conn = db) {
  * Create
  ***********************************************************/
 exports.addClient = async (client, user_id, conn = db) => {
-    const result = await conn.query(`
+    const public_id = await conn.query(`
         INSERT INTO clients (
             first_name, last_name, name, email, phone, company, position, status, priority, notes, source,
             addressLine1, addressLine2, city, state, country, postcode, user_id
             )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        RETURNING public_id
         `,
         [
             client.firstName,
@@ -164,7 +165,7 @@ exports.addClient = async (client, user_id, conn = db) => {
             user_id,
         ]
     );
-    return result.insertId;
+    return public_id[0] ? public_id[0].public_id : null;
 };
 
 /***********************************************************

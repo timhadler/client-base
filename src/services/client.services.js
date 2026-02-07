@@ -1,5 +1,5 @@
 const clientModels = require('../models/client.models');
-const reminderModels = require('../models/reminder.models');
+const reminderServices = require('../services/reminder.services');
 const db = require('../database');
 
 // Returns paginated client list according to filters
@@ -29,18 +29,18 @@ exports.createClient = async function({userId, createReminder, reminderDate, cli
         await connection.beginTransaction();
 
         const clientId = await clientModels.addClient(clientData, userId, connection);
-        const publicIdObj = await clientModels.getPublicId(clientId, userId, connection);
 
         // Optional reminder if selected
         if (createReminder && reminderDate) {
             const note = "Initial reminder";
             const important = false;                // PLACEHOLDER
             const reminderCount = 1;
-            await reminderModels.createReminder(reminderDate, important, note, reminderCount, publicIdObj.public_id, userId, connection);
-            await clientModels.updateClientNextContact(publicIdObj.public_id, userId, connection);
+
+            await reminderServices.addReminder({ date: reminderDate, important, note, reminderCount, clientId, userId }, connection);
         }
+    
         await connection.commit();
-        return publicIdObj.public_id;
+        return clientId;
     } catch (error) {
         await connection.rollback();
         throw error;
