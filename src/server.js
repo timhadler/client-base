@@ -16,7 +16,10 @@ const reminderRouter = require("./routes/reminders");
 const clientRouter = require("./routes/clients");
 const authRouter = require("./routes/auth");
 const stripeRouter = require("./routes/stripe");
-const interactionsRouter  =require("./routes/interactions");
+
+// API Routes
+const apiReminderRouter = require("./routes/api/api.reminders");
+const apiClientRouter = require("./routes/api/api.clients");
 
 // Config
 const { passport, autoLoginDev } = require("./passport-config");
@@ -107,7 +110,10 @@ app.get("/", checkAuthenticated, (req, res) => {
 app.use("/auth", authRouter);
 app.use("/reminders", checkAuthenticated, reminderRouter);
 app.use("/clients", checkAuthenticated, clientRouter);
-app.use('/interactions', checkAuthenticated, interactionsRouter);
+
+// API routes
+app.use("/api/reminders", checkAuthenticated, apiReminderRouter);
+app.use("/api/clients", checkAuthenticated, apiClientRouter);
 
 // Global error handler (doesnt inlcude async errros)
 app.use((err, req, res, next) => {

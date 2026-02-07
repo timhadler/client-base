@@ -21,7 +21,7 @@
     </div>
     
     <!-- Form Card -->
-    <form id="clientForm" action="<%= isEdit ? `/clients/${client.id}?_method=PUT` : '/clients' %>" method="POST">
+    <form id="clientForm" action="<%= isEdit ? `/api/clients/${client.id}?_method=PUT` : '/api/clients' %>" method="POST">
         <div class="cf-form-card">
             <!-- Basic Information -->
             <div class="cf-form-section">

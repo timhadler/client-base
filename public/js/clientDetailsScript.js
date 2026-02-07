@@ -75,11 +75,10 @@ $(document).ready(function() {
  ****************************************************************/
 function loadClientData() {
     $.ajax({
-        url: `/clients/${clientId}/data`,
+        url: `/api/clients/${clientId}`,
         method: 'GET',
-        success: function(response) {
-            const data = typeof response === 'string' ? JSON.parse(response) : response;
-            clientData = data.client;
+        success: function(res) {
+            clientData = res.client;
             renderClientHeader(clientData);
             renderClientInfo(clientData);
             renderAddress(clientData);
@@ -321,14 +320,13 @@ function copyAddress() {
  ****************************************************************/
 function loadReminders() {
     $.ajax({
-        url: `/clients/${clientId}/reminders`,
+        url: `/api/clients/${clientId}/reminders`,
         method: 'GET',
         data: {
             limit: CLIENT_REMINDERS_LIMIT
         },
-        success: function(response) {
-            const data = typeof response === 'string' ? JSON.parse(response) : response;
-            renderReminders(data.reminders || []);
+        success: function(res) {
+            renderReminders(res.reminders || []);
         },
         error: function(xhr, status, error) {
             $('#remindersList').html(`
@@ -537,11 +535,10 @@ function saveInteractionResponse() {
     const notes = $('#responseNotes').val().trim();
     
     $.ajax({
-        url: `/interactions/${currentReminderId}`,
+        url: `/api/clients/${clientId}/interactions/${currentReminderId}`,
         method: 'PUT',
         data: JSON.stringify({
             outcome: selectedOutcome,
-            clientId: clientId,
             notes: notes
         }),
         contentType: 'application/json',
@@ -561,14 +558,13 @@ function saveInteractionResponse() {
  ****************************************************************/
 function loadActivityHistory() {
     $.ajax({
-        url: `/clients/${clientId}/activity`,
+        url: `/api/clients/${clientId}/interactions`,
         method: 'GET',
         data: {
             limit: CLIENT_INTERACTION_LIMIT
         },
-        success: function(response) {
-            const data = typeof response === 'string' ? JSON.parse(response) : response;
-            renderInteraction(data.interactions || []);
+        success: function(res) {
+            renderInteraction(res.interactions || []);
         },
         error: function(xhr, status, error) {
             $('#activityList').html(`
@@ -667,11 +663,10 @@ function createInteractionRow(interaction) {
  ****************************************************************/
 function loadEngagementStats() {
     $.ajax({
-        url: `/clients/${clientId}/stats`,
+        url: `/api/clients/${clientId}/stats`,
         method: 'GET',
-        success: function(response) {
-            const data = typeof response === 'string' ? JSON.parse(response) : response;
-            renderStats(data.stats || {});
+        success: function(res) {
+            renderStats(res.stats || {});
         },
         error: function(xhr, status, error) {
             renderStats({});

@@ -56,7 +56,7 @@ function loadClients() {
     const offset = (currentPage - 1) * LIMIT;
     
     $.ajax({
-        url: '/clients/load-client-list',
+        url: "/api/clients",
         method: 'GET',
         data: {
             limit: LIMIT,
@@ -75,12 +75,9 @@ function loadClients() {
                 </tr>
             `);
         },
-        success: function(res) {
-            // Parse response if it's a string
-            const data = typeof res === 'string' ? JSON.parse(res) : res;
-            
-            totalClients = data.nClients || 0;
-            renderClientsTable(data.clientList || []);
+        success: function(res) {          
+            totalClients = res.nClients || 0;
+            renderClientsTable(res.clients || []);
             renderPagination();
         },
         error: function(xhr, status, error) {
