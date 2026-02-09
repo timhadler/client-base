@@ -33,11 +33,15 @@ exports.getReminderList = async function(filter, limit, offset, user_id, reminde
 }
 
 // Fetches the total count of reminders within a given filter
-exports.getReminderCount = async function(filter, user_id, conn = db) {
-    let condition = getReminderFilterCondition(filter);
+exports.getReminderCount = async function(filter, user_id, reminderCount = 'all', conn = db) {
+    let condition = getReminderFilterCondition(filter, reminderCount);
     
     if (filter !== 'completed') { 
        condition = "reminders.status != 'complete' AND " + condition;
+    }
+
+    if (reminderCount !== 'all') {
+        condition += ` AND reminders.reminderCount = ${parseInt(reminderCount)}`;
     }
 
     const sqlQuery = `
@@ -126,8 +130,8 @@ function getReminderFilterCondition(filter) {
         case 'overdue': return "DATE(rDate) < CURDATE()";
         case 'today': return "DATE(rDate) = CURDATE()";
         case 'thisMonth' : return "rDate >= DATE_FORMAT(CURDATE(), '%Y-%m-01') AND rDate <  DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')";
-        case 'initial': return "reminderCount = 1";
-        case 'followUp': return "reminderCount > 1";
+        case 'initial': return "reminderCount = 0";
+        case 'followUp': return "reminderCount > 0";
         case 'completed': return "reminders.status = 'complete'";
         default: return "reminders.status != 'complete'";
     }
