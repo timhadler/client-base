@@ -1,0 +1,6 @@
+START TRANSACTION;
+
+DROP TABLE settings;
+DROP TABLE interactions;
+
+COMMIT;

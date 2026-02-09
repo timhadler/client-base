@@ -1,0 +1,10 @@
+START TRANSACTION;
+
+ALTER TABLE clients
+DROP COLUMN mobile,
+DROP COLUMN home,
+DROP COLUMN suburb, 
+DROP COLUMN street, 
+DROP COLUMN created;
+
+COMMIT;

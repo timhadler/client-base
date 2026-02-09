@@ -1,0 +1,11 @@
+START TRANSACTION;
+
+ALTER TABLE reminders
+MODIFY COLUMN client_id INT(11) UNSIGNED, 
+ADD CONSTRAINT fk_reminders_clients
+  FOREIGN KEY (client_id)
+  REFERENCES clients(id)
+  ON DELETE SET NULL
+  ON UPDATE NO ACTION;
+
+COMMIT;

@@ -1,0 +1,16 @@
+START TRANSACTION;
+
+ALTER TABLE clients
+ADD COLUMN user_id INT(11) UNSIGNED NOT NULL;
+
+UPDATE clients 
+SET user_id = 13;
+
+ALTER TABLE clients
+ADD CONSTRAINT fk_clients_user
+  FOREIGN KEY (user_id)
+  REFERENCES users(id)
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION;
+
+COMMIT;

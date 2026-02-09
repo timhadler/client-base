@@ -1,0 +1,6 @@
+START TRANSACTION;
+
+ALTER TABLE reminders
+ADD COLUMN respondedAt DATE;
+
+COMMIT;
