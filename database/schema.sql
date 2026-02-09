@@ -14,7 +14,34 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Dumping structure for table clientbase-test1.clients
+
+-- Dumping database structure for clientbase
+CREATE DATABASE IF NOT EXISTS `clientbase` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+USE `clientbase`;
+
+-- Dumping structure for table clientbase.appointment_attempts
+CREATE TABLE IF NOT EXISTS `appointment_attempts` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `client_id` int(11) unsigned DEFAULT NULL,
+  `user_id` int(11) unsigned NOT NULL,
+  `status` enum('active','resolved','stale','abandoned') DEFAULT 'active',
+  `outcome` enum('booked','declined','waiting','followup','no_answer','none') DEFAULT NULL,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `first_reminder_sent_at` datetime DEFAULT NULL,
+  `outcome_set_at` datetime DEFAULT NULL,
+  `resolved_at` datetime DEFAULT NULL,
+  `total_reminders_sent` smallint(6) NOT NULL DEFAULT 0,
+  `is_legacy` bit(1) DEFAULT b'0',
+  PRIMARY KEY (`id`),
+  KEY `fk-attempts-user` (`user_id`),
+  KEY `fk-attempts-client` (`client_id`),
+  CONSTRAINT `fk-attempts-client` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
+  CONSTRAINT `fk-attempts-user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table clientbase.clients
 CREATE TABLE IF NOT EXISTS `clients` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `public_id` uuid NOT NULL DEFAULT uuid(),
@@ -43,63 +70,39 @@ CREATE TABLE IF NOT EXISTS `clients` (
   UNIQUE KEY `public_id` (`public_id`),
   KEY `FK-clients-user` (`user_id`),
   CONSTRAINT `FK-clients-user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='This table will contain client details';
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='This table will contain client details';
 
 -- Data exporting was unselected.
 
--- Dumping structure for table clientbase-test1.interactions
-CREATE TABLE IF NOT EXISTS `interactions` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `client_id` int(11) unsigned DEFAULT NULL,
-  `reminder_id` int(11) unsigned NOT NULL,
-  `user_id` int(11) unsigned NOT NULL,
-  `method` enum('call','email','text','ignored') NOT NULL,
-  `outcome` enum('booked','followup','no_answer','declined','waiting','end_attempt') DEFAULT NULL,
-  `createdAt` date NOT NULL DEFAULT current_timestamp(),
-  `respondedAt` date DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK-interactions-clients` (`client_id`),
-  KEY `FK-interactions-users` (`user_id`),
-  KEY `fk_interactions_reminders` (`reminder_id`),
-  CONSTRAINT `FK-interactions-clients` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  CONSTRAINT `FK-interactions-users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `fk_interactions_reminders` FOREIGN KEY (`reminder_id`) REFERENCES `reminders` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=20645 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Data exporting was unselected.
-
--- Dumping structure for table clientbase-test1.reminders
+-- Dumping structure for table clientbase.reminders
 CREATE TABLE IF NOT EXISTS `reminders` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `client_id` int(11) unsigned DEFAULT NULL,
+  `appointment_attempt_id` int(11) unsigned NOT NULL,
   `user_id` int(11) unsigned NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `rDate` date NOT NULL,
+  `respondedAt` date DEFAULT NULL,
+  `completedAt` date DEFAULT NULL,
   `status` enum('pending','complete') DEFAULT NULL,
   `important` bit(1) DEFAULT NULL,
-  `outcome` enum('booked','followup','no_answer','declined','waiting','end_attempt') DEFAULT NULL,
-  `reminderCount` smallint(5) unsigned NOT NULL,
+  `method` enum('call','text','email','ignored') DEFAULT NULL,
+  `outcome` enum('booked','followup','no_answer','declined','waiting','none') DEFAULT NULL,
+  `reminderCount` smallint(5) unsigned NOT NULL DEFAULT 0,
   `note` varchar(150) DEFAULT NULL,
+  `is_legacy` bit(1) DEFAULT b'0',
   PRIMARY KEY (`id`),
-  KEY `FK-reminders-client` (`client_id`),
-  KEY `FK-reminders-users` (`user_id`),
-  CONSTRAINT `FK-reminders-client` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  CONSTRAINT `FK-reminders-users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='This table will contain the dates to remind user to contact or meet with clients';
+  KEY `fk-reminders-attempt` (`appointment_attempt_id`),
+  KEY `fk-reminders-client` (`client_id`),
+  KEY `fk-reminders-user` (`user_id`),
+  CONSTRAINT `fk-reminders-attempt` FOREIGN KEY (`appointment_attempt_id`) REFERENCES `appointment_attempts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk-reminders-client` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
+  CONSTRAINT `fk-reminders-user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='This table will contain the dates to remind user to contact or meet with clients';
 
 -- Data exporting was unselected.
 
--- Dumping structure for table clientbase-test1.settings
-CREATE TABLE IF NOT EXISTS `settings` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `setting_key` varchar(100) NOT NULL,
-  `setting_value` varchar(100) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `setting_key` (`setting_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- Data exporting was unselected.
-
--- Dumping structure for table clientbase-test1.users
+-- Dumping structure for table clientbase.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `stripe_customer_id` varchar(255) DEFAULT NULL,
