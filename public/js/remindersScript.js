@@ -9,7 +9,7 @@ let currentReminderId = 0;
 let currentReminderCount = 0;
 
 // Default tab
-let currentTab = "all";
+let currentTab = "dateRange";
 
 // List limits
 const REMINDERS_LIST_LIMIT = 10;
@@ -19,22 +19,31 @@ const REMINDERS_INTERACTION_LIMIT = 8;
 const FOLLOW_UP_PERIOD_DAYS = 2;
 const CYCLE_PERIOD_DAYS = 365;
 
+// Pagination
 let currentOffset = 0;
 let totalReminders = 0;
 let hasMoreReminders = false;
 
+// Reminder count filter
 let selectedReminderCount = 'all';
 const MAX_REMINDER_COUNT = 10;
 
-$(document).ready(function() {
-    $(".tab:not(.filter-dropdown-trigger)").on('click', function() {
-        $('.tab').removeClass('active');
-        this.classList.add('active');
+// Date range filter
+let activeDateFilter = 'any';   // 'today' | 'thisMonth' | 'specificMonth' | 'dateRange' | 'any'
+let dateRangeFrom = null;
+let dateRangeTo   = null;
 
-        currentTab = $(this).data("filter");
-        currentOffset = 0; // Reset offset when changing tabs
-        
-        resetCountFilter();
+let showImportantOnly = false;
+
+$(document).ready(function() {
+    // Tab triggers
+    $(".tab:not(.filter-dropdown-trigger, .important-toggle-tab)").on('click', function() {
+        changeTab($(this));
+    });
+
+    $('#importantToggle').on('click', (e) => {
+        showImportantOnly = !showImportantOnly;
+        $(e.currentTarget).toggleClass('active', showImportantOnly);
         queryListData(currentTab);
     });
 
@@ -53,8 +62,7 @@ $(document).ready(function() {
     initClientPanel();
     initInteractionModal();
     initLoadMoreButton();
-    initCountFilterDropdown();
-    populateCountFilterOptions();
+    initDropdowns();
 
     initEditReminderModal('#tableBody');
     initDeleteModal();
@@ -71,10 +79,16 @@ function queryListData(filter, offset=0) {
         url: "/api/reminders",
         method: "GET",
         data: { 
-            filter: filter, 
+            filterData: {
+                tab: currentTab, 
+                dateFilterType: activeDateFilter, 
+                dateFrom: dateRangeFrom, 
+                dateTo: dateRangeTo, 
+                important: showImportantOnly,
+                reminderCount: selectedReminderCount
+            }, 
             limit: REMINDERS_LIST_LIMIT, 
-            offset: offset,
-            reminderCount: selectedReminderCount
+            offset: offset
         },
         success: function(res) {
             // Update pagination state
@@ -127,6 +141,10 @@ async function fetchClientInteractions(id) {
     })
 }
 
+
+/*****************************************************************
+ * List functions
+ ****************************************************************/
 // Loads data into reminders table
 function loadList(counts, reminders, offset=0) {
     let $table = $('#tableBody');
@@ -265,6 +283,36 @@ function updatePaginationUI(offset, loadedCount) {
         $('#loadMoreBtn').hide();
         hasMoreReminders = false;
     }
+}
+
+function resetFilters() {
+    // Reminder count
+    selectedReminderCount = 'all';
+    $('#countFilterLabel').text('Attempt #');
+    $('#countFilterMenu .filter-dropdown-item').removeClass('selected');
+    $('#countFilterMenu .filter-dropdown-item[data-count="all"]').addClass('selected');
+
+    // Date range
+    if (currentTab !== 'dateRange') {
+        activeDateFilter = 'any';
+        dateRangeFrom = dateRangeTo = null;
+        $('#dateRangeMenu .filter-dropdown-item').removeClass('selected');
+        $('#dateRangeMenu .filter-dropdown-item[data-date-filter="any"]').addClass('selected');
+        $('#dateRangeLabel').text('Any Date');
+    }
+
+    // Important
+    showImportantOnly = false;
+}
+
+function changeTab($tab) {
+    currentTab = $tab.data("filter");
+    currentOffset = 0;
+    $('.tab').removeClass('active');
+    
+    resetFilters();
+    $tab.addClass('active');
+    queryListData(currentTab);
 }
 
 /*****************************************************************
@@ -656,6 +704,34 @@ function initInteractionModal() {
 }
 
 /*****************************************************************
+ * Dropdown filters
+ ****************************************************************/
+function initDropdowns() {
+    const $overlay = $('#dropdownOverlay');
+
+    $overlay.on('click', closeAllDropdowns);
+
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && $overlay.hasClass('show')) {
+            closeAllDropdowns();
+        }
+    });
+
+    initCountFilterDropdown();
+    initDateRangeFilterDropdown();
+}
+
+function closeAllDropdowns() {
+    $('#countFilterTrigger').removeClass('open');
+    $('#countFilterMenu').removeClass('show');
+
+    $('#dateRangeTrigger').removeClass('open');
+    $('#dateRangeMenu').removeClass('show');
+
+    $('#dropdownOverlay').removeClass('show');
+}
+
+/*****************************************************************
  * Reminder Count Filter Dropdown
  ****************************************************************/
 function initCountFilterDropdown() {
@@ -668,17 +744,9 @@ function initCountFilterDropdown() {
         const isOpen = $trigger.hasClass('open');
         
         if (isOpen) {
-            closeCountDropdown();
+            closeAllDropdowns();
         } else {
             openCountDropdown();
-        }
-    });
-    
-    $overlay.on('click', closeCountDropdown);
-    
-    $(document).on('keydown', function(e) {
-        if (e.key === 'Escape' && $trigger.hasClass('open')) {
-            closeCountDropdown();
         }
     });
     
@@ -686,7 +754,7 @@ function initCountFilterDropdown() {
         e.stopPropagation();
         const count = $(this).data('count');
         
-        $('.filter-dropdown-item').removeClass('selected');
+        $('#countFilterMenu .filter-dropdown-item').removeClass('selected');
         $(this).addClass('selected');
         
         selectedReminderCount = count;
@@ -699,7 +767,7 @@ function initCountFilterDropdown() {
             $trigger.addClass('active');
         }
         
-        closeCountDropdown();
+        closeAllDropdowns();
         
         queryListData(currentTab);
     });
@@ -709,27 +777,8 @@ function initCountFilterDropdown() {
         $menu.addClass('show');
         $overlay.addClass('show');
     }
-    
-    function closeCountDropdown() {
-        $trigger.removeClass('open');
-        $menu.removeClass('show');
-        $overlay.removeClass('show');
-    }
-}
 
-function resetCountFilter() {
-    selectedReminderCount = 'all';
-    $('#countFilterLabel').text('Attempt #');
-    $('#countFilterTrigger').removeClass('active');
-    $('.filter-dropdown-item').removeClass('selected');
-    $('.filter-dropdown-item[data-count="all"]').addClass('selected');
-    closeCountDropdown();
-}
-
-function closeCountDropdown() {
-    $('#countFilterTrigger').removeClass('open');
-    $('#countFilterMenu').removeClass('show');
-    $('#dropdownOverlay').removeClass('show');
+    populateCountFilterOptions();
 }
 
 function populateCountFilterOptions() {
@@ -748,4 +797,88 @@ function populateCountFilterOptions() {
     }
     
     $('.filter-dropdown-item[data-count="all"]').addClass('selected');
+}
+
+/*****************************************************************
+ * Date Range Filter
+ ****************************************************************/
+function initDateRangeFilterDropdown() {
+    const $trigger = $('#dateRangeTrigger');
+    const $menu = $('#dateRangeMenu');
+    const $label = $('#dateRangeLabel');
+    const $overlay = $('#dropdownOverlay');
+
+    const DATE_FILTER_LABELS = {
+        today:         'Today',
+        thisMonth:     'This Month',
+        specificMonth: (val) => `${val}`,
+        dateRange:     (f, t) => `${f} – ${t}`,
+        any:           'Any Date',
+    };
+    setDateFilterLabel('any');
+
+    $trigger.on('click', () => {
+        const isOpen = $menu.hasClass('show');
+        if (!isOpen) {
+            $menu.addClass('show');
+            $trigger.addClass('open');
+            $overlay.addClass('show');
+        } else {
+            closeAllDropdowns();
+        }
+    });
+
+    // Quick-pick items
+    $menu.on('click', '.filter-dropdown-item', function(e) {
+        e.stopPropagation();
+        const type = $(this).data('date-filter');
+
+        // Show/hide sub-inputs
+        $('#monthPickerInputs').css('display', type === 'specificMonth' ? 'block' : 'none');
+        $('#dateRangeInputs').css('display', type === 'dateRange' ? 'block' : 'none');
+
+        markDateFilterSelected($(this));
+        if (type === 'specificMonth' || type === 'dateRange') return; // wait for Apply
+
+        submitDateRange(type, null, null);
+    });
+
+    // Apply month picker
+    $('#applyMonthBtn').on('click', () => {
+        const val = $('#specificMonthInput').val();
+        if (!val) return;
+
+        submitDateRange('specificMonth', val, null);
+    });
+
+    // Apply date range
+    $('#applyDateRangeBtn').on('click', () => {
+        const from = $('#dateRangeFrom').val();
+        const to   = $('#dateRangeTo').val();
+        if (!from || !to) return;
+
+        submitDateRange('dateRange', from, to);
+    });
+
+    function submitDateRange(type, f, t) {
+        activeDateFilter = type;
+        dateRangeFrom = f;
+        dateRangeTo = t;
+
+        setDateFilterLabel(type, f, t);
+        closeAllDropdowns();
+        changeTab($trigger);
+    }
+
+    function markDateFilterSelected($activeBtn) {
+        $menu.find('[data-date-filter]').removeClass('selected');
+        if ($activeBtn) $activeBtn.addClass('selected');
+    }
+
+    function setDateFilterLabel(type, extra1, extra2) {
+        const lbl = typeof DATE_FILTER_LABELS[type] === 'function'
+            ? DATE_FILTER_LABELS[type](extra1, extra2)
+            : DATE_FILTER_LABELS[type];
+        $label.text(lbl);
+    }
 }
