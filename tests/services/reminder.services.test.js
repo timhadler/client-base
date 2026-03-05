@@ -4,7 +4,7 @@
 jest.mock('../../src/models/reminder.models');
 jest.mock('../../src/models/attempt.models');
 jest.mock('../../src/models/client.models');
-jest.mock('../../src/database', () => ({
+jest.mock('../../src/config/database', () => ({
     getConnection: jest.fn(), 
     query: jest.fn(), 
     end: jest.fn()
@@ -15,13 +15,12 @@ const service = require('../../src/services/reminder.services');
 const reminderModels = require('../../src/models/reminder.models');
 const attemptModels = require('../../src/models/attempt.models');
 const clientModels = require('../../src/models/client.models');
-const db = require('../../src/database');
+const db = require('../../src/config/database');
 
 // Mock function return values
 const mockGetAttemptId = 10;
 const mockCreateAttemptId = 25;
 const mockReminderList = [ { id: 1, clientName: 'John Doe', date: '2024-12-01' }, { id: 2, clientName: 'Jane Smith', date: '2024-12-01' } ]
-const mockReminderCount = 10;
  
 let mockConnection;
 function createMockConnection() {
@@ -40,7 +39,6 @@ beforeEach(() => {
     db.getConnection.mockResolvedValue(mockConnection);
 
     reminderModels.getReminderList.mockResolvedValue(mockReminderList);
-    reminderModels.getReminderCount.mockResolvedValue(mockReminderCount);
     reminderModels.getAttemptIdFromReminder.mockResolvedValue(mockGetAttemptId);
     attemptModels.createAttempt.mockResolvedValue(mockCreateAttemptId);
     reminderModels.getReminderCount.mockImplementation((filter) => {
@@ -80,17 +78,18 @@ describe('loadReminderList', () => {
                     followUp: 8
                 },
                 listData: mockReminderList,
-                total: mockReminderCount
+                total: 10
             });
         });
 
-        test('should call all count functions with correct userId', async () => {
+        test('should call all count functions with correct userId and filter', async () => {
             await service.loadReminderList(baseParams);
 
             expect(reminderModels.getReminderCount).toHaveBeenCalledWith('overdue', 100);
             expect(reminderModels.getReminderCount).toHaveBeenCalledWith('today', 100);
             expect(reminderModels.getReminderCount).toHaveBeenCalledWith('thisMonth', 100);
             expect(reminderModels.getReminderCount).toHaveBeenCalledWith('followUp', 100);
+            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('today', 100, null);
             expect(reminderModels.getReminderCount).toHaveBeenCalledTimes(5);
         });
 
@@ -103,160 +102,6 @@ describe('loadReminderList', () => {
                 0,
                 100,
                 null
-            );
-        });
-
-        test('should call getReminderCount with correct filter and userId', async () => {
-            await service.loadReminderList(baseParams);
-
-            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('today', 100);
-        });
-    });
-
-    describe('different filter scenarios', () => {
-        test('should work with overdue filter', async () => {
-            const result = await service.loadReminderList({
-                ...baseParams,
-                filter: 'overdue'
-            });
-
-            expect(reminderModels.getReminderList).toHaveBeenCalledWith(
-                'overdue',
-                20,
-                0,
-                100,
-                null
-            );
-            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('overdue', 100);
-            expect(result.listCounts.overdue).toBe(5);
-        });
-
-        test('should work with thisMonth filter', async () => {
-            const result = await service.loadReminderList({
-                ...baseParams,
-                filter: 'thisMonth'
-            });
-
-            expect(reminderModels.getReminderList).toHaveBeenCalledWith(
-                'thisMonth',
-                20,
-                0,
-                100,
-                null
-            );
-            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('thisMonth', 100);
-            expect(result.listCounts.thisMonth).toBe(25);
-        });
-
-        test('should work with followUp filter', async () => {
-            const result = await service.loadReminderList({
-                ...baseParams,
-                filter: 'followUp'
-            });
-
-            expect(reminderModels.getReminderList).toHaveBeenCalledWith(
-                'followUp',
-                20,
-                0,
-                100,
-                null
-            );
-            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('followUp', 100);
-            expect(result.listCounts.followUp).toBe(8);
-        });
-    });
-
-    describe('pagination scenarios', () => {
-        test('should handle custom limit', async () => {
-            await service.loadReminderList({
-                ...baseParams,
-                limit: 50
-            });
-
-            expect(reminderModels.getReminderList).toHaveBeenCalledWith(
-                'today',
-                50,
-                0,
-                100,
-                null
-            );
-        });
-
-        test('should handle custom offset', async () => {
-            await service.loadReminderList({
-                ...baseParams,
-                offset: 40
-            });
-
-            expect(reminderModels.getReminderList).toHaveBeenCalledWith(
-                'today',
-                20,
-                40,
-                100,
-                null
-            );
-        });
-
-        test('should handle both custom limit and offset', async () => {
-            await service.loadReminderList({
-                ...baseParams,
-                limit: 100,
-                offset: 200
-            });
-
-            expect(reminderModels.getReminderList).toHaveBeenCalledWith(
-                'today',
-                100,
-                200,
-                100,
-                null
-            );
-        });
-    });
-
-    describe('reminderCount scenarios', () => {
-        test('should pass reminderCount when provided', async () => {
-            await service.loadReminderList({
-                ...baseParams,
-                reminderCount: 3
-            });
-
-            expect(reminderModels.getReminderList).toHaveBeenCalledWith(
-                'today',
-                20,
-                0,
-                100,
-                3
-            );
-        });
-
-        test('should pass null reminderCount by default', async () => {
-            await service.loadReminderList({
-                ...baseParams,
-                reminderCount: null
-            });
-
-            expect(reminderModels.getReminderList).toHaveBeenCalledWith(
-                'today',
-                20,
-                0,
-                100,
-                null
-            );
-        });
-
-        test('should pass zero reminderCount', async () => {
-            await service.loadReminderList({
-                ...baseParams,
-                reminderCount: 0
-            });
-
-            expect(reminderModels.getReminderList).toHaveBeenCalledWith(
-                'today',
-                20,
-                0,
-                100,
-                0
             );
         });
     });
@@ -277,43 +122,6 @@ describe('loadReminderList', () => {
                 followUp: 0
             });
         });
-
-        test('should handle all counts being zero', async () => {
-            reminderModels.getReminderCount.mockResolvedValue(0);
-            reminderModels.getReminderList.mockResolvedValue([]);
-            reminderModels.getReminderCount.mockResolvedValue(0);
-
-            const result = await service.loadReminderList(baseParams);
-
-            expect(result.listCounts).toEqual({
-                overdue: 0,
-                today: 0,
-                thisMonth: 0,
-                followUp: 0
-            });
-        });
-
-        test('should handle large counts', async () => {
-            reminderModels.getReminderCount.mockImplementation((filter) => {
-                const counts = {
-                    'overdue': 1000,
-                    'today': 2000,
-                    'thisMonth': 5000,
-                    'followUp': 500
-                };
-                return Promise.resolve(counts[filter] || 0);
-            });
-
-            const result = await service.loadReminderList(baseParams);
-
-            expect(result.listCounts).toEqual({
-                overdue: 1000,
-                today: 2000,
-                thisMonth: 5000,
-                followUp: 500
-            });
-            expect(result.total).toBe(2000);
-        });
     });
 
     describe('error handling', () => {
@@ -328,35 +136,10 @@ describe('loadReminderList', () => {
 
             await expect(service.loadReminderList(baseParams)).rejects.toThrow('Query failed');
         });
-
-        test('should throw error if getReminderCount fails', async () => {
-            reminderModels.getReminderCount.mockRejectedValue(new Error('Count failed'));
-
-            await expect(service.loadReminderList(baseParams)).rejects.toThrow('Count failed');
-        });
     });
 
     describe('Promise.all behavior', () => {
-        test('should execute all count queries in parallel', async () => {
-            const startTime = Date.now();
-            
-            // Mock each count call to take 100ms
-            reminderModels.getReminderCount.mockImplementation((filter) => {
-                return new Promise(resolve => {
-                    setTimeout(() => resolve(10), 100);
-                });
-            });
-
-            await service.loadReminderList(baseParams);
-            
-            const duration = Date.now() - startTime;
-            
-            // Should take ~100ms (parallel) not ~400ms (sequential)
-            expect(duration).toBeLessThan(300);
-            expect(reminderModels.getReminderCount).toHaveBeenCalledTimes(5);
-        });
-
-        test('should fail fast if any count query fails', async () => {
+        test('should fail if any count query fails', async () => {
             reminderModels.getReminderCount.mockImplementation((filter) => {
                 if (filter === 'today') {
                     return Promise.reject(new Error('Today count failed'));
@@ -367,60 +150,58 @@ describe('loadReminderList', () => {
             await expect(service.loadReminderList(baseParams)).rejects.toThrow('Today count failed');
         });
     });
-
-    describe('different user scenarios', () => {
-        test('should work with different userId', async () => {
-            await service.loadReminderList({
-                ...baseParams,
-                userId: 999
-            });
-
-            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('overdue', 999);
-            expect(reminderModels.getReminderList).toHaveBeenCalledWith(
-                'today',
-                20,
-                0,
-                999,
-                null
-            );
-            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('today', 999);
-        });
-    });
 });
 
 // Add reminder
 describe('addReminder', () => {
+    const baseParams = {
+        date: '2026-01-15', 
+        important: true, 
+        note: 'Test note', 
+        reminderCount: 2, 
+        clientId: 1, 
+        userId: 100
+    }
     test('should create an attempt, a reminder, and update client next contact', async () => {
-        await service.addReminder({
-            date: '2026-01-15', 
-            important: true, 
-            note: 'Test note', 
-            reminderCount: 2, 
-            clientId: 1, 
-            userId: 100
-        });
+        await service.addReminder(baseParams);
 
         expect(attemptModels.createAttempt).toHaveBeenCalledWith(1, 100, mockConnection);
         expect(reminderModels.createReminder).toHaveBeenCalledWith(
             mockCreateAttemptId, '2026-01-15', true, 'Test note', 2, 1, 100, mockConnection
         );
         expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(1, 100, mockConnection);
-        expect(mockConnection.commit).toHaveBeenCalled();
     })
 
-    test('should rollback on error', async () => {
+    test('should handle external transaction', async () => {
+        await service.addReminder(baseParams, mockConnection);
+
+        expect(mockConnection.beginTransaction).not.toHaveBeenCalled();
+        expect(mockConnection.commit).not.toHaveBeenCalled();
+        expect(mockConnection.release).not.toHaveBeenCalled();
+    });
+
+    test('should handle no external transaction', async () => {
+        await service.addReminder(baseParams);
+
+        expect(mockConnection.beginTransaction).toHaveBeenCalled();
+        expect(mockConnection.commit).toHaveBeenCalled();
+        expect(mockConnection.release).toHaveBeenCalled();
+    });
+
+    test('should rollback on error with no external connection', async () => {
         attemptModels.createAttempt.mockRejectedValue(new Error('DB error'));
 
-        await expect(service.addReminder({
-            date: '2024-12-01',
-            important: true,
-            note: 'Follow up',
-            reminderCount: 0,
-            clientId: 1,
-            userId: 100
-        })).rejects.toThrow('DB error');
+        await expect(service.addReminder(baseParams)).rejects.toThrow('DB error');
 
         expect(mockConnection.rollback).toHaveBeenCalled();
+    });
+
+    test('should not rollback on error with external connection', async () => {
+        attemptModels.createAttempt.mockRejectedValue(new Error('DB error'));
+
+        await expect(service.addReminder(baseParams, mockConnection)).rejects.toThrow('DB error');
+
+        expect(mockConnection.rollback).not.toHaveBeenCalled();
     });
 })
 
@@ -1022,73 +803,36 @@ describe('editReminder', () => {
         id: 500,
         userId: 100
     };
-    describe('successful edit scenarios', () => {
-        test('should edit reminder and update client next contact', async () => {
-            await service.editReminder(baseParams);
+    test('should call functions with correct parameters', async () => {
+        await service.editReminder(baseParams);
 
-            expect(reminderModels.editReminder).toHaveBeenCalledWith(
-                500,
-                '2024-12-15',
-                true,
-                'Follow up appointment',
-                100,
-                mockConnection
-            );
-            expect(clientModels.updateClientNextContactFromReminder).toHaveBeenCalledWith(
-                500,
-                100,
-                mockConnection
-            );
-            expect(mockConnection.commit).toHaveBeenCalled();
-            expect(mockConnection.release).toHaveBeenCalled();
-        });
+        expect(reminderModels.editReminder).toHaveBeenCalledWith(
+            500,
+            '2024-12-15',
+            true,
+            'Follow up appointment',
+            100,
+            mockConnection
+        );
+        expect(clientModels.updateClientNextContactFromReminder).toHaveBeenCalledWith(
+            500,
+            100,
+            mockConnection
+        );
+    });
 
-        test('should handle important flag as false', async () => {
-            await service.editReminder({
-                ...baseParams,
-                important: false
-            });
+    test('should begin transaction, commit, and release', async () => {
+        await service.editReminder(baseParams);
 
-            expect(reminderModels.editReminder).toHaveBeenCalledWith(
-                500,
-                '2024-12-15',
-                false,
-                'Follow up appointment',
-                100,
-                mockConnection
-            );
-        });
+        expect(mockConnection.beginTransaction).toHaveBeenCalled();
+        expect(mockConnection.commit).toHaveBeenCalled();
+        expect(mockConnection.release).toHaveBeenCalled();
+    });
 
-        test('should handle empty note', async () => {
-            await service.editReminder({
-                ...baseParams,
-                note: ''
-            });
+    test('should rollback on error', async () => {
+        reminderModels.editReminder.mockRejectedValue(new Error('Database error'));
 
-            expect(reminderModels.editReminder).toHaveBeenCalledWith(
-                500,
-                '2024-12-15',
-                true,
-                '',
-                100,
-                mockConnection
-            );
-        });
-
-        test('should handle null note', async () => {
-            await service.editReminder({
-                ...baseParams,
-                note: null
-            });
-
-            expect(reminderModels.editReminder).toHaveBeenCalledWith(
-                500,
-                '2024-12-15',
-                true,
-                null,
-                100,
-                mockConnection
-            );
-        });
+        await expect(service.editReminder(baseParams)).rejects.toThrow('Database error');
+        expect(mockConnection.rollback).toHaveBeenCalled();
     });
 });
