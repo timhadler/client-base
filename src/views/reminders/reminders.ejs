@@ -213,11 +213,48 @@
     
     <!-- Filter Tabs -->
     <div class="filter-tabs">
-        <button class="tab active" data-filter="all">All Reminders</button>
+        <!-- Date Range Filter -->
+        <div class="filter-dropdown-wrapper">
+            <button class="tab active filter-dropdown-trigger" data-filter="dateRange" id="dateRangeTrigger">
+                <span id="dateRangeLabel"> All Reminders</span>
+                <span class="filter-chevron">▼</span>
+            </button>
+            <div class="filter-dropdown-menu" id="dateRangeMenu">
+                <button class="filter-dropdown-item selected" data-date-filter="any">
+                    <span class="filter-check">✓</span> Any Date
+                </button>
+                <div class="filter-dropdown-header">Filter by Date</div>
+                <button class="filter-dropdown-item" data-date-filter="today">
+                    <span class="filter-check">✓</span> Today
+                    <span class="filter-count-badge" id="todayCount"></span>
+                </button>
+                <button class="filter-dropdown-item" data-date-filter="thisMonth">
+                    <span class="filter-check">✓</span> This Month
+                    <span class="filter-count-badge" id="thisMonthCount"></span>
+                </button>
+                <button class="filter-dropdown-item" data-date-filter="specificMonth">
+                    <span class="filter-check">✓</span> Pick a Month…
+                </button>
+                <button class="filter-dropdown-item" data-date-filter="dateRange">
+                    <span class="filter-check">✓</span> Custom Date Range…
+                </button>
+                <!-- Month picker -->
+                <div class="date-filter-inputs" id="monthPickerInputs" style="display:none;">
+                    <input type="month" id="specificMonthInput" class="form-control" style="margin: 8px 12px; width: calc(100% - 24px);">
+                    <button class="date-filter-apply-btn" id="applyMonthBtn">Apply</button>
+                </div>
+                <!-- Date range picker -->
+                <div class="date-filter-inputs" id="dateRangeInputs" style="display:none;">
+                    <label class="date-filter-label">From</label>
+                    <input type="date" id="dateRangeFrom" class="form-control" style="margin: 4px 12px; width: calc(100% - 24px);">
+                    <label class="date-filter-label">To</label>
+                    <input type="date" id="dateRangeTo" class="form-control" style="margin: 4px 12px; width: calc(100% - 24px);">
+                    <button class="date-filter-apply-btn" id="applyDateRangeBtn">Apply</button>
+                </div>
+            </div>
+        </div>
+        <button class="tab important-toggle-tab" id="importantToggle" title="Show important reminders only"> Important </button>
         <button class="tab" data-filter="overdue">Overdue <span id="overdueCount"></span></button>
-        <button class="tab" data-filter="today">Today <span id="todayCount"></span></button>
-        <button class="tab" data-filter="thisMonth">This Month <span id="thisMonthCount"></span></button>
-        <button hidden class="tab" data-filter="initial">First Attempts <span id="initialCount"></span></button>
         <button class="tab" data-filter="followUp">Follow-ups <span id="followUpCount"></span></button>
         <button class="tab" data-filter="completed">Completed</button>
         
