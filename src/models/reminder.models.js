@@ -4,19 +4,9 @@ const db = require('../config/database');
  * Read
  ***********************************************************/
 // Fetches filtered reminder list
-exports.getReminderList = async function(filter, limit, offset, user_id, reminderCount = 'all', conn = db) {
-    let condition = getReminderFilterCondition(filter);
+exports.getReminderList = async function(filters, limit, offset, user_id, conn = db) {
+    let condition = getReminderFilterCondition(filters);
     let order = "ASC"
-
-    if (filter !== 'completed') { 
-       condition = "reminders.status != 'complete' AND " + condition;
-    } else {
-        order = "DESC";
-    }
-  
-    if (reminderCount !== 'all') {
-        condition += ` AND reminders.reminderCount = ${parseInt(reminderCount)}`;
-    }
 
     const sqlQuery = `
         SELECT clients.public_id as clientId, reminders.id, rDate as date, reminders.status, reminderCount, reminders.important, outcome, reminders.note, name, company 
@@ -32,17 +22,9 @@ exports.getReminderList = async function(filter, limit, offset, user_id, reminde
     return rows;
 }
 
-// Fetches the total count of reminders within a given filter
-exports.getReminderCount = async function(filter, user_id, reminderCount = 'all', conn = db) {
-    let condition = getReminderFilterCondition(filter, reminderCount);
-    
-    if (filter !== 'completed') { 
-       condition = "reminders.status != 'complete' AND " + condition;
-    }
-
-    if (reminderCount !== 'all') {
-        condition += ` AND reminders.reminderCount = ${parseInt(reminderCount)}`;
-    }
+// Fetches the total count of reminders with a given filter
+exports.getReminderCount = async function(filter, user_id, conn = db) {
+    let condition = getReminderFilterCondition(filter);
 
     const sqlQuery = `
         SELECT COUNT(*) as total
@@ -50,8 +32,8 @@ exports.getReminderCount = async function(filter, user_id, reminderCount = 'all'
         INNER JOIN clients on reminders.client_id = clients.id 
         WHERE ${condition} AND clients.user_id = ?
     `;
-    
     const result = await conn.query(sqlQuery, [user_id]);
+    
     return result[0].total ? result[0].total : null;
 }
 
@@ -125,14 +107,53 @@ exports.deleteReminder = async function(id, user_id, conn = db) {
 /***********************************************************
  * Helpers
  ***********************************************************/
-function getReminderFilterCondition(filter) {
-    switch (filter) {
-        case 'overdue': return "DATE(rDate) < CURDATE()";
-        case 'today': return "DATE(rDate) = CURDATE()";
-        case 'thisMonth' : return "rDate >= DATE_FORMAT(CURDATE(), '%Y-%m-01') AND rDate <  DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')";
-        case 'initial': return "reminderCount = 0";
-        case 'followUp': return "reminderCount > 0";
-        case 'completed': return "reminders.status = 'complete'";
-        default: return "reminders.status != 'complete'";
+// Constructs the condition sql to filter reminders based on filter data
+// Filters can be a string (tab) or object with filter data
+function getReminderFilterCondition(filters) {
+    let sql;
+    const isObject = typeof filters === 'object';
+    const tab = isObject ? filters.tab : filters;
+
+    const tabConditions = {
+        today: "DATE(rDate) = CURDATE()",
+        thisMonth: "rDate >= DATE_FORMAT(CURDATE(), '%Y-%m-01') AND rDate <  DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')",
+        overdue: 'DATE(rDate) < CURDATE()', 
+        followUp: 'reminderCount > 0', 
+        completed: "reminders.status = 'complete'"
+    };
+
+    sql = tabConditions[tab] ?? '1 = 1';
+
+    if (tab === 'dateRange') {
+        switch (filters.dateFilterType) {
+            case 'today': 
+                sql = "DATE(rDate) = CURDATE()"; 
+                break;
+            case 'thisMonth': 
+                sql = "rDate >= DATE_FORMAT(CURDATE(), '%Y-%m-01') AND rDate <  DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')"; 
+                break;
+            case 'specificMonth':
+                sql = `rDate >= DATE_FORMAT('${filters.dateFrom + '-01'}', '%Y-%m-01') AND rDate <  DATE_FORMAT('${filters.dateFrom + '-01'}' + INTERVAL 1 MONTH, '%Y-%m-01')`;
+                break;
+            case 'dateRange':
+                sql = `rDate >= '${filters.dateFrom}' AND rDate <= '${filters.dateTo}'`;
+                break;
+            default:
+                sql = '1 = 1';
+        }
     }
+
+    if (tab !== 'completed') {
+        sql = "reminders.status != 'complete' AND " + sql;
+    }
+
+    if (typeof filters === 'object') {
+        if (filters.reminderCount !== 'all') {
+            sql += ` AND reminders.reminderCount = ${parseInt(filters.reminderCount)}`;
+        }
+        if (filters.important === 'true') {
+            sql += ' AND reminders.important > 0';
+        }
+    }
+    return sql;
 }
