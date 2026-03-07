@@ -40,17 +40,20 @@ if (process.env.NODE_ENV !== 'production') {
 function logError(message, error, req, extraContext = {}) {
   const errorMsg = error.message ? error.message.split('\n')[0] : 'Unknown Error';    // Only log the first line of error message (cleaner logs)
   
-  logger.error(`${message}: ${errorMsg}`, {
-      userId: req.user?.id,
-      route: req.originalUrl,
-      method: req.method,
-      ...extraContext,
-      ...(process.env.NODE_ENV === 'development' && { 
-        sqlMessage: error.sqlMessage, 
-        sql: error.sql, 
-        sqlCode: error.code
-      }),
-  });
+  const sqlDetails = process.env.NODE_ENV === 'development' && {
+    sqlCode: error.code,
+    sql: error.sql
+  };
+
+  const logData = {
+    userId: req.user?.id,
+    route: req.originalUrl,
+    method: req.method,
+    ...extraContext,
+    ...sqlDetails,
+  };
+
+  logger.error(`${message} -  ${errorMsg}\n${JSON.stringify(logData, null, 2)}`);
 }
 
 function logInfo(message, meta = {}) {
