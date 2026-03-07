@@ -793,7 +793,7 @@ function populateCountFilterOptions() {
         const $item = $(`
             <button class="filter-dropdown-item" data-count="${i}">
                 <span class="filter-check">✓</span>
-                Attempt #${i}
+                ${i} Attempt${i !== 1 ? 's' : ''}
             </button>
         `);
         
