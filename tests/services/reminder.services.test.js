@@ -251,8 +251,6 @@ describe('completeReminder - Decision Table Tests', () => {
                 mockConnection
             );
             expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
-            expect(attemptModels.createAttempt).not.toHaveBeenCalled();
-            expect(reminderModels.createReminder).not.toHaveBeenCalled();
         });
 
         test('call + booked + moveToNextCycle=true + createNewReminder=false', async () => {
@@ -331,7 +329,6 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.userId,
                 mockConnection
             );
-            expect(attemptModels.createAttempt).not.toHaveBeenCalled();
         });
 
         test('call + declined + moveToNextCycle=true + createNewReminder=false', async () => {
@@ -412,8 +409,6 @@ describe('completeReminder - Decision Table Tests', () => {
             );
             expect(attemptModels.abandonAttempt).toHaveBeenCalledWith(mockGetAttemptId, basePayload.userId, mockConnection);
             expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
-            expect(attemptModels.resolveAttempt).not.toHaveBeenCalled();
-            expect(reminderModels.createReminder).not.toHaveBeenCalled();
         });
 
         test('call + no_answer + moveToNextCycle=false + createNewReminder=true', async () => {
@@ -452,7 +447,6 @@ describe('completeReminder - Decision Table Tests', () => {
                 mockConnection
             );
             expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
-            expect(attemptModels.abandonAttempt).not.toHaveBeenCalled();
         });
 
         test('call + no_answer + moveToNextCycle=true + createNewReminder=false', async () => {
@@ -672,7 +666,6 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.userId,
                 mockConnection
             );
-            expect(attemptModels.abandonAttempt).not.toHaveBeenCalled();
             expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
     });
@@ -786,7 +779,6 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.userId,
                 mockConnection
             );
-            expect(attemptModels.abandonAttempt).not.toHaveBeenCalled();
             expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
     });
@@ -818,8 +810,6 @@ describe('completeReminder - Decision Table Tests', () => {
                 mockConnection
             );
             expect(attemptModels.abandonAttempt).toHaveBeenCalledWith(mockGetAttemptId, basePayload.userId, mockConnection);
-            expect(clientModels.updateClientLastContact).not.toHaveBeenCalled();
-            expect(attemptModels.setFirstReminderSentAt).not.toHaveBeenCalled();
             expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
 
@@ -864,12 +854,83 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.userId,
                 mockConnection
             );
-            expect(clientModels.updateClientLastContact).not.toHaveBeenCalled();
             expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
     });
 
-    describe('Additional workflow tests', () => {
+    describe('negative tests', () => {
+        test('should not update client last contact on method = email', async () => {
+            await service.completeReminder({
+                ...basePayload,
+                method: 'email',
+                outcome: 'waiting'
+            });
+
+            expect(clientModels.updateClientLastContact).not.toHaveBeenCalled;
+        });
+
+        test('should not update client last contact on method = text', async () => {
+            await service.completeReminder({
+                ...basePayload,
+                method: 'text', 
+                outcome: 'waiting'
+            });
+
+            expect(clientModels.updateClientLastContact).not.toHaveBeenCalled();
+        });
+
+        test('should not update client last contact on method = ignored', async () => {
+            await service.completeReminder({
+                ...basePayload, 
+                method: 'ignored',
+                outcome: 'none'
+            });
+
+            expect(clientModels.updateClientLastContact).not.toHaveBeenCalled();
+        });
+
+        test('should not create an appointment attempt or reminder if moveToNextCycle = false', async () => {
+            await service.completeReminder({
+                ...basePayload, 
+                moveToNextCycle: false
+            });
+
+            expect(attemptModels.createAttempt).not.toHaveBeenCalled();
+            expect(reminderModels.createReminder).not.toHaveBeenCalled();
+        });
+
+        test('should not create reminder if createReminder = false', async () => {
+            await service.completeReminder({
+                ...basePayload,
+                createReminder: false
+            });
+
+            expect(reminderModels.createReminder).not.toHaveBeenCalled();
+        });
+
+        test.each([
+            {...basePayload, outcome: 'waiting'},
+            {...basePayload, outcome: 'followup'},
+            {...basePayload, outcome: 'no_answer'},
+            {...basePayload, outcome: 'none'}
+        ])('should not resolve attmept if outcome = $outcome', async (payload) => {
+            await service.completeReminder(payload);
+
+            expect(attemptModels.resolveAttempt).not.toHaveBeenCalled();
+        });
+
+        test.each([
+            {...basePayload, outcome: 'none', createNewReminder: true},
+            {...basePayload, outcome: 'booked', createNewReminder: false},
+            {...basePayload, outcome: 'declined', createNewReminder: false}
+        ])('should not abandon attempt if outcome = $outcome and createNewReminder = $createNewReminder', async (payload) => {
+            await service.completeReminder(payload);
+
+            expect(attemptModels.abandonAttempt).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('additional workflow tests', () => {
         test('should set first_reminder_sent_at for reminder #0 (non-ignore method)', async () => {
             await service.completeReminder({
                 ...basePayload,
@@ -912,26 +973,25 @@ describe('completeReminder - Decision Table Tests', () => {
 
             expect(attemptModels.setFirstReminderSentAt).not.toHaveBeenCalled();
         });
+    });
 
-        describe('successful transaction block', () => {
-            test('should begin transaction, commit, and release', async () => {
-                await service.completeReminder(basePayload);
+    describe('successful transaction block', () => {
+        test('should begin transaction, commit, and release', async () => {
+            await service.completeReminder(basePayload);
 
-                expect(mockConnection.beginTransaction).toHaveBeenCalled();
-                expect(mockConnection.commit).toHaveBeenCalled();
-                expect(mockConnection.release).toHaveBeenCalled();
-            });
+            expect(mockConnection.beginTransaction).toHaveBeenCalled();
+            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(mockConnection.release).toHaveBeenCalled();
+        });
 
-            test('should rollback transaction on error', async () => {
-                reminderModels.getAttemptIdFromReminder.mockRejectedValue(new Error('Database error'));
+        test('should rollback transaction on error', async () => {
+            reminderModels.getAttemptIdFromReminder.mockRejectedValue(new Error('Database error'));
+            await expect(service.completeReminder({
+                ...basePayload
+            })).rejects.toThrow('Database error');
 
-                await expect(service.completeReminder({
-                    ...basePayload
-                })).rejects.toThrow('Database error');
-
-                expect(mockConnection.rollback).toHaveBeenCalled();
-                expect(mockConnection.release).toHaveBeenCalled();
-            });
+            expect(mockConnection.rollback).toHaveBeenCalled();
+            expect(mockConnection.release).toHaveBeenCalled();
         });
     });
 });
