@@ -200,7 +200,7 @@ function loadList(counts, reminders, offset=0) {
             $row.find('.reminder-note').text(reminder.note); 
 
             // Attach reminder
-            $row.find('.cd-edit-reminder-btn').data('id', reminder.id).data('note', reminder.note).data('date', reminder.date);
+            $row.find('.cd-edit-reminder-btn').data('id', reminder.id).data('note', reminder.note).data('date', reminder.date).data('important', reminder.important);
 
             // Attach click listener for reminder row
             $row.on('click', function(e) {
