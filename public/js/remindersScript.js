@@ -811,8 +811,15 @@ function initDateRangeFilterDropdown() {
     const DATE_FILTER_LABELS = {
         today:         'Today',
         thisMonth:     'This Month',
-        specificMonth: (val) => `${val}`,
-        dateRange:     (f, t) => `${f} – ${t}`,
+        specificMonth: (val) => {
+            val = val.split("-").reverse().join("-");
+            return `${val.replaceAll('-', '/')}`;
+        },
+        dateRange:     (f, t) => {
+            f = f.split("-").reverse().join("-");
+            t = t.split("-").reverse().join("-");
+            return `${f.replaceAll('-', '/')} - ${t.replaceAll('-', '/')}`;
+        },
         any:           'Any Date',
     };
     setDateFilterLabel('any');
