@@ -3,9 +3,9 @@ const clientModels = require('../models/client.models');
 const attemptModels = require('../models/attempt.models');
 const db = require('../config/database');
 
-// Returns paginated reminder rows for a given filter
+// Returns paginated reminder rows for a given tab with filters
 // Returns row count for overdue, today, this month, and followUp filters
-exports.loadReminderList = async function({ filter, reminderCount, limit, offset, userId }) {
+exports.loadReminderList = async function({ filters, limit, offset, userId }) {
     // Get counts
     const [overdueCount, todayCount, thisMonthCount, followUpCount] = await Promise.all([
         reminderModels.getReminderCount('overdue', userId),
@@ -15,10 +15,10 @@ exports.loadReminderList = async function({ filter, reminderCount, limit, offset
     ]);
 
     // Get reminder list
-    const reminders = await reminderModels.getReminderList(filter, limit, offset, userId, reminderCount);
+    const reminders = await reminderModels.getReminderList(filters, limit, offset, userId);
 
     // Get total count for pagination
-    const totalCount = await reminderModels.getReminderCount(filter, userId, reminderCount);
+    const totalCount = await reminderModels.getReminderCount(filters, userId);
 
     return {
         listCounts: { overdue: overdueCount, today: todayCount, thisMonth: thisMonthCount, followUp: followUpCount },

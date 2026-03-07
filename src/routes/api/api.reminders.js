@@ -9,12 +9,10 @@ const { logError } = require('../../config/logger');
  ***********************************************************/
 // Fetch the paginated filtered reminder list
 // Returns list counts for tab filters
-// Filter: 'all', 'overdue', 'today', 'thisMonth', 'initial', 'followup', 'completed'
 router.get("/", async (req, res) => {
     try {
         const data = await reminderServices.loadReminderList({
-            filter: req.query.filter,
-            reminderCount: req.query.reminderCount,
+            filters: req.query.filterData,      // { tab, dateFilterType, dateFrom, dateTo, important, reminderCount }
             userId: req.user.id, 
             limit: req.query.limit, 
             offset: req.query.offset

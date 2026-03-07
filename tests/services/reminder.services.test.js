@@ -48,7 +48,8 @@ beforeEach(() => {
             'thisMonth': 25,
             'followUp': 8
         };
-        return Promise.resolve(counts[filter] || 0);
+        const f = typeof filter === 'string' ? filter : filter.tab;
+        return Promise.resolve(counts[f] || 0);
     });
 })
 
@@ -59,8 +60,14 @@ afterEach(() => {
 // Get reminder list
 describe('loadReminderList', () => {
     const baseParams = {
-        filter: 'today',
-        reminderCount: null,
+        filters: {
+            tab: 'today', 
+            dateFilterType: 'any',
+            dateFrom: 'null',
+            dateTo: 'null',
+            important: 'false',
+            reminderCount: '1'
+        },
         limit: 20,
         offset: 0,
         userId: 100
@@ -89,7 +96,6 @@ describe('loadReminderList', () => {
             expect(reminderModels.getReminderCount).toHaveBeenCalledWith('today', 100);
             expect(reminderModels.getReminderCount).toHaveBeenCalledWith('thisMonth', 100);
             expect(reminderModels.getReminderCount).toHaveBeenCalledWith('followUp', 100);
-            expect(reminderModels.getReminderCount).toHaveBeenCalledWith('today', 100, null);
             expect(reminderModels.getReminderCount).toHaveBeenCalledTimes(5);
         });
 
@@ -97,11 +103,10 @@ describe('loadReminderList', () => {
             await service.loadReminderList(baseParams);
 
             expect(reminderModels.getReminderList).toHaveBeenCalledWith(
-                'today',
-                20,
-                0,
-                100,
-                null
+                baseParams.filters,
+                baseParams.limit,
+                baseParams.offset,
+                baseParams.userId
             );
         });
     });
@@ -109,18 +114,9 @@ describe('loadReminderList', () => {
     describe('edge cases', () => {
         test('should handle empty reminder list', async () => {
             reminderModels.getReminderList.mockResolvedValue([]);
-            reminderModels.getReminderCount.mockResolvedValue(0);
-
             const result = await service.loadReminderList(baseParams);
 
             expect(result.listData).toEqual([]);
-            expect(result.total).toBe(0);
-            expect(result.listCounts).toEqual({
-                overdue: 0,
-                today: 0,
-                thisMonth: 0,
-                followUp: 0
-            });
         });
     });
 

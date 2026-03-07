@@ -3397,3 +3397,59 @@ th.reminder-count-header,
         width: 100%;
     }
 }
+
+/* Date Filter Inputs (inside dropdown) */
+.date-filter-inputs {
+    padding: 4px 0 12px;
+    border-top: 1px solid var(--gray-100);
+}
+
+.date-filter-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 8px 12px 2px;
+}
+
+.date-filter-apply-btn {
+    display: block;
+    width: calc(100% - 24px);
+    margin: 10px 12px 0;
+    padding: 10px;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-base);
+    transition: all 0.2s ease;
+}
+
+.date-filter-apply-btn:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+/* Important toggle tab */
+.important-toggle-tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    border: 2px solid transparent !important;
+    transition: all 0.2s ease;
+}
+
+.important-toggle-tab.active {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fbbf24 !important;
+}
+
+.important-toggle-tab:hover:not(.active) {
+    background: #fef9ee;
+    color: #92400e;
+}
