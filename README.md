@@ -63,6 +63,9 @@ If using seed data, user credentials:
 ## Further Development
 Plans for further development can be found in [Further Development](./management/Further%20Development.md)
 
+## Past Migrations
+Database migration files and instructions for updating from v2.0.0 to v3.0.0 can be found [here](./database/migrations/v2.0.0-v3.0.0/)
+
 ## Screenshots
 Reminders page
 <p align="center"> <img src="images/v3.0.0/reminders.png" alt="Dashboard" width="1385"> </p>
