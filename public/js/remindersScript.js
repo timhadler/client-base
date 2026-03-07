@@ -596,6 +596,7 @@ function initInteractionModal() {
             $dateInput.val(dateTimeStr);
         } else {
             $fields.hide();
+            $('#reminderIsImportant').prop('checked', false);
         }
     }
 
@@ -626,6 +627,7 @@ function initInteractionModal() {
                 $('#reminderDescription').text(newReminderText);
                 $('#reminderDescription').show();
                 showNewReminder(true);
+                $('#reminderIsImportant').prop('checked', true);
             } else if (outcome === 'no_answer') {
                 // Show both options
                 $('#newReminderWrapper').show();
@@ -657,6 +659,7 @@ function initInteractionModal() {
     function resetReminderCheckboxes() {
         $('#createNewReminder').prop('checked', false);
         $('#moveToNextCycle').prop('checked', false);
+        $('#reminderIsImportant').prop('checked', false);
         $('#reminderDescription').hide();
     }
 
