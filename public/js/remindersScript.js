@@ -675,7 +675,7 @@ function initInteractionModal() {
             const notes = {
                 call: {
                     followup: "Requested a follow-up",
-                    no_answer: "Follow-up after missed call"
+                    no_answer: "Follow-up after missed outbound call"
                 },
                 email: "Follow-up after email",
                 text: "Follow-up after text"
