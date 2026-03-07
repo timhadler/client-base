@@ -544,6 +544,7 @@ function initInteractionModal() {
             clientId: currentClientData.id,
             method: selectedMethod,
             outcome: selectedOutcome,
+            important: $('#reminderIsImportant').prop('checked'),
             createNewReminder: $('#createNewReminder').prop('checked'),
             moveToNextCycle: $('#moveToNextCycle').prop('checked'),
             newReminderDate: $('#newReminderDate').val(),

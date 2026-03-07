@@ -68,8 +68,9 @@ router.post("/:id/complete", async (req, res) => {
             reminderCount: req.body.reminderCount,
             method: req.body.method,
             outcome: req.body.outcome,
-            createNewReminder: req.body.createNewReminder ? true : false,
-            moveToNextCycle: req.body.moveToNextCycle ? true : false,
+            important: req.body.important,
+            createNewReminder: req.body.createNewReminder,
+            moveToNextCycle: req.body.moveToNextCycle,
             newReminderDate: req.body.newReminderDate,
             newReminderNote: req.body.newReminderNote,
         });
