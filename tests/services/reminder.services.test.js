@@ -211,7 +211,7 @@ describe('completeReminder - Decision Table Tests', () => {
     reminderCount: 1,
     method: 'call',
     outcome: 'booked',
-    important: 'false',
+    important: false,
     createNewReminder: false,
     moveToNextCycle: false,
     newReminderDate: '2024-12-01',
