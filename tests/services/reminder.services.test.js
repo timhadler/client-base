@@ -208,9 +208,10 @@ describe('completeReminder - Decision Table Tests', () => {
     clientId: 1,
     userId: 100,
     reminderId: 500,
-    reminderCount: 0,
+    reminderCount: 1,
     method: 'call',
     outcome: 'booked',
+    important: false,
     createNewReminder: false,
     moveToNextCycle: false,
     newReminderDate: '2024-12-01',
@@ -229,10 +230,17 @@ describe('completeReminder - Decision Table Tests', () => {
 
             // Should complete reminder, resolve attempt, update client last contact
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
-                basePayload.reminderId,
+                basePayload.reminderId, 
                 'call', 
+                'booked', 
+                basePayload.reminderCount + 1,
+                basePayload.userId, 
+                mockConnection
+            );
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
                 'booked',
-                1,
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
@@ -242,9 +250,7 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.userId,
                 mockConnection
             );
-            expect(attemptModels.createAttempt).not.toHaveBeenCalled();
-            expect(reminderModels.createReminder).not.toHaveBeenCalled();
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
 
         test('call + booked + moveToNextCycle=true + createNewReminder=false', async () => {
@@ -256,9 +262,26 @@ describe('completeReminder - Decision Table Tests', () => {
                 createNewReminder: false
             });
 
-            // Should complete reminder, resolve attempt, create new attempt, update client last contact
+            // Should complete reminder, resolve attempt, create new attempt, create new reminder, update client last contact
             expect(attemptModels.createAttempt).toHaveBeenCalledWith(
                 basePayload.clientId,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(reminderModels.createReminder).toHaveBeenCalledWith(
+                mockCreateAttemptId, 
+                basePayload.newReminderDate, 
+                basePayload.important, 
+                basePayload.newReminderNote, 
+                0, 
+                basePayload.clientId, 
+                basePayload.userId, 
+                mockConnection
+            );
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'booked',
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
@@ -266,17 +289,17 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.reminderId,
                 'call',
                 'booked',
-                1,
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
             expect(attemptModels.resolveAttempt).toHaveBeenCalledWith(mockGetAttemptId, basePayload.userId, mockConnection);
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
             expect(clientModels.updateClientLastContact).toHaveBeenCalledWith(
                 basePayload.clientId,
                 basePayload.userId,
                 mockConnection
             );
-            expect(mockConnection.commit).toHaveBeenCalled();
         });
     });
 
@@ -295,18 +318,17 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.reminderId,
                 'call',
                 'declined',
-                1,
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
             expect(attemptModels.resolveAttempt).toHaveBeenCalledWith(mockGetAttemptId, basePayload.userId, mockConnection);
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
             expect(clientModels.updateClientLastContact).toHaveBeenCalledWith(
                 basePayload.clientId,
                 basePayload.userId,
                 mockConnection
             );
-            expect(attemptModels.createAttempt).not.toHaveBeenCalled();
-            expect(mockConnection.commit).toHaveBeenCalled();
         });
 
         test('call + declined + moveToNextCycle=true + createNewReminder=false', async () => {
@@ -318,27 +340,44 @@ describe('completeReminder - Decision Table Tests', () => {
                 createNewReminder: false
             });
 
-            // Should complete reminder, resolve attempt, create new attempt, update client last contact
+            // Should complete reminder, resolve attempt, create new attempt, create new reminder, update client last contact
             expect(attemptModels.createAttempt).toHaveBeenCalledWith(
                 basePayload.clientId,
                 basePayload.userId,
+                mockConnection
+            );
+            expect(reminderModels.createReminder).toHaveBeenCalledWith(
+                mockCreateAttemptId, 
+                basePayload.newReminderDate, 
+                basePayload.important, 
+                basePayload.newReminderNote, 
+                0, 
+                basePayload.clientId, 
+                basePayload.userId, 
                 mockConnection
             );
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
                 'call',
                 'declined',
-                1,
+                basePayload.reminderCount + 1,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'declined',
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
             expect(attemptModels.resolveAttempt).toHaveBeenCalledWith(mockGetAttemptId, basePayload.userId, mockConnection);
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
             expect(clientModels.updateClientLastContact).toHaveBeenCalledWith(
                 basePayload.clientId,
                 basePayload.userId,
                 mockConnection
             );
-            expect(mockConnection.commit).toHaveBeenCalled();
         });
     });
 
@@ -357,14 +396,19 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.reminderId,
                 'call',
                 'no_answer',
-                1,
+                basePayload.reminderCount + 1,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'no_answer',
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
             expect(attemptModels.abandonAttempt).toHaveBeenCalledWith(mockGetAttemptId, basePayload.userId, mockConnection);
-            expect(attemptModels.resolveAttempt).not.toHaveBeenCalled();
-            expect(reminderModels.createReminder).not.toHaveBeenCalled();
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
 
         test('call + no_answer + moveToNextCycle=false + createNewReminder=true', async () => {
@@ -381,22 +425,28 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.reminderId,
                 'call',
                 'no_answer',
-                1,
+                basePayload.reminderCount + 1,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'no_answer',
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
             expect(reminderModels.createReminder).toHaveBeenCalledWith(
-                mockGetAttemptId, // existing attempt ID
+                mockGetAttemptId,
                 basePayload.newReminderDate,
-                false,
+                basePayload.important,
                 basePayload.newReminderNote,
-                1, // count + 1
+                basePayload.reminderCount + 1,
                 basePayload.clientId,
                 basePayload.userId,
                 mockConnection
             );
-            expect(attemptModels.abandonAttempt).not.toHaveBeenCalled();
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
 
         test('call + no_answer + moveToNextCycle=true + createNewReminder=false', async () => {
@@ -407,10 +457,19 @@ describe('completeReminder - Decision Table Tests', () => {
                 moveToNextCycle: true,
                 createNewReminder: false
             });
-
             // Should complete reminder, abandon attempt, create new attempt
             expect(attemptModels.abandonAttempt).toHaveBeenCalledWith(mockGetAttemptId, basePayload.userId, mockConnection);
             expect(attemptModels.createAttempt).toHaveBeenCalledWith(
+                basePayload.clientId,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(reminderModels.createReminder).toHaveBeenCalledWith(
+                mockCreateAttemptId,
+                basePayload.newReminderDate,
+                basePayload.important,
+                basePayload.newReminderNote,
+                0,
                 basePayload.clientId,
                 basePayload.userId,
                 mockConnection
@@ -419,11 +478,18 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.reminderId,
                 'call',
                 'no_answer',
-                1,
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'no_answer',
+                basePayload.reminderCount + 1,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
     });
 
@@ -443,6 +509,7 @@ describe('completeReminder - Decision Table Tests', () => {
             expect(attemptModels.resolveAttempt).not.toHaveBeenCalled();
             expect(reminderModels.createReminder).not.toHaveBeenCalled();
             expect(clientModels.updateClientLastContact).not.toHaveBeenCalled();
+            expect(clientModels.updateClientNextContact).not.toHaveBeenCalled();
             expect(mockConnection.commit).not.toHaveBeenCalled();
         });
 
@@ -455,21 +522,28 @@ describe('completeReminder - Decision Table Tests', () => {
                 createNewReminder: true
             });
 
-            // Should complete reminder, create new reminder (count+1), update client last contact
+            // Should complete reminder, create new reminder (important=true), update client last contact
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
                 'call',
                 'followup',
-                1,
+                basePayload.reminderCount + 1,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'followup',
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
             expect(reminderModels.createReminder).toHaveBeenCalledWith(
                 mockGetAttemptId,
                 basePayload.newReminderDate,
-                false,
+                basePayload.important,
                 basePayload.newReminderNote,
-                1,
+                basePayload.reminderCount + 1,
                 basePayload.clientId,
                 basePayload.userId,
                 mockConnection
@@ -479,7 +553,7 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.userId,
                 mockConnection
             );
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
     });
 
@@ -498,12 +572,19 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.reminderId,
                 'text',
                 'waiting',
-                1,
+                basePayload.reminderCount + 1,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'waiting',
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
             expect(attemptModels.abandonAttempt).toHaveBeenCalledWith(mockGetAttemptId, basePayload.userId, mockConnection);
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
 
         test('text + waiting + moveToNextCycle=true + createNewReminder=false', async () => {
@@ -522,15 +603,32 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.userId,
                 mockConnection
             );
+            expect(reminderModels.createReminder).toHaveBeenCalledWith(
+                mockCreateAttemptId,
+                basePayload.newReminderDate,
+                basePayload.important,
+                basePayload.newReminderNote,
+                0,
+                basePayload.clientId,
+                basePayload.userId,
+                mockConnection
+            );
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
                 'text',
                 'waiting',
-                1,
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'waiting',
+                basePayload.reminderCount + 1,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
 
         test('text + waiting + moveToNextCycle=false + createNewReminder=true', async () => {
@@ -547,22 +645,28 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.reminderId,
                 'text',
                 'waiting',
-                1,
+                basePayload.reminderCount + 1,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'waiting',
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
             expect(reminderModels.createReminder).toHaveBeenCalledWith(
                 mockGetAttemptId,
                 basePayload.newReminderDate,
-                false,
+                basePayload.important,
                 basePayload.newReminderNote,
-                1,
+                basePayload.reminderCount + 1,
                 basePayload.clientId,
                 basePayload.userId,
                 mockConnection
             );
-            expect(attemptModels.abandonAttempt).not.toHaveBeenCalled();
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
     });
 
@@ -581,12 +685,19 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.reminderId,
                 'email',
                 'waiting',
-                1,
+                basePayload.reminderCount + 1,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'waiting',
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
             expect(attemptModels.abandonAttempt).toHaveBeenCalledWith(mockGetAttemptId, basePayload.userId, mockConnection);
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
 
         test('email + waiting + moveToNextCycle=true + createNewReminder=false', async () => {
@@ -605,15 +716,32 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.userId,
                 mockConnection
             );
+            expect(reminderModels.createReminder).toHaveBeenCalledWith(
+                mockCreateAttemptId,
+                basePayload.newReminderDate,
+                basePayload.important,
+                basePayload.newReminderNote,
+                0,
+                basePayload.clientId,
+                basePayload.userId,
+                mockConnection
+            );
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
                 'email',
                 'waiting',
-                1,
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'waiting',
+                basePayload.reminderCount + 1,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
 
         test('email + waiting + moveToNextCycle=false + createNewReminder=true', async () => {
@@ -630,22 +758,28 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.reminderId,
                 'email',
                 'waiting',
-                1,
+                basePayload.reminderCount + 1,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'waiting',
+                basePayload.reminderCount + 1,
                 basePayload.userId,
                 mockConnection
             );
             expect(reminderModels.createReminder).toHaveBeenCalledWith(
                 mockGetAttemptId,
                 basePayload.newReminderDate,
-                false,
+                basePayload.important,
                 basePayload.newReminderNote,
-                1,
+                basePayload.reminderCount + 1,
                 basePayload.clientId,
                 basePayload.userId,
                 mockConnection
             );
-            expect(attemptModels.abandonAttempt).not.toHaveBeenCalled();
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
     });
 
@@ -653,7 +787,6 @@ describe('completeReminder - Decision Table Tests', () => {
         test('ignore + none + moveToNextCycle=false + createNewReminder=false', async () => {
             await service.completeReminder({
                 ...basePayload,
-                reminderCount: 1,
                 method: 'ignored',
                 outcome: 'none',
                 moveToNextCycle: false,
@@ -665,14 +798,19 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.reminderId,
                 'ignored',
                 'none',
-                1,
+                basePayload.reminderCount,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'none',
+                basePayload.reminderCount,
                 basePayload.userId,
                 mockConnection
             );
             expect(attemptModels.abandonAttempt).toHaveBeenCalledWith(mockGetAttemptId, basePayload.userId, mockConnection);
-            expect(clientModels.updateClientLastContact).not.toHaveBeenCalled();
-            expect(attemptModels.setFirstReminderSentAt).not.toHaveBeenCalled();
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
 
         test('ignore + none + moveToNextCycle=true + createNewReminder=false', async () => {
@@ -691,20 +829,108 @@ describe('completeReminder - Decision Table Tests', () => {
                 basePayload.userId,
                 mockConnection
             );
+            expect(reminderModels.createReminder).toHaveBeenCalledWith(
+                mockCreateAttemptId,
+                basePayload.newReminderDate,
+                basePayload.important,
+                basePayload.newReminderNote,
+                0,
+                basePayload.clientId,
+                basePayload.userId,
+                mockConnection
+            );
             expect(reminderModels.completeReminder).toHaveBeenCalledWith(
                 basePayload.reminderId,
                 'ignored',
                 'none',
-                0,
+                basePayload.reminderCount,
                 basePayload.userId,
                 mockConnection
             );
-            expect(clientModels.updateClientLastContact).not.toHaveBeenCalled();
-            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(attemptModels.updateAttempt).toHaveBeenCalledWith(
+                mockGetAttemptId,
+                'none',
+                basePayload.reminderCount,
+                basePayload.userId,
+                mockConnection
+            );
+            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(basePayload.clientId, basePayload.userId, mockConnection);
         });
     });
 
-    describe('Additional workflow tests', () => {
+    describe('negative tests', () => {
+        test('should not update client last contact on method = email', async () => {
+            await service.completeReminder({
+                ...basePayload,
+                method: 'email',
+                outcome: 'waiting'
+            });
+
+            expect(clientModels.updateClientLastContact).not.toHaveBeenCalled;
+        });
+
+        test('should not update client last contact on method = text', async () => {
+            await service.completeReminder({
+                ...basePayload,
+                method: 'text', 
+                outcome: 'waiting'
+            });
+
+            expect(clientModels.updateClientLastContact).not.toHaveBeenCalled();
+        });
+
+        test('should not update client last contact on method = ignored', async () => {
+            await service.completeReminder({
+                ...basePayload, 
+                method: 'ignored',
+                outcome: 'none'
+            });
+
+            expect(clientModels.updateClientLastContact).not.toHaveBeenCalled();
+        });
+
+        test('should not create an appointment attempt or reminder if moveToNextCycle = false', async () => {
+            await service.completeReminder({
+                ...basePayload, 
+                moveToNextCycle: false
+            });
+
+            expect(attemptModels.createAttempt).not.toHaveBeenCalled();
+            expect(reminderModels.createReminder).not.toHaveBeenCalled();
+        });
+
+        test('should not create reminder if createReminder = false', async () => {
+            await service.completeReminder({
+                ...basePayload,
+                createReminder: false
+            });
+
+            expect(reminderModels.createReminder).not.toHaveBeenCalled();
+        });
+
+        test.each([
+            {...basePayload, outcome: 'waiting'},
+            {...basePayload, outcome: 'followup'},
+            {...basePayload, outcome: 'no_answer'},
+            {...basePayload, outcome: 'none'}
+        ])('should not resolve attmept if outcome = $outcome', async (payload) => {
+            await service.completeReminder(payload);
+
+            expect(attemptModels.resolveAttempt).not.toHaveBeenCalled();
+        });
+
+        test.each([
+            {...basePayload, outcome: 'none', createNewReminder: true},
+            {...basePayload, outcome: 'booked', createNewReminder: false},
+            {...basePayload, outcome: 'declined', createNewReminder: false}
+        ])('should not abandon attempt if outcome = $outcome and createNewReminder = $createNewReminder', async (payload) => {
+            await service.completeReminder(payload);
+
+            expect(attemptModels.abandonAttempt).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('additional workflow tests', () => {
         test('should set first_reminder_sent_at for reminder #0 (non-ignore method)', async () => {
             await service.completeReminder({
                 ...basePayload,
@@ -747,44 +973,24 @@ describe('completeReminder - Decision Table Tests', () => {
 
             expect(attemptModels.setFirstReminderSentAt).not.toHaveBeenCalled();
         });
+    });
 
-        test('should always update nextFollowUp client field', async () => {
-            await service.completeReminder({
-                ...basePayload,
-                method: 'text',
-                outcome: 'waiting',
-                moveToNextCycle: false,
-                createNewReminder: false
-            });
+    describe('successful transaction block', () => {
+        test('should begin transaction, commit, and release', async () => {
+            await service.completeReminder(basePayload);
 
-            expect(clientModels.updateClientNextContact).toHaveBeenCalledWith(
-                basePayload.clientId,
-                basePayload.userId,
-                mockConnection
-            );
+            expect(mockConnection.beginTransaction).toHaveBeenCalled();
+            expect(mockConnection.commit).toHaveBeenCalled();
+            expect(mockConnection.release).toHaveBeenCalled();
         });
 
         test('should rollback transaction on error', async () => {
             reminderModels.getAttemptIdFromReminder.mockRejectedValue(new Error('Database error'));
-
             await expect(service.completeReminder({
                 ...basePayload
             })).rejects.toThrow('Database error');
 
             expect(mockConnection.rollback).toHaveBeenCalled();
-            expect(mockConnection.release).toHaveBeenCalled();
-        });
-
-        test('should release connection after successful commit', async () => {
-            await service.completeReminder({
-                ...basePayload,
-                method: 'call',
-                outcome: 'booked',
-                moveToNextCycle: false,
-                createNewReminder: false
-            });
-
-            expect(mockConnection.commit).toHaveBeenCalled();
             expect(mockConnection.release).toHaveBeenCalled();
         });
     });
