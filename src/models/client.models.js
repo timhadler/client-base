@@ -74,7 +74,7 @@ exports.getClientReminders = async function(id, user_id, limit, conn = db) {
     limit = limit ? limit : 10;
 
     const sqlQuery = `
-        SELECT reminders.id, rDate as date, reminders.status, note, method, outcome, important, reminderCount, respondedAt 
+        SELECT reminders.id, rDate as date, reminders.status, note, method, outcome, CAST(reminders.important AS UNSIGNED) AS important, reminderCount, respondedAt 
         FROM reminders 
         JOIN clients on reminders.client_id = clients.id 
         WHERE clients.public_id = ? 
@@ -89,7 +89,7 @@ exports.getClientReminders = async function(id, user_id, limit, conn = db) {
 // Fetches all reminders with statius 'pending' for a given client id
 exports.getClientActiveReminders = async function(id, user_id, limit, conn = db) {
        const sqlQuery = `
-       SELECT reminders.id, rDate as date, reminders.status, note, outcome, important, reminderCount 
+       SELECT reminders.id, rDate as date, reminders.status, note, outcome, CAST(reminders.important AS UNSIGNED) AS important, reminderCount 
        FROM reminders 
        JOIN clients on reminders.client_id = clients.id 
        WHERE clients.public_id = ? 
@@ -105,7 +105,7 @@ exports.getClientActiveReminders = async function(id, user_id, limit, conn = db)
 // Fetches all reminders with status complete for a given client id
 exports.getClientCompleteReminders = async function(id, user_id, limit, conn = db) {
        const sqlQuery = `
-       SELECT reminders.id, rDate as date, reminders.status, note, method, outcome, important, reminderCount, respondedAt as respondedDate, completedAt as completedDate
+       SELECT reminders.id, rDate as date, reminders.status, note, method, outcome, CAST(reminders.important AS UNSIGNED) AS important, reminderCount, respondedAt as respondedDate, completedAt as completedDate
        FROM reminders 
        JOIN clients on reminders.client_id = clients.id 
        WHERE clients.public_id = ? 

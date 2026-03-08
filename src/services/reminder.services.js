@@ -102,6 +102,7 @@ exports.editReminder = async function({ date, important, note, id, userId }) {
  * | email  | waiting    | false           | true              | Complete reminder, create new reminder (count+1)                                                           |
  * | ignored| none       | false           | false             | Complete reminder, abandon attempt, NO client timestamp or reminder count updates                          |
  * | ignored| none       | true            | false             | Complete reminder, abandon attempt, create new attempt, NO client timestamp or reminder count updates      |
+ * Note: all cases should; update attempt, complete reminder, and update client next contact date
 **/
 exports.completeReminder = async function({
     clientId,
@@ -110,6 +111,7 @@ exports.completeReminder = async function({
     reminderCount,
     method,
     outcome,
+    important,
     createNewReminder,
     moveToNextCycle,
     newReminderDate,
@@ -118,7 +120,7 @@ exports.completeReminder = async function({
     // Exit if not creating a new reminder with outcome = followup
     if (outcome === 'followup' && !createNewReminder) { return };
 
-    const resolveObj = resolveOutcome(method, outcome, reminderCount, createNewReminder, moveToNextCycle);      // Get action plan
+    const resolveObj = resolveOutcome(method, outcome, important, reminderCount, createNewReminder, moveToNextCycle);      // Get action plan
     const connection = await db.getConnection();
     try {
         await connection.beginTransaction();
@@ -146,8 +148,7 @@ exports.completeReminder = async function({
         }
 
         if (resolveObj.createReminder) {
-            // Use false as placeholder for 'important' for now
-            await reminderModels.createReminder(newAttemptId, newReminderDate, false, newReminderNote, resolveObj.newReminderCount, clientId, userId, connection);
+            await reminderModels.createReminder(newAttemptId, newReminderDate, resolveObj.important, newReminderNote, resolveObj.newReminderCount, clientId, userId, connection);
         }
 
         await reminderModels.completeReminder(reminderId, method, resolveObj.outcome, currentReminderCount, userId, connection);
@@ -231,9 +232,10 @@ exports.deleteReminder = async function({ id, userId }) {
  * Helpers
  ***********************************************************/
 // Returns the action plan for resolving a reminder
-function resolveOutcome(method, outcome, oldReminderCount, createNewReminder, moveToNextCycle) {
+function resolveOutcome(method, outcome, important, oldReminderCount, createNewReminder, moveToNextCycle) {
     let obj =  {
         outcome: outcome,
+        important: important,
         createReminder: createNewReminder || moveToNextCycle,
         updateLastContact: outcome === 'booked' || outcome === 'declined' || outcome === 'followup',
         abandonAttempt: !createNewReminder && outcome !== 'booked' && outcome !== 'declined', 

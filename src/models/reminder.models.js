@@ -9,7 +9,7 @@ exports.getReminderList = async function(filters, limit, offset, user_id, conn =
     let order = "ASC"
 
     const sqlQuery = `
-        SELECT clients.public_id as clientId, reminders.id, rDate as date, reminders.status, reminderCount, reminders.important, outcome, reminders.note, name, company 
+        SELECT clients.public_id as clientId, reminders.id, rDate as date, reminders.status, reminderCount, CAST(reminders.important AS UNSIGNED) AS important, outcome, reminders.note, name, company 
         FROM reminders 
         INNER JOIN clients on reminders.client_id = clients.id 
         WHERE ${condition} AND clients.user_id = ? 

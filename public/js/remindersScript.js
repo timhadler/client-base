@@ -200,7 +200,7 @@ function loadList(counts, reminders, offset=0) {
             $row.find('.reminder-note').text(reminder.note); 
 
             // Attach reminder
-            $row.find('.cd-edit-reminder-btn').data('id', reminder.id).data('note', reminder.note).data('date', reminder.date);
+            $row.find('.cd-edit-reminder-btn').data('id', reminder.id).data('note', reminder.note).data('date', reminder.date).data('important', reminder.important);
 
             // Attach click listener for reminder row
             $row.on('click', function(e) {
@@ -544,6 +544,7 @@ function initInteractionModal() {
             clientId: currentClientData.id,
             method: selectedMethod,
             outcome: selectedOutcome,
+            important: $('#reminderIsImportant').prop('checked'),
             createNewReminder: $('#createNewReminder').prop('checked'),
             moveToNextCycle: $('#moveToNextCycle').prop('checked'),
             newReminderDate: $('#newReminderDate').val(),
@@ -595,6 +596,7 @@ function initInteractionModal() {
             $dateInput.val(dateTimeStr);
         } else {
             $fields.hide();
+            $('#reminderIsImportant').prop('checked', false);
         }
     }
 
@@ -625,6 +627,7 @@ function initInteractionModal() {
                 $('#reminderDescription').text(newReminderText);
                 $('#reminderDescription').show();
                 showNewReminder(true);
+                $('#reminderIsImportant').prop('checked', true);
             } else if (outcome === 'no_answer') {
                 // Show both options
                 $('#newReminderWrapper').show();
@@ -656,6 +659,7 @@ function initInteractionModal() {
     function resetReminderCheckboxes() {
         $('#createNewReminder').prop('checked', false);
         $('#moveToNextCycle').prop('checked', false);
+        $('#reminderIsImportant').prop('checked', false);
         $('#reminderDescription').hide();
     }
 

@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
     try {
         await reminderServices.addReminder({
             date: req.body.date, 
-            important: false,   // Placeholder for now 
+            important: req.body.important,
             note: req.body.note, 
             reminderCount: 0,   // New reminder starts at 0
             clientId: req.body.clientId, 
@@ -68,8 +68,9 @@ router.post("/:id/complete", async (req, res) => {
             reminderCount: req.body.reminderCount,
             method: req.body.method,
             outcome: req.body.outcome,
-            createNewReminder: req.body.createNewReminder ? true : false,
-            moveToNextCycle: req.body.moveToNextCycle ? true : false,
+            important: req.body.important,
+            createNewReminder: req.body.createNewReminder,
+            moveToNextCycle: req.body.moveToNextCycle,
             newReminderDate: req.body.newReminderDate,
             newReminderNote: req.body.newReminderNote,
         });
@@ -91,7 +92,7 @@ router.put("/:id", async (req, res) => {
         await reminderServices.editReminder({
             id: req.params.id, 
             date: req.body.date, 
-            important: false,   // Placeholder for now
+            important: req.body.important,
             note: req.body.note, 
             userId: req.user.id
         })

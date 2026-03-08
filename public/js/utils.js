@@ -10,7 +10,7 @@ function initEditReminderModal(listSelector) {
     // Open modal handler
     $(listSelector).on('click', '.cd-edit-reminder-btn', function(e) {
         e.preventDefault();
-        const reminderData = { id:$(this).data('id'), note: $(this).data('note'), date: $(this).data('date')};
+        const reminderData = { id:$(this).data('id'), note: $(this).data('note'), date: $(this).data('date'), important: $(this).data('important')};
         editReminder(reminderData);
     });
 }
@@ -53,7 +53,7 @@ function editReminder(data) {
     $('#editReminderId').val(data.id);
     $('#editReminderDate').val(dateLocal);
     $('#editReminderNote').val(data.note);
-    $('#editReminderImportant').val(data.important);
+    $('#editReminderImportant').prop('checked', data.important);
     $('#reminderModal').addClass('show');
 }
 

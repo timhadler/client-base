@@ -417,7 +417,6 @@ function createReminderRow(reminder) {
     }
 
     let importantText = '';
-    
     return `
         <div class="cd-reminder-item ${statusClass}" data-reminder-id="${reminder.id}">
             <div class="cd-reminder-date">
@@ -430,7 +429,7 @@ function createReminderRow(reminder) {
             </div>
             <div class="cd-reminder-actions-group">
                 <div class="cd-reminder-status ${statusClass}">${statusText}</div>
-                <button data-id="${reminder.id}" data-date="${reminder.date}" data-note="${reminder.note}" class="cd-btn-icon-sm cd-edit-reminder-btn" title="Edit">✏️</button>
+                <button data-id="${reminder.id}" data-date="${reminder.date}" data-note="${reminder.note}" data-important="${reminder.important}" class="cd-btn-icon-sm cd-edit-reminder-btn" title="Edit">✏️</button>
                 <button class="btn-icon delete delete-reminder-btn" title="Delete">🗑️</button>
             </div>
         </div>
