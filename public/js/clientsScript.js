@@ -136,12 +136,12 @@ function createClientRow(client) {
             </td>
             <td>${escapeHtml(client.company || '-')}</td>
             <td>
-                <span class="status-badge ${statusClass}">
+                <span class="client-badge ${statusClass}">
                     ${capitalizeFirst(client.status || '-')}
                 </span>
             </td>
             <td>
-                <span class="priority-badge ${priorityClass}">
+                <span class="client-badge ${priorityClass}">
                     ${priorityIcon} ${capitalizeFirst(client.priority || '-')}
                 </span>
             </td>
