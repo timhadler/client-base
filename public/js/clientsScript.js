@@ -126,7 +126,6 @@ function renderClientsTable(clients) {
 function createClientRow(client) {
     const statusClass = client.status ? client.status.toLowerCase() : '';
     const priorityClass = client.priority ? client.priority.toLowerCase() : '';
-    const priorityIcon = getPriorityIcon(priorityClass);
     
     return `
         <tr data-client-id="${client.id}">
@@ -142,7 +141,7 @@ function createClientRow(client) {
             </td>
             <td>
                 <span class="client-badge ${priorityClass}">
-                    ${priorityIcon} ${capitalizeFirst(client.priority || '-')}
+                    ${capitalizeFirst(client.priority || '-')}
                 </span>
             </td>
             <td>${formatDate(client.lastContact)}</td>
@@ -245,15 +244,6 @@ function handleDeleteClient($button) {
 /*****************************************************************
  * Helper Functions
  ****************************************************************/
-function getPriorityIcon(priority) {
-    const icons = {
-        high: '🔴',
-        medium: '🟡',
-        low: '🟢'
-    };
-    return icons[priority] || '';
-}
-
 function capitalizeFirst(str) {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();

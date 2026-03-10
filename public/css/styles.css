@@ -775,7 +775,9 @@ th.reminder-count-header,
 }
 
 .client-badge {
-    display: inline-block;
+    display: inline-flex;
+    min-width: 73px;
+    justify-content: center;
     padding: 6px 14px;
     border-radius: 12px;
     font-size: 12px;
