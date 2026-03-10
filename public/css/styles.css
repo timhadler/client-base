@@ -7,9 +7,12 @@
     /* Accent Colors */
     --accent-teal: #14b8a6;
     --accent-orange: #f59e0b;
+    --accent-brown: #92400e;
     --accent-red: #ef4444;
     --accent-red-dark: #dc2626;
     --accent-green: #10b981;
+    --accent-amber-light: #fef3c7;
+    --accent-amber: #fbbf24;
     
     /* Neutrals */
     --gray-50: #f9fafb;
@@ -3448,12 +3451,27 @@ th.reminder-count-header,
 }
 
 .important-toggle-tab.active {
-    background: #fef3c7;
-    color: #92400e;
-    border-color: #fbbf24 !important;
+    background: var(--accent-amber-light);
+    color: var(--accent-brown);
+    border-color: var(--accent-amber) !important;
 }
 
 .important-toggle-tab:hover:not(.active) {
     background: #fef9ee;
-    color: #92400e;
+    color: var(--accent-brown);
+}
+
+.important-badge {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    background: var(--accent-amber-light);
+    border: 1.5px solid var(--accent-amber);
+    color: var(--accent-brown);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 12px;
+    flex-shrink: 0;
+    white-space: nowrap;
 }

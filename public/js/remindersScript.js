@@ -199,6 +199,11 @@ function loadList(counts, reminders, offset=0) {
             $row.find('.client-company').text(reminder.company);
             $row.find('.reminder-note').text(reminder.note); 
 
+            // Reveal important badge
+            if (reminder.important) {
+                $row.find('.important-badge').css('display', 'inline-flex');
+            }
+
             // Attach reminder
             $row.find('.cd-edit-reminder-btn').data('id', reminder.id).data('note', reminder.note).data('date', reminder.date).data('important', reminder.important);
 
