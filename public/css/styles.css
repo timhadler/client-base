@@ -551,8 +551,8 @@ td {
 }
 
 .interaction-outcome.missed {
-    background: #fef3c7;
-    color: #92400e;
+    background: var(--accent-amber-light);
+    color: var(--accent-brown);
 }
 
 .interaction-outcome.ignored {
@@ -788,8 +788,8 @@ th.reminder-count-header,
 }
 
 .status-badge.pending {
-    background: #fef3c7;
-    color: #92400e;
+    background: var(--accent-amber-light);
+    color: var(--accent-brown);
 }
 
 .status-badge.inactive {
@@ -1618,8 +1618,8 @@ th.reminder-count-header,
 }
 
 .priority-badge.medium {
-    background: #fef3c7;
-    color: #d97706;
+    background: var(--accent-amber-light);
+    color: var(--accent-brown);
 }
 
 .priority-badge.low {
@@ -1818,8 +1818,8 @@ th.reminder-count-header,
 }
 
 .cd-status-badge.pending {
-    background: #fef3c7;
-    color: #92400e;
+    background: var(--accent-amber-light);
+    color: var(--accent-brown);
 }
 
 .cd-status-badge.inactive {
@@ -1845,8 +1845,8 @@ th.reminder-count-header,
 }
 
 .cd-priority-badge.medium {
-    background: #fef3c7;
-    color: #d97706;
+    background: var(--accent-amber-light);
+    color: var(--accent-brown);
 }
 
 .cd-priority-badge.low {
@@ -2018,8 +2018,8 @@ th.reminder-count-header,
 }
 
 .cd-reminder-status.today {
-    background: #fef3c7;
-    color: #d97706;
+    background: var(--accent-amber-light);
+    color: var(--accent-brown);
 }
 
 .cd-btn-icon-sm {
@@ -3081,8 +3081,8 @@ th.reminder-count-header,
 }
 
 .delete-warning {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    border: 2px solid #fbbf24;
+    background: linear-gradient(135deg, var(--accent-amber-light) 0%, #fde68a 100%);
+    border: 2px solid var(--accent-amber);
     border-radius: 12px;
     padding: 20px;
     display: flex;
@@ -3098,7 +3098,7 @@ th.reminder-count-header,
 
 .delete-warning-text {
     font-size: 15px;
-    color: #92400e;
+    color: var(--accent-brown);
     line-height: 1.6;
 }
 
