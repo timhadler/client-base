@@ -7,9 +7,12 @@
     /* Accent Colors */
     --accent-teal: #14b8a6;
     --accent-orange: #f59e0b;
+    --accent-brown: #92400e;
     --accent-red: #ef4444;
     --accent-red-dark: #dc2626;
     --accent-green: #10b981;
+    --accent-amber-light: #fef3c7;
+    --accent-amber: #fbbf24;
     
     /* Neutrals */
     --gray-50: #f9fafb;
@@ -548,8 +551,8 @@ td {
 }
 
 .interaction-outcome.missed {
-    background: #fef3c7;
-    color: #92400e;
+    background: var(--accent-amber-light);
+    color: var(--accent-brown);
 }
 
 .interaction-outcome.ignored {
@@ -771,30 +774,42 @@ th.reminder-count-header,
     text-align: center;
 }
 
-.status-badge {
-    display: inline-block;
+.client-badge {
+    display: inline-flex;
+    min-width: 73px;
+    justify-content: center;
     padding: 6px 14px;
     border-radius: 12px;
     font-size: 12px;
     font-weight: 600;
 }
 
-.status-badge.active {
+.cd-badge.active, 
+.cd-badge.low,
+.client-badge.low,
+.client-badge.active {
     background: #d1fae5;
     color: #065f46;
 }
 
-.status-badge.pending {
-    background: #fef3c7;
-    color: #92400e;
+.cd-badge.pending, 
+.cd-badge.medium,
+.client-badge.medium,
+.client-badge.pending {
+    background: var(--accent-amber-light);
+    color: var(--accent-brown);
 }
 
-.status-badge.inactive {
+.cd-badge.inactive, 
+.cd-badge.high,
+.client-badge.high,
+.client-badge.inactive {
     background: #fee2e2;
     color: #991b1b;
 }
 
-.status-badge.completed {
+.cd-badge.complete, 
+.client-badge.complete {
     background: #d1fae5;
     color: #065f46;
 }
@@ -1599,31 +1614,6 @@ th.reminder-count-header,
     font-size: 14px;
 }
 
-.priority-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.priority-badge.high {
-    background: #fef2f2;
-    color: var(--accent-red);
-}
-
-.priority-badge.medium {
-    background: #fef3c7;
-    color: #d97706;
-}
-
-.priority-badge.low {
-    background: #f0fdfa;
-    color: var(--accent-teal);
-}
-
 .action-buttons {
     display: flex;
     gap: 8px;
@@ -1802,53 +1792,11 @@ th.reminder-count-header,
     margin-top: 16px;
 }
 
-.cd-status-badge {
+.cd-badge {
     padding: 8px 16px;
     border-radius: 12px;
     font-size: 13px;
     font-weight: 600;
-}
-
-.cd-status-badge.active {
-    background: #d1fae5;
-    color: #065f46;
-}
-
-.cd-status-badge.pending {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.cd-status-badge.inactive {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
-.cd-status-badge.completed {
-    background: #d1fae5;
-    color: #065f46;
-}
-
-.cd-priority-badge {
-    padding: 8px 16px;
-    border-radius: 12px;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.cd-priority-badge.high {
-    background: #fef2f2;
-    color: var(--accent-red);
-}
-
-.cd-priority-badge.medium {
-    background: #fef3c7;
-    color: #d97706;
-}
-
-.cd-priority-badge.low {
-    background: #f0fdfa;
-    color: var(--accent-teal);
 }
 
 .cd-actions {
@@ -2015,8 +1963,8 @@ th.reminder-count-header,
 }
 
 .cd-reminder-status.today {
-    background: #fef3c7;
-    color: #d97706;
+    background: var(--accent-amber-light);
+    color: var(--accent-brown);
 }
 
 .cd-btn-icon-sm {
@@ -3078,8 +3026,8 @@ th.reminder-count-header,
 }
 
 .delete-warning {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    border: 2px solid #fbbf24;
+    background: linear-gradient(135deg, var(--accent-amber-light) 0%, #fde68a 100%);
+    border: 2px solid var(--accent-amber);
     border-radius: 12px;
     padding: 20px;
     display: flex;
@@ -3095,7 +3043,7 @@ th.reminder-count-header,
 
 .delete-warning-text {
     font-size: 15px;
-    color: #92400e;
+    color: var(--accent-brown);
     line-height: 1.6;
 }
 
@@ -3448,12 +3396,27 @@ th.reminder-count-header,
 }
 
 .important-toggle-tab.active {
-    background: #fef3c7;
-    color: #92400e;
-    border-color: #fbbf24 !important;
+    background: var(--accent-amber-light);
+    color: var(--accent-brown);
+    border-color: var(--accent-amber) !important;
 }
 
 .important-toggle-tab:hover:not(.active) {
     background: #fef9ee;
-    color: #92400e;
+    color: var(--accent-brown);
+}
+
+.important-badge {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    background: var(--accent-amber-light);
+    border: 1.5px solid var(--accent-amber);
+    color: var(--accent-brown);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 12px;
+    flex-shrink: 0;
+    white-space: nowrap;
 }

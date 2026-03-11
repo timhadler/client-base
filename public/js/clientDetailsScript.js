@@ -140,7 +140,7 @@ function renderClientHeader(client) {
     // Build badges
     const statusClass = (client.status || 'active').toLowerCase();
     let badgesHtml = `
-        <span class="cd-status-badge ${statusClass}">
+        <span class="cd-badge ${statusClass}">
             ${capitalizeFirst(client.status || 'Active')}
         </span>
     `;
@@ -148,7 +148,7 @@ function renderClientHeader(client) {
     if (client.priority) {
         const priorityClass = client.priority.toLowerCase();
         badgesHtml += `
-            <span class="cd-priority-badge ${priorityClass}">
+            <span class="cd-badge ${priorityClass}">
                 ${capitalizeFirst(client.priority)} Priority
             </span>
         `;

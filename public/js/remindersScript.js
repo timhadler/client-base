@@ -199,6 +199,11 @@ function loadList(counts, reminders, offset=0) {
             $row.find('.client-company').text(reminder.company);
             $row.find('.reminder-note').text(reminder.note); 
 
+            // Reveal important badge
+            if (reminder.important) {
+                $row.find('.important-badge').css('display', 'inline-flex');
+            }
+
             // Attach reminder
             $row.find('.cd-edit-reminder-btn').data('id', reminder.id).data('note', reminder.note).data('date', reminder.date).data('important', reminder.important);
 
@@ -675,7 +680,7 @@ function initInteractionModal() {
             const notes = {
                 call: {
                     followup: "Requested a follow-up",
-                    no_answer: "Follow-up after missed call"
+                    no_answer: "Follow-up after missed outbound call"
                 },
                 email: "Follow-up after email",
                 text: "Follow-up after text"
@@ -793,7 +798,7 @@ function populateCountFilterOptions() {
         const $item = $(`
             <button class="filter-dropdown-item" data-count="${i}">
                 <span class="filter-check">✓</span>
-                Attempt #${i}
+                ${i} Attempt${i !== 1 ? 's' : ''}
             </button>
         `);
         
